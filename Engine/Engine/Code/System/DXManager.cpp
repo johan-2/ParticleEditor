@@ -1,5 +1,6 @@
 #include "DXManager.h"
 #include <iostream>
+
 #include "SystemDefs.h"
 
 DXManager* DXManager::_instance = 0;
@@ -168,7 +169,8 @@ void DXManager::SetZBuffer(DEPTH_STATE state)
 
 void DXManager::Initialize(HWND hwnd,int screenWidth, int screenHeight, bool vsync, bool fullscreen)
 {
-
+	
+	
 	ID3D11Texture2D* backBufferPtr = 0;
 	HRESULT result;
 

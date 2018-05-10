@@ -4,6 +4,9 @@
 
 #include "DXManager.h"
 #include "SystemDefs.h"
+#include "TexturePool.h"
+
+
 
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM Lparam);
@@ -14,6 +17,10 @@ Framework::Framework()
 	CreateWindowDx11("Engine", 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	
 	DXManager::GetInstance().Initialize(_window, SCREEN_WIDTH, SCREEN_HEIGHT, V_SYNC, FULLSCREEN);
+
+	ID3D11ShaderResourceView* t = TexturePool::GetInstance().GetTexture(L"Textures/Arrow.dds");
+	ID3D11ShaderResourceView* h = TexturePool::GetInstance().GetTexture(L"Textures/ArrowUp.dds");
+
 
 	Start();
 	Run();

@@ -70,10 +70,10 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SolutionDir)Engine/Code/System;$(SolutionDir)Engine/Code/Utils;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Engine/Code/System;$(SolutionDir)Engine/Code/Utils;$(SolutionDir)Engine/Code;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)Engine/Code/System;$(SolutionDir)Engine/Code/Utils;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Engine/Code/System;$(SolutionDir)Engine/Code/Utils;$(SolutionDir)Engine/Code;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -122,14 +122,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Code\DDSTextureLoader\DDSTextureLoader.cpp" />
     <ClCompile Include="Code\System\DXManager.cpp" />
     <ClCompile Include="Code\System\Framework.cpp" />
+    <ClCompile Include="Code\Utils\TexturePool.cpp" />
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Code\DDSTextureLoader\DDSTextureLoader.h" />
     <ClInclude Include="Code\System\DXManager.h" />
     <ClInclude Include="Code\System\Framework.h" />
     <ClInclude Include="Code\Utils\SystemDefs.h" />
+    <ClInclude Include="Code\Utils\TexturePool.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
