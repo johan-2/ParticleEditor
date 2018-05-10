@@ -1,0 +1,7 @@
+﻿  Main.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\main.cpp(3): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+  Generating Code...
+  Skipping... (no relevant changes detected)
+  Framework.cpp
+  Engine.vcxproj -> C:\Users\nilss\Desktop\EngineDx11\Engine\x64\Debug\Engine.exe
+  Engine.vcxproj -> C:\Users\nilss\Desktop\EngineDx11\Engine\x64\Debug\Engine.pdb (Partial PDB)
