@@ -30,7 +30,7 @@ void TransformationComponent::Update()
 
 	float rotationAmount = _speedRotation * delta;
 
-	XMStoreFloat3(&_transform->GetRotationRef(), XMVectorAdd(&_transform->GetRotationRef(), XMVectorMultiply(XMLoadFloat3(&_rotation), XMLoadFloat(&rotationAmount))));
+	XMStoreFloat3(&_transform->GetRotationRef(), XMVectorAdd(XMLoadFloat3(&_transform->GetRotationRef()), XMVectorMultiply(XMLoadFloat3(&_rotation), XMLoadFloat3(&XMFLOAT3(rotationAmount, rotationAmount, rotationAmount)))));
 
 	if (_axis == TransformComponent::Axis::NONE)
 		return;
@@ -40,13 +40,13 @@ void TransformationComponent::Update()
 	switch (_axis)
 	{
 	case TransformComponent::RIGHT:
-		XMStoreFloat3(&_transform->GetPositionRef(), XMVectorAdd(&_transform->GetPositionRef(), XMVectorMultiply(XMLoadFloat3(&_transform->GetRight()), XMLoadFloat(&translationAmount))));
+		XMStoreFloat3(&_transform->GetPositionRef(), XMVectorAdd(XMLoadFloat3(&_transform->GetPositionRef()), XMVectorMultiply(XMLoadFloat3(&_transform->GetRight()), XMLoadFloat3(&XMFLOAT3(translationAmount,translationAmount,translationAmount)))));
 		break;
 	case TransformComponent::FORWARD:
-		XMStoreFloat3(&_transform->GetPositionRef(), XMVectorAdd(&_transform->GetPositionRef(), XMVectorMultiply(XMLoadFloat3(&_transform->GetForward()), XMLoadFloat(&translationAmount))));
+		XMStoreFloat3(&_transform->GetPositionRef(), XMVectorAdd(XMLoadFloat3(&_transform->GetPositionRef()), XMVectorMultiply(XMLoadFloat3(&_transform->GetForward()), XMLoadFloat3(&XMFLOAT3(translationAmount, translationAmount, translationAmount)))));
 		break;
 	case TransformComponent::UP:
-		XMStoreFloat3(&_transform->GetPositionRef(), XMVectorAdd(&_transform->GetPositionRef(), XMVectorMultiply(XMLoadFloat3(&_transform->GetUp()), XMLoadFloat(&translationAmount))));
+		XMStoreFloat3(&_transform->GetPositionRef(), XMVectorAdd(XMLoadFloat3(&_transform->GetPositionRef()), XMVectorMultiply(XMLoadFloat3(&_transform->GetUp()), XMLoadFloat3(&XMFLOAT3(translationAmount, translationAmount, translationAmount)))));
 		break;
 	
 	}

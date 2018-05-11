@@ -57,7 +57,7 @@ void Renderer::CreateDepthMap()
 	QuadComponent* q = UIQuad1->AddComponent<QuadComponent>(); q->Init(XMFLOAT2(SCREEN_WIDTH * 0.06f, SCREEN_HEIGHT * 0.1f), XMFLOAT2(SCREEN_WIDTH * 0.1f, SCREEN_WIDTH * 0.1f), L"");
 	q->SetTexture(_depthMap->GetShaderResource());
 
-	_skyBox = new SkyBox("Skyboxes/EmptySpace.dds");
+	_skyBox = new SkyBox(L"Skyboxes/ThickCloudsWater.dds");
 }
 
 

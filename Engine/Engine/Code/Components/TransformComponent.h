@@ -1,30 +1,34 @@
 #pragma once
 #include "IComponent.h"
 
+#include <DirectXMath.h>
+
+using namespace DirectX;
+
 class TransformComponent : public IComponent
 {
 public:
 	TransformComponent();
 	~TransformComponent();
 
-	void Init(D3DXVECTOR3 position = D3DXVECTOR3(0, 0, 0), D3DXVECTOR3 rotation = D3DXVECTOR3(0, 0, 0), D3DXVECTOR3 scale = D3DXVECTOR3(1, 1, 1));
+	void Init(XMFLOAT3 position = XMFLOAT3(0, 0, 0), XMFLOAT3 rotation = XMFLOAT3(0, 0, 0), XMFLOAT3 scale = XMFLOAT3(1, 1, 1));
 	
-	D3DXMATRIX GetWorldMatrix();
+	XMFLOAT4X4 GetWorldMatrix();
 
-	D3DXVECTOR3& GetPositionRef() { return _position; }
-	D3DXVECTOR3  GetPositionVal() { return _position; }
+	XMFLOAT3& GetPositionRef() { return _position; }
+	XMFLOAT3  GetPositionVal() { return _position; }
 
-	D3DXVECTOR3& GetRotationRef() { return _rotation; }
-	D3DXVECTOR3  GetRotationVal() { return _rotation; }
+	XMFLOAT3& GetRotationRef() { return _rotation; }
+	XMFLOAT3  GetRotationVal() { return _rotation; }
 
-	D3DXVECTOR3& GetScaleRef() { return _scale; }
-	D3DXVECTOR3  GetScaleVal() { return _scale; }
+	XMFLOAT3& GetScaleRef() { return _scale; }
+	XMFLOAT3  GetScaleVal() { return _scale; }
 	
-	D3DXVECTOR3  GetRight() { return CalculateAxises(Axis::RIGHT); }
-	D3DXVECTOR3  GetForward() { return CalculateAxises(Axis::FORWARD); }
-	D3DXVECTOR3  GetUp() { return CalculateAxises(Axis::UP); }
+	XMFLOAT3  GetRight() { return CalculateAxises(Axis::RIGHT); }
+	XMFLOAT3  GetForward() { return CalculateAxises(Axis::FORWARD); }
+	XMFLOAT3  GetUp() { return CalculateAxises(Axis::UP); }
 
-	void GetAllAxis(D3DXVECTOR3& forward, D3DXVECTOR3& right, D3DXVECTOR3& up) { CalculateAxises(Axis::ALL, forward, right, up); }
+	void GetAllAxis(XMFLOAT3& forward, XMFLOAT3& right, XMFLOAT3& up) { CalculateAxises(Axis::ALL, forward, right, up); }
 
 	void Update();
 
@@ -39,11 +43,11 @@ public:
 
 private:
 		
-	D3DXVECTOR3 CalculateAxises(Axis axis, D3DXVECTOR3& forward = D3DXVECTOR3(0,0,0), D3DXVECTOR3& right = D3DXVECTOR3(0, 0, 0), D3DXVECTOR3& up = D3DXVECTOR3(0, 0, 0));
+	XMFLOAT3 CalculateAxises(Axis axis, XMFLOAT3& forward = XMFLOAT3(0,0,0), XMFLOAT3& right = XMFLOAT3(0, 0, 0), XMFLOAT3& up = XMFLOAT3(0, 0, 0));
 	
-	D3DXVECTOR3 _position;
-	D3DXVECTOR3 _rotation;
-	D3DXVECTOR3 _scale;
+	XMFLOAT3 _position;
+	XMFLOAT3 _rotation;
+	XMFLOAT3 _scale;
 	
 };
 

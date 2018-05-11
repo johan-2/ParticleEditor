@@ -3,6 +3,9 @@
 #include <Windows.h>
 #include <string>
 
+class Entity;
+class DebugStats;
+
 class Framework
 {
 public:
@@ -21,5 +24,7 @@ private:
 	HINSTANCE _hInstance;
 	HWND _window;
 	std::string _applicationName;
+
+	DebugStats* _debugStats;
 };
 

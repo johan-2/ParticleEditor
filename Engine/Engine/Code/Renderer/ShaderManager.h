@@ -2,7 +2,10 @@
 
 #include <d3d11.h>
 #include <vector>
+#include <DirectXMath.h>
 #include "imgui.h"
+
+using namespace DirectX;
 
 class Mesh;
 class QuadComponent;
@@ -30,8 +33,8 @@ public:
 	void CreateShaders();
 	void ShutdownShaders();
 
-	void CreateVertexShader(const char* filePath, ID3D11VertexShader**, ID3D10Blob**);
-	void CreatePixelShader(const char* filePath, ID3D11PixelShader**, ID3D10Blob**);
+	void CreateVertexShader(LPCWSTR filePath, ID3D11VertexShader**, ID3D10Blob**);
+	void CreatePixelShader(LPCWSTR filePath, ID3D11PixelShader**, ID3D10Blob**);
 
 	void RenderAmbient(const std::vector<Mesh*>& meshes);
 	void RenderDirectional(const std::vector<Mesh*>& meshes);
@@ -42,7 +45,7 @@ public:
 
 	void RenderQuadUI(const std::vector<QuadComponent*>& quads);
 	
-	void RenderSkyBox(D3DXMATRIX worldMatrix);
+	void RenderSkyBox(XMFLOAT4X4 worldMatrix);
 	void RenderParticles(const std::vector<ParticleEmitterComponent*>& emitters);
 
 	void SetConstantBuffers();
@@ -93,88 +96,88 @@ private:
 	// sprite constants
 	struct ConstantQuadUIVertex
 	{		
-		D3DXMATRIX view;
-		D3DXMATRIX projection;
+		XMFLOAT4X4 view;
+		XMFLOAT4X4 projection;
 	};
 	struct ConstantQuadUIPixel
 	{
-		D3DXVECTOR4 color;
+		XMFLOAT4 color;
 	};
 
 	//ambient constants
 	struct ConstantAmbientVertex
 	{
-		D3DXMATRIX world;
-		D3DXMATRIX view;
-		D3DXMATRIX projection;
-		D3DXVECTOR2 uvOffset;
-		D3DXVECTOR2 pad;
+		XMFLOAT4X4 world;
+		XMFLOAT4X4 view;
+		XMFLOAT4X4 projection;
+		XMFLOAT2 uvOffset;
+		XMFLOAT2 pad;
 	};
 	struct ConstantAmbientPixel
 	{
-		D3DXVECTOR4 color;
+		XMFLOAT4 color;
 	};
 	
 	// directional
 	struct ConstantDirectionalVertex
 	{
-		D3DXMATRIX world;
-		D3DXMATRIX view;
-		D3DXMATRIX projection;
-		D3DXVECTOR3 camPos;
+		XMFLOAT4X4 world;
+		XMFLOAT4X4 view;
+		XMFLOAT4X4 projection;
+		XMFLOAT3 camPos;
 		float pad1;
-		D3DXVECTOR2 uvOffset;
-		D3DXVECTOR2 pad2;
+		XMFLOAT2 uvOffset;
+		XMFLOAT2 pad2;
 	};
 	struct ConstantDirectionalPixel
 	{
-		D3DXVECTOR4 diffuseColor;
-		D3DXVECTOR4 specularColor;		
-		D3DXVECTOR3 lightDir;
+		XMFLOAT4 diffuseColor;
+		XMFLOAT4 specularColor;		
+		XMFLOAT3 lightDir;
 		float specularPower;		
 	};
 
 	struct ConstantDirectionalShadowVertex
 	{		
-		D3DXMATRIX world;
-		D3DXMATRIX view;
-		D3DXMATRIX projection;
-		D3DXMATRIX lightView;
-		D3DXMATRIX lightProjection;
+		XMFLOAT4X4 world;
+		XMFLOAT4X4 view;
+		XMFLOAT4X4 projection;
+		XMFLOAT4X4 lightView;
+		XMFLOAT4X4 lightProjection;
 		
-		D3DXVECTOR3 camPos;
+		XMFLOAT3 camPos;
 		float pad1;
-		D3DXVECTOR2 uvOffset;
-		D3DXVECTOR2 pad2;
+		XMFLOAT2 uvOffset;
+		XMFLOAT2 pad2;
 		
 	};
 	struct ConstantDirectionalShadowPixel
 	{
-		D3DXVECTOR4 diffuseColor;
-		D3DXVECTOR4 specularColor;
-		D3DXVECTOR3 lightDir;
+		XMFLOAT4 diffuseColor;
+		XMFLOAT4 specularColor;
+		XMFLOAT3 lightDir;
 		float specularPower;
 	};
 
 	//depth map constants
 	struct ConstantDepthVertex
 	{
-		D3DXMATRIX world;
-		D3DXMATRIX view;
-		D3DXMATRIX projection;
+		XMFLOAT4X4 world;
+		XMFLOAT4X4 view;
+		XMFLOAT4X4 projection;
 	};
 	
 	struct ConstantSkyBoxVertex
 	{
-		D3DXMATRIX world;
-		D3DXMATRIX view;
-		D3DXMATRIX projection;
+		XMFLOAT4X4 world;
+		XMFLOAT4X4 view;
+		XMFLOAT4X4 projection;
 	};
 
 	struct ConstantParticleVertex
 	{
-		D3DXMATRIX view;
-		D3DXMATRIX projection;
+		XMFLOAT4X4 view;
+		XMFLOAT4X4 projection;
 	};
 	
 	struct ConstantGUIVertex
@@ -184,24 +187,24 @@ private:
 	
 	struct ConstantPointVertex
 	{
-		D3DXMATRIX world;
-		D3DXMATRIX view;
-		D3DXMATRIX projection;
+		XMFLOAT4X4 world;
+		XMFLOAT4X4 view;
+		XMFLOAT4X4 projection;
 				
-		D3DXVECTOR3 camPos;	
+		XMFLOAT3 camPos;	
 		float pad1;
-		D3DXVECTOR2 uvOffset;
-		D3DXVECTOR2 pad2;
+		XMFLOAT2 uvOffset;
+		XMFLOAT2 pad2;
 	
 	};
 
 	struct ConstantPointPixel
 	{
-		D3DXVECTOR3 lightPosition;
+		XMFLOAT3 lightPosition;
 		float radius;
-		D3DXVECTOR3 color;
+		XMFLOAT3 color;
 		float intensity;
-		D3DXVECTOR3 specularColor;
+		XMFLOAT3 specularColor;
 		float specularPower;
 
 		float attConstant;

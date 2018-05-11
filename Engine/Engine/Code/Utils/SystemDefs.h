@@ -1,9 +1,9 @@
 #pragma once
 
-#define SCREEN_WIDTH 1280
-#define SCREEN_HEIGHT 720
+const float SCREEN_WIDTH = 1920.0f;
+const float SCREEN_HEIGHT = 1080.0f;
 
-#define V_SYNC false
+#define V_SYNC true
 #define FULLSCREEN false
 
 #define ANTI_ALIASING 4

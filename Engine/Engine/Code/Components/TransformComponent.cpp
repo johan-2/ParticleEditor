@@ -8,66 +8,73 @@ TransformComponent::~TransformComponent()
 {	
 }
 
-void TransformComponent::Init(D3DXVECTOR3 position, D3DXVECTOR3 rotation, D3DXVECTOR3 scale)
+void TransformComponent::Init(XMFLOAT3 position, XMFLOAT3 rotation, XMFLOAT3 scale)
 {
 	_position = position;
 	_rotation = rotation;
 	_scale = scale;
 }
 
-D3DXMATRIX TransformComponent::GetWorldMatrix() 
+XMFLOAT4X4 TransformComponent::GetWorldMatrix() 
 {
-	// find out if we are leaking memory here, ruturns a pointer and takes an outparameter? 
-	D3DXMATRIX matrixPosition = *D3DXMatrixIdentity(&matrixPosition);	
-	D3DXMATRIX matrixScale = *D3DXMatrixIdentity(&matrixScale);
-	D3DXMATRIX matrixRotation = *D3DXMatrixIdentity(&matrixRotation);
 	
-	// translate and scale to our matrices
-	D3DXMatrixTranslation(&matrixPosition, _position.x, _position.y, _position.z);
-	D3DXMatrixScaling(&matrixScale, _scale.x, _scale.y, _scale.z);
+	XMFLOAT4X4 matrixPosition, matrixScale, matrixRotation, matrixWorld;
 
-	// apply rotation to matrix(convert to radians)	
-	D3DXMatrixRotationYawPitchRoll(&matrixRotation, D3DXToRadian( _rotation.y) , D3DXToRadian(_rotation.x), D3DXToRadian(_rotation.z));
+	XMStoreFloat4x4(&matrixPosition, XMMatrixIdentity());
+	XMStoreFloat4x4(&matrixScale,    XMMatrixIdentity());
+	XMStoreFloat4x4(&matrixRotation, XMMatrixIdentity());
+	XMStoreFloat4x4(&matrixWorld,    XMMatrixIdentity());
+	
+	XMStoreFloat4x4(&matrixPosition, XMMatrixTranslationFromVector(XMLoadFloat3(&_position)));
+	XMStoreFloat4x4(&matrixScale,    XMMatrixScalingFromVector(XMLoadFloat3(&_scale)));
+	XMStoreFloat4x4(&matrixRotation, XMMatrixRotationRollPitchYaw(XMConvertToRadians(_rotation.x), XMConvertToRadians(_rotation.y), XMConvertToRadians(_rotation.z)));
+
+	XMStoreFloat4x4(&matrixWorld, XMMatrixMultiply(XMLoadFloat4x4(&matrixScale), XMLoadFloat4x4(&matrixRotation)));
+	XMStoreFloat4x4(&matrixWorld, XMMatrixMultiply(XMLoadFloat4x4(&matrixWorld), XMLoadFloat4x4(&matrixPosition)));
 	
 	// return all matrices multiplied
-	return matrixScale * matrixRotation * matrixPosition;
-	
+	return matrixWorld;	
 }
 
-D3DXVECTOR3 TransformComponent::CalculateAxises(Axis axis, D3DXVECTOR3& forward, D3DXVECTOR3& right, D3DXVECTOR3& up)
+XMFLOAT3 TransformComponent::CalculateAxises(Axis axis, XMFLOAT3& forward, XMFLOAT3& right, XMFLOAT3& up)
 {
 	// get rotation matrix
-	D3DXMATRIX matrixRotation = *D3DXMatrixIdentity(&matrixRotation);
-	D3DXMatrixRotationYawPitchRoll(&matrixRotation, D3DXToRadian(_rotation.y), D3DXToRadian(_rotation.x), D3DXToRadian(_rotation.z));
+	XMFLOAT4X4 matrixRotation; 
+	XMStoreFloat4x4(&matrixRotation, XMMatrixIdentity());
 
-	D3DXVECTOR3 f = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
-	D3DXVECTOR3 r = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
-	D3DXVECTOR3 u = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-	
-	// transform axis by our rotation
-	D3DXVec3TransformCoord(&f, &f, &matrixRotation);
-	D3DXVec3TransformCoord(&r, &r, &matrixRotation);
-	D3DXVec3TransformCoord(&u, &u, &matrixRotation);
+	XMStoreFloat4x4(&matrixRotation, XMMatrixRotationRollPitchYaw(XMConvertToRadians(_rotation.x), XMConvertToRadians(_rotation.y), XMConvertToRadians(_rotation.z)));
+
+	XMFLOAT3 f = XMFLOAT3(0.0f, 0.0f, 1.0f);
+	XMFLOAT3 r = XMFLOAT3(1.0f, 0.0f, 0.0f);
+	XMFLOAT3 u = XMFLOAT3(0.0f, 1.0f, 0.0f);
+
+	XMStoreFloat3(&f, XMVector3TransformCoord(XMLoadFloat3(&f), XMLoadFloat4x4(&matrixRotation)));
+	XMStoreFloat3(&r, XMVector3TransformCoord(XMLoadFloat3(&r), XMLoadFloat4x4(&matrixRotation)));
+	XMStoreFloat3(&u, XMVector3TransformCoord(XMLoadFloat3(&u), XMLoadFloat4x4(&matrixRotation)));
 
 	switch (axis)
 	{
 	case TransformComponent::FORWARD:
-		return *D3DXVec3Normalize(&f, &f);
+
+		XMStoreFloat3(&f, XMVector3Normalize(XMLoadFloat3(&f)));
+		return f;
 		break;
 	case TransformComponent::RIGHT:
-		return *D3DXVec3Normalize(&r, &r);
+		XMStoreFloat3(&r, XMVector3Normalize(XMLoadFloat3(&r)));
+		return r;
 		break;
 	case TransformComponent::UP:
-		return *D3DXVec3Normalize(&u, &u);
+		XMStoreFloat3(&u, XMVector3Normalize(XMLoadFloat3(&u)));
+		return u;
 		break;	
 	case TransformComponent::ALL:
-		forward = f;
-		right = r;
-		up = u;
+		XMStoreFloat3(&forward, XMVector3Normalize(XMLoadFloat3(&f)));
+		XMStoreFloat3(&right, XMVector3Normalize(XMLoadFloat3(&r)));
+		XMStoreFloat3(&up, XMVector3Normalize(XMLoadFloat3(&u)));
 		break;
 	}
 
-	return D3DXVECTOR3(0,0,0);
+	return XMFLOAT3(0,0,0);
 }
 
 void TransformComponent::Update() 

@@ -1,2 +1,15 @@
-﻿  Engine.vcxproj -> C:\Users\nilss\Desktop\EngineDx11\Engine\Debug\Engine.exe
+﻿  FreeMoveComponent.cpp
+  c:\program files (x86)\windows kits\10\include\10.0.15063.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\entity.h(36): warning C4018: '<': signed/unsigned mismatch
+  c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\icomponent.h(17): note: see reference to function template instantiation 'T *Entity::GetComponent<T>(void)' being compiled
+          with
+          [
+              T=TransformComponent
+          ]
+  c:\users\nilss\desktop\enginedx11\engine\engine\code\components\freemovecomponent.cpp(25): note: see reference to function template instantiation 'T *IComponent::GetComponent<TransformComponent>(void)' being compiled
+          with
+          [
+              T=TransformComponent
+          ]
+  Engine.vcxproj -> C:\Users\nilss\Desktop\EngineDx11\Engine\Debug\Engine.exe
   Engine.vcxproj -> C:\Users\nilss\Desktop\EngineDx11\Engine\Debug\Engine.pdb (Partial PDB)

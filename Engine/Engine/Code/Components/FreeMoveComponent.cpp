@@ -87,12 +87,12 @@ void FreeMoveComponent::UpdateMovement()
 	if (input.IsKeyHeld(DIK_S))
 		keyboardInput.y -= 1.0f;
 	if (input.IsKeyHeld(DIK_W))
-		keyboardInput.y += 1.0f;
+		keyboardInput.y += 1.0f;	
 
 	XMFLOAT3 direction; 
-	XMStoreFloat3(&direction, XMVectorAdd(XMVectorMultiply(XMLoadFloat3(&right), XMLoadFloat(&keyboardInput.x)), XMVectorMultiply(XMLoadFloat3(&forward), XMLoadFloat(&keyboardInput.y))));
+	XMStoreFloat3(&direction, XMVectorAdd(XMVectorMultiply(XMLoadFloat3(&right), XMLoadFloat3(&XMFLOAT3(keyboardInput.x, keyboardInput.x, keyboardInput.x))), XMVectorMultiply(XMLoadFloat3(&forward), XMLoadFloat3(&XMFLOAT3(keyboardInput.y, keyboardInput.y, keyboardInput.y)))));
 	XMStoreFloat3(&direction, XMVector3Normalize(XMLoadFloat3(&direction)));
-	XMStoreFloat3(&pos, XMVectorAdd(XMLoadFloat3(&pos), XMVectorMultiply(XMLoadFloat3(&direction), XMLoadFloat(&movement))));
+	XMStoreFloat3(&pos, XMVectorAdd(XMLoadFloat3(&pos), XMVectorMultiply(XMLoadFloat3(&direction), XMLoadFloat3(&XMFLOAT3(movement,movement,movement)))));
 	
 }
 

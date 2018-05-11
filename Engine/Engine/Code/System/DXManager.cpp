@@ -256,11 +256,12 @@ bool DXManager::CreateSwapchain(HWND hwnd, bool fullscreen, int screenWidth, int
 	swapChainDesc.SampleDesc.Count = ANTI_ALIASING;
 	swapChainDesc.SampleDesc.Quality = 0;		
 	swapChainDesc.Windowed = _fullscreen;	
-	swapChainDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_PROGRESSIVE;
+	swapChainDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
 	swapChainDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;	
 	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 	swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH; // allow to switch to fullscreen using allt + enter
-	featureLevel = D3D_FEATURE_LEVEL_11_0;
+	featureLevel = D3D_FEATURE_LEVEL_11_1;
+	
 
 	// create the swapchain using the description, and devices
 	result = D3D11CreateDeviceAndSwapChain(NULL,
@@ -376,14 +377,14 @@ bool DXManager::CreateRasterizerStates()
 	HRESULT result;
 	D3D11_RASTERIZER_DESC rasterDesc;
 	
-	rasterDesc.AntialiasedLineEnable = false;
+	rasterDesc.AntialiasedLineEnable = true;
 	rasterDesc.CullMode = D3D11_CULL_BACK;
 	rasterDesc.DepthBias = 0;
 	rasterDesc.DepthBiasClamp = 0.0f;
 	rasterDesc.DepthClipEnable = true;
 	rasterDesc.FillMode = D3D11_FILL_SOLID;
 	rasterDesc.FrontCounterClockwise = false;
-	rasterDesc.MultisampleEnable = false;
+	rasterDesc.MultisampleEnable = true;
 	rasterDesc.ScissorEnable = false;
 	rasterDesc.SlopeScaledDepthBias = 0.0f;
 
@@ -488,12 +489,13 @@ void DXManager::CreateSamplerStates()
 	D3D11_SAMPLER_DESC samplerDesc;
 
 	// create samplerstate wrap
-	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR; // use mipmapping to get better result (expensive)
+	
+	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR; 
 	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
 	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
 	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
 	samplerDesc.MipLODBias = 0.0f;
-	samplerDesc.MaxAnisotropy = 1;
+	samplerDesc.MaxAnisotropy = 16;
 	samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
 	samplerDesc.BorderColor[0] = 0;
 	samplerDesc.BorderColor[1] = 0;

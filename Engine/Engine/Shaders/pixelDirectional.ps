@@ -1,0 +1,69 @@
+
+Texture2D Textures[3];	// diffuse, normal, specular
+SamplerState SampleType[2]; // wrap,clamp 	
+ 		
+uniform	float4 u_lightColor;	
+uniform	float4 u_specularColor;	
+uniform	float3 u_lightDirection;
+uniform	float  u_specularPower;
+
+struct PixelInputType
+{
+    float4 position : SV_POSITION;
+    float2 texCoord : TEXCOORD0;
+	float3 normal : NORMAL;
+	float3 tangent : TANGENT;
+	float3 binormal : BINORMAL;
+	float3 vertexToCamera : TEXCOORD1;
+	
+};
+
+float4 Main(PixelInputType input) : SV_TARGET
+{
+           	
+	// sample from textures		
+	float4 textureColor = Textures[0].Sample(SampleType[0], input.texCoord); 
+	
+	float4 bumpValues = Textures[1].Sample(SampleType[0],input.texCoord);
+	
+	// convert normalmap sample to range -1 to 1
+	bumpValues = (bumpValues * 2.0) -1.0;
+	
+	// get tangentSpaceMatrix for normalmapping and multiply with normalmapsample to get the bumpnormal
+	float3x3 tangentSpaceMatrix =float3x3(input.tangent,input.binormal,input.normal);	
+	float3 bumpNormal = normalize(mul(bumpValues, tangentSpaceMatrix));   
+	    		  					   		
+    float lightIntensity = saturate(dot(bumpNormal, u_lightDirection)); 
+	
+	// get color based on texture, intensity and color of light
+    float4 color = textureColor * lightIntensity * u_lightColor; 
+
+	float4 specular = float4(0,0,0,0);
+	
+	// add specular effect if the light is affecting the pixel
+	if(lightIntensity > 0)
+	{
+		
+		float4 specularValue = Textures[2].Sample(SampleType[0],input.texCoord);
+	
+		//blinn phong
+		//float3 half = normalize(u_lightDirection + input.vertexToCamera);		
+		//float specularIntensity = pow( max( 0.0, dot( input.normal, half ) ), specularPower );
+		//specular = specularColor * specularIntensity;
+
+		
+		//phong
+		float3 reflection = normalize(2 * lightIntensity * input.normal - u_lightDirection);		
+		float specularIntensity = pow(saturate(dot(reflection, input.vertexToCamera)),u_specularPower);
+		specular = u_specularColor * specularIntensity;
+		specular = specular	* specularValue;
+	} 
+				
+	 color += specular;							                     
+     
+    return color;
+	
+
+	
+    
+}

@@ -228,7 +228,6 @@ void SkyBox::CreateBox()
 
 void SkyBox::Loadtexture(wchar_t* file) 
 {
-	HRESULT result;
 
 	HRESULT result = DirectX::CreateDDSTextureFromFile(DXManager::GetInstance().GetDevice(), file, NULL, &_texture);
 	if (FAILED(result))

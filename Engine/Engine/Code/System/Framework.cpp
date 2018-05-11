@@ -1,13 +1,31 @@
 #include "Framework.h"
 #include <d3d11.h>
 #include <iostream>
+#include <DirectXMath.h>
 
-#include "DXManager.h"
+#include "Framework.h"
 #include "SystemDefs.h"
-#include "TexturePool.h"
-
-
-
+#include "DXManager.h"
+#include "CameraManager.h"
+#include "ShaderManager.h"
+#include "LightManager.h"
+#include "Renderer.h"
+#include "World.h"
+#include "input.h"
+#include "Time.h"
+#include "Mesh.h"
+#include "Entity.h"
+#include "FreeMoveComponent.h"
+#include "TransformationComponent.h"
+#include "UVScrollComponent.h"
+#include "CameraComponent.h"
+#include "QuadComponent.h"
+#include "ModelComponent.h"
+#include "ParticleEmitterComponent.h"
+#include "LightPointComponent.h"
+#include <iostream>
+#include "GuiManager.h"
+#include "DebugStats.h"
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM Lparam);
 
@@ -18,8 +36,15 @@ Framework::Framework()
 	
 	DXManager::GetInstance().Initialize(_window, SCREEN_WIDTH, SCREEN_HEIGHT, V_SYNC, FULLSCREEN);
 
-	ID3D11ShaderResourceView* t = TexturePool::GetInstance().GetTexture(L"Textures/Arrow.dds");
-	ID3D11ShaderResourceView* h = TexturePool::GetInstance().GetTexture(L"Textures/ArrowUp.dds");
+	GuiManager::GetInstance().Initialize(_window);
+	// load and create our shader objects	
+	ShaderManager::GetInstance().Initialize();
+
+	// initialize directinput
+	Input::GetInstance().InitializeInputDevices(_hInstance, _window);
+
+	// start timers
+	Time::GetInstance();
 
 
 	Start();
@@ -31,14 +56,63 @@ Framework::Framework()
 Framework::~Framework()
 {
 	DXManager::GetInstance().Shutdown();
+	ShaderManager::GetInstance().Shutdown();
 	
 	UnregisterClass((LPCSTR)_applicationName.c_str(), _hInstance);	
+
+	delete _debugStats;
 }
 
 
 void Framework::Start()
 {
-	
+
+	// setup renderer to handle depthrendering
+	Renderer::GetInstance().CreateDepthMap();
+
+	// create game camera
+	Entity* cameraGame = new Entity();
+	cameraGame->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0, -20), XMFLOAT3(0,0,0));
+	CameraComponent* camGame = cameraGame->AddComponent<CameraComponent>(); camGame->Init3D(70);
+	cameraGame->AddComponent<FreeMoveComponent>()->init();
+	CameraManager::GetInstance().SetCurrentCameraGame(camGame);
+
+	// create UIcamera
+	Entity* cameraUI = new Entity();
+	cameraUI->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0, -1));
+	CameraComponent* camUI = cameraUI->AddComponent<CameraComponent>(); camUI->Init2D(XMFLOAT2(SCREEN_WIDTH, SCREEN_HEIGHT), XMFLOAT2(0.01f, 1.0f));
+	CameraManager::GetInstance().SetCurrentCameraUI(camUI);
+
+	//set ambient light color	
+	LightManager::GetInstance().SetAmbientColor(XMFLOAT4(0.1f, 0.1f, 0.1f, 1.0f));
+
+	// create directional light, set to same values as the depthrendercamera
+	TransformComponent* dt = CameraManager::GetInstance().GetCurrentCameraDepthMap()->GetComponent<TransformComponent>();
+	Entity* directionalLight = new Entity;
+	directionalLight->AddComponent<TransformComponent>()->Init(dt->GetPositionVal(), dt->GetRotationVal());
+	directionalLight->AddComponent<LightDirectionComponent>()->Init(XMFLOAT4(1.0f, 1.0f, 1.0f, 1), XMFLOAT4(1, 1, 1, 1), 100.0f);
+
+	//// test entities
+	Entity* testEntity1 = new Entity();
+	testEntity1->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0, 0), XMFLOAT3(0, 0, 0));
+	testEntity1->AddComponent<TransformationComponent>()->Init(XMFLOAT3(1.0f, 1.0f, 0.0f), 40.0f);
+	testEntity1->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::CUBE, AMBIENT | DIRECTIONAL , L"Textures/metalBox.dds", L"Textures/metalBoxNormal.dds", L"Textures/metalBoxSpecular.dds");
+
+	_debugStats = new DebugStats();
+}
+
+void Framework::Update()
+{
+	World::GetInstance().Update();
+
+	_debugStats->Update();
+
+}
+
+void Framework::Render()
+{
+	Renderer::GetInstance().Render();
+	ShaderManager::GetInstance().RenderGUI(ImGui::GetDrawData());
 }
 
 void Framework::Run()
@@ -54,26 +128,40 @@ void Framework::Run()
 			DispatchMessage(&msg);
 		}
 
+		// update imgui
+		GuiManager::GetInstance().Update();
+
+		// update timers
+		Time::GetInstance().Update();
+
+		//uppdate input
+		Input::GetInstance().Update();
 		
+		//destroy window if escape is pressed, will send quit message with windowproc to end loop
+		if (Input::GetInstance().IskeyPressed(DIK_ESCAPE))
+		{
+			DXManager::GetInstance().SetFullscreen(false);
+			DestroyWindow(_window);
+		}
+
+		// update everything
+		Update();
 		
 		DXManager& DXM = DXManager::GetInstance();
-		DXM.ClearRenderTarget(0, 0, 0, 1);
-		DXM.PresentScene();
-		
 
+		// clear rendertarget from last frame
+		DXM.ClearRenderTarget(0, 0, 0, 1);
+
+		// setup ImGui buffers before rendering
+		ImGui::Render();
+
+		// render everything
+		Render();
+
+		// swap buffers
+		DXM.PresentScene();
 	}
 }
-
-void Framework::Update()
-{
-
-}
-
-void Framework::Render()
-{
-
-}
-
 
 void Framework::CreateWindowDx11(char* title, int x, int y, int width, int height)
 {
@@ -146,6 +234,9 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM Lparam)
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		SetFocus(GetConsoleWindow());
+		break;
+	case WM_SETCURSOR:
+		GuiManager::GetInstance().UpdateMouseCursor();
 		break;
 	default:
 		return DefWindowProc(hwnd, msg, wParam, Lparam);

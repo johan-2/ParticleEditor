@@ -15,9 +15,9 @@ UVScrollComponent::~UVScrollComponent()
 {
 }
 
-void UVScrollComponent::Init(D3DXVECTOR2 speed)
+void UVScrollComponent::Init(XMFLOAT2 speed)
 {
-	_uvOffset = D3DXVECTOR2(0, 0);
+	_uvOffset = XMFLOAT2(0, 0);
 	_scrollSpeed = speed;
 
 	_modelComponent = GetComponent<ModelComponent>();
@@ -28,7 +28,12 @@ void UVScrollComponent::Update()
 {
 	const float& delta = Time::GetInstance().GetDeltaTime();
 
-	_uvOffset += _scrollSpeed * delta;
+	XMFLOAT2 translation;
+	translation.x = _scrollSpeed.x * delta;
+	translation.y = _scrollSpeed.y * delta;
+
+	_uvOffset.x += translation.x;
+	_uvOffset.y += translation.y;
 
 	_modelComponent->GetMesh()->SetUvOffset(_uvOffset);
 	
