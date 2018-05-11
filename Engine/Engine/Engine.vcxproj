@@ -70,10 +70,10 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SolutionDir)Engine/Code/System;$(SolutionDir)Engine/Code/Utils;$(SolutionDir)Engine/Code;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Engine/Code/System;$(SolutionDir)Engine/Code/Utils;$(SolutionDir)Engine/Code;$(SolutionDir)Engine/Code/ComponentSystem;$(SolutionDir)Engine/Code/Components;$(SolutionDir)Engine/Code/Managers;$(SolutionDir)Engine/Code/ImGUI;$(SolutionDir)Engine/Code/Input;$(SolutionDir)Engine/Code/rapidjson;$(SolutionDir)Engine/Code/Renderer;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)Engine/Code/System;$(SolutionDir)Engine/Code/Utils;$(SolutionDir)Engine/Code;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Engine/Code/System;$(SolutionDir)Engine/Code/Utils;$(SolutionDir)Engine/Code;$(SolutionDir)Engine/Code/ComponentSystem;$(SolutionDir)Engine/Code/Components;$(SolutionDir)Engine/Code/Managers;$(SolutionDir)Engine/Code/ImGUI;$(SolutionDir)Engine/Code/Input;$(SolutionDir)Engine/Code/rapidjson;$(SolutionDir)Engine/Code/Renderer;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -82,7 +82,7 @@
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>d3d11.lib;D3DCompiler.lib;dxgi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;D3DCompiler.lib;dxgi.lib;XInput.lib;dinput8.lib;dxguid.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -92,7 +92,7 @@
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>d3d11.lib;D3DCompiler.lib;dxgi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;D3DCompiler.lib;dxgi.lib;XInput.lib;dinput8.lib;dxguid.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -122,18 +122,78 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Code\ComponentSystem\Entity.cpp" />
+    <ClCompile Include="Code\ComponentSystem\IComponent.cpp" />
+    <ClCompile Include="Code\ComponentSystem\World.cpp" />
+    <ClCompile Include="Code\Components\CameraComponent.cpp" />
+    <ClCompile Include="Code\Components\FreeMoveComponent.cpp" />
+    <ClCompile Include="Code\Components\LightDirectionComponent.cpp" />
+    <ClCompile Include="Code\Components\LightPointComponent.cpp" />
+    <ClCompile Include="Code\Components\ModelComponent.cpp" />
+    <ClCompile Include="Code\Components\ParticleEmitterComponent.cpp" />
+    <ClCompile Include="Code\Components\QuadComponent.cpp" />
+    <ClCompile Include="Code\Components\TransformationComponent.cpp" />
+    <ClCompile Include="Code\Components\TransformComponent.cpp" />
+    <ClCompile Include="Code\Components\UVScrollComponent.cpp" />
     <ClCompile Include="Code\DDSTextureLoader\DDSTextureLoader.cpp" />
+    <ClCompile Include="Code\ImGUI\imgui.cpp" />
+    <ClCompile Include="Code\ImGUI\imgui_demo.cpp" />
+    <ClCompile Include="Code\ImGUI\imgui_draw.cpp" />
+    <ClCompile Include="Code\Input\Gamepad.cpp" />
+    <ClCompile Include="Code\Input\Input.cpp" />
+    <ClCompile Include="Code\Managers\CameraManager.cpp" />
+    <ClCompile Include="Code\Managers\GuiManager.cpp" />
+    <ClCompile Include="Code\Managers\LightManager.cpp" />
+    <ClCompile Include="Code\Renderer\Mesh.cpp" />
+    <ClCompile Include="Code\Renderer\Renderer.cpp" />
+    <ClCompile Include="Code\Renderer\RenderToTexture.cpp" />
+    <ClCompile Include="Code\Renderer\ShaderManager.cpp" />
+    <ClCompile Include="Code\Renderer\SkyBox.cpp" />
     <ClCompile Include="Code\System\DXManager.cpp" />
     <ClCompile Include="Code\System\Framework.cpp" />
+    <ClCompile Include="Code\Utils\DebugStats.cpp" />
     <ClCompile Include="Code\Utils\TexturePool.cpp" />
+    <ClCompile Include="Code\Utils\Time.cpp" />
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Code\ComponentSystem\ComponentTypes.h" />
+    <ClInclude Include="Code\ComponentSystem\Entity.h" />
+    <ClInclude Include="Code\ComponentSystem\IComponent.h" />
+    <ClInclude Include="Code\ComponentSystem\World.h" />
+    <ClInclude Include="Code\Components\CameraComponent.h" />
+    <ClInclude Include="Code\Components\FreeMoveComponent.h" />
+    <ClInclude Include="Code\Components\LightDirectionComponent.h" />
+    <ClInclude Include="Code\Components\LightPointComponent.h" />
+    <ClInclude Include="Code\Components\ModelComponent.h" />
+    <ClInclude Include="Code\Components\ParticleEmitterComponent.h" />
+    <ClInclude Include="Code\Components\QuadComponent.h" />
+    <ClInclude Include="Code\Components\TransformationComponent.h" />
+    <ClInclude Include="Code\Components\TransformComponent.h" />
+    <ClInclude Include="Code\Components\UVScrollComponent.h" />
     <ClInclude Include="Code\DDSTextureLoader\DDSTextureLoader.h" />
+    <ClInclude Include="Code\ImGUI\imconfig.h" />
+    <ClInclude Include="Code\ImGUI\imgui.h" />
+    <ClInclude Include="Code\ImGUI\imgui_internal.h" />
+    <ClInclude Include="Code\ImGUI\stb_rect_pack.h" />
+    <ClInclude Include="Code\ImGUI\stb_textedit.h" />
+    <ClInclude Include="Code\ImGUI\stb_truetype.h" />
+    <ClInclude Include="Code\Input\Gamepad.h" />
+    <ClInclude Include="Code\Input\Input.h" />
+    <ClInclude Include="Code\Managers\CameraManager.h" />
+    <ClInclude Include="Code\Managers\GuiManager.h" />
+    <ClInclude Include="Code\Managers\LightManager.h" />
+    <ClInclude Include="Code\Renderer\Mesh.h" />
+    <ClInclude Include="Code\Renderer\Renderer.h" />
+    <ClInclude Include="Code\Renderer\RenderToTexture.h" />
+    <ClInclude Include="Code\Renderer\ShaderManager.h" />
+    <ClInclude Include="Code\Renderer\SkyBox.h" />
     <ClInclude Include="Code\System\DXManager.h" />
     <ClInclude Include="Code\System\Framework.h" />
+    <ClInclude Include="Code\Utils\DebugStats.h" />
     <ClInclude Include="Code\Utils\SystemDefs.h" />
     <ClInclude Include="Code\Utils\TexturePool.h" />
+    <ClInclude Include="Code\Utils\Time.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

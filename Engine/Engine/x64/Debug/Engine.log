@@ -1,3 +1,1120 @@
-﻿  Framework.cpp
-  Engine.vcxproj -> C:\Users\nilss\Desktop\EngineDx11\Engine\x64\Debug\Engine.exe
-  Engine.vcxproj -> C:\Users\nilss\Desktop\EngineDx11\Engine\x64\Debug\Engine.pdb (Partial PDB)
+﻿  DebugStats.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(10): error C2061: syntax error: identifier 'D3DXVECTOR3'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(12): error C3646: 'GetWorldMatrix': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(12): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(12): error C2238: unexpected token(s) preceding ';'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(14): error C2143: syntax error: missing ';' before '&'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(14): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(14): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(15): error C3646: 'GetPositionVal': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(15): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(15): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(17): error C2143: syntax error: missing ';' before '&'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(17): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(17): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(18): error C3646: 'GetRotationVal': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(18): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(18): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(20): error C2143: syntax error: missing ';' before '&'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(20): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(20): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(21): error C3646: 'GetScaleVal': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(21): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(21): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(23): error C3646: 'GetRight': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(23): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(23): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(24): error C3646: 'GetForward': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(24): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(24): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(25): error C3646: 'GetUp': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(25): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(25): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C2061: syntax error: identifier 'D3DXVECTOR3'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(42): error C3646: 'CalculateAxises': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(42): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(42): error C2238: unexpected token(s) preceding ';'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(44): error C3646: '_position': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(44): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(45): error C3646: '_rotation': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(45): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(46): error C3646: '_scale': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(46): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C2065: 'forward': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C2065: 'right': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C2065: 'up': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C3861: 'CalculateAxises': identifier not found
+c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\debugstats.cpp(27): error C2039: 'GetPositionRef': is not a member of 'TransformComponent'
+  c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(4): note: see declaration of 'TransformComponent'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\debugstats.cpp(27): error C2530: 'camPos': references must be initialized
+  SkyBox.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(45): error C2061: syntax error: identifier 'D3DXMATRIX'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(96): error C3646: 'view': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(96): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(97): error C3646: 'projection': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(97): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(101): error C3646: 'color': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(101): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(107): error C3646: 'world': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(107): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(108): error C3646: 'view': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(108): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(109): error C3646: 'projection': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(109): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(110): error C3646: 'uvOffset': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(110): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(111): error C3646: 'pad': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(111): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(115): error C3646: 'color': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(115): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(121): error C3646: 'world': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(121): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(122): error C3646: 'view': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(122): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(123): error C3646: 'projection': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(123): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(124): error C3646: 'camPos': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(124): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(126): error C3646: 'uvOffset': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(126): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(127): error C3646: 'pad2': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(127): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(131): error C3646: 'diffuseColor': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(131): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(132): error C3646: 'specularColor': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(132): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(133): error C3646: 'lightDir': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(133): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(139): error C3646: 'world': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(139): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(140): error C3646: 'view': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(140): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(141): error C3646: 'projection': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(141): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(142): error C3646: 'lightView': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(142): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(143): error C3646: 'lightProjection': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(143): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(145): error C3646: 'camPos': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(145): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(147): error C3646: 'uvOffset': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(147): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(148): error C3646: 'pad2': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(148): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(153): error C3646: 'diffuseColor': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(153): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(154): error C3646: 'specularColor': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(154): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(155): error C3646: 'lightDir': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(155): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(162): error C3646: 'world': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(162): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(163): error C3646: 'view': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(163): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(164): error C3646: 'projection': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(164): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(169): error C3646: 'world': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(169): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(170): error C3646: 'view': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(170): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(171): error C3646: 'projection': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(171): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(176): error C3646: 'view': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(176): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(177): error C3646: 'projection': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(177): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(187): error C3646: 'world': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(187): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(188): error C3646: 'view': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(188): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(189): error C3646: 'projection': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(189): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(191): error C3646: 'camPos': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(191): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(193): error C3646: 'uvOffset': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(193): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(194): error C3646: 'pad2': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(194): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(200): error C3646: 'lightPosition': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(200): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(202): error C3646: 'color': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(202): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(204): error C3646: 'specularColor': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(204): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(10): error C2061: syntax error: identifier 'D3DXVECTOR3'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(12): error C3646: 'GetWorldMatrix': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(12): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(12): error C2238: unexpected token(s) preceding ';'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(14): error C2143: syntax error: missing ';' before '&'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(14): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(14): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(15): error C3646: 'GetPositionVal': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(15): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(15): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(17): error C2143: syntax error: missing ';' before '&'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(17): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(17): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(18): error C3646: 'GetRotationVal': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(18): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(18): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(20): error C2143: syntax error: missing ';' before '&'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(20): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(20): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(21): error C3646: 'GetScaleVal': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(21): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(21): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(23): error C3646: 'GetRight': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(23): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(23): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(24): error C3646: 'GetForward': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(24): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(24): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(25): error C3646: 'GetUp': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(25): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(25): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C2061: syntax error: identifier 'D3DXVECTOR3'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(42): error C3646: 'CalculateAxises': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(42): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(42): error C2238: unexpected token(s) preceding ';'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(44): error C3646: '_position': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(44): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(45): error C3646: '_rotation': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(45): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(46): error C3646: '_scale': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(46): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C2065: 'forward': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C2065: 'right': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C2065: 'up': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C3861: 'CalculateAxises': identifier not found
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\skybox.cpp(233): error C2086: 'HRESULT result': redefinition
+  c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\skybox.cpp(231): note: see declaration of 'result'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\skybox.cpp(245): error C2039: 'GetPositionVal': is not a member of 'TransformComponent'
+  c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(4): note: see declaration of 'TransformComponent'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\skybox.cpp(273): error C2660: 'ShaderManager::RenderSkyBox': function does not take 1 arguments
+  ShaderManager.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(45): error C2061: syntax error: identifier 'D3DXMATRIX'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(96): error C3646: 'view': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(96): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(97): error C3646: 'projection': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(97): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(101): error C3646: 'color': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(101): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(107): error C3646: 'world': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(107): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(108): error C3646: 'view': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(108): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(109): error C3646: 'projection': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(109): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(110): error C3646: 'uvOffset': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(110): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(111): error C3646: 'pad': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(111): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(115): error C3646: 'color': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(115): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(121): error C3646: 'world': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(121): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(122): error C3646: 'view': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(122): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(123): error C3646: 'projection': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(123): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(124): error C3646: 'camPos': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(124): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(126): error C3646: 'uvOffset': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(126): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(127): error C3646: 'pad2': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(127): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(131): error C3646: 'diffuseColor': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(131): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(132): error C3646: 'specularColor': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(132): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(133): error C3646: 'lightDir': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(133): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(139): error C3646: 'world': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(139): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(140): error C3646: 'view': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(140): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(141): error C3646: 'projection': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(141): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(142): error C3646: 'lightView': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(142): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(143): error C3646: 'lightProjection': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(143): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(145): error C3646: 'camPos': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(145): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(147): error C3646: 'uvOffset': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(147): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(148): error C3646: 'pad2': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(148): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(153): error C3646: 'diffuseColor': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(153): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(154): error C3646: 'specularColor': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(154): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(155): error C3646: 'lightDir': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(155): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(162): error C3646: 'world': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(162): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(163): error C3646: 'view': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(163): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(164): error C3646: 'projection': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(164): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(169): error C3646: 'world': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(169): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(170): error C3646: 'view': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(170): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(171): error C3646: 'projection': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(171): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(176): error C3646: 'view': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(176): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(177): error C3646: 'projection': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(177): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(187): error C3646: 'world': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(187): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(188): error C3646: 'view': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(188): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(189): error C3646: 'projection': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(189): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(191): error C3646: 'camPos': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(191): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(193): error C3646: 'uvOffset': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(193): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(194): error C3646: 'pad2': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(194): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(200): error C3646: 'lightPosition': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(200): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(202): error C3646: 'color': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(202): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(204): error C3646: 'specularColor': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(204): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(10): error C2061: syntax error: identifier 'D3DXVECTOR3'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(12): error C3646: 'GetWorldMatrix': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(12): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(12): error C2238: unexpected token(s) preceding ';'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(14): error C2143: syntax error: missing ';' before '&'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(14): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(14): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(15): error C3646: 'GetPositionVal': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(15): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(15): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(17): error C2143: syntax error: missing ';' before '&'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(17): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(17): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(18): error C3646: 'GetRotationVal': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(18): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(18): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(20): error C2143: syntax error: missing ';' before '&'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(20): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(20): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(21): error C3646: 'GetScaleVal': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(21): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(21): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(23): error C3646: 'GetRight': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(23): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(23): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(24): error C3646: 'GetForward': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(24): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(24): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(25): error C3646: 'GetUp': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(25): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(25): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C2061: syntax error: identifier 'D3DXVECTOR3'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(42): error C3646: 'CalculateAxises': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(42): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(42): error C2238: unexpected token(s) preceding ';'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(44): error C3646: '_position': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(44): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(45): error C3646: '_rotation': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(45): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(46): error C3646: '_scale': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(46): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C2065: 'forward': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C2065: 'right': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C2065: 'up': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C3861: 'CalculateAxises': identifier not found
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\lightdirectioncomponent.h(21): error C2039: 'GetForward': is not a member of 'TransformComponent'
+  c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(4): note: see declaration of 'TransformComponent'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\mesh.h(36): error C2039: 'GetWorldMatrix': is not a member of 'TransformComponent'
+  c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(4): note: see declaration of 'TransformComponent'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\mesh.h(46): error C2039: 'GetPositionVal': is not a member of 'TransformComponent'
+  c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(4): note: see declaration of 'TransformComponent'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(280): error C2065: 'D3DXVECTOR3': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(280): error C2146: syntax error: missing ';' before identifier 'cameraPos'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(280): error C2065: 'cameraPos': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(280): error C2039: 'GetPositionRef': is not a member of 'TransformComponent'
+  c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particleemittercomponent.h(10): note: see declaration of 'TransformComponent'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(290): error C2065: 'D3DXMATRIX': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(290): error C2146: syntax error: missing ';' before identifier 'viewMatrix'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(290): error C2065: 'viewMatrix': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(291): error C2065: 'D3DXMATRIX': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(291): error C2146: syntax error: missing ';' before identifier 'projectionMatrix'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(291): error C2065: 'projectionMatrix': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(293): error C2065: 'viewMatrix': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(293): error C3861: 'D3DXMatrixTranspose': identifier not found
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(293): fatal error C1003: error count exceeds 100; stopping compilation
+  Renderer.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(45): error C2061: syntax error: identifier 'D3DXMATRIX'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(96): error C3646: 'view': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(96): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(97): error C3646: 'projection': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(97): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(101): error C3646: 'color': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(101): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(107): error C3646: 'world': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(107): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(108): error C3646: 'view': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(108): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(109): error C3646: 'projection': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(109): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(110): error C3646: 'uvOffset': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(110): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(111): error C3646: 'pad': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(111): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(115): error C3646: 'color': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(115): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(121): error C3646: 'world': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(121): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(122): error C3646: 'view': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(122): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(123): error C3646: 'projection': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(123): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(124): error C3646: 'camPos': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(124): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(126): error C3646: 'uvOffset': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(126): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(127): error C3646: 'pad2': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(127): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(131): error C3646: 'diffuseColor': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(131): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(132): error C3646: 'specularColor': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(132): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(133): error C3646: 'lightDir': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(133): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(139): error C3646: 'world': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(139): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(140): error C3646: 'view': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(140): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(141): error C3646: 'projection': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(141): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(142): error C3646: 'lightView': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(142): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(143): error C3646: 'lightProjection': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(143): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(145): error C3646: 'camPos': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(145): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(147): error C3646: 'uvOffset': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(147): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(148): error C3646: 'pad2': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(148): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(153): error C3646: 'diffuseColor': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(153): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(154): error C3646: 'specularColor': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(154): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(155): error C3646: 'lightDir': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(155): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(162): error C3646: 'world': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(162): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(163): error C3646: 'view': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(163): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(164): error C3646: 'projection': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(164): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(169): error C3646: 'world': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(169): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(170): error C3646: 'view': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(170): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(171): error C3646: 'projection': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(171): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(176): error C3646: 'view': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(176): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(177): error C3646: 'projection': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(177): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(187): error C3646: 'world': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(187): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(188): error C3646: 'view': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(188): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(189): error C3646: 'projection': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(189): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(191): error C3646: 'camPos': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(191): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(193): error C3646: 'uvOffset': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(193): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(194): error C3646: 'pad2': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(194): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(200): error C3646: 'lightPosition': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(200): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(202): error C3646: 'color': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(202): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(204): error C3646: 'specularColor': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.h(204): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(10): error C2061: syntax error: identifier 'D3DXVECTOR3'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(12): error C3646: 'GetWorldMatrix': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(12): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(12): error C2238: unexpected token(s) preceding ';'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(14): error C2143: syntax error: missing ';' before '&'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(14): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(14): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(15): error C3646: 'GetPositionVal': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(15): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(15): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(17): error C2143: syntax error: missing ';' before '&'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(17): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(17): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(18): error C3646: 'GetRotationVal': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(18): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(18): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(20): error C2143: syntax error: missing ';' before '&'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(20): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(20): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(21): error C3646: 'GetScaleVal': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(21): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(21): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(23): error C3646: 'GetRight': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(23): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(23): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(24): error C3646: 'GetForward': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(24): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(24): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(25): error C3646: 'GetUp': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(25): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(25): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C2061: syntax error: identifier 'D3DXVECTOR3'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(42): error C3646: 'CalculateAxises': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(42): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(42): error C2238: unexpected token(s) preceding ';'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(44): error C3646: '_position': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(44): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(45): error C3646: '_rotation': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(45): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(46): error C3646: '_scale': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(46): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C2065: 'forward': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C2065: 'right': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C2065: 'up': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C3861: 'CalculateAxises': identifier not found
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\mesh.h(36): error C2039: 'GetWorldMatrix': is not a member of 'TransformComponent'
+  c:\users\nilss\desktop\enginedx11\engine\engine\code\components\cameracomponent.h(9): note: see declaration of 'TransformComponent'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\mesh.h(46): error C2039: 'GetPositionVal': is not a member of 'TransformComponent'
+  c:\users\nilss\desktop\enginedx11\engine\engine\code\components\cameracomponent.h(9): note: see declaration of 'TransformComponent'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\renderer.cpp(45): warning C4244: 'argument': conversion from 'const float' to 'unsigned int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\renderer.cpp(49): error C2660: 'TransformComponent::Init': function does not take 2 arguments
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\renderer.cpp(60): error C2664: 'SkyBox::SkyBox(const SkyBox &)': cannot convert argument 1 from 'const char [24]' to 'wchar_t *'
+  c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\renderer.cpp(60): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\renderer.cpp(257): error C2039: 'GetPositionVal': is not a member of 'TransformComponent'
+  c:\users\nilss\desktop\enginedx11\engine\engine\code\components\cameracomponent.h(9): note: see declaration of 'TransformComponent'
+  Mesh.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(10): error C2061: syntax error: identifier 'D3DXVECTOR3'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(12): error C3646: 'GetWorldMatrix': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(12): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(12): error C2238: unexpected token(s) preceding ';'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(14): error C2143: syntax error: missing ';' before '&'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(14): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(14): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(15): error C3646: 'GetPositionVal': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(15): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(15): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(17): error C2143: syntax error: missing ';' before '&'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(17): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(17): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(18): error C3646: 'GetRotationVal': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(18): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(18): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(20): error C2143: syntax error: missing ';' before '&'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(20): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(20): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(21): error C3646: 'GetScaleVal': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(21): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(21): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(23): error C3646: 'GetRight': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(23): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(23): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(24): error C3646: 'GetForward': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(24): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(24): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(25): error C3646: 'GetUp': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(25): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(25): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C2061: syntax error: identifier 'D3DXVECTOR3'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(42): error C3646: 'CalculateAxises': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(42): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(42): error C2238: unexpected token(s) preceding ';'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(44): error C3646: '_position': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(44): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(45): error C3646: '_rotation': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(45): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(46): error C3646: '_scale': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(46): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C2065: 'forward': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C2065: 'right': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C2065: 'up': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C3861: 'CalculateAxises': identifier not found
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\mesh.h(36): error C2039: 'GetWorldMatrix': is not a member of 'TransformComponent'
+  c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(4): note: see declaration of 'TransformComponent'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\mesh.h(46): error C2039: 'GetPositionVal': is not a member of 'TransformComponent'
+  c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(4): note: see declaration of 'TransformComponent'
+  LightManager.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(10): error C2061: syntax error: identifier 'D3DXVECTOR3'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(12): error C3646: 'GetWorldMatrix': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(12): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(12): error C2238: unexpected token(s) preceding ';'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(14): error C2143: syntax error: missing ';' before '&'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(14): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(14): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(15): error C3646: 'GetPositionVal': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(15): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(15): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(17): error C2143: syntax error: missing ';' before '&'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(17): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(17): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(18): error C3646: 'GetRotationVal': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(18): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(18): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(20): error C2143: syntax error: missing ';' before '&'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(20): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(20): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(21): error C3646: 'GetScaleVal': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(21): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(21): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(23): error C3646: 'GetRight': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(23): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(23): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(24): error C3646: 'GetForward': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(24): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(24): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(25): error C3646: 'GetUp': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(25): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(25): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C2061: syntax error: identifier 'D3DXVECTOR3'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(42): error C3646: 'CalculateAxises': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(42): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(42): error C2238: unexpected token(s) preceding ';'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(44): error C3646: '_position': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(44): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(45): error C3646: '_rotation': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(45): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(46): error C3646: '_scale': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(46): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C2065: 'forward': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C2065: 'right': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C2065: 'up': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C3861: 'CalculateAxises': identifier not found
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\lightdirectioncomponent.h(21): error C2039: 'GetForward': is not a member of 'TransformComponent'
+  c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(4): note: see declaration of 'TransformComponent'
+  UVScrollComponent.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\uvscrollcomponent.h(14): error C2061: syntax error: identifier 'D3DXVECTOR2'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\uvscrollcomponent.h(21): error C3646: '_scrollSpeed': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\uvscrollcomponent.h(21): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\uvscrollcomponent.h(22): error C3646: '_uvOffset': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\uvscrollcomponent.h(22): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(10): error C2061: syntax error: identifier 'D3DXVECTOR3'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(12): error C3646: 'GetWorldMatrix': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(12): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(12): error C2238: unexpected token(s) preceding ';'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(14): error C2143: syntax error: missing ';' before '&'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(14): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(14): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(15): error C3646: 'GetPositionVal': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(15): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(15): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(17): error C2143: syntax error: missing ';' before '&'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(17): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(17): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(18): error C3646: 'GetRotationVal': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(18): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(18): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(20): error C2143: syntax error: missing ';' before '&'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(20): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(20): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(21): error C3646: 'GetScaleVal': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(21): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(21): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(23): error C3646: 'GetRight': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(23): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(23): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(24): error C3646: 'GetForward': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(24): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(24): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(25): error C3646: 'GetUp': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(25): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(25): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C2061: syntax error: identifier 'D3DXVECTOR3'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(42): error C3646: 'CalculateAxises': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(42): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(42): error C2238: unexpected token(s) preceding ';'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(44): error C3646: '_position': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(44): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(45): error C3646: '_rotation': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(45): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(46): error C3646: '_scale': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(46): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C2065: 'forward': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C2065: 'right': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C2065: 'up': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C3861: 'CalculateAxises': identifier not found
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\mesh.h(36): error C2039: 'GetWorldMatrix': is not a member of 'TransformComponent'
+  c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(4): note: see declaration of 'TransformComponent'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\mesh.h(46): error C2039: 'GetPositionVal': is not a member of 'TransformComponent'
+  c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(4): note: see declaration of 'TransformComponent'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\uvscrollcomponent.cpp(18): error C2065: 'D3DXVECTOR2': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\uvscrollcomponent.cpp(18): error C2146: syntax error: missing ')' before identifier 'speed'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\uvscrollcomponent.cpp(19): error C2143: syntax error: missing ';' before '{'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\uvscrollcomponent.cpp(19): error C2447: '{': missing function header (old-style formal list?)
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\uvscrollcomponent.cpp(31): error C2065: '_uvOffset': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\uvscrollcomponent.cpp(31): error C2065: '_scrollSpeed': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\uvscrollcomponent.cpp(33): error C2065: '_uvOffset': undeclared identifier
+  TransformationComponent.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(10): error C2061: syntax error: identifier 'D3DXVECTOR3'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(12): error C3646: 'GetWorldMatrix': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(12): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(12): error C2238: unexpected token(s) preceding ';'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(14): error C2143: syntax error: missing ';' before '&'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(14): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(14): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(15): error C3646: 'GetPositionVal': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(15): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(15): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(17): error C2143: syntax error: missing ';' before '&'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(17): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(17): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(18): error C3646: 'GetRotationVal': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(18): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(18): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(20): error C2143: syntax error: missing ';' before '&'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(20): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(20): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(21): error C3646: 'GetScaleVal': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(21): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(21): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(23): error C3646: 'GetRight': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(23): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(23): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(24): error C3646: 'GetForward': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(24): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(24): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(25): error C3646: 'GetUp': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(25): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(25): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C2061: syntax error: identifier 'D3DXVECTOR3'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(42): error C3646: 'CalculateAxises': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(42): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(42): error C2238: unexpected token(s) preceding ';'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(44): error C3646: '_position': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(44): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(45): error C3646: '_rotation': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(45): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(46): error C3646: '_scale': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(46): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C2065: 'forward': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C2065: 'right': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C2065: 'up': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C3861: 'CalculateAxises': identifier not found
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformationcomponent.cpp(33): error C2039: 'GetRotationRef': is not a member of 'TransformComponent'
+  c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(4): note: see declaration of 'TransformComponent'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformationcomponent.cpp(33): error C2660: 'DirectX::XMStoreFloat3': function does not take 1 arguments
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformationcomponent.cpp(43): error C2039: 'GetPositionRef': is not a member of 'TransformComponent'
+  c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(4): note: see declaration of 'TransformComponent'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformationcomponent.cpp(43): error C2039: 'GetRight': is not a member of 'TransformComponent'
+  c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(4): note: see declaration of 'TransformComponent'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformationcomponent.cpp(43): error C2660: 'DirectX::XMVectorAdd': function does not take 1 arguments
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformationcomponent.cpp(43): error C2660: 'DirectX::XMStoreFloat3': function does not take 1 arguments
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformationcomponent.cpp(46): error C2039: 'GetPositionRef': is not a member of 'TransformComponent'
+  c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(4): note: see declaration of 'TransformComponent'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformationcomponent.cpp(46): error C2039: 'GetForward': is not a member of 'TransformComponent'
+  c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(4): note: see declaration of 'TransformComponent'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformationcomponent.cpp(46): error C2660: 'DirectX::XMVectorAdd': function does not take 1 arguments
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformationcomponent.cpp(46): error C2660: 'DirectX::XMStoreFloat3': function does not take 1 arguments
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformationcomponent.cpp(49): error C2039: 'GetPositionRef': is not a member of 'TransformComponent'
+  c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(4): note: see declaration of 'TransformComponent'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformationcomponent.cpp(49): error C2039: 'GetUp': is not a member of 'TransformComponent'
+  c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(4): note: see declaration of 'TransformComponent'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformationcomponent.cpp(49): error C2660: 'DirectX::XMVectorAdd': function does not take 1 arguments
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformationcomponent.cpp(49): error C2660: 'DirectX::XMStoreFloat3': function does not take 1 arguments
+  TransformComponent.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(10): error C2061: syntax error: identifier 'D3DXVECTOR3'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(12): error C3646: 'GetWorldMatrix': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(12): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(12): error C2238: unexpected token(s) preceding ';'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(14): error C2143: syntax error: missing ';' before '&'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(14): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(14): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(15): error C3646: 'GetPositionVal': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(15): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(15): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(17): error C2143: syntax error: missing ';' before '&'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(17): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(17): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(18): error C3646: 'GetRotationVal': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(18): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(18): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(20): error C2143: syntax error: missing ';' before '&'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(20): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(20): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(21): error C3646: 'GetScaleVal': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(21): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(21): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(23): error C3646: 'GetRight': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(23): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(23): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(24): error C3646: 'GetForward': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(24): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(24): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(25): error C3646: 'GetUp': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(25): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(25): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C2061: syntax error: identifier 'D3DXVECTOR3'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(42): error C3646: 'CalculateAxises': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(42): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(42): error C2238: unexpected token(s) preceding ';'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(44): error C3646: '_position': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(44): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(45): error C3646: '_rotation': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(45): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(46): error C3646: '_scale': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(46): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C2065: 'forward': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C2065: 'right': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C2065: 'up': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C3861: 'CalculateAxises': identifier not found
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.cpp(11): error C2065: 'D3DXVECTOR3': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.cpp(11): error C2146: syntax error: missing ')' before identifier 'position'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.cpp(12): error C2143: syntax error: missing ';' before '{'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.cpp(12): error C2447: '{': missing function header (old-style formal list?)
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.cpp(18): error C2039: 'GetWorldMatrix': is not a member of 'TransformComponent'
+  c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(4): note: see declaration of 'TransformComponent'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.cpp(18): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.cpp(18): error C2146: syntax error: missing ';' before identifier 'GetWorldMatrix'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.cpp(19): error C2143: syntax error: missing ';' before '{'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.cpp(19): error C2447: '{': missing function header (old-style formal list?)
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.cpp(37): error C2039: 'CalculateAxises': is not a member of 'TransformComponent'
+  c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(4): note: see declaration of 'TransformComponent'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.cpp(37): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.cpp(37): error C2146: syntax error: missing ';' before identifier 'CalculateAxises'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.cpp(38): error C2143: syntax error: missing ';' before '{'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.cpp(38): error C2447: '{': missing function header (old-style formal list?)
+  ParticleEmitterComponent.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(10): error C2061: syntax error: identifier 'D3DXVECTOR3'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(12): error C3646: 'GetWorldMatrix': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(12): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(12): error C2238: unexpected token(s) preceding ';'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(14): error C2143: syntax error: missing ';' before '&'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(14): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(14): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(15): error C3646: 'GetPositionVal': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(15): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(15): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(17): error C2143: syntax error: missing ';' before '&'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(17): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(17): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(18): error C3646: 'GetRotationVal': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(18): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(18): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(20): error C2143: syntax error: missing ';' before '&'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(20): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(20): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(21): error C3646: 'GetScaleVal': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(21): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(21): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(23): error C3646: 'GetRight': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(23): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(23): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(24): error C3646: 'GetForward': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(24): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(24): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(25): error C3646: 'GetUp': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(25): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(25): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C2061: syntax error: identifier 'D3DXVECTOR3'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(42): error C3646: 'CalculateAxises': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(42): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(42): error C2238: unexpected token(s) preceding ';'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(44): error C3646: '_position': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(44): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(45): error C3646: '_rotation': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(45): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(46): error C3646: '_scale': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(46): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C2065: 'forward': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C2065: 'right': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C2065: 'up': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C3861: 'CalculateAxises': identifier not found
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particleemittercomponent.cpp(46): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particleemittercomponent.cpp(117): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particleemittercomponent.cpp(218): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particleemittercomponent.cpp(297): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particleemittercomponent.cpp(452): warning C4244: 'initializing': conversion from 'std::chrono::system_clock::rep' to 'unsigned int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particleemittercomponent.cpp(651): warning C4018: '<': signed/unsigned mismatch
+  ModelComponent.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(10): error C2061: syntax error: identifier 'D3DXVECTOR3'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(12): error C3646: 'GetWorldMatrix': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(12): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(12): error C2238: unexpected token(s) preceding ';'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(14): error C2143: syntax error: missing ';' before '&'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(14): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(14): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(15): error C3646: 'GetPositionVal': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(15): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(15): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(17): error C2143: syntax error: missing ';' before '&'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(17): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(17): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(18): error C3646: 'GetRotationVal': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(18): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(18): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(20): error C2143: syntax error: missing ';' before '&'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(20): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(20): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(21): error C3646: 'GetScaleVal': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(21): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(21): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(23): error C3646: 'GetRight': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(23): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(23): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(24): error C3646: 'GetForward': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(24): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(24): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(25): error C3646: 'GetUp': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(25): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(25): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C2061: syntax error: identifier 'D3DXVECTOR3'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(42): error C3646: 'CalculateAxises': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(42): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(42): error C2238: unexpected token(s) preceding ';'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(44): error C3646: '_position': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(44): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(45): error C3646: '_rotation': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(45): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(46): error C3646: '_scale': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(46): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C2065: 'forward': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C2065: 'right': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C2065: 'up': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C3861: 'CalculateAxises': identifier not found
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\mesh.h(36): error C2039: 'GetWorldMatrix': is not a member of 'TransformComponent'
+  c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(4): note: see declaration of 'TransformComponent'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\mesh.h(46): error C2039: 'GetPositionVal': is not a member of 'TransformComponent'
+  c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(4): note: see declaration of 'TransformComponent'
+  LightPointComponent.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(10): error C2061: syntax error: identifier 'D3DXVECTOR3'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(12): error C3646: 'GetWorldMatrix': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(12): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(12): error C2238: unexpected token(s) preceding ';'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(14): error C2143: syntax error: missing ';' before '&'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(14): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(14): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(15): error C3646: 'GetPositionVal': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(15): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(15): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(17): error C2143: syntax error: missing ';' before '&'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(17): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(17): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(18): error C3646: 'GetRotationVal': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(18): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(18): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(20): error C2143: syntax error: missing ';' before '&'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(20): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(20): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(21): error C3646: 'GetScaleVal': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(21): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(21): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(23): error C3646: 'GetRight': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(23): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(23): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(24): error C3646: 'GetForward': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(24): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(24): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(25): error C3646: 'GetUp': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(25): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(25): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C2061: syntax error: identifier 'D3DXVECTOR3'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(42): error C3646: 'CalculateAxises': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(42): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(42): error C2238: unexpected token(s) preceding ';'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(44): error C3646: '_position': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(44): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(45): error C3646: '_rotation': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(45): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(46): error C3646: '_scale': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(46): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C2065: 'forward': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C2065: 'right': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C2065: 'up': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C3861: 'CalculateAxises': identifier not found
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\lightpointcomponent.h(15): error C2061: syntax error: identifier 'XMFLOAT3'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\lightpointcomponent.h(19): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\lightpointcomponent.h(19): error C2143: syntax error: missing ';' before '&'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\lightpointcomponent.h(19): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\lightpointcomponent.h(20): error C2327: 'LightPointComponent::XMFLOAT3': is not a type name, static, or enumerator
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\lightpointcomponent.h(20): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\lightpointcomponent.h(20): error C2143: syntax error: missing ';' before '&'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\lightpointcomponent.h(20): error C2086: 'const int LightPointComponent::XMFLOAT3': redefinition
+  c:\users\nilss\desktop\enginedx11\engine\engine\code\components\lightpointcomponent.h(19): note: see declaration of 'LightPointComponent::XMFLOAT3'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\lightpointcomponent.h(20): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\lightpointcomponent.h(32): error C2327: 'LightPointComponent::XMFLOAT3': is not a type name, static, or enumerator
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\lightpointcomponent.h(32): error C3646: '_color': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\lightpointcomponent.h(32): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\lightpointcomponent.h(33): error C2327: 'LightPointComponent::XMFLOAT3': is not a type name, static, or enumerator
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\lightpointcomponent.h(33): error C3646: '_specularColor': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\lightpointcomponent.h(33): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\lightdirectioncomponent.h(21): error C2039: 'GetForward': is not a member of 'TransformComponent'
+  c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(4): note: see declaration of 'TransformComponent'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\lightpointcomponent.cpp(6): error C2789: 'LightPointComponent::XMFLOAT3': an object of const-qualified type must be initialized
+  c:\users\nilss\desktop\enginedx11\engine\engine\code\components\lightpointcomponent.h(19): note: see declaration of 'LightPointComponent::XMFLOAT3'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\lightpointcomponent.cpp(15): error C2061: syntax error: identifier 'XMFLOAT3'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\lightpointcomponent.cpp(19): error C2065: '_color': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\lightpointcomponent.cpp(19): error C2065: 'color': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\lightpointcomponent.cpp(20): error C2065: '_specularColor': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\lightpointcomponent.cpp(20): error C2065: 'specularColor': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\lightpointcomponent.cpp(21): error C2065: 'specularPower': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\lightpointcomponent.cpp(22): error C2065: 'attConstant': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\lightpointcomponent.cpp(23): error C2065: 'attLinear': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\lightpointcomponent.cpp(24): error C2065: 'attExponential': undeclared identifier
+  LightDirectionComponent.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(10): error C2061: syntax error: identifier 'D3DXVECTOR3'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(12): error C3646: 'GetWorldMatrix': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(12): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(12): error C2238: unexpected token(s) preceding ';'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(14): error C2143: syntax error: missing ';' before '&'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(14): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(14): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(15): error C3646: 'GetPositionVal': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(15): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(15): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(17): error C2143: syntax error: missing ';' before '&'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(17): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(17): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(18): error C3646: 'GetRotationVal': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(18): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(18): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(20): error C2143: syntax error: missing ';' before '&'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(20): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(20): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(21): error C3646: 'GetScaleVal': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(21): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(21): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(23): error C3646: 'GetRight': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(23): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(23): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(24): error C3646: 'GetForward': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(24): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(24): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(25): error C3646: 'GetUp': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(25): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(25): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C2061: syntax error: identifier 'D3DXVECTOR3'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(42): error C3646: 'CalculateAxises': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(42): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(42): error C2238: unexpected token(s) preceding ';'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(44): error C3646: '_position': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(44): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(45): error C3646: '_rotation': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(45): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(46): error C3646: '_scale': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(46): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C2065: 'forward': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C2065: 'right': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C2065: 'up': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C3861: 'CalculateAxises': identifier not found
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\lightdirectioncomponent.h(21): error C2039: 'GetForward': is not a member of 'TransformComponent'
+  c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(4): note: see declaration of 'TransformComponent'
+  FreeMoveComponent.cpp
+  c:\program files (x86)\windows kits\10\include\10.0.15063.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(10): error C2061: syntax error: identifier 'D3DXVECTOR3'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(12): error C3646: 'GetWorldMatrix': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(12): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(12): error C2238: unexpected token(s) preceding ';'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(14): error C2143: syntax error: missing ';' before '&'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(14): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(14): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(15): error C3646: 'GetPositionVal': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(15): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(15): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(17): error C2143: syntax error: missing ';' before '&'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(17): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(17): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(18): error C3646: 'GetRotationVal': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(18): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(18): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(20): error C2143: syntax error: missing ';' before '&'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(20): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(20): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(21): error C3646: 'GetScaleVal': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(21): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(21): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(23): error C3646: 'GetRight': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(23): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(23): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(24): error C3646: 'GetForward': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(24): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(24): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(25): error C3646: 'GetUp': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(25): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(25): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C2061: syntax error: identifier 'D3DXVECTOR3'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(42): error C3646: 'CalculateAxises': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(42): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(42): error C2238: unexpected token(s) preceding ';'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(44): error C3646: '_position': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(44): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(45): error C3646: '_rotation': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(45): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(46): error C3646: '_scale': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(46): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C2065: 'forward': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C2065: 'right': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C2065: 'up': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C3861: 'CalculateAxises': identifier not found
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\freemovecomponent.cpp(41): error C2660: 'TransformComponent::GetAllAxis': function does not take 3 arguments
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\freemovecomponent.cpp(43): error C2039: 'GetRotationRef': is not a member of 'TransformComponent'
+  c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(4): note: see declaration of 'TransformComponent'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\freemovecomponent.cpp(43): error C2530: 'rotation': references must be initialized
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\freemovecomponent.cpp(44): error C2039: 'GetPositionRef': is not a member of 'TransformComponent'
+  c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(4): note: see declaration of 'TransformComponent'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\freemovecomponent.cpp(44): error C2530: 'pos': references must be initialized
+  CameraComponent.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(10): error C2061: syntax error: identifier 'D3DXVECTOR3'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(12): error C3646: 'GetWorldMatrix': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(12): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(12): error C2238: unexpected token(s) preceding ';'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(14): error C2143: syntax error: missing ';' before '&'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(14): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(14): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(15): error C3646: 'GetPositionVal': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(15): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(15): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(17): error C2143: syntax error: missing ';' before '&'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(17): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(17): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(18): error C3646: 'GetRotationVal': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(18): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(18): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(20): error C2143: syntax error: missing ';' before '&'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(20): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(20): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(21): error C3646: 'GetScaleVal': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(21): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(21): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(23): error C3646: 'GetRight': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(23): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(23): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(24): error C3646: 'GetForward': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(24): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(24): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(25): error C3646: 'GetUp': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(25): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(25): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C2061: syntax error: identifier 'D3DXVECTOR3'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(42): error C3646: 'CalculateAxises': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(42): error C2059: syntax error: '('
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(42): error C2238: unexpected token(s) preceding ';'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(44): error C3646: '_position': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(44): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(45): error C3646: '_rotation': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(45): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(46): error C3646: '_scale': unknown override specifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(46): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C2065: 'forward': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C2065: 'right': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C2065: 'up': undeclared identifier
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(27): error C3861: 'CalculateAxises': identifier not found
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\cameracomponent.cpp(48): error C2039: 'GetPositionRef': is not a member of 'TransformComponent'
+  c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformcomponent.h(4): note: see declaration of 'TransformComponent'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\cameracomponent.cpp(48): error C2530: 'pos': references must be initialized
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\cameracomponent.cpp(49): error C2660: 'TransformComponent::GetAllAxis': function does not take 3 arguments
+  Generating Code...
