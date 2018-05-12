@@ -37,7 +37,7 @@ struct ParticleData
 	float lifeTime;
 	float dragMultiplier;
 	bool active;
-	double distance;
+	float distance;
 	float startScale;
 	float endScale;
 	XMFLOAT3 previousPosition;

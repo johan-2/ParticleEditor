@@ -1,6 +1,24 @@
-﻿  Framework.cpp
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(373,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
+  Framework.cpp
   c:\program files (x86)\windows kits\10\include\10.0.15063.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-c:\users\nilss\desktop\enginedx11\engine\engine\code\system\framework.cpp(35): warning C4244: 'argument': conversion from 'const float' to 'int', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\system\framework.cpp(37): warning C4244: 'argument': conversion from 'const float' to 'int', possible loss of data
-  Engine.vcxproj -> C:\Users\nilss\Desktop\EngineDx11\Engine\x64\Debug\Engine.exe
-  Engine.vcxproj -> C:\Users\nilss\Desktop\EngineDx11\Engine\x64\Debug\Engine.pdb (Partial PDB)
+c:\users\nilss\desktop\enginedx11\engine\engine\code\system\framework.cpp(36): warning C4244: 'argument': conversion from 'const float' to 'int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\system\framework.cpp(39): warning C4244: 'argument': conversion from 'const float' to 'int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\system\framework.cpp(126): warning C4305: 'argument': truncation from 'double' to 'float'
+  ShaderManager.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(426): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(426): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(461): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(465): warning C4267: 'argument': conversion from 'size_t' to 'unsigned int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(717): warning C4018: '<': signed/unsigned mismatch
+  Renderer.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\renderer.cpp(45): warning C4244: 'argument': conversion from 'const float' to 'unsigned int', possible loss of data
+  Generating Code...
+  Skipping... (no relevant changes detected)
+  DebugStats.cpp
+  SkyBox.cpp
+  CameraManager.cpp
+  ParticleEmitterComponent.cpp
+  FreeMoveComponent.cpp
+  CameraComponent.cpp
+  Engine.vcxproj -> C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\Engine.exe
+  Engine.vcxproj -> C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\Engine.pdb (Partial PDB)

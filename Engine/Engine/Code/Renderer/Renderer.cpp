@@ -47,17 +47,21 @@ void Renderer::CreateDepthMap()
 	// create camera to render depth and give it a reference to the render texture it will use
 	_cameraDepth = new Entity();
 	_cameraDepth->AddComponent<TransformComponent>()->Init(XMFLOAT3(0.0f, 30.0f, -41.0f), XMFLOAT3(45.0f, 0.0f, 0));
-	CameraComponent* camDepth = _cameraDepth->AddComponent<CameraComponent>(); camDepth->Init2D(XMFLOAT2(orthoSize, orthoSize), XMFLOAT2(0.01f, 1000.0f));
+	_cameraDepth->AddComponent<CameraComponent>()->Init2D(XMFLOAT2(orthoSize, orthoSize), XMFLOAT2(0.01f, 1000.0f));
 
 	// give camera a reference to the shaderResource in depthmap
-	camDepth->SetRenderTexture(_depthMap->GetShaderResource());
-	CameraManager::GetInstance().SetCurrentCameraDepthMap(camDepth);
+	_cameraDepth->GetComponent<CameraComponent>()->SetRSV(_depthMap->GetShaderResource());
+	CameraManager::GetInstance().SetCurrentCameraDepthMap(_cameraDepth->GetComponent<CameraComponent>());
 
-	Entity* UIQuad1 = new Entity();
-	QuadComponent* q = UIQuad1->AddComponent<QuadComponent>(); q->Init(XMFLOAT2(SCREEN_WIDTH * 0.06f, SCREEN_HEIGHT * 0.1f), XMFLOAT2(SCREEN_WIDTH * 0.1f, SCREEN_WIDTH * 0.1f), L"");
-	q->SetTexture(_depthMap->GetShaderResource());
+	// create a quad that can render a preview of  the depthmap
+#ifdef _DEBUG
+	Entity* depthMapQuad = new Entity();
+	depthMapQuad->AddComponent<QuadComponent>()->Init(XMFLOAT2(SCREEN_WIDTH * 0.06f, SCREEN_HEIGHT * 0.1f), XMFLOAT2(SCREEN_WIDTH * 0.1f, SCREEN_WIDTH * 0.1f), L"");
+	depthMapQuad->GetComponent<QuadComponent>()->SetTexture(_depthMap->GetShaderResource());
+#endif
 
-	_skyBox = new SkyBox(L"Skyboxes/ThickCloudsWater.dds");
+	// create skybox
+	_skyBox = new SkyBox(L"Skyboxes/EmptySpace.dds");
 }
 
 

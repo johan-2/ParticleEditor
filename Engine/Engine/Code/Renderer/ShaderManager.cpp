@@ -332,160 +332,161 @@ void ShaderManager::RenderDirectional(const std::vector<Mesh*>& meshes)
 
 void ShaderManager::RenderDirectionalShadows(const std::vector<Mesh*>& meshes) 
 {
-	//// get devicecontext
-	//DXManager& DXM = DXManager::GetInstance();
-	//ID3D11DeviceContext* devCon = DXM.GetDeviceCon();
+	// get devicecontext
+	DXManager& DXM = DXManager::GetInstance();
+	ID3D11DeviceContext* devCon = DXM.GetDeviceCon();
 
-	//// create constantbuffer structures
-	//ConstantDirectionalShadowVertex vertexData;
-	//ConstantDirectionalShadowPixel pixelData;
+	// create constantbuffer structures
+	ConstantDirectionalShadowVertex vertexData;
+	ConstantDirectionalShadowPixel pixelData;
 
-	//CameraComponent* camera = CameraManager::GetInstance().GetCurrentCameraGame();
-	//CameraComponent* cameraLight = CameraManager::GetInstance().GetCurrentCameraDepthMap();
+	CameraComponent* camera = CameraManager::GetInstance().GetCurrentCameraGame();
+	CameraComponent* cameraLight = CameraManager::GetInstance().GetCurrentCameraDepthMap();
 
-	//// get directional lights
-	//LightDirectionComponent*& directionalLight = LightManager::GetInstance().GetDirectionalLight();
+	// get directional lights
+	LightDirectionComponent*& directionalLight = LightManager::GetInstance().GetDirectionalLight();
 
-	//// get camera position
-	//XMFLOAT3 cameraPos = camera->GetComponent<TransformComponent>()->GetPositionRef();
+	// get camera position
+	XMFLOAT3 cameraPos = camera->GetComponent<TransformComponent>()->GetPositionRef();
 
-	//// render with additive blend state
-	//DXM.SetBlendState(BLEND_STATE::BLEND_ADDITIVE);
+	// render with additive blend state
+	DXM.SetBlendState(BLEND_STATE::BLEND_ADDITIVE);
 
-	//// set shaders	
-	//devCon->VSSetShader(_vertexDirectionalShadowsShader, NULL, 0);
-	//devCon->PSSetShader(_pixelDirectionalShadowsShader, NULL, 0);
+	// set shaders	
+	devCon->VSSetShader(_vertexDirectionalShadowsShader, NULL, 0);
+	devCon->PSSetShader(_pixelDirectionalShadowsShader, NULL, 0);
 
-	//// get and transpose the camera matrices
-	//XMFLOAT4X4 viewMatrix = camera->GetViewMatrix();
-	//XMFLOAT4X4 projectionMatrix = camera->GetProjectionMatrix();
+	// get and transpose the camera matrices
+	XMFLOAT4X4 viewMatrix = camera->GetViewMatrix();
+	XMFLOAT4X4 projectionMatrix = camera->GetProjectionMatrix();
 
-	//XMFLOAT4X4Transpose(&viewMatrix, &viewMatrix);
-	//XMFLOAT4X4Transpose(&projectionMatrix, &projectionMatrix);
+	XMStoreFloat4x4(&viewMatrix, XMMatrixTranspose(XMLoadFloat4x4(&viewMatrix)));
+	XMStoreFloat4x4(&projectionMatrix, XMMatrixTranspose(XMLoadFloat4x4(&projectionMatrix)));
 
-	//XMFLOAT4X4 viewMatrixLight = cameraLight->GetViewMatrix();
-	//XMFLOAT4X4 projectionMatrixLight = cameraLight->GetProjectionMatrix();
+	XMFLOAT4X4 viewMatrixLight = cameraLight->GetViewMatrix();
+	XMFLOAT4X4 projectionMatrixLight = cameraLight->GetProjectionMatrix();
 
-	//XMFLOAT4X4Transpose(&viewMatrixLight, &viewMatrixLight);
-	//XMFLOAT4X4Transpose(&projectionMatrixLight, &projectionMatrixLight);
+	XMStoreFloat4x4(&viewMatrixLight, XMMatrixTranspose(XMLoadFloat4x4(&viewMatrixLight)));
+	XMStoreFloat4x4(&projectionMatrixLight, XMMatrixTranspose(XMLoadFloat4x4(&projectionMatrixLight)));
 
-	//// set the light data
-	//pixelData.diffuseColor = directionalLight->GetLightColor();
-	//pixelData.lightDir = -directionalLight->GetLightDirection();
-	//pixelData.specularColor = directionalLight->GetSpecularColor();
-	//pixelData.specularPower = directionalLight->GetSpecularPower();
+	// set the light data
+	pixelData.diffuseColor = directionalLight->GetLightColor();
+	XMStoreFloat3(&pixelData.lightDir, XMVectorNegate(XMLoadFloat3(&directionalLight->GetLightDirection())));
+	pixelData.specularColor = directionalLight->GetSpecularColor();
+	pixelData.specularPower = directionalLight->GetSpecularPower();
 
-	//// upload new light data to pixelshader		
-	//UpdatePixelConstants((void*)&pixelData, sizeof(ConstantDirectionalShadowPixel));	
+	// upload new light data to pixelshader		
+	UpdatePixelConstants((void*)&pixelData, sizeof(ConstantDirectionalShadowPixel));	
 
-	//ID3D11ShaderResourceView* shadowMap = cameraLight->GetRenderTexture();
-	//
-	//for (int i = 0; i< meshes.size(); i++)
-	//{
-	//	// get and transpose the world matrix for the mesh
-	//	XMFLOAT4X4 worldMatrix = meshes[i]->GetWorldMatrix();
-	//	XMFLOAT4X4Transpose(&worldMatrix, &worldMatrix);
+	ID3D11ShaderResourceView* shadowMap = cameraLight->GetRSV();
+	
+	for (int i = 0; i< meshes.size(); i++)
+	{
+		// get and transpose the world matrix for the mesh
+		XMFLOAT4X4 worldMatrix = meshes[i]->GetWorldMatrix();
+		XMStoreFloat4x4(&worldMatrix, XMMatrixTranspose(XMLoadFloat4x4(&worldMatrix)));
 
-	//	// set vertex constants data and upload to gpu
-	//	vertexData.world = worldMatrix;
-	//	vertexData.view = viewMatrix;
-	//	vertexData.projection = projectionMatrix;
-	//	vertexData.lightView = viewMatrixLight;
-	//	vertexData.lightProjection = projectionMatrixLight;
-	//	vertexData.camPos = cameraPos;
-	//	vertexData.uvOffset = meshes[i]->GetUvOffset();
-	//	UpdateVertexConstants((void*)&vertexData, sizeof(ConstantDirectionalShadowVertex));
-	//	
-	//	ID3D11ShaderResourceView** meshTextures = meshes[i]->GetTextureArray();
-	//	ID3D11ShaderResourceView* t[4] = { meshTextures[0], meshTextures[1], meshTextures[2], shadowMap };
+		// set vertex constants data and upload to gpu
+		vertexData.world = worldMatrix;
+		vertexData.view = viewMatrix;
+		vertexData.projection = projectionMatrix;
+		vertexData.lightView = viewMatrixLight;
+		vertexData.lightProjection = projectionMatrixLight;
+		vertexData.camPos = cameraPos;
+		vertexData.uvOffset = meshes[i]->GetUvOffset();
+		UpdateVertexConstants((void*)&vertexData, sizeof(ConstantDirectionalShadowVertex));
+		
+		ID3D11ShaderResourceView** meshTextures = meshes[i]->GetTextureArray();
+		ID3D11ShaderResourceView* t[4] = { meshTextures[0], meshTextures[1], meshTextures[2], shadowMap };
 
-	//	// set textures
-	//	devCon->PSSetShaderResources(0, 4, t);
+		// set textures
+		devCon->PSSetShaderResources(0, 4, t);
 
-	//	//upload vertex and index buffers for this mesh
-	//	meshes[i]->UploadBuffers();
-	//				
-	//	// draw the mesh additivly for the light
-	//	devCon->DrawIndexed(meshes[i]->GetNumIndices(), 0, 0);		
-	//}
+		//upload vertex and index buffers for this mesh
+		meshes[i]->UploadBuffers();
+					
+		// draw the mesh additivly for the light
+		devCon->DrawIndexed(meshes[i]->GetNumIndices(), 0, 0);		
+	}
 
 }
 
 void ShaderManager::RenderPoint(const std::vector<Mesh*>& meshes)
 {
 	//// get devicecontext
-	//DXManager& DXM = DXManager::GetInstance();
-	//ID3D11DeviceContext* devCon = DXM.GetDeviceCon();
-	//
-	//CameraComponent* camera = CameraManager::GetInstance().GetCurrentCameraGame();
+	DXManager& DXM = DXManager::GetInstance();
+	ID3D11DeviceContext* devCon = DXM.GetDeviceCon();
+	
+	CameraComponent* camera = CameraManager::GetInstance().GetCurrentCameraGame();
 
-	//// get directional lights
-	//std::vector<LightPointComponent*>& pointLights = LightManager::GetInstance().GetPointLight();
-	//
-	//// create constantbuffer structures
-	//const int size = pointLights.size();
-	//
-	//ConstantPointVertex vertexData;
-	//ConstantPointPixel pixelData[MAX_POINT_LIGHTS];
+	// get directional lights
+	std::vector<LightPointComponent*>& pointLights = LightManager::GetInstance().GetPointLight();
+	
+	// create constantbuffer structures
+	const int size = pointLights.size();
+	
+	ConstantPointVertex vertexData;
+	ConstantPointPixel pixelData[MAX_POINT_LIGHTS];
 
-	//// get camera position
-	//XMFLOAT3 cameraPos = camera->GetComponent<TransformComponent>()->GetPositionRef();
+	// get camera position
+	XMFLOAT3 cameraPos = camera->GetComponent<TransformComponent>()->GetPositionRef();
 
-	//// render with additive blend state
-	//DXM.SetBlendState(BLEND_STATE::BLEND_ADDITIVE);
+	// render with additive blend state
+	DXM.SetBlendState(BLEND_STATE::BLEND_ADDITIVE);
 
-	//// set shaders	
-	//devCon->VSSetShader(_vertexPointShader, NULL, 0);
-	//devCon->PSSetShader(_pixelPointShader, NULL, 0);
+	// set shaders	
+	devCon->VSSetShader(_vertexPointShader, NULL, 0);
+	devCon->PSSetShader(_pixelPointShader, NULL, 0);
 
-	//// get and transpose the camera matrices
-	//XMFLOAT4X4 viewMatrix = camera->GetViewMatrix();
-	//XMFLOAT4X4 projectionMatrix = camera->GetProjectionMatrix();
+	// get and transpose the camera matrices
+	XMFLOAT4X4 viewMatrix = camera->GetViewMatrix();
+	XMFLOAT4X4 projectionMatrix = camera->GetProjectionMatrix();
 
-	//XMFLOAT4X4Transpose(&viewMatrix, &viewMatrix);
-	//XMFLOAT4X4Transpose(&projectionMatrix, &projectionMatrix);
+	XMStoreFloat4x4(&viewMatrix, XMMatrixTranspose(XMLoadFloat4x4(&viewMatrix)));
+	XMStoreFloat4x4(&projectionMatrix, XMMatrixTranspose(XMLoadFloat4x4(&projectionMatrix)));
 
-	//// set the light data
-	//for(int i =0; i< pointLights.size(); i++)
-	//{
-	//	pixelData[i].color          = pointLights[i]->GetLightColor();
-	//	pixelData[i].intensity      = pointLights[i]->GetIntensity();
-	//	pixelData[i].radius         = pointLights[i]->GetRadius();
-	//	pixelData[i].lightPosition  = pointLights[i]->GetComponent<TransformComponent>()->GetPositionRef();
-	//	pixelData[i].specularColor  = pointLights[i]->GetSpecularColor();
-	//	pixelData[i].specularPower  = pointLights[i]->GetSpecularPower();
-	//	pixelData[i].attConstant    = pointLights[i]->GetAttConstant();
-	//	pixelData[i].attLinear      = pointLights[i]->GetAttLinear();
-	//	pixelData[i].attExponential = pointLights[i]->GetAttExponential();
-	//	pixelData[i].numLights		= pointLights.size();
-	//}
 
-	//// upload new light data to pixelshader		
-	//UpdatePixelConstants((void*)&pixelData, sizeof(ConstantPointPixel) * pointLights.size());
+	// set the light data
+	for(int i =0; i< pointLights.size(); i++)
+	{
+		pixelData[i].color          = pointLights[i]->GetLightColor();
+		pixelData[i].intensity      = pointLights[i]->GetIntensity();
+		pixelData[i].radius         = pointLights[i]->GetRadius();
+		pixelData[i].lightPosition  = pointLights[i]->GetComponent<TransformComponent>()->GetPositionRef();
+		pixelData[i].specularColor  = pointLights[i]->GetSpecularColor();
+		pixelData[i].specularPower  = pointLights[i]->GetSpecularPower();
+		pixelData[i].attConstant    = pointLights[i]->GetAttConstant();
+		pixelData[i].attLinear      = pointLights[i]->GetAttLinear();
+		pixelData[i].attExponential = pointLights[i]->GetAttExponential();
+		pixelData[i].numLights		= pointLights.size();
+	}
 
-	//for (int y = 0; y< meshes.size(); y++)
-	//{
-	//	// get and transpose the world matrix for the mesh
-	//	XMFLOAT4X4 worldMatrix = meshes[y]->GetWorldMatrix();
-	//	XMFLOAT4X4Transpose(&worldMatrix, &worldMatrix);
+	// upload new light data to pixelshader		
+	UpdatePixelConstants((void*)&pixelData, sizeof(ConstantPointPixel) * pointLights.size());
 
-	//	// set vertex constants data and upload to gpu
-	//	vertexData.world = worldMatrix;
-	//	vertexData.view = viewMatrix;
-	//	vertexData.projection = projectionMatrix;
-	//	vertexData.camPos = cameraPos;
-	//	vertexData.uvOffset = meshes[y]->GetUvOffset();
-	//	UpdateVertexConstants((void*)&vertexData, sizeof(ConstantPointVertex));
+	for (int y = 0; y< meshes.size(); y++)
+	{
+		// get and transpose the world matrix for the mesh
+		XMFLOAT4X4 worldMatrix = meshes[y]->GetWorldMatrix();
+		XMStoreFloat4x4(&worldMatrix, XMMatrixTranspose(XMLoadFloat4x4(&worldMatrix)));
 
-	//	// set textures
-	//	devCon->PSSetShaderResources(0, 3, meshes[y]->GetTextureArray());
+		// set vertex constants data and upload to gpu
+		vertexData.world = worldMatrix;
+		vertexData.view = viewMatrix;
+		vertexData.projection = projectionMatrix;
+		vertexData.camPos = cameraPos;
+		vertexData.uvOffset = meshes[y]->GetUvOffset();
+		UpdateVertexConstants((void*)&vertexData, sizeof(ConstantPointVertex));
 
-	//	//upload vertex and index buffers for this mesh
-	//	meshes[y]->UploadBuffers();
+		// set textures
+		devCon->PSSetShaderResources(0, 3, meshes[y]->GetTextureArray());
 
-	//	// draw the mesh additivly for each light
-	//	devCon->DrawIndexed(meshes[y]->GetNumIndices(), 0, 0);
-	//}	
+		//upload vertex and index buffers for this mesh
+		meshes[y]->UploadBuffers();
+
+		// draw the mesh additivly for each light
+		devCon->DrawIndexed(meshes[y]->GetNumIndices(), 0, 0);
+	}	
 }
 
 void ShaderManager::RenderAmbient(const std::vector<Mesh*>& meshes)
@@ -550,93 +551,93 @@ void ShaderManager::RenderAmbient(const std::vector<Mesh*>& meshes)
 
 void ShaderManager::RenderQuadUI(const std::vector<QuadComponent*>& quads)
 {	
-	//DXManager& DXM = DXManager::GetInstance();
-	//ID3D11DeviceContext* devCon = DXM.GetDeviceCon();
+	DXManager& DXM = DXManager::GetInstance();
+	ID3D11DeviceContext* devCon = DXM.GetDeviceCon();
 
-	//ConstantQuadUIVertex vertexData;
-	//ConstantQuadUIPixel pixelData;
+	ConstantQuadUIVertex vertexData;
+	ConstantQuadUIPixel pixelData;
 
-	//// set shaders			
-	//devCon->VSSetShader(_vertexSpriteShader, NULL, 0);
-	//devCon->PSSetShader(_pixelSpriteShader, NULL, 0);
+	// set shaders			
+	devCon->VSSetShader(_vertexSpriteShader, NULL, 0);
+	devCon->PSSetShader(_pixelSpriteShader, NULL, 0);
 
-	////disable the zbuffer for the 2d rendering
-	//DXM.SetBlendState(BLEND_STATE::BLEND_ALPHA);
-	//DXM.SetZBuffer(DEPTH_STATE::DISABLED);
-	//
-	//// get matrices 
-	//XMFLOAT4X4 viewMatrix = CameraManager::GetInstance().GetCurrentCameraUI()->GetViewMatrix(); 
-	//XMFLOAT4X4 projectionMatrix = CameraManager::GetInstance().GetCurrentCameraUI()->GetProjectionMatrix();
+	//disable the zbuffer for the 2d rendering
+	DXM.SetBlendState(BLEND_STATE::BLEND_ALPHA);
+	DXM.SetZBuffer(DEPTH_STATE::DISABLED);
+	
+	// get matrices 
+	XMFLOAT4X4 viewMatrix = CameraManager::GetInstance().GetCurrentCameraUI()->GetViewMatrix(); 
+	XMFLOAT4X4 projectionMatrix = CameraManager::GetInstance().GetCurrentCameraUI()->GetProjectionMatrix();
 
-	//// Transpose the matrices 	
-	//XMFLOAT4X4Transpose(&viewMatrix, &viewMatrix);
-	//XMFLOAT4X4Transpose(&projectionMatrix, &projectionMatrix);	
+	// Transpose the matrices 	
+	XMStoreFloat4x4(&viewMatrix, XMMatrixTranspose(XMLoadFloat4x4(&viewMatrix)));
+	XMStoreFloat4x4(&projectionMatrix, XMMatrixTranspose(XMLoadFloat4x4(&projectionMatrix)));
 
-	////FILL ALL CBUFFERS WITH DATA
-	//vertexData.projection = projectionMatrix;
-	//vertexData.view = viewMatrix;
+	//FILL ALL CBUFFERS WITH DATA
+	vertexData.projection = projectionMatrix;
+	vertexData.view = viewMatrix;
 
-	//// update vertexconstantbuffers, only needs to be done once for all quads
-	//UpdateVertexConstants((void*)&vertexData, sizeof(ConstantQuadUIVertex));		
+	// update vertexconstantbuffers, only needs to be done once for all quads
+	UpdateVertexConstants((void*)&vertexData, sizeof(ConstantQuadUIVertex));		
 
-	//for (int i = 0; i < quads.size(); i++) 
-	//{
-	//	// set constantbuffer pixel data, needs to be set and updated for each quad
-	//	pixelData.color = quads[i]->GetColor();
-	//	UpdatePixelConstants((void*)&pixelData, sizeof(ConstantQuadUIPixel));
+	for (int i = 0; i < quads.size(); i++) 
+	{
+		// set constantbuffer pixel data, needs to be set and updated for each quad
+		pixelData.color = quads[i]->GetColor();
+		UpdatePixelConstants((void*)&pixelData, sizeof(ConstantQuadUIPixel));
 
-	//	ID3D11ShaderResourceView* texture = quads[i]->GetTexture();
-	//	devCon->PSSetShaderResources(0, 1, &texture);
+		ID3D11ShaderResourceView* texture = quads[i]->GetTexture();
+		devCon->PSSetShaderResources(0, 1, &texture);
 
-	//	quads[i]->UploadBuffers();
+		quads[i]->UploadBuffers();
 
-	//	devCon->DrawIndexed(6, 0, 0);
-	//}
-	//	
-	//// change back the z buffer
-	//DXM.SetZBuffer(DEPTH_STATE::ENABLED);
+		devCon->DrawIndexed(6, 0, 0);
+	}
+		
+	// change back the z buffer
+	DXM.SetZBuffer(DEPTH_STATE::ENABLED);
 
 }
 
 void ShaderManager::RenderDepth(const std::vector<Mesh*>& meshes)
 {
 	//// get devicecontext
-	//ID3D11DeviceContext* devCon = DXManager::GetInstance().GetDeviceCon();
+	ID3D11DeviceContext* devCon = DXManager::GetInstance().GetDeviceCon();
 
-	//// constantbuffer structures
-	//ConstantAmbientVertex vertexData;
+	// constantbuffer structures
+	ConstantAmbientVertex vertexData;
 
-	//CameraComponent* camera = CameraManager::GetInstance().GetCurrentCameraDepthMap();
+	CameraComponent* camera = CameraManager::GetInstance().GetCurrentCameraDepthMap();
 
-	//// only set vertexshader TODO: create pixelshader to handle depthmapping alpha meshes	
-	//devCon->VSSetShader(_vertexDepthShader, NULL, 0);
-	//devCon->PSSetShader(_pixelDepthShader, NULL, 0);
-	//				
-	//// get and transpose camera matrices
-	//XMFLOAT4X4 viewMatrix = camera->GetViewMatrix();
-	//XMFLOAT4X4 projectionMatrix = camera->GetProjectionMatrix();
+	// only set vertexshader TODO: create pixelshader to handle depthmapping alpha meshes	
+	devCon->VSSetShader(_vertexDepthShader, NULL, 0);
+	devCon->PSSetShader(_pixelDepthShader, NULL, 0);
+					
+	// get and transpose camera matrices
+	XMFLOAT4X4 viewMatrix = camera->GetViewMatrix();
+	XMFLOAT4X4 projectionMatrix = camera->GetProjectionMatrix();
 
-	//XMFLOAT4X4Transpose(&viewMatrix, &viewMatrix);
-	//XMFLOAT4X4Transpose(&projectionMatrix, &projectionMatrix);
+	XMStoreFloat4x4(&viewMatrix, XMMatrixTranspose(XMLoadFloat4x4(&viewMatrix)));
+	XMStoreFloat4x4(&projectionMatrix, XMMatrixTranspose(XMLoadFloat4x4(&projectionMatrix)));
 
-	//for (int i = 0; i < meshes.size(); i++) 
-	//{		
-	//	// get and transpose worldmatrix
-	//	XMFLOAT4X4 worldMatrix = meshes[i]->GetWorldMatrix();		
-	//	XMFLOAT4X4Transpose(&worldMatrix, &worldMatrix);
+	for (int i = 0; i < meshes.size(); i++) 
+	{		
+		// get and transpose worldmatrix
+		XMFLOAT4X4 worldMatrix = meshes[i]->GetWorldMatrix();		
+		XMStoreFloat4x4(&worldMatrix, XMMatrixTranspose(XMLoadFloat4x4(&worldMatrix)));
 
-	//	//set and upload vertexconstantdata 
-	//	vertexData.projection = projectionMatrix;
-	//	vertexData.view = viewMatrix;
-	//	vertexData.world = worldMatrix;
-	//	UpdateVertexConstants((void*)&vertexData, sizeof(ConstantDepthVertex));
+		//set and upload vertexconstantdata 
+		vertexData.projection = projectionMatrix;
+		vertexData.view = viewMatrix;
+		vertexData.world = worldMatrix;
+		UpdateVertexConstants((void*)&vertexData, sizeof(ConstantDepthVertex));
 
-	//	devCon->PSSetShaderResources(0, 1, meshes[i]->GetTextureArray());
+		devCon->PSSetShaderResources(0, 1, meshes[i]->GetTextureArray());
 
-	//	meshes[i]->UploadBuffers();
+		meshes[i]->UploadBuffers();
 
-	//	devCon->DrawIndexed(meshes[i]->GetNumIndices(), 0, 0);
-	//}
+		devCon->DrawIndexed(meshes[i]->GetNumIndices(), 0, 0);
+	}
 	
 }
 
@@ -664,10 +665,6 @@ void ShaderManager::RenderSkyBox(XMFLOAT4X4 worldMatrix)
 	XMFLOAT4X4 viewMatrix = camera->GetViewMatrix();
 	XMFLOAT4X4 projectionMatrix = camera->GetProjectionMatrix();
 
-	/*XMFLOAT4X4Transpose(&viewMatrix, &viewMatrix);
-	XMFLOAT4X4Transpose(&projectionMatrix, &projectionMatrix);
-	XMFLOAT4X4Transpose(&worldMatrix, &worldMatrix);*/
-
 	XMStoreFloat4x4(&viewMatrix, XMMatrixTranspose(XMLoadFloat4x4(&viewMatrix)));
 	XMStoreFloat4x4(&projectionMatrix, XMMatrixTranspose(XMLoadFloat4x4(&projectionMatrix)));
 	XMStoreFloat4x4(&worldMatrix, XMMatrixTranspose(XMLoadFloat4x4(&worldMatrix)));
@@ -689,49 +686,49 @@ void ShaderManager::RenderSkyBox(XMFLOAT4X4 worldMatrix)
 void ShaderManager::RenderParticles(const std::vector<ParticleEmitterComponent*>& emitters) 
 {
 	//// get devicecontext
-	//DXManager& DXM = DXManager::GetInstance();
-	//ID3D11DeviceContext* devCon = DXM.GetDeviceCon();
+	DXManager& DXM = DXManager::GetInstance();
+	ID3D11DeviceContext* devCon = DXM.GetDeviceCon();
 
-	//// constantbuffer structures
-	//ConstantParticleVertex vertexData;
-	//
-	//CameraComponent* camera = CameraManager::GetInstance().GetCurrentCameraGame();
+	// constantbuffer structures
+	ConstantParticleVertex vertexData;
+	
+	CameraComponent* camera = CameraManager::GetInstance().GetCurrentCameraGame();
 
-	//DXM.SetZBuffer(DEPTH_STATE::READ_ONLY);
-	//	
-	//// set shaders			
-	//devCon->VSSetShader(_vertexParticleShader, NULL, 0);
-	//devCon->PSSetShader(_pixelParticleShader, NULL, 0);
-	//
-	//// get and transpose camera matrices
-	//XMFLOAT4X4 viewMatrix = camera->GetViewMatrix();
-	//XMFLOAT4X4 projectionMatrix = camera->GetProjectionMatrix();
+	DXM.SetZBuffer(DEPTH_STATE::READ_ONLY);
+		
+	// set shaders			
+	devCon->VSSetShader(_vertexParticleShader, NULL, 0);
+	devCon->PSSetShader(_pixelParticleShader, NULL, 0);
+	
+	// get and transpose camera matrices
+	XMFLOAT4X4 viewMatrix = camera->GetViewMatrix();
+	XMFLOAT4X4 projectionMatrix = camera->GetProjectionMatrix();
 
-	//XMFLOAT4X4Transpose(&viewMatrix, &viewMatrix);
-	//XMFLOAT4X4Transpose(&projectionMatrix, &projectionMatrix);
+	XMStoreFloat4x4(&viewMatrix, XMMatrixTranspose(XMLoadFloat4x4(&viewMatrix)));
+	XMStoreFloat4x4(&projectionMatrix, XMMatrixTranspose(XMLoadFloat4x4(&projectionMatrix)));
 
-	//vertexData.view = viewMatrix;
-	//vertexData.projection = projectionMatrix;
-	//UpdateVertexConstants((void*)&vertexData, sizeof(ConstantParticleVertex));
-	//	
-	//// stuff that need to be set per emitter
-	//for (int i = 0; i < emitters.size(); i++)
-	//{
-	//	for(int y =0; y < emitters[i]->GetNumEmitters(); y++)
-	//	{
-	//		// upload vertex and indexbuffers
-	//		emitters[i]->UploadBuffers(y);
-	//		DXM.SetBlendState(emitters[i]->GetBlendState(y));
+	vertexData.view = viewMatrix;
+	vertexData.projection = projectionMatrix;
+	UpdateVertexConstants((void*)&vertexData, sizeof(ConstantParticleVertex));
+		
+	// stuff that need to be set per emitter
+	for (int i = 0; i < emitters.size(); i++)
+	{
+		for(int y =0; y < emitters[i]->GetNumEmitters(); y++)
+		{
+			// upload vertex and indexbuffers
+			emitters[i]->UploadBuffers(y);
+			DXM.SetBlendState(emitters[i]->GetBlendState(y));
 
-	//		// set texture
-	//		ID3D11ShaderResourceView* texture = emitters[i]->GetTexture(y);
-	//		devCon->PSSetShaderResources(0, 1, &texture);
+			// set texture
+			ID3D11ShaderResourceView* texture = emitters[i]->GetTexture(y);
+			devCon->PSSetShaderResources(0, 1, &texture);
 
-	//		// draw		
-	//		devCon->DrawIndexedInstanced(6, emitters[i]->GetNumParticles(y), 0, 0, 0);
-	//	}		
-	//}
-	//DXM.SetZBuffer(DEPTH_STATE::ENABLED);
+			// draw		
+			devCon->DrawIndexedInstanced(6, emitters[i]->GetNumParticles(y), 0, 0, 0);
+		}		
+	}
+	DXM.SetZBuffer(DEPTH_STATE::ENABLED);
 }
 
 void ShaderManager::RenderGUI(ImDrawData* draw_data)

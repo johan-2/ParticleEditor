@@ -15,6 +15,8 @@
 #include "rapidjson/stringbuffer.h"
 #include <fstream>
 #include <string>
+#include <AtlBase.h>
+#include <atlconv.h>
 
 
 ParticleEmitterComponent::ParticleEmitterComponent() : IComponent(PARTICLE_COMPONENT)
@@ -56,52 +58,55 @@ void ParticleEmitterComponent::Init(char* particleFile)
 
 void ParticleEmitterComponent::SetUp()
 {
-	//_hasLifetime = true;
+	_hasLifetime = true;
 
-	//// add to renderer and get transform reference
-	//Renderer::GetInstance().AddParticleEmitter(this);
-	//_transform = GetComponent<TransformComponent>();
+	// add to renderer and get transform reference
+	Renderer::GetInstance().AddParticleEmitter(this);
+	_transform = GetComponent<TransformComponent>();
 
-	//for(int i =0; i < _numEmitters; i++)
-	//{				
-	//	_currentParticlesLifetime[i] = _settings[i].particleLifetime; // if in burst mode we use one timer for every particle per emitter
-	//	_numSpawnedParticles[i] = 0; // init to zero
+	for(int i =0; i < _numEmitters; i++)
+	{				
+		_currentParticlesLifetime[i] = _settings[i].particleLifetime; // if in burst mode we use one timer for every particle per emitter
+		_numSpawnedParticles[i] = 0; // init to zero
 
-	//	// get texture
-	//	std::string tp = "Textures/";
-	//	tp.append(_settings[i].texturePath.c_str());
-	//	_texture[i] = _settings[i].texturePath.c_str() != "" ? TexturePool::GetInstance().GetTexture(tp.c_str()) : TexturePool::GetInstance().GetTexture("textures/defaultDiffuse.dds");
+		// append texturename and convert to widestring
+		std::string tp = "Textures/";		
+		tp.append(_settings[i].texturePath.c_str());
+		CA2W convert(tp.c_str());
+		std::wstring wtp = convert;
 
-	//	// check if emitter have a limited lifetime or not(0 == magic number for no)
-	//	if (_settings[i].emitterLifetime == 0)
-	//		_hasLifetime = false;
-	//	
-	//	// get a pointer to the data of each particle, these pointers will be sorted instead of the actual particle data so we dont have to move around big data structures
-	//	for (int y = 0; y < _settings[i].numParticles; y++)
-	//		_sortedData[i][y] = &_particleData[i][y];
+		_texture[i] = _settings[i].texturePath.c_str() != "" ? TexturePool::GetInstance().GetTexture(wtp.c_str()) : TexturePool::GetInstance().GetTexture(L"textures/defaultDiffuse.dds");
 
-	//	// create all D3D11 buffers and two triangles for rendering
-	//	CreateBuffers(_settings[i].startSize, i);
+		// check if emitter have a limited lifetime or not(0 == magic number for no)
+		if (_settings[i].emitterLifetime == 0)
+			_hasLifetime = false;
+		
+		// get a pointer to the data of each particle, these pointers will be sorted instead of the actual particle data so we dont have to move around big data structures
+		for (int y = 0; y < _settings[i].numParticles; y++)
+			_sortedData[i][y] = &_particleData[i][y];
 
-	//	if (_settings[i].burst)
-	//		SpawnAllParticles(i);
-	//	else
-	//	{
-	//		// start all particles inactive and set scale to 0 so inactive particles wont be visible
-	//		for (int y = 0; y < _settings[i].numParticles; y++)
-	//		{
-	//			_particleData[i][y].active = false;
-	//			_particleData[i][y].scale = XMFLOAT3(0, 0, 0);
-	//		}
+		// create all D3D11 buffers and two triangles for rendering
+		CreateBuffers(_settings[i].startSize, i);
 
-	//		// get spawnratio based on num particles and lifetimr per particle
-	//		_particleSpawnRatio[i] = _settings[i].particleLifetime / _settings[i].numParticles;
-	//		_spawnTimer[i] = _particleSpawnRatio[i];
-	//	}		
-	//}
-	//
-	//// get current entity position for use next frame
-	//_previousPosition = _transform->GetPositionVal();
+		if (_settings[i].burst)
+			SpawnAllParticles(i);
+		else
+		{
+			// start all particles inactive and set scale to 0 so inactive particles wont be visible
+			for (int y = 0; y < _settings[i].numParticles; y++)
+			{
+				_particleData[i][y].active = false;
+				_particleData[i][y].scale = XMFLOAT3(0, 0, 0);
+			}
+
+			// get spawnratio based on num particles and lifetimr per particle
+			_particleSpawnRatio[i] = _settings[i].particleLifetime / _settings[i].numParticles;
+			_spawnTimer[i] = _particleSpawnRatio[i];
+		}		
+	}
+	
+	// get current entity position for use next frame
+	_previousPosition = _transform->GetPositionVal();
 }
 
 ParticleEmitterComponent::~ParticleEmitterComponent()
@@ -224,64 +229,64 @@ void ParticleEmitterComponent::SpawnAllParticles(unsigned int index)
 
 void ParticleEmitterComponent::SpawnParticle(ParticleData& particle, unsigned int index)
 {
-	// get minmax spawn position values
-	//const XMFLOAT3& emitterPos = _transform->GetPositionRef();
+	 //get minmax spawn position values
+	const XMFLOAT3& emitterPos = _transform->GetPositionRef();
 
-	//XMFLOAT2 spawnMinMaxX = XMFLOAT2(emitterPos.x - (_settings[index].spawnRadius * 0.5f), emitterPos.x + (_settings[index].spawnRadius * 0.5f));
-	//XMFLOAT2 spawnMinMaxY = XMFLOAT2(emitterPos.y - (_settings[index].spawnRadius * 0.5f), emitterPos.y + (_settings[index].spawnRadius * 0.5f));
-	//XMFLOAT2 spawnMinMaxZ = XMFLOAT2(emitterPos.z - (_settings[index].spawnRadius * 0.5f), emitterPos.z + (_settings[index].spawnRadius * 0.5f));
+	XMFLOAT2 spawnMinMaxX = XMFLOAT2(emitterPos.x - (_settings[index].spawnRadius * 0.5f), emitterPos.x + (_settings[index].spawnRadius * 0.5f));
+	XMFLOAT2 spawnMinMaxY = XMFLOAT2(emitterPos.y - (_settings[index].spawnRadius * 0.5f), emitterPos.y + (_settings[index].spawnRadius * 0.5f));
+	XMFLOAT2 spawnMinMaxZ = XMFLOAT2(emitterPos.z - (_settings[index].spawnRadius * 0.5f), emitterPos.z + (_settings[index].spawnRadius * 0.5f));
 
-	//XMFLOAT2 directionMinMaxX = XMFLOAT2(_settings[index].direction.x - (_settings[index].velocitySpread.x * 0.5f), _settings[index].direction.x + (_settings[index].velocitySpread.x * 0.5f));
-	//XMFLOAT2 directionMinMaxY = XMFLOAT2(_settings[index].direction.y - (_settings[index].velocitySpread.y * 0.5f), _settings[index].direction.y + (_settings[index].velocitySpread.y * 0.5f));
-	//XMFLOAT2 directionMinMaxZ = XMFLOAT2(_settings[index].direction.z - (_settings[index].velocitySpread.z * 0.5f), _settings[index].direction.z + (_settings[index].velocitySpread.z * 0.5f));
+	XMFLOAT2 directionMinMaxX = XMFLOAT2(_settings[index].direction.x - (_settings[index].velocitySpread.x * 0.5f), _settings[index].direction.x + (_settings[index].velocitySpread.x * 0.5f));
+	XMFLOAT2 directionMinMaxY = XMFLOAT2(_settings[index].direction.y - (_settings[index].velocitySpread.y * 0.5f), _settings[index].direction.y + (_settings[index].velocitySpread.y * 0.5f));
+	XMFLOAT2 directionMinMaxZ = XMFLOAT2(_settings[index].direction.z - (_settings[index].velocitySpread.z * 0.5f), _settings[index].direction.z + (_settings[index].velocitySpread.z * 0.5f));
 
-	//// get velocityDirection;
-	//XMFLOAT3 direction = XMFLOAT3(GetRandomFloat(directionMinMaxX.x, directionMinMaxX.y), GetRandomFloat(directionMinMaxY.x, directionMinMaxY.y), GetRandomFloat(directionMinMaxZ.x, directionMinMaxZ.y));
-	//D3DXVec3Normalize(&direction, &direction);
-	//if (_settings[index].LocalSpace)
-	//	direction = GetDirectionLocal(direction);
+	// get velocityDirection;
+	XMFLOAT3 direction = XMFLOAT3(GetRandomFloat(directionMinMaxX.x, directionMinMaxX.y), GetRandomFloat(directionMinMaxY.x, directionMinMaxY.y), GetRandomFloat(directionMinMaxZ.x, directionMinMaxZ.y));
+	XMStoreFloat3(&direction, XMVector3Normalize(XMLoadFloat3(&direction)));
+	if (_settings[index].LocalSpace)
+		direction = GetDirectionLocal(direction);
 
-	//// get random color values
-	//XMFLOAT3 startColorMultiplier = XMFLOAT3
-	//								(GetRandomFloat(_settings[index].startColorMultiplierRGBMin.x, _settings[index].startColorMultiplierRGBMax.x), 
-	//								 GetRandomFloat(_settings[index].startColorMultiplierRGBMin.y, _settings[index].startColorMultiplierRGBMax.y),
-	//								 GetRandomFloat(_settings[index].startColorMultiplierRGBMin.z, _settings[index].startColorMultiplierRGBMax.z));
+	// get random color values
+	XMFLOAT3 startColorMultiplier = XMFLOAT3
+									(GetRandomFloat(_settings[index].startColorMultiplierRGBMin.x, _settings[index].startColorMultiplierRGBMax.x), 
+									 GetRandomFloat(_settings[index].startColorMultiplierRGBMin.y, _settings[index].startColorMultiplierRGBMax.y),
+									 GetRandomFloat(_settings[index].startColorMultiplierRGBMin.z, _settings[index].startColorMultiplierRGBMax.z));
 
-	//XMFLOAT3 endColorMultiplier = XMFLOAT3
-	//								(GetRandomFloat(_settings[index].endColorMultiplierRGBMin.x, _settings[index].endColorMultiplierRGBMax.x),
-	//								 GetRandomFloat(_settings[index].endColorMultiplierRGBMin.y, _settings[index].endColorMultiplierRGBMax.y),
-	//								 GetRandomFloat(_settings[index].endColorMultiplierRGBMin.z, _settings[index].endColorMultiplierRGBMax.z));
+	XMFLOAT3 endColorMultiplier = XMFLOAT3
+									(GetRandomFloat(_settings[index].endColorMultiplierRGBMin.x, _settings[index].endColorMultiplierRGBMax.x),
+									 GetRandomFloat(_settings[index].endColorMultiplierRGBMin.y, _settings[index].endColorMultiplierRGBMax.y),
+									 GetRandomFloat(_settings[index].endColorMultiplierRGBMin.z, _settings[index].endColorMultiplierRGBMax.z));
 
-	//// get random speed
-	//float speed = GetRandomFloat(_settings[index].minMaxSpeed.x, _settings[index].minMaxSpeed.y);
+	// get random speed
+	float speed = GetRandomFloat(_settings[index].minMaxSpeed.x, _settings[index].minMaxSpeed.y);
 
-	//float startScale = GetRandomFloat(_settings[index].startScaleMinMax.x, _settings[index].startScaleMinMax.y);
-	//float endScale = GetRandomFloat(_settings[index].endScaleMinMax.x, _settings[index].endScaleMinMax.y);
+	float startScale = GetRandomFloat(_settings[index].startScaleMinMax.x, _settings[index].startScaleMinMax.y);
+	float endScale = GetRandomFloat(_settings[index].endScaleMinMax.x, _settings[index].endScaleMinMax.y);
 
-	//float rotationSpeed = GetRandomFloat(_settings[index].rotationPerSecMinMax.x, _settings[index].rotationPerSecMinMax.y);
-	//XMFLOAT2 uvScrollSpeed(GetRandomFloat(_settings[index].uvScrollXMinMax.x, _settings[index].uvScrollXMinMax.y), GetRandomFloat(_settings[index].uvScrollYMinMax.x, _settings[index].uvScrollYMinMax.y));
+	float rotationSpeed = GetRandomFloat(_settings[index].rotationPerSecMinMax.x, _settings[index].rotationPerSecMinMax.y);
+	XMFLOAT2 uvScrollSpeed(GetRandomFloat(_settings[index].uvScrollXMinMax.x, _settings[index].uvScrollXMinMax.y), GetRandomFloat(_settings[index].uvScrollYMinMax.x, _settings[index].uvScrollYMinMax.y));
 
-	//// set start values in particledatastruct
-	//particle.position = XMFLOAT3(GetRandomFloat(spawnMinMaxX.x, spawnMinMaxX.y), GetRandomFloat(spawnMinMaxY.x, spawnMinMaxY.y), GetRandomFloat(spawnMinMaxZ.x, spawnMinMaxZ.y)) + _settings[index].spawnOffset;
-	//particle.zRotation = 0;
-	//particle.scale = XMFLOAT3(1, 1, 1);
-	//particle.direction = direction;
-	//particle.speed.x = speed;
-	//particle.speed.y = speed;
-	//particle.speed.z = speed;
-	//particle.dragMultiplier = 1.0f;
-	//particle.lifeTime = _settings[index].particleLifetime;
-	//particle.active = true;
-	//particle.currentColorMultiplier = _settings[index].startColorMultiplierRGBMin;
-	//particle.currentAlpha = _settings[index].startAlpha;
-	//particle.fraction = 0;
-	//particle.startColorMultiplierRGB = startColorMultiplier;
-	//particle.endColorMultiplierRGB = endColorMultiplier;
-	//particle.startScale = startScale;
-	//particle.endScale = endScale;
-	//particle.zRotationSpeed = rotationSpeed;
-	//particle.uvOffset = XMFLOAT2(0, 0);
-	//particle.uvOffsetSpeed = uvScrollSpeed;
+	// set start values in particledatastruct
+	XMStoreFloat3(&particle.position, XMVectorAdd(XMLoadFloat3(&XMFLOAT3(GetRandomFloat(spawnMinMaxX.x, spawnMinMaxX.y), GetRandomFloat(spawnMinMaxY.x, spawnMinMaxY.y), GetRandomFloat(spawnMinMaxZ.x, spawnMinMaxZ.y))), XMLoadFloat3(&_settings[index].spawnOffset)));
+	particle.zRotation = 0;
+	particle.scale = XMFLOAT3(1, 1, 1);
+	particle.direction = direction;
+	particle.speed.x = speed;
+	particle.speed.y = speed;
+	particle.speed.z = speed;
+	particle.dragMultiplier = 1.0f;
+	particle.lifeTime = _settings[index].particleLifetime;
+	particle.active = true;
+	particle.currentColorMultiplier = _settings[index].startColorMultiplierRGBMin;
+	particle.currentAlpha = _settings[index].startAlpha;
+	particle.fraction = 0;
+	particle.startColorMultiplierRGB = startColorMultiplier;
+	particle.endColorMultiplierRGB = endColorMultiplier;
+	particle.startScale = startScale;
+	particle.endScale = endScale;
+	particle.zRotationSpeed = rotationSpeed;
+	particle.uvOffset = XMFLOAT2(0, 0);
+	particle.uvOffsetSpeed = uvScrollSpeed;
 	
 }
 
@@ -304,147 +309,153 @@ void ParticleEmitterComponent::Update()
 
 void ParticleEmitterComponent::UpdateVelocity(const float& delta)
 {
-	//XMFLOAT3 EmitterPos = _transform->GetPositionVal();
+	XMFLOAT3 EmitterPos = _transform->GetPositionVal();
 
-	//for (int i = 0; i < _numEmitters; i++)
-	//{
-	//	for(int y =0; y < _settings[i].numParticles; y++)
-	//	{
-	//		if (!_particleData[i][y].active)
-	//			continue;
+	for (int i = 0; i < _numEmitters; i++)
+	{
+		for(int y =0; y < _settings[i].numParticles; y++)
+		{
+			if (!_particleData[i][y].active)
+				continue;
 
-	//		// save last frame position before we update velocity (used to calculate velocity direction of particle for rotation) 
-	//		_particleData[i][y].previousPosition = _particleData[i][y].position;
+			// save last frame position before we update velocity (used to calculate velocity direction of particle for rotation) 
+			_particleData[i][y].previousPosition = _particleData[i][y].position;
 
-	//		// manipulate speed based on gravity and direction
-	//		// if direction is negative we have to take -gravity resulting in the speed decreasing with a positive gravity and increasing with a negative gravity (becuase of doubble negative)
-	//		// positive direction works normally, will add negative gravity resulting in speed slowing down or add positive gravity that will increase speed
-	//		if (_particleData[i][y].direction.x < 0.0f)
-	//			_particleData[i][y].speed.x -= _settings[i].gravity.x * delta;
-	//		else
-	//			_particleData[i][y].speed.x += _settings[i].gravity.x * delta;
+			// manipulate speed based on gravity and direction
+			// if direction is negative we have to take -gravity resulting in the speed decreasing with a positive gravity and increasing with a negative gravity (becuase of doubble negative)
+			// positive direction works normally, will add negative gravity resulting in speed slowing down or add positive gravity that will increase speed
+			if (_particleData[i][y].direction.x < 0.0f)
+				_particleData[i][y].speed.x -= _settings[i].gravity.x * delta;
+			else
+				_particleData[i][y].speed.x += _settings[i].gravity.x * delta;
 
-	//		if (_particleData[i][y].direction.y < 0.0f)
-	//			_particleData[i][y].speed.y -= _settings[i].gravity.y * delta;
-	//		else
-	//			_particleData[i][y].speed.y += _settings[i].gravity.y * delta;
+			if (_particleData[i][y].direction.y < 0.0f)
+				_particleData[i][y].speed.y -= _settings[i].gravity.y * delta;
+			else
+				_particleData[i][y].speed.y += _settings[i].gravity.y * delta;
 
-	//		if (_particleData[i][y].direction.z < 0.0f)
-	//			_particleData[i][y].speed.z -= _settings[i].gravity.z * delta;
-	//		else
-	//			_particleData[i][y].speed.z += _settings[i].gravity.z * delta;
+			if (_particleData[i][y].direction.z < 0.0f)
+				_particleData[i][y].speed.z -= _settings[i].gravity.z * delta;
+			else
+				_particleData[i][y].speed.z += _settings[i].gravity.z * delta;
 
-	//		// update the drag
-	//		_particleData[i][y].dragMultiplier -= _settings[i].drag * delta;
-	//		if (_particleData[i][y].dragMultiplier < 0.0f)
-	//			_particleData[i][y].dragMultiplier = 0;
+			// update the drag
+			_particleData[i][y].dragMultiplier -= _settings[i].drag * delta;
+			if (_particleData[i][y].dragMultiplier < 0.0f)
+				_particleData[i][y].dragMultiplier = 0;
 
-	//		// update the position based on direction and speed
-	//		_particleData[i][y].position.x += (_particleData[i][y].direction.x * _particleData[i][y].speed.x * _particleData[i][y].dragMultiplier * delta) + (EmitterPos - _previousPosition).x * _settings[i].inheritVelocityScale.x;
-	//		_particleData[i][y].position.y += (_particleData[i][y].direction.y * _particleData[i][y].speed.y * _particleData[i][y].dragMultiplier * delta) + (EmitterPos - _previousPosition).y * _settings[i].inheritVelocityScale.y;
-	//		_particleData[i][y].position.z += (_particleData[i][y].direction.z * _particleData[i][y].speed.z * _particleData[i][y].dragMultiplier * delta) + (EmitterPos - _previousPosition).z * _settings[i].inheritVelocityScale.z;
+			// get velocity rom last pos to currentpos
+			XMFLOAT3 velocityVector;
+			XMStoreFloat3(&velocityVector, XMVectorSubtract(XMLoadFloat3(&EmitterPos), XMLoadFloat3(&_previousPosition)));
 
-	//		// add on gravity
-	//		_particleData[i][y].position.x += _settings[i].gravity.x * _particleData[i][y].dragMultiplier * delta;
-	//		_particleData[i][y].position.y += _settings[i].gravity.y * _particleData[i][y].dragMultiplier * delta;
-	//		_particleData[i][y].position.z += _settings[i].gravity.z * _particleData[i][y].dragMultiplier * delta;
+			// update the position based on direction and speed
+			_particleData[i][y].position.x += (_particleData[i][y].direction.x * _particleData[i][y].speed.x * _particleData[i][y].dragMultiplier * delta) + velocityVector.x * _settings[i].inheritVelocityScale.x;
+			_particleData[i][y].position.y += (_particleData[i][y].direction.y * _particleData[i][y].speed.y * _particleData[i][y].dragMultiplier * delta) + velocityVector.y * _settings[i].inheritVelocityScale.y;
+			_particleData[i][y].position.z += (_particleData[i][y].direction.z * _particleData[i][y].speed.z * _particleData[i][y].dragMultiplier * delta) + velocityVector.z * _settings[i].inheritVelocityScale.z;
 
-	//		// add on the movement of entity from last to current frame 
-	//		if (_settings[i].followEmitter)
-	//			_particleData[i][y].position += (EmitterPos - _previousPosition);
+			// add on gravity
+			_particleData[i][y].position.x += _settings[i].gravity.x * _particleData[i][y].dragMultiplier * delta;
+			_particleData[i][y].position.y += _settings[i].gravity.y * _particleData[i][y].dragMultiplier * delta;
+			_particleData[i][y].position.z += _settings[i].gravity.z * _particleData[i][y].dragMultiplier * delta;
 
-	//		_particleData[i][y].uvOffset.x += _particleData[i][y].uvOffsetSpeed.x * delta;
-	//		_particleData[i][y].uvOffset.y += _particleData[i][y].uvOffsetSpeed.y * delta;
-	//	}		
-	//}
+			// add on the movement of entity from last to current frame 
+			if (_settings[i].followEmitter)
+				XMStoreFloat3(&_particleData[i][y].position, XMVectorAdd(XMLoadFloat3(&_particleData[i][y].position), XMLoadFloat3(&velocityVector)));				
 
-	//_previousPosition = EmitterPos;
+			_particleData[i][y].uvOffset.x += _particleData[i][y].uvOffsetSpeed.x * delta;
+			_particleData[i][y].uvOffset.y += _particleData[i][y].uvOffsetSpeed.y * delta;
+		}		
+	}
+
+	_previousPosition = EmitterPos;
 
 }
 
 void ParticleEmitterComponent::UpdateLerps(const float& delta)
 {
-	//for(int i = 0; i < _numEmitters; i++)
-	//{
-	//	for(int y =0; y < _settings[i].numParticles; y++)
-	//	{
-	//		if (!_particleData[i][y].active)
-	//			continue;
+	for(int i = 0; i < _numEmitters; i++)
+	{
+		for(int y =0; y < _settings[i].numParticles; y++)
+		{
+			if (!_particleData[i][y].active)
+				continue;
 
-	//		// add on to fraction
-	//		_particleData[i][y].fraction += delta / _settings[i].particleLifetime;
+			// add on to fraction
+			_particleData[i][y].fraction += delta / _settings[i].particleLifetime;
 
-	//		// color and alpha
-	//		D3DXVec3Lerp(&_particleData[i][y].currentColorMultiplier, &_particleData[i][y].startColorMultiplierRGB, &_particleData[i][y].endColorMultiplierRGB, _particleData[i][y].fraction);
-	//		_particleData[i][y].currentAlpha = LerpFloat(_settings[i].startAlpha, _settings[i].endAlpha, _particleData[i][y].fraction);
+			// color and alpha
+			XMStoreFloat3(&_particleData[i][y].currentColorMultiplier, XMVectorLerp(XMLoadFloat3(&_particleData[i][y].startColorMultiplierRGB), XMLoadFloat3(&_particleData[i][y].endColorMultiplierRGB), _particleData[i][y].fraction));
+			_particleData[i][y].currentAlpha = LerpFloat(_settings[i].startAlpha, _settings[i].endAlpha, _particleData[i][y].fraction);
 
-	//		//scale
-	//		_particleData[i][y].scale = XMFLOAT3(1, 1, 1) * LerpFloat(_particleData[i][y].startScale, _particleData[i][y].endScale, _particleData[i][y].fraction);
-	//	}		
-	//}
+			//scale
+			float scaleFraction = LerpFloat(_particleData[i][y].startScale, _particleData[i][y].endScale, _particleData[i][y].fraction);
+			float one = 1.0f;
+			XMStoreFloat3(&_particleData[i][y].scale, XMVectorMultiply(XMLoadFloat3(&XMFLOAT3(one, one, one)), XMLoadFloat3(&XMFLOAT3(scaleFraction, scaleFraction, scaleFraction))));			
+		}		
+	}
 }
 
 void ParticleEmitterComponent::UpdateLifeTime(const float& delta)
 {
-	//for(int i =0; i < _numEmitters; i++)
-	//{
-	//	// if has a lifetime, countdown and remove entity
-	//	if (_hasLifetime)
-	//	{
-	//		_settings[i].emitterLifetime -= delta;
-	//		if (_settings[i].emitterLifetime <= 0)
-	//			_parent->RemoveEntity();
-	//	}
+	for(int i =0; i < _numEmitters; i++)
+	{
+		// if has a lifetime, countdown and remove entity
+		if (_hasLifetime)
+		{
+			_settings[i].emitterLifetime -= delta;
+			if (_settings[i].emitterLifetime <= 0)
+				_parent->RemoveEntity();
+		}
 
-	//	// if in burst mode only update the timer that all particles share
-	//	if (_settings[i].burst)
-	//	{
-	//		_currentParticlesLifetime[i] -= delta;
-	//		if (_currentParticlesLifetime[i] <= 0)
-	//			SpawnAllParticles(i);
-	//		continue;
-	//	}
+		// if in burst mode only update the timer that all particles share
+		if (_settings[i].burst)
+		{
+			_currentParticlesLifetime[i] -= delta;
+			if (_currentParticlesLifetime[i] <= 0)
+				SpawnAllParticles(i);
+			continue;
+		}
 
-	//	// if flow mode update the lifespan of all active particles
-	//	for (int y = 0; y < _settings[i].numParticles; y++)
-	//	{
-	//		if (_particleData[i][y].active)
-	//		{
-	//			_particleData[i][y].lifeTime -= delta;
-	//			if (_particleData[i][y].lifeTime <= 0)
-	//				SpawnParticle(_particleData[i][y], i);
-	//		}
-	//	}
+		// if flow mode update the lifespan of all active particles
+		for (int y = 0; y < _settings[i].numParticles; y++)
+		{
+			if (_particleData[i][y].active)
+			{
+				_particleData[i][y].lifeTime -= delta;
+				if (_particleData[i][y].lifeTime <= 0)
+					SpawnParticle(_particleData[i][y], i);
+			}
+		}
 
-	//	// check if all particles is alredy active and spawned
-	//	if (_numSpawnedParticles[i] == _settings[i].numParticles)
-	//		continue;
+		// check if all particles is alredy active and spawned
+		if (_numSpawnedParticles[i] == _settings[i].numParticles)
+			continue;
 
-	//	// spawn new particle based on number of particles in emitter and lifespan of 1 particle to get a nice flow
-	//	_spawnTimer[i] += delta;
-	//	if (_spawnTimer[i] >= _particleSpawnRatio[i])
-	//	{
-	//		_spawnTimer[i] = 0;
-	//		SpawnParticle(_particleData[i][_numSpawnedParticles[i]],i);
-	//		_numSpawnedParticles[i]++;
-	//	}
-	//}	
+		// spawn new particle based on number of particles in emitter and lifespan of 1 particle to get a nice flow
+		_spawnTimer[i] += delta;
+		if (_spawnTimer[i] >= _particleSpawnRatio[i])
+		{
+			_spawnTimer[i] = 0;
+			SpawnParticle(_particleData[i][_numSpawnedParticles[i]],i);
+			_numSpawnedParticles[i]++;
+		}
+	}	
 
 }
 
 void ParticleEmitterComponent::SortParticles(unsigned int index)
 {
-	//XMFLOAT3 camPos = CameraManager::GetInstance().GetCurrentCameraGame()->GetComponent<TransformComponent>()->GetPositionVal();
-	//XMFLOAT3 vec;
+	XMFLOAT3 camPos = CameraManager::GetInstance().GetCurrentCameraGame()->GetComponent<TransformComponent>()->GetPositionVal();
+	XMFLOAT3 vec;
 
-	//// get distance of particle from camera
-	//for (int i = 0; i < _settings[index].numParticles; i++)
-	//{
-	//	vec = _particleData[index][i].position - camPos;
-	//	_particleData[index][i].distance = D3DXVec3Length(&vec);
-	//}
-	//		
-	//std::sort(_sortedData[index], _sortedData[index] + _settings[index].numParticles, [&](ParticleData* a, ParticleData* b) -> bool {return a->distance > b->distance; });
+	// get distance of particle from camera
+	for (int i = 0; i < _settings[index].numParticles; i++)
+	{
+		XMStoreFloat3(&vec, XMVectorSubtract(XMLoadFloat3(&_particleData[index][i].position), XMLoadFloat3(&camPos)));
+		XMStoreFloat(&_particleData[index][i].distance, XMVector3Length(XMLoadFloat3(&vec)));
+	}
+			
+	std::sort(_sortedData[index], _sortedData[index] + _settings[index].numParticles, [&](ParticleData* a, ParticleData* b) -> bool {return a->distance > b->distance; });
 }
 
 float ParticleEmitterComponent::GetRandomFloat(float min, float max)
@@ -463,144 +474,144 @@ float ParticleEmitterComponent::LerpFloat(float a, float b, float f)
 
 XMFLOAT3 ParticleEmitterComponent::GetDirectionLocal(XMFLOAT3 direction)
 {
-	//const XMFLOAT3& emitterRotation = _transform->GetRotationRef();
-	//D3DXMATRIX matrixRotation = *D3DXMatrixIdentity(&matrixRotation);
-	//D3DXMatrixRotationYawPitchRoll(&matrixRotation, D3DXToRadian(emitterRotation.y), D3DXToRadian(emitterRotation.x), D3DXToRadian(emitterRotation.z));
-	//	
-	//// transform direction by our rotation
-	//D3DXVec3TransformCoord(&direction, &direction, &matrixRotation);
-	//		
-	//return *D3DXVec3Normalize(&direction, &direction);
+	const XMFLOAT3& emitterRotation = _transform->GetRotationRef();
+	XMFLOAT4X4 matrixRotation; XMStoreFloat4x4(&matrixRotation, XMMatrixIdentity());
 
-	return XMFLOAT3(0, 0, 0);
+	XMStoreFloat4x4(&matrixRotation, XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&emitterRotation)));
+	XMStoreFloat3(&direction, XMVector3TransformCoord(XMLoadFloat3(&direction), XMLoadFloat4x4(&matrixRotation)));
+	XMStoreFloat3(&direction, XMVector3Normalize(XMLoadFloat3(&direction)));
+	
+	return direction;	
 }
 
 void ParticleEmitterComponent::UpdateRotations(const float& delta)
 {
 
-	//XMFLOAT3 forward, up, right;
-	//CameraManager::GetInstance().GetCurrentCameraGame()->GetComponent<TransformComponent>()->GetAllAxis(forward, right, up);
+	XMFLOAT3 forward, up, right;
+	CameraManager::GetInstance().GetCurrentCameraGame()->GetComponent<TransformComponent>()->GetAllAxis(forward, right, up);
 
-	// XMFLOAT4X4 rotationMatrix = *D3DXMatrixIdentity(&rotationMatrix);
+	XMFLOAT4X4 rotationMatrix; XMStoreFloat4x4(&rotationMatrix, XMMatrixIdentity());
 
-	// for(int i =0; i < _numEmitters; i++)
-	// {
-	//	 if (_settings[i].rotationByVelocity) // billboarding with z rotation by velocityvector
-	//	 {
-	//		 for (int y = 0; y < _settings[i].numParticles; y++)
-	//		 {
-	//			 // get the direction of velocity
-	//			 XMFLOAT3 dir = _particleData[i][y].position - _particleData[i][y].previousPosition;
-	//			 D3DXVec3Normalize(&dir, &dir);
+	 for(int i =0; i < _numEmitters; i++)
+	 {
+		 if (_settings[i].rotationByVelocity) // billboarding with z rotation by velocityvector
+		 {
+			 for (int y = 0; y < _settings[i].numParticles; y++)
+			 {
+				 // get the direction of velocity
+				 XMFLOAT3 dir; XMStoreFloat3(&dir, XMVectorSubtract(XMLoadFloat3(&_particleData[i][y].position), XMLoadFloat3(&_particleData[i][y].previousPosition))); 
+				 XMStoreFloat3(&dir, XMVector3Normalize(XMLoadFloat3(&dir)));
 
-	//			 // get perpendicular vector from camera forward and inverted velocity vector
-	//			 XMFLOAT3 byVelocityRight(0, 0, 0);
-	//			 D3DXVec3Cross(&byVelocityRight, &forward, &-dir);
-	//			 D3DXVec3Normalize(&byVelocityRight, &byVelocityRight);
+				 // get perpendicular vector from camera forward and inverted velocity vector
+				 XMFLOAT3 byVelocityRight(0, 0, 0);
+				 XMStoreFloat3(&byVelocityRight, XMVector3Cross(XMLoadFloat3(&forward), XMVectorNegate(XMLoadFloat3(&dir))));
+				 XMStoreFloat3(&byVelocityRight, XMVector3Normalize(XMLoadFloat3(&byVelocityRight)));				
 
-	//			 // get the perpendicular vector from camera forward and the newly calculated rightvector 
-	//			 XMFLOAT3 byVelocityUp(0, 0, 0);
-	//			 D3DXVec3Cross(&byVelocityUp, &forward, &byVelocityRight);
-	//			 D3DXVec3Normalize(&byVelocityUp, &byVelocityUp);
+				 // get the perpendicular vector from camera forward and the newly calculated rightvector 
+				 XMFLOAT3 byVelocityUp(0, 0, 0);
+				 XMStoreFloat3(&byVelocityUp, XMVector3Cross(XMLoadFloat3(&forward), XMLoadFloat3(&byVelocityRight)));
+				 XMStoreFloat3(&byVelocityUp, XMVector3Normalize(XMLoadFloat3(&byVelocityUp)));
 
-	//			 rotationMatrix._11 = byVelocityRight.x;
-	//			 rotationMatrix._21 = byVelocityRight.y;
-	//			 rotationMatrix._31 = byVelocityRight.z;
+				 rotationMatrix._11 = byVelocityRight.x;
+				 rotationMatrix._21 = byVelocityRight.y;
+				 rotationMatrix._31 = byVelocityRight.z;
 
-	//			 rotationMatrix._12 = byVelocityUp.x;
-	//			 rotationMatrix._22 = byVelocityUp.y;
-	//			 rotationMatrix._32 = byVelocityUp.z;
+				 rotationMatrix._12 = byVelocityUp.x;
+				 rotationMatrix._22 = byVelocityUp.y;
+				 rotationMatrix._32 = byVelocityUp.z;
 
-	//			 rotationMatrix._13 = forward.x;
-	//			 rotationMatrix._23 = forward.y;
-	//			 rotationMatrix._33 = forward.z;
+				 rotationMatrix._13 = forward.x;
+				 rotationMatrix._23 = forward.y;
+				 rotationMatrix._33 = forward.z;
 
-	//			 D3DXMatrixTranspose(&rotationMatrix, &rotationMatrix);
+				 XMStoreFloat4x4(&rotationMatrix, XMMatrixTranspose(XMLoadFloat4x4(&rotationMatrix)));
+				 _particleData[i][y].rotationMatrix = rotationMatrix;
+			 }
+		 }
+		 else // billboarding with z rotation by speed
+		 {
+			 rotationMatrix._11 = right.x;
+			 rotationMatrix._21 = right.y;
+			 rotationMatrix._31 = right.z;
 
-	//			 _particleData[i][y].rotationMatrix = rotationMatrix;
-	//		 }
-	//	 }
-	//	 else // billboarding with z rotation by speed
-	//	 {
-	//		 rotationMatrix._11 = right.x;
-	//		 rotationMatrix._21 = right.y;
-	//		 rotationMatrix._31 = right.z;
+			 rotationMatrix._12 = up.x;
+			 rotationMatrix._22 = up.y;
+			 rotationMatrix._32 = up.z;
 
-	//		 rotationMatrix._12 = up.x;
-	//		 rotationMatrix._22 = up.y;
-	//		 rotationMatrix._32 = up.z;
+			 rotationMatrix._13 = forward.x;
+			 rotationMatrix._23 = forward.y;
+			 rotationMatrix._33 = forward.z;
 
-	//		 rotationMatrix._13 = forward.x;
-	//		 rotationMatrix._23 = forward.y;
-	//		 rotationMatrix._33 = forward.z;
+			 XMFLOAT4X4 zRotationMatrix;  XMStoreFloat4x4(&zRotationMatrix, XMMatrixIdentity());
+			 XMFLOAT4X4 result; XMStoreFloat4x4(&result, XMMatrixIdentity());
 
-	//		 D3DXMATRIX zRotationMatrix = *D3DXMatrixIdentity(&zRotationMatrix);
-	//		 D3DXMATRIX result = *D3DXMatrixIdentity(&result);
+			 for (int y = 0; y < _settings[i].numParticles; y++)
+			 {
+				 // add on rotation for each particle and caculate the rotationmatrix for the z rotation
+				 _particleData[i][y].zRotation += _particleData[i][y].zRotationSpeed * delta;
 
-	//		 for (int y = 0; y < _settings[i].numParticles; y++)
-	//		 {
-	//			 // add on rotation for each particle and caculate the rotationmatrix for the z rotation
-	//			 _particleData[i][y].zRotation += _particleData[i][y].zRotationSpeed * delta;
-	//			 D3DXMatrixRotationZ(&zRotationMatrix, D3DXToRadian(_particleData[i][y].zRotation));
-
-	//			 // multiply the billboard rotationmatrix with the z rotationmatrix and transpose the result
-	//			 D3DXMatrixMultiply(&result, &rotationMatrix, &zRotationMatrix);
-	//			 D3DXMatrixTranspose(&result, &result);
-
-	//			 _particleData[i][y].rotationMatrix = result;
-	//		 }
-	//	 }
-	// }					
+				 XMStoreFloat4x4(&zRotationMatrix, XMMatrixRotationZ(XMConvertToRadians(_particleData[i][y].zRotation)));
+				 XMStoreFloat4x4(&result, XMMatrixMultiplyTranspose(XMLoadFloat4x4(&rotationMatrix), XMLoadFloat4x4(&zRotationMatrix)));
+	
+				 _particleData[i][y].rotationMatrix = result;
+			 }
+		 }
+	 }					
 }
 
 void ParticleEmitterComponent::UpdateBuffer() 
 {
-	//D3DXMATRIX matrixPosition = *D3DXMatrixIdentity(&matrixPosition);
-	//D3DXMATRIX matrixScale	  = *D3DXMatrixIdentity(&matrixScale);
-	//D3DXMATRIX matrixRotation = *D3DXMatrixIdentity(&matrixRotation);
+	XMFLOAT4X4 matrixPosition; XMStoreFloat4x4(&matrixPosition, XMMatrixIdentity());
+	XMFLOAT4X4 matrixScale;    XMStoreFloat4x4(&matrixScale,    XMMatrixIdentity());
+	XMFLOAT4X4 matrixRotation; XMStoreFloat4x4(&matrixRotation, XMMatrixIdentity());
+	XMFLOAT4X4 matrixWorld;    XMStoreFloat4x4(&matrixWorld,    XMMatrixIdentity());
+	
+	XMFLOAT3 color;
+	float alpha;
+			
+	for(int i =0; i < _numEmitters; i++)
+	{
+		for (int y = 0; y < _settings[i].numParticles; y++)
+		{
 
-	//XMFLOAT3 color;
-	//float alpha;
-	//		
-	//for(int i =0; i < _numEmitters; i++)
-	//{
-	//	for (int y = 0; y < _settings[i].numParticles; y++)
-	//	{
-	//		// calculate all matrices from the sorted particle values
-	//		D3DXMatrixTranslation(&matrixPosition, _sortedData[i][y]->position.x, _sortedData[i][y]->position.y, _sortedData[i][y]->position.z);
-	//		D3DXMatrixScaling(&matrixScale, _sortedData[i][y]->scale.x, _sortedData[i][y]->scale.y, _sortedData[i][y]->scale.z);
-	//		matrixRotation = _sortedData[i][y]->rotationMatrix;
+			// calculate all matrices from the sorted particle values
+			XMStoreFloat4x4(&matrixPosition, XMMatrixTranslationFromVector(XMLoadFloat3(&_sortedData[i][y]->position)));
+			XMStoreFloat4x4(&matrixScale, XMMatrixScalingFromVector(XMLoadFloat3(&_sortedData[i][y]->scale)));
+			matrixRotation = _sortedData[i][y]->rotationMatrix;
 
-	//		// set the values for each instace
-	//		_particleInstanceData[i][y].worldMatrix = matrixScale * matrixRotation * matrixPosition;
+			// calculate worldmatrix
+			XMStoreFloat4x4(&matrixWorld, XMMatrixMultiply(XMLoadFloat4x4(&matrixScale), XMLoadFloat4x4(&matrixRotation)));
+			XMStoreFloat4x4(&matrixWorld, XMMatrixMultiply(XMLoadFloat4x4(&matrixWorld), XMLoadFloat4x4(&matrixPosition)));
 
-	//		color = _sortedData[i][y]->currentColorMultiplier;
-	//		alpha = _sortedData[i][y]->currentAlpha;
+			_particleInstanceData[i][y].worldMatrix = matrixWorld;
+			color = _sortedData[i][y]->currentColorMultiplier;
+			alpha = _sortedData[i][y]->currentAlpha;
 
-	//		// multiply all colors with alpha value, black == transparent
-	//		if (_settings[i].BLEND == BLEND_STATE::BLEND_ADDITIVE || _settings[i].BLEND == BLEND_STATE::BLEND_SUBTRACTIVE)
-	//			_particleInstanceData[i][y].color = D3DXVECTOR4(color.x, color.y, color.z, alpha) * alpha;
-	//		// send in the color normaly, alpha is set in shader
-	//		else if (_settings[i].BLEND == BLEND_STATE::BLEND_ALPHA)
-	//			_particleInstanceData[i][y].color = D3DXVECTOR4(color.x, color.y, color.z, alpha);
+			// multiply all colors with alpha value, black == transparent
+			if (_settings[i].BLEND == BLEND_STATE::BLEND_ADDITIVE || _settings[i].BLEND == BLEND_STATE::BLEND_SUBTRACTIVE)
+				XMStoreFloat4(&_particleInstanceData[i][y].color, XMVectorMultiply(XMLoadFloat4(&XMFLOAT4(color.x, color.y, color.z, 1)), XMLoadFloat4(&XMFLOAT4(alpha, alpha, alpha, alpha))));	
 
-	//		_particleInstanceData[i][y].uvOffset = _sortedData[i][y]->uvOffset;
-	//	}
+			// send in the color normaly, alpha is set in shader
+			else if (_settings[i].BLEND == BLEND_STATE::BLEND_ALPHA)
+				_particleInstanceData[i][y].color = XMFLOAT4(color.x, color.y, color.z, alpha);
 
-	//	ID3D11DeviceContext* devCon = DXManager::GetInstance().GetDeviceCon();
-	//	D3D11_MAPPED_SUBRESOURCE data;
+			_particleInstanceData[i][y].uvOffset = _sortedData[i][y]->uvOffset;
+		}
 
-	//	// map instancebuffer
-	//	HRESULT result = devCon->Map(_instanceBuffer[i], 0, D3D11_MAP_WRITE_DISCARD, 0, &data);
-	//	if (FAILED(result))
-	//		printf("failed to map instancebuffer in particlesystem\n");
+		ID3D11DeviceContext* devCon = DXManager::GetInstance().GetDeviceCon();
+		D3D11_MAPPED_SUBRESOURCE data;
 
-	//	// copy the instancedata over to the instancebuffer
-	//	memcpy(data.pData, (void*)_particleInstanceData[i], sizeof(ParticleInstanceType) * _settings[i].numParticles);
+		// map instancebuffer
+		HRESULT result = devCon->Map(_instanceBuffer[i], 0, D3D11_MAP_WRITE_DISCARD, 0, &data);
+		if (FAILED(result))
+			printf("failed to map instancebuffer in particlesystem\n");
 
-	//	//unmap
-	//	devCon->Unmap(_instanceBuffer[i], 0);
-	//}
+		// copy the instancedata over to the instancebuffer
+		memcpy(data.pData, (void*)_particleInstanceData[i], sizeof(ParticleInstanceType) * _settings[i].numParticles);
+
+		//unmap
+		devCon->Unmap(_instanceBuffer[i], 0);
+	}
 	
 }
 

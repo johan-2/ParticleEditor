@@ -32,8 +32,10 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM Lparam);
 Framework::Framework()
 {
 
+	// create window
 	CreateWindowDx11("Engine", 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	
+	// init all directX stuff
 	DXManager::GetInstance().Initialize(_window, SCREEN_WIDTH, SCREEN_HEIGHT, V_SYNC, FULLSCREEN);
 
 	GuiManager::GetInstance().Initialize(_window);
@@ -46,7 +48,7 @@ Framework::Framework()
 	// start timers
 	Time::GetInstance();
 
-
+	// start and run
 	Start();
 	Run();
 	
@@ -60,7 +62,10 @@ Framework::~Framework()
 	
 	UnregisterClass((LPCSTR)_applicationName.c_str(), _hInstance);	
 
+#ifdef _DEBUG
 	delete _debugStats;
+#endif 
+
 }
 
 
@@ -73,40 +78,65 @@ void Framework::Start()
 	// create game camera
 	Entity* cameraGame = new Entity();
 	cameraGame->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0, -20), XMFLOAT3(0,0,0));
-	CameraComponent* camGame = cameraGame->AddComponent<CameraComponent>(); camGame->Init3D(70);
+	cameraGame->AddComponent<CameraComponent>()->Init3D(70); 
 	cameraGame->AddComponent<FreeMoveComponent>()->init();
-	CameraManager::GetInstance().SetCurrentCameraGame(camGame);
+	CameraManager::GetInstance().SetCurrentCameraGame(cameraGame->GetComponent<CameraComponent>());
 
 	// create UIcamera
 	Entity* cameraUI = new Entity();
 	cameraUI->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0, -1));
-	CameraComponent* camUI = cameraUI->AddComponent<CameraComponent>(); camUI->Init2D(XMFLOAT2(SCREEN_WIDTH, SCREEN_HEIGHT), XMFLOAT2(0.01f, 1.0f));
-	CameraManager::GetInstance().SetCurrentCameraUI(camUI);
+	cameraUI->AddComponent<CameraComponent>()->Init2D(XMFLOAT2(SCREEN_WIDTH, SCREEN_HEIGHT), XMFLOAT2(0.01f, 1.0f));
+	CameraManager::GetInstance().SetCurrentCameraUI(cameraUI->GetComponent<CameraComponent>());
 
 	//set ambient light color	
 	LightManager::GetInstance().SetAmbientColor(XMFLOAT4(0.1f, 0.1f, 0.1f, 1.0f));
 
-	// create directional light, set to same values as the depthrendercamera
+	// get transform of the camera that renders the depthmap
 	TransformComponent* dt = CameraManager::GetInstance().GetCurrentCameraDepthMap()->GetComponent<TransformComponent>();
+
+	// create directional light and give it the same position/ rotation as depthrender camera
 	Entity* directionalLight = new Entity;
 	directionalLight->AddComponent<TransformComponent>()->Init(dt->GetPositionVal(), dt->GetRotationVal());
-	directionalLight->AddComponent<LightDirectionComponent>()->Init(XMFLOAT4(1.0f, 1.0f, 1.0f, 1), XMFLOAT4(1, 1, 1, 1), 100.0f);
+	directionalLight->AddComponent<LightDirectionComponent>()->Init(XMFLOAT4(0.02f, 0.02f, 0.02f, 1), XMFLOAT4(1, 1, 1, 1), 100.0f);
 
 	//// test entities
-	Entity* testEntity1 = new Entity();
-	testEntity1->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0, 0), XMFLOAT3(0, 0, 0));
-	testEntity1->AddComponent<TransformationComponent>()->Init(XMFLOAT3(1.0f, 1.0f, 0.0f), 40.0f);
-	testEntity1->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::CUBE, AMBIENT | DIRECTIONAL , L"Textures/metalBox.dds", L"Textures/metalBoxNormal.dds", L"Textures/metalBoxSpecular.dds");
+	Entity* box = new Entity();
+	box->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, -2, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(2,2,2));
+	box->AddComponent<TransformationComponent>()->Init(XMFLOAT3(1.0f, 1.0f, 0.0f), 40.0f);
+	box->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::CUBE, AMBIENT | POINT | CAST_SHADOW_DIR , L"Textures/metalBox.dds", L"Textures/metalBoxNormal.dds", L"Textures/metalBoxSpecular.dds");
 
+	Entity* floor = new Entity();
+	floor->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, -8, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(10, 1, 10));
+	floor->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::PLANE, AMBIENT | POINT | RECIVE_SHADOW_DIR, L"Textures/red.dds", L"Textures/faceNormal.dds", L"");
+
+	Entity* wall = new Entity();
+	wall->AddComponent<TransformComponent>()->Init(XMFLOAT3(-20, -6.5f, 12), XMFLOAT3(0, -80, 0), XMFLOAT3(10, 10, 3));
+	wall->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::CUBE, AMBIENT | POINT, L"Textures/wetCrate.dds", L"Textures/wetCrateNormal.dds", L"Textures/wetCrateSpecular.dds");
+
+	Entity* fire = new Entity();
+	fire->AddComponent<TransformComponent>()->Init(XMFLOAT3(-15.0f, -7.5f, 12), XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1));
+	fire->AddComponent<ParticleEmitterComponent>()->Init("Particles/fire.json");
+
+	Entity* pointLight1 = new Entity();
+	pointLight1->AddComponent<TransformComponent>()->Init(XMFLOAT3(0.0f, -3.0f, -5), XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1));
+	pointLight1->AddComponent<LightPointComponent>()->Init(10.0f, 3.0f, XMFLOAT3(1, 1, 1), XMFLOAT3(1, 1, 1), 80.0f, 0.0f, 1.0f, 0.01f);
+
+	Entity* pointLight2 = new Entity();
+	pointLight2->AddComponent<TransformComponent>()->Init(XMFLOAT3(-15.0f, -5.0f, 12), XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1));
+	pointLight2->AddComponent<LightPointComponent>()->Init(15.0f, 3.0f, XMFLOAT3(1.0, 0.8, 0.0), XMFLOAT3(1, 0.8, 0.0), 80.0f, 0.0f, 0.6f, 0.1f);
+
+#ifdef _DEBUG
 	_debugStats = new DebugStats();
+#endif
 }
 
 void Framework::Update()
 {
 	World::GetInstance().Update();
 
+#ifdef _DEBUG
 	_debugStats->Update();
-
+#endif
 }
 
 void Framework::Render()
