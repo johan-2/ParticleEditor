@@ -477,7 +477,7 @@ XMFLOAT3 ParticleEmitterComponent::GetDirectionLocal(XMFLOAT3 direction)
 	const XMFLOAT3& emitterRotation = _transform->GetRotationRef();
 	XMFLOAT4X4 matrixRotation; XMStoreFloat4x4(&matrixRotation, XMMatrixIdentity());
 
-	XMStoreFloat4x4(&matrixRotation, XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&emitterRotation)));
+	XMStoreFloat4x4(&matrixRotation, XMMatrixRotationRollPitchYaw(XMConvertToRadians(emitterRotation.x), XMConvertToRadians(emitterRotation.y), XMConvertToRadians(emitterRotation.z)));
 	XMStoreFloat3(&direction, XMVector3TransformCoord(XMLoadFloat3(&direction), XMLoadFloat4x4(&matrixRotation)));
 	XMStoreFloat3(&direction, XMVector3Normalize(XMLoadFloat3(&direction)));
 	

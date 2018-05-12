@@ -1,0 +1,213 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{B96FCD8B-F409-40D3-B152-F02205B4A2CA}</ProjectGuid>
+    <RootNamespace>ParticleEditor</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>$(SolutionDir)ParticleEditor/Code;$(SolutionDir)ParticleEditor/Code/System;$(SolutionDir)ParticleEditor/Code/Utils;$(SolutionDir)ParticleEditor/Code/ComponentSystem;$(SolutionDir)ParticleEditor/Code/Components;$(SolutionDir)ParticleEditor/Code/Managers;$(SolutionDir)ParticleEditor/Code/imGUI;$(SolutionDir)ParticleEditor/Code/Input;$(SolutionDir)ParticleEditor/Code/rapidjson;$(SolutionDir)ParticleEditor/Code/Renderer;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)ParticleEditor</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>$(SolutionDir)ParticleEditor/Code;$(SolutionDir)ParticleEditor/Code/System;$(SolutionDir)ParticleEditor/Code/Utils;$(SolutionDir)ParticleEditor/Code/ComponentSystem;$(SolutionDir)ParticleEditor/Code/Components;$(SolutionDir)ParticleEditor/Code/Managers;$(SolutionDir)ParticleEditor/Code/imGUI;$(SolutionDir)ParticleEditor/Code/Input;$(SolutionDir)ParticleEditor/Code/rapidjson;$(SolutionDir)ParticleEditor/Code/Renderer;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)ParticleEditor</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>$(SolutionDir)ParticleEditor/Code;$(SolutionDir)ParticleEditor/Code/System;$(SolutionDir)ParticleEditor/Code/Utils;$(SolutionDir)ParticleEditor/Code/ComponentSystem;$(SolutionDir)ParticleEditor/Code/Components;$(SolutionDir)ParticleEditor/Code/Managers;$(SolutionDir)ParticleEditor/Code/imGUI;$(SolutionDir)ParticleEditor/Code/Input;$(SolutionDir)ParticleEditor/Code/rapidjson;$(SolutionDir)ParticleEditor/Code/Renderer;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)ParticleEditor</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>$(SolutionDir)ParticleEditor/Code;$(SolutionDir)ParticleEditor/Code/System;$(SolutionDir)ParticleEditor/Code/Utils;$(SolutionDir)ParticleEditor/Code/ComponentSystem;$(SolutionDir)ParticleEditor/Code/Components;$(SolutionDir)ParticleEditor/Code/Managers;$(SolutionDir)ParticleEditor/Code/imGUI;$(SolutionDir)ParticleEditor/Code/Input;$(SolutionDir)ParticleEditor/Code/rapidjson;$(SolutionDir)ParticleEditor/Code/Renderer;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)ParticleEditor</OutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>d3d11.lib;D3DCompiler.lib;dxgi.lib;XInput.lib;dinput8.lib;dxguid.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>d3d11.lib;D3DCompiler.lib;dxgi.lib;XInput.lib;dinput8.lib;dxguid.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>d3d11.lib;D3DCompiler.lib;dxgi.lib;XInput.lib;dinput8.lib;dxguid.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>d3d11.lib;D3DCompiler.lib;dxgi.lib;XInput.lib;dinput8.lib;dxguid.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="Code\ComponentSystem\ComponentTypes.h" />
+    <ClInclude Include="Code\ComponentSystem\Entity.h" />
+    <ClInclude Include="Code\ComponentSystem\IComponent.h" />
+    <ClInclude Include="Code\ComponentSystem\World.h" />
+    <ClInclude Include="Code\Components\CameraComponent.h" />
+    <ClInclude Include="Code\Components\FreeMoveComponent.h" />
+    <ClInclude Include="Code\Components\LightDirectionComponent.h" />
+    <ClInclude Include="Code\Components\LightPointComponent.h" />
+    <ClInclude Include="Code\Components\ModelComponent.h" />
+    <ClInclude Include="Code\Components\ParticleEmitterComponent.h" />
+    <ClInclude Include="Code\Components\QuadComponent.h" />
+    <ClInclude Include="Code\Components\TransformationComponent.h" />
+    <ClInclude Include="Code\Components\TransformComponent.h" />
+    <ClInclude Include="Code\Components\UVScrollComponent.h" />
+    <ClInclude Include="Code\DDSTextureLoader\DDSTextureLoader.h" />
+    <ClInclude Include="Code\ImGUI\imconfig.h" />
+    <ClInclude Include="Code\ImGUI\imgui.h" />
+    <ClInclude Include="Code\ImGUI\imgui_internal.h" />
+    <ClInclude Include="Code\ImGUI\stb_rect_pack.h" />
+    <ClInclude Include="Code\ImGUI\stb_textedit.h" />
+    <ClInclude Include="Code\ImGUI\stb_truetype.h" />
+    <ClInclude Include="Code\Input\Gamepad.h" />
+    <ClInclude Include="Code\Input\Input.h" />
+    <ClInclude Include="Code\Managers\CameraManager.h" />
+    <ClInclude Include="Code\Managers\GuiManager.h" />
+    <ClInclude Include="Code\Managers\LightManager.h" />
+    <ClInclude Include="Code\Renderer\Mesh.h" />
+    <ClInclude Include="Code\Renderer\MeshGeneration.h" />
+    <ClInclude Include="Code\Renderer\Renderer.h" />
+    <ClInclude Include="Code\Renderer\RenderToTexture.h" />
+    <ClInclude Include="Code\Renderer\ShaderManager.h" />
+    <ClInclude Include="Code\Renderer\SkyBox.h" />
+    <ClInclude Include="Code\System\DXManager.h" />
+    <ClInclude Include="Code\System\Framework.h" />
+    <ClInclude Include="Code\Utils\DebugStats.h" />
+    <ClInclude Include="Code\Utils\SystemDefs.h" />
+    <ClInclude Include="Code\Utils\TexturePool.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Code\ComponentSystem\Entity.cpp" />
+    <ClCompile Include="Code\ComponentSystem\IComponent.cpp" />
+    <ClCompile Include="Code\ComponentSystem\World.cpp" />
+    <ClCompile Include="Code\Components\CameraComponent.cpp" />
+    <ClCompile Include="Code\Components\FreeMoveComponent.cpp" />
+    <ClCompile Include="Code\Components\LightDirectionComponent.cpp" />
+    <ClCompile Include="Code\Components\LightPointComponent.cpp" />
+    <ClCompile Include="Code\Components\ModelComponent.cpp" />
+    <ClCompile Include="Code\Components\ParticleEmitterComponent.cpp" />
+    <ClCompile Include="Code\Components\QuadComponent.cpp" />
+    <ClCompile Include="Code\Components\TransformationComponent.cpp" />
+    <ClCompile Include="Code\Components\TransformComponent.cpp" />
+    <ClCompile Include="Code\Components\UVScrollComponent.cpp" />
+    <ClCompile Include="Code\DDSTextureLoader\DDSTextureLoader.cpp" />
+    <ClCompile Include="Code\ImGUI\imgui.cpp" />
+    <ClCompile Include="Code\ImGUI\imgui_demo.cpp" />
+    <ClCompile Include="Code\ImGUI\imgui_draw.cpp" />
+    <ClCompile Include="Code\Input\Gamepad.cpp" />
+    <ClCompile Include="Code\Input\Input.cpp" />
+    <ClCompile Include="Code\Managers\CameraManager.cpp" />
+    <ClCompile Include="Code\Managers\GuiManager.cpp" />
+    <ClCompile Include="Code\Managers\LightManager.cpp" />
+    <ClCompile Include="Code\Renderer\Mesh.cpp" />
+    <ClCompile Include="Code\Renderer\Renderer.cpp" />
+    <ClCompile Include="Code\Renderer\RenderToTexture.cpp" />
+    <ClCompile Include="Code\Renderer\ShaderManager.cpp" />
+    <ClCompile Include="Code\Renderer\SkyBox.cpp" />
+    <ClCompile Include="Code\System\DXManager.cpp" />
+    <ClCompile Include="Code\System\Framework.cpp" />
+    <ClCompile Include="Code\Utils\DebugStats.cpp" />
+    <ClCompile Include="Code\Utils\TexturePool.cpp" />
+    <ClCompile Include="Code\Utils\Time.cpp" />
+    <ClCompile Include="Main.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

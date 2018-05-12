@@ -4,21 +4,30 @@
 c:\users\nilss\desktop\enginedx11\engine\engine\code\system\framework.cpp(36): warning C4244: 'argument': conversion from 'const float' to 'int', possible loss of data
 c:\users\nilss\desktop\enginedx11\engine\engine\code\system\framework.cpp(39): warning C4244: 'argument': conversion from 'const float' to 'int', possible loss of data
 c:\users\nilss\desktop\enginedx11\engine\engine\code\system\framework.cpp(126): warning C4305: 'argument': truncation from 'double' to 'float'
-  ShaderManager.cpp
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(426): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(426): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(461): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(465): warning C4267: 'argument': conversion from 'size_t' to 'unsigned int', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(717): warning C4018: '<': signed/unsigned mismatch
   Renderer.cpp
 c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\renderer.cpp(45): warning C4244: 'argument': conversion from 'const float' to 'unsigned int', possible loss of data
-  Generating Code...
-  Skipping... (no relevant changes detected)
-  DebugStats.cpp
-  SkyBox.cpp
-  CameraManager.cpp
   ParticleEmitterComponent.cpp
-  FreeMoveComponent.cpp
-  CameraComponent.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particleemittercomponent.cpp(48): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particleemittercomponent.cpp(67): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particleemittercomponent.cpp(85): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particleemittercomponent.cpp(96): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particleemittercomponent.cpp(122): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particleemittercomponent.cpp(223): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particleemittercomponent.cpp(302): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particleemittercomponent.cpp(314): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particleemittercomponent.cpp(316): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particleemittercomponent.cpp(376): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particleemittercomponent.cpp(378): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particleemittercomponent.cpp(400): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particleemittercomponent.cpp(420): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particleemittercomponent.cpp(452): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particleemittercomponent.cpp(463): warning C4244: 'initializing': conversion from 'std::chrono::system_clock::rep' to 'unsigned int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particleemittercomponent.cpp(495): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particleemittercomponent.cpp(499): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particleemittercomponent.cpp(548): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particleemittercomponent.cpp(572): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particleemittercomponent.cpp(574): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particleemittercomponent.cpp(662): warning C4018: '<': signed/unsigned mismatch
+  Generating Code...
   Engine.vcxproj -> C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\Engine.exe
   Engine.vcxproj -> C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\Engine.pdb (Partial PDB)

@@ -1,0 +1,87 @@
+
+Texture2D Textures[3];	// diffuse, normal, specular	
+SamplerState SampleType[2]; // wrap,clamp 	
+
+struct PointLight
+{
+	float3 position;
+	float radius;
+	float3 color;
+	float intensity;
+	float3 specularColor;
+	float specularPower;
+	float attConstant;
+	float attLinear;
+	float attExponential;
+	int numLights;
+};
+
+uniform PointLight u_light[25];
+
+struct PixelInputType
+{
+    float4 position : SV_POSITION;
+    float2 tex : TEXCOORD0;	
+	float3 normal : NORMAL;
+	float3 tangent : TANGENT;
+	float3 binormal : BINORMAL;
+	float3 vertexToCamera : TEXCOORD1;	
+	float3 worldPos : TEXCOORD2;		
+};
+
+float4 Main(PixelInputType input) : SV_TARGET
+{
+		
+	float4 finalColor = float4(0,0,0,1);
+	for (int i =0; i < u_light[0].numLights; i++)
+	{	
+		// get light direction and distance from light	
+		float3 lightDir = -normalize(input.worldPos - u_light[i].position);	
+		float dst = length(input.worldPos - u_light[i].position);
+		
+		// calculate attuniation	
+		float fallOff = 1 - ((dst / u_light[i].radius) * 0.5);	// make the falloff 50% slower then the radius to give more control of result depending of attuniation settings
+		float attuniation = 1 / (u_light[i].attConstant + u_light[i].attLinear * dst + u_light[i].attExponential * dst * dst);
+		attuniation = (attuniation * u_light[i].intensity) * fallOff;
+		
+		if(fallOff >= 0)
+		{	
+			// sample from textures		
+			float4 textureColor = Textures[0].Sample(SampleType[0], input.tex); 	
+			float4 bumpValues = Textures[1].Sample(SampleType[0],input.tex);
+			
+			// convert normalmap sample to range -1 to 1
+			bumpValues = (bumpValues * 2.0) -1.0;
+			
+			// get tangentSpaceMatrix for normalmapping and multiply with normalmapsample to get the bumpnormal
+			float3x3 tangentSpaceMatrix =float3x3(input.tangent,input.binormal,input.normal);	
+			float3 bumpNormal = normalize(mul(bumpValues, tangentSpaceMatrix));   
+				
+			// get intensity from the normal from normalmap and lightdirection
+			float lightIntensity = saturate(dot(bumpNormal, lightDir)); 
+			
+			// get color based on texture, intensity and color of light
+			float4 color = textureColor * lightIntensity * float4(u_light[i].color,1); 
+			
+			// add specular effect if the light is affecting the pixel, dont add specular effect if dst is more then radius
+			float4 specular = float4(0,0,0,0);		
+			if(lightIntensity > 0 && dst < u_light[i].radius)
+			{		
+				float4 specularValue = Textures[2].Sample(SampleType[0],input.tex);
+							
+				//phong
+				float3 reflection = normalize(2 * lightIntensity * input.normal - lightDir);		
+				float specularIntensity = pow(saturate(dot(reflection, input.vertexToCamera)), u_light[i].specularPower);
+				specular.xyz = (u_light[i].specularColor * specularIntensity);
+				specular = specular	* specularValue;
+			} 
+						
+			color += specular;	
+			finalColor += (color * attuniation);
+		}
+	}
+     
+    return finalColor;
+}
+
+

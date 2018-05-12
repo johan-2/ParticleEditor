@@ -1,0 +1,54 @@
+
+Texture2D shaderTexture;	// the texture that we will use for rendering, we will set this in setshaderparameters
+SamplerState SampleType;	// description of how we are going to use the texture, set in initialize shader function
+ 
+uniform float3 u_lightDirection;
+ 			 
+
+struct PixelInputType
+{
+    float4 position : SV_POSITION;
+    float2 tex : TEXCOORD0;
+	float3 normal : NORMAL;	
+	
+};
+
+
+float4 Main(PixelInputType input) : SV_TARGET
+{
+  
+    float4 textureColor;
+    float3 lightDir;
+    float lightIntensity;
+    float4 color;
+		
+		   
+    textureColor = shaderTexture.Sample(SampleType, input.tex); 
+	  				       
+    lightDir = - u_lightDirection;
+   
+    lightIntensity = saturate(dot(input.normal, lightDir));
+	if (lightIntensity <0)
+	{
+		lightIntensity =0;
+	}
+				
+
+    if (lightIntensity > 0.9)
+        color = float4(1.0,1.0,1.0,1.0) * textureColor;
+    else if (lightIntensity > 0.7)
+        color = float4(0.7,0.7,0.7,1.0) * textureColor;
+    else if (lightIntensity > 0.4)
+        color = float4(0.5,0.5,0.5,1.0) * textureColor;
+	 else if (lightIntensity > 0.2)
+        color = float4(0.3,0.3,0.3,1.0) * textureColor;
+    else
+        color = float4(0.15,0.15,0.15,1.0) * textureColor;
+      
+     
+    return color;
+	
+
+	
+    
+}

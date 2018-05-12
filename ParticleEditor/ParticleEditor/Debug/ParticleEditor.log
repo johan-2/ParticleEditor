@@ -1,0 +1,38 @@
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(373,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
+  ParticleEmitterComponent.cpp
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\components\particleemittercomponent.cpp(48): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\components\particleemittercomponent.cpp(64): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\components\particleemittercomponent.cpp(83): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\components\particleemittercomponent.cpp(101): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\components\particleemittercomponent.cpp(119): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\components\particleemittercomponent.cpp(130): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\components\particleemittercomponent.cpp(156): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\components\particleemittercomponent.cpp(257): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\components\particleemittercomponent.cpp(336): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\components\particleemittercomponent.cpp(348): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\components\particleemittercomponent.cpp(350): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\components\particleemittercomponent.cpp(410): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\components\particleemittercomponent.cpp(412): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\components\particleemittercomponent.cpp(434): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\components\particleemittercomponent.cpp(454): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\components\particleemittercomponent.cpp(486): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\components\particleemittercomponent.cpp(497): warning C4244: 'initializing': conversion from 'std::chrono::system_clock::rep' to 'unsigned int', possible loss of data
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\components\particleemittercomponent.cpp(529): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\components\particleemittercomponent.cpp(533): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\components\particleemittercomponent.cpp(582): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\components\particleemittercomponent.cpp(606): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\components\particleemittercomponent.cpp(608): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\components\particleemittercomponent.cpp(696): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\componentsystem\entity.h(36): warning C4018: '<': signed/unsigned mismatch
+  c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\componentsystem\icomponent.h(17): note: see reference to function template instantiation 'T *Entity::GetComponent<T>(void)' being compiled
+          with
+          [
+              T=TransformComponent
+          ]
+  c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\components\particleemittercomponent.cpp(99): note: see reference to function template instantiation 'T *IComponent::GetComponent<TransformComponent>(void)' being compiled
+          with
+          [
+              T=TransformComponent
+          ]
+  ParticleEditor.vcxproj -> C:\Users\nilss\Desktop\EngineDx11\ParticleEditor\ParticleEditor\ParticleEditor.exe
+  ParticleEditor.vcxproj -> C:\Users\nilss\Desktop\EngineDx11\ParticleEditor\ParticleEditor\ParticleEditor.pdb (Partial PDB)

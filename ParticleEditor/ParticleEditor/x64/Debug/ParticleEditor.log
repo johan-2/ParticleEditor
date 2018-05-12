@@ -1,0 +1,124 @@
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(373,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
+  Main.cpp
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\main.cpp(3): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+  Time.cpp
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\utils\time.cpp(61): warning C4244: 'initializing': conversion from 'INT64' to 'int', possible loss of data
+  TexturePool.cpp
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\utils\texturepool.cpp(28): warning C4477: 'printf' : format string '%s' requires an argument of type 'char *', but variadic argument 1 has type 'const std::wstring'
+  DebugStats.cpp
+  Framework.cpp
+  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\system\framework.cpp(46): warning C4244: 'argument': conversion from 'const float' to 'int', possible loss of data
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\system\framework.cpp(49): warning C4244: 'argument': conversion from 'const float' to 'int', possible loss of data
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\system\framework.cpp(122): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\system\framework.cpp(192): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\system\framework.cpp(200): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\system\framework.cpp(208): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\system\framework.cpp(216): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\system\framework.cpp(224): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\system\framework.cpp(232): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\system\framework.cpp(240): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\system\framework.cpp(248): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\system\framework.cpp(256): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\system\framework.cpp(264): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\system\framework.cpp(272): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\system\framework.cpp(280): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\system\framework.cpp(288): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\system\framework.cpp(296): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\system\framework.cpp(304): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\system\framework.cpp(312): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\system\framework.cpp(320): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\system\framework.cpp(328): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\system\framework.cpp(336): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\system\framework.cpp(344): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\system\framework.cpp(352): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\system\framework.cpp(360): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\system\framework.cpp(368): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\system\framework.cpp(376): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\system\framework.cpp(383): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\system\framework.cpp(389): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\system\framework.cpp(395): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\system\framework.cpp(401): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\system\framework.cpp(408): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\system\framework.cpp(499): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\system\framework.cpp(563): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\system\framework.cpp(616): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\system\framework.cpp(618): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\system\framework.cpp(622): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\system\framework.cpp(624): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\system\framework.cpp(628): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\system\framework.cpp(675): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\system\framework.cpp(698): warning C4018: '<': signed/unsigned mismatch
+  DXManager.cpp
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\system\dxmanager.cpp(570): warning C4018: '<': signed/unsigned mismatch
+  SkyBox.cpp
+  ShaderManager.cpp
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\renderer\shadermanager.cpp(427): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\renderer\shadermanager.cpp(427): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\renderer\shadermanager.cpp(462): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\renderer\shadermanager.cpp(466): warning C4267: 'argument': conversion from 'size_t' to 'unsigned int', possible loss of data
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\renderer\shadermanager.cpp(730): warning C4018: '<': signed/unsigned mismatch
+  RenderToTexture.cpp
+  Renderer.cpp
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\renderer\renderer.cpp(45): warning C4244: 'argument': conversion from 'const float' to 'unsigned int', possible loss of data
+  Mesh.cpp
+  LightManager.cpp
+  GuiManager.cpp
+  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  CameraManager.cpp
+  Input.cpp
+  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\input\input.cpp(143): warning C4244: '=': conversion from 'LONG' to 'float', possible loss of data
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\input\input.cpp(144): warning C4244: '=': conversion from 'LONG' to 'float', possible loss of data
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\input\input.cpp(199): warning C4244: 'return': conversion from 'LONG' to 'float', possible loss of data
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\input\input.cpp(204): warning C4244: 'return': conversion from 'LONG' to 'float', possible loss of data
+  Gamepad.cpp
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\input\gamepad.cpp(102): warning C4244: '=': conversion from 'float' to 'WORD', possible loss of data
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\input\gamepad.cpp(103): warning C4244: '=': conversion from 'float' to 'WORD', possible loss of data
+  imgui_draw.cpp
+  imgui_demo.cpp
+  imgui.cpp
+  DDSTextureLoader.cpp
+  Generating Code...
+  Compiling...
+  UVScrollComponent.cpp
+  TransformComponent.cpp
+  TransformationComponent.cpp
+  QuadComponent.cpp
+  ParticleEmitterComponent.cpp
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\components\particleemittercomponent.cpp(48): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\components\particleemittercomponent.cpp(64): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\components\particleemittercomponent.cpp(83): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\components\particleemittercomponent.cpp(101): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\components\particleemittercomponent.cpp(119): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\components\particleemittercomponent.cpp(130): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\components\particleemittercomponent.cpp(156): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\components\particleemittercomponent.cpp(257): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\components\particleemittercomponent.cpp(336): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\components\particleemittercomponent.cpp(348): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\components\particleemittercomponent.cpp(350): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\components\particleemittercomponent.cpp(410): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\components\particleemittercomponent.cpp(412): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\components\particleemittercomponent.cpp(434): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\components\particleemittercomponent.cpp(454): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\components\particleemittercomponent.cpp(486): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\components\particleemittercomponent.cpp(497): warning C4244: 'initializing': conversion from 'std::chrono::system_clock::rep' to 'unsigned int', possible loss of data
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\components\particleemittercomponent.cpp(529): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\components\particleemittercomponent.cpp(533): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\components\particleemittercomponent.cpp(582): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\components\particleemittercomponent.cpp(606): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\components\particleemittercomponent.cpp(608): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\components\particleemittercomponent.cpp(696): warning C4018: '<': signed/unsigned mismatch
+  ModelComponent.cpp
+c:\users\nilss\desktop\enginedx11\particleeditor\particleeditor\code\components\modelcomponent.cpp(52): warning C4018: '<': signed/unsigned mismatch
+  LightPointComponent.cpp
+  LightDirectionComponent.cpp
+  FreeMoveComponent.cpp
+  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  CameraComponent.cpp
+  World.cpp
+  IComponent.cpp
+  Entity.cpp
+  Generating Code...
+  ParticleEditor.vcxproj -> C:\Users\nilss\Desktop\EngineDx11\ParticleEditor\ParticleEditor\ParticleEditor.exe
+  ParticleEditor.vcxproj -> C:\Users\nilss\Desktop\EngineDx11\ParticleEditor\ParticleEditor\ParticleEditor.pdb (Partial PDB)
