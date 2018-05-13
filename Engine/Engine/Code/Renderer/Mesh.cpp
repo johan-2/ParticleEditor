@@ -106,24 +106,23 @@ void Mesh::AddRemoveToRenderer(bool add)
 			add ? renderer.AddToRenderer(this, SHADER_TYPE::S_DEPTH) : renderer.RemoveFromRenderer(this, SHADER_TYPE::S_DEPTH);
 
 		add ? renderer.AddToAlphaMeshes(this) : renderer.RemoveFromAlphaMeshes(this);	
-
 		return;
 	}
 
     if ((_FLAGS & AMBIENT) == AMBIENT)
-		add ? renderer.AddToRenderer(this, SHADER_TYPE::S_AMBIENT) : renderer.RemoveFromRenderer(this, SHADER_TYPE::S_AMBIENT);
+		add ? renderer.AddToRenderer(this, SHADER_TYPE::S_AMBIENT)             : renderer.RemoveFromRenderer(this, SHADER_TYPE::S_AMBIENT);
 
 	if ((_FLAGS & DIRECTIONAL) == DIRECTIONAL)
-		add ? renderer.AddToRenderer(this, SHADER_TYPE::S_DIRECTIONAL) : renderer.RemoveFromRenderer(this, SHADER_TYPE::S_DIRECTIONAL);
+		add ? renderer.AddToRenderer(this, SHADER_TYPE::S_DIRECTIONAL)         : renderer.RemoveFromRenderer(this, SHADER_TYPE::S_DIRECTIONAL);
 
 	if ((_FLAGS & CAST_SHADOW_DIR) == CAST_SHADOW_DIR)
-		add ? renderer.AddToRenderer(this, SHADER_TYPE::S_DEPTH) : renderer.RemoveFromRenderer(this, SHADER_TYPE::S_DEPTH);
+		add ? renderer.AddToRenderer(this, SHADER_TYPE::S_DEPTH)               : renderer.RemoveFromRenderer(this, SHADER_TYPE::S_DEPTH);
 
 	if ((_FLAGS & RECIVE_SHADOW_DIR) == RECIVE_SHADOW_DIR) 
 		add ? renderer.AddToRenderer(this, SHADER_TYPE::S_DIRECTIONAL_SHADOWS) : renderer.RemoveFromRenderer(this, SHADER_TYPE::S_DIRECTIONAL_SHADOWS);
 
 	if ((_FLAGS & POINT) == POINT)
-		add ? renderer.AddToRenderer(this, SHADER_TYPE::S_POINT) : renderer.RemoveFromRenderer(this, SHADER_TYPE::S_POINT);
+		add ? renderer.AddToRenderer(this, SHADER_TYPE::S_POINT)               : renderer.RemoveFromRenderer(this, SHADER_TYPE::S_POINT);
 	
 
 	if ((_FLAGS & LIGHTS_ALL) == LIGHTS_ALL)
