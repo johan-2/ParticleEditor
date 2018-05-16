@@ -43,6 +43,9 @@ public:
 	void RenderDirectionalShadows(const std::vector<Mesh*>& meshes);
 	void RenderGUI(ImDrawData* draw_data);
 
+	void RenderGeometry(const std::vector<Mesh*>& meshes);
+	void RenderLights();
+
 	void RenderQuadUI(const std::vector<QuadComponent*>& quads);
 	
 	void RenderSkyBox(XMFLOAT4X4 worldMatrix);
@@ -55,8 +58,7 @@ private:
 
 	static ShaderManager* _instance;
 	
-	void UpdateVertexConstants(void* data, unsigned int size);
-	void UpdatePixelConstants(void* data, unsigned int size);
+	void UpdateConstantBuffer(void* data, unsigned int size, ID3D11Buffer*& buffer);
 
 	ID3D11VertexShader* _vertexDirectionalShader;
 	ID3D11PixelShader* _pixelDirectionalShader;
@@ -84,6 +86,9 @@ private:
 
 	ID3D11VertexShader* _vertexGUIShader;
 	ID3D11PixelShader* _pixelGUIShader;
+
+	ID3D11VertexShader* _vertexGeometryShader;
+	ID3D11PixelShader* _pixelGeometryShader;
 
 	ID3D11InputLayout* _inputlayout3D;
 	ID3D11InputLayout* _inputlayout2D;
@@ -211,6 +216,15 @@ private:
 		float attLinear;
 		float attExponential;
 		int numLights;		
+	};
+
+	struct ConstantGeometryVertex
+	{
+		XMFLOAT4X4 world;
+		XMFLOAT4X4 view;
+		XMFLOAT4X4 projection;
+		XMFLOAT2 uvOffset;
+		XMFLOAT2 pad;
 	};
 	
 };

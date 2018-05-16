@@ -114,6 +114,9 @@
     <ClCompile Include="Code\ImGUI\imgui_draw.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Code\Renderer\GBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\System\DXManager.h">
@@ -225,6 +228,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Code\ImGUI\stb_truetype.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Renderer\GBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

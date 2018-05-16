@@ -8,6 +8,7 @@ class RenderToTexture;
 class Entity;
 class SkyBox;
 class ParticleEmitterComponent;
+class GBuffer;
 
 enum SHADER_TYPE
 {
@@ -16,6 +17,7 @@ enum SHADER_TYPE
 	S_DEPTH,
 	S_DIRECTIONAL_SHADOWS,
 	S_POINT,
+	S_DEFERRED,
 	S_NUM_RENDER_TYPES
 };
 
@@ -46,6 +48,9 @@ private:
 
 	static Renderer* _instance;
 
+
+	void RenderDeferred();
+
 	void RenderDepth();
 	void RenderLights();
 	void RenderLightsAlpha();
@@ -59,10 +64,10 @@ private:
 	std::vector<QuadComponent*> _quads;
 	std::vector<ParticleEmitterComponent*> _particleEmitters;
 
-	//depth stuff
 	Entity* _cameraDepth;
 	RenderToTexture* _depthMap;
 
+	GBuffer* _gBuffer;
 	SkyBox* _skyBox;
 
 };

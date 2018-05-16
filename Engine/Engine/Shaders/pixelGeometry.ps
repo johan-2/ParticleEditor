@@ -1,0 +1,43 @@
+
+Texture2D Textures[3];	// diffuse, normal, specular
+SamplerState SampleType[2]; // wrap,clamp 	
+ 		
+struct PixelInputType
+{
+    float4 position : SV_POSITION;
+    float2 texCoord : TEXCOORD0;
+	float3 normal : NORMAL;
+	float3 tangent : TANGENT;
+	float3 binormal : BINORMAL;
+	float4 worldPosition : TEXCOORD1;
+};
+
+struct Output
+{
+	float4 position : SV_TARGET0;
+	float4 normal   : SV_TARGET1;
+	float4 diffuse  : SV_TARGET2;
+	float4 specular : SV_TARGET3;
+};
+
+Output Main(PixelInputType input) 
+{
+    Output output;
+	
+	float4 textureColor = Textures[0].Sample(SampleType[0],input.texCoord); 	
+	float4 normalMap    = Textures[1].Sample(SampleType[0],input.texCoord);
+	float4 specularMap  = Textures[2].Sample(SampleType[0],input.texCoord);
+	
+	normalMap = (normalMap * 2.0) -1.0;
+	
+	float3x3 tangentSpaceMatrix =float3x3(input.tangent, input.binormal, input.normal);	
+	float3 bumpNormal = normalize(mul(normalMap, tangentSpaceMatrix));   
+			    		  					   		    				
+	output.position = input.worldPosition;
+	output.normal   = float4(bumpNormal,1);
+	output.diffuse  = textureColor;
+	output.specular = specularMap;
+	
+			
+	return output;    
+}

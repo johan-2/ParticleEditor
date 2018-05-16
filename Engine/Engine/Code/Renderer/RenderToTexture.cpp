@@ -94,7 +94,7 @@ RenderToTexture::RenderToTexture(unsigned int width, unsigned int height, bool d
 		depthStencilTexDesc.Height = height;
 		depthStencilTexDesc.MipLevels = 1;
 		depthStencilTexDesc.ArraySize = 1;
-		depthStencilTexDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;;
+		depthStencilTexDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 		depthStencilTexDesc.SampleDesc.Count = 1;
 		depthStencilTexDesc.SampleDesc.Quality = 0;
 		depthStencilTexDesc.Usage = D3D11_USAGE_DEFAULT;
@@ -171,6 +171,15 @@ RenderToTexture::~RenderToTexture()
 
 	if (_renderTargetView)
 		_renderTargetView->Release();
+}
+
+
+void RenderToTexture::SetRendertarget()
+{
+	ID3D11DeviceContext* devCon = DXManager::GetInstance().GetDeviceCon();
+
+	devCon->OMSetRenderTargets(1, &_renderTargetView, _depthStencilView);
+	devCon->RSSetViewports(1, &_viewport);
 }
 
 void RenderToTexture::ClearRenderTarget(float r, float g, float b, float a, bool depthOnly)

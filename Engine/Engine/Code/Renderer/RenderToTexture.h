@@ -13,6 +13,7 @@ public:
 	D3D11_VIEWPORT* GetViewport() {	return &_viewport;	}
 
 	void ClearRenderTarget(float r,float g, float b, float a, bool depthOnly);
+	void SetRendertarget();
 
 private:
 

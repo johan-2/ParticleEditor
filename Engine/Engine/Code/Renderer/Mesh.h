@@ -11,6 +11,7 @@
 #define LIGHTS_ALL  1 << 4
 #define HAS_ALPHA  1 << 5
 #define POINT 1 << 6
+#define DEFERRED 1 << 7
 
 using namespace DirectX;
 

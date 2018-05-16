@@ -107,6 +107,8 @@ void ShaderManager::CreateShaders()
 	ID3D10Blob* pixelShaderBufferParticle = nullptr;
 	ID3D10Blob* vertexShaderBufferGUI = nullptr;
 	ID3D10Blob* pixelShaderBufferGUI = nullptr;
+	ID3D10Blob* vertexShaderBufferGeometry = nullptr;
+	ID3D10Blob* pixelShaderBufferGeometry = nullptr;
 				
 	//COMPILE AND CREATE SHADERS
 	////create ambient shaders
@@ -144,6 +146,10 @@ void ShaderManager::CreateShaders()
 	//create gui shaders
 	CreateVertexShader(L"shaders/vertexImGui.vs", &_vertexGUIShader, &vertexShaderBufferGUI);
 	CreatePixelShader(L"shaders/pixelImGui.ps", &_pixelGUIShader, &pixelShaderBufferGUI);
+
+	//create gui shaders
+	CreateVertexShader(L"shaders/vertexGeometry.vs", &_vertexGeometryShader, &vertexShaderBufferGeometry);
+	CreatePixelShader(L"shaders/pixelGeometry.ps", &_pixelGeometryShader, &pixelShaderBufferGeometry);
 	
 	// create input layouts
 	D3D11_INPUT_ELEMENT_DESC inputLayout3D[5]
@@ -262,6 +268,62 @@ void ShaderManager::SetInputLayout(INPUT_LAYOUT_TYPE type)
 	}
 }
 
+void ShaderManager::RenderGeometry(const std::vector<Mesh*>& meshes)
+{
+	// get devicecontext
+	DXManager& DXM = DXManager::GetInstance();
+	ID3D11DeviceContext* devCon = DXM.GetDeviceCon();
+
+	// constantbuffer structures
+	ConstantGeometryVertex vertexData;
+
+	CameraComponent* camera = CameraManager::GetInstance().GetCurrentCameraGame();
+
+	//render with alpha blending	
+	DXM.SetBlendState(BLEND_STATE::BLEND_OPAQUE);
+
+	// set shaders			
+	devCon->VSSetShader(_vertexGeometryShader, NULL, 0);
+	devCon->PSSetShader(_pixelGeometryShader, NULL, 0);
+
+	// get and transpose camera matrices
+	XMFLOAT4X4 viewMatrix = camera->GetViewMatrix();
+	XMFLOAT4X4 projectionMatrix = camera->GetProjectionMatrix();
+
+	XMStoreFloat4x4(&viewMatrix, XMMatrixTranspose(XMLoadFloat4x4(&viewMatrix)));
+	XMStoreFloat4x4(&projectionMatrix, XMMatrixTranspose(XMLoadFloat4x4(&projectionMatrix)));
+
+	// stuff that need to be set per mesh
+	for (int i = 0; i < meshes.size(); i++)
+	{
+		// upload vertex and indexbuffers
+		meshes[i]->UploadBuffers();
+
+		// get the world matrix and transpose it
+		// get and transpose the world matrix for the mesh
+		XMFLOAT4X4 worldMatrix = meshes[i]->GetWorldMatrix();
+		XMStoreFloat4x4(&worldMatrix, XMMatrixTranspose(XMLoadFloat4x4(&worldMatrix)));
+
+		//set and upload vertexconstantdata 
+		vertexData.world = worldMatrix;
+		vertexData.view = viewMatrix;
+		vertexData.projection = projectionMatrix;
+		vertexData.uvOffset = meshes[i]->GetUvOffset();
+		UpdateConstantBuffer((void*)&vertexData, sizeof(ConstantGeometryVertex), _constantBufferVertex);
+
+		// set textures
+		devCon->PSSetShaderResources(0, 3, meshes[i]->GetTextureArray());
+
+		// draw
+		devCon->DrawIndexed(meshes[i]->GetNumIndices(), 0, 0);
+	}
+}
+
+void ShaderManager::RenderLights()
+{
+
+}
+
 void ShaderManager::RenderDirectional(const std::vector<Mesh*>& meshes)
 {			
 	//// get devicecontext
@@ -302,7 +364,7 @@ void ShaderManager::RenderDirectional(const std::vector<Mesh*>& meshes)
 	pixelData.specularPower = directionalLight->GetSpecularPower();
 
 	// upload new light data to pixelshader		
-	UpdatePixelConstants((void*)&pixelData, sizeof(ConstantDirectionalPixel));
+	UpdateConstantBuffer((void*)&pixelData, sizeof(ConstantDirectionalPixel), _constantBufferPixel);
 	
 	for(int i =0; i< meshes.size(); i++)
 	{		
@@ -316,7 +378,7 @@ void ShaderManager::RenderDirectional(const std::vector<Mesh*>& meshes)
 		vertexData.projection = projectionMatrix;
 		vertexData.camPos = cameraPos;
 		vertexData.uvOffset = meshes[i]->GetUvOffset();
-		UpdateVertexConstants((void*)&vertexData, sizeof(ConstantDirectionalVertex));
+		UpdateConstantBuffer((void*)&vertexData, sizeof(ConstantDirectionalVertex), _constantBufferVertex);
 		
 		// set textures
 		devCon->PSSetShaderResources(0, 3, meshes[i]->GetTextureArray());
@@ -376,7 +438,7 @@ void ShaderManager::RenderDirectionalShadows(const std::vector<Mesh*>& meshes)
 	pixelData.specularPower = directionalLight->GetSpecularPower();
 
 	// upload new light data to pixelshader		
-	UpdatePixelConstants((void*)&pixelData, sizeof(ConstantDirectionalShadowPixel));	
+	UpdateConstantBuffer((void*)&pixelData, sizeof(ConstantDirectionalShadowPixel), _constantBufferPixel);
 
 	ID3D11ShaderResourceView* shadowMap = cameraLight->GetRSV();
 	
@@ -394,7 +456,7 @@ void ShaderManager::RenderDirectionalShadows(const std::vector<Mesh*>& meshes)
 		vertexData.lightProjection = projectionMatrixLight;
 		vertexData.camPos = cameraPos;
 		vertexData.uvOffset = meshes[i]->GetUvOffset();
-		UpdateVertexConstants((void*)&vertexData, sizeof(ConstantDirectionalShadowVertex));
+		UpdateConstantBuffer((void*)&vertexData, sizeof(ConstantDirectionalShadowVertex), _constantBufferVertex);
 		
 		ID3D11ShaderResourceView** meshTextures = meshes[i]->GetTextureArray();
 		ID3D11ShaderResourceView* t[4] = { meshTextures[0], meshTextures[1], meshTextures[2], shadowMap };
@@ -462,7 +524,7 @@ void ShaderManager::RenderPoint(const std::vector<Mesh*>& meshes)
 	}
 
 	// upload new light data to pixelshader		
-	UpdatePixelConstants((void*)&pixelData, sizeof(ConstantPointPixel) * pointLights.size());
+	UpdateConstantBuffer((void*)&pixelData, sizeof(ConstantPointPixel) * pointLights.size(), _constantBufferPixel);
 
 	for (int y = 0; y< meshes.size(); y++)
 	{
@@ -476,7 +538,7 @@ void ShaderManager::RenderPoint(const std::vector<Mesh*>& meshes)
 		vertexData.projection = projectionMatrix;
 		vertexData.camPos = cameraPos;
 		vertexData.uvOffset = meshes[y]->GetUvOffset();
-		UpdateVertexConstants((void*)&vertexData, sizeof(ConstantPointVertex));
+		UpdateConstantBuffer((void*)&vertexData, sizeof(ConstantPointVertex), _constantBufferVertex);
 
 		// set textures
 		devCon->PSSetShaderResources(0, 3, meshes[y]->GetTextureArray());
@@ -520,7 +582,7 @@ void ShaderManager::RenderAmbient(const std::vector<Mesh*>& meshes)
 
 	// set and update pixelconstants, only light color for now
 	pixelData.color = ambientColor;
-	UpdatePixelConstants((void*)&pixelData, sizeof(ConstantAmbientPixel));
+	UpdateConstantBuffer((void*)&pixelData, sizeof(ConstantAmbientPixel), _constantBufferPixel);
 
 	// stuff that need to be set per mesh
 	for (int i = 0; i < meshes.size(); i++) 
@@ -538,7 +600,7 @@ void ShaderManager::RenderAmbient(const std::vector<Mesh*>& meshes)
 		vertexData.view = viewMatrix;
 		vertexData.projection = projectionMatrix;
 		vertexData.uvOffset = meshes[i]->GetUvOffset();
-		UpdateVertexConstants((void*)&vertexData, sizeof(ConstantAmbientVertex));
+		UpdateConstantBuffer((void*)&vertexData, sizeof(ConstantAmbientVertex), _constantBufferVertex);
 						
 		// set textures
 		devCon->PSSetShaderResources(0, 1, meshes[i]->GetTextureArray());
@@ -578,13 +640,13 @@ void ShaderManager::RenderQuadUI(const std::vector<QuadComponent*>& quads)
 	vertexData.view = viewMatrix;
 
 	// update vertexconstantbuffers, only needs to be done once for all quads
-	UpdateVertexConstants((void*)&vertexData, sizeof(ConstantQuadUIVertex));		
+	UpdateConstantBuffer((void*)&vertexData, sizeof(ConstantQuadUIVertex), _constantBufferVertex);
 
 	for (int i = 0; i < quads.size(); i++) 
 	{
 		// set constantbuffer pixel data, needs to be set and updated for each quad
 		pixelData.color = quads[i]->GetColor();
-		UpdatePixelConstants((void*)&pixelData, sizeof(ConstantQuadUIPixel));
+		UpdateConstantBuffer((void*)&pixelData, sizeof(ConstantQuadUIPixel), _constantBufferPixel);
 
 		ID3D11ShaderResourceView* texture = quads[i]->GetTexture();
 		devCon->PSSetShaderResources(0, 1, &texture);
@@ -630,7 +692,7 @@ void ShaderManager::RenderDepth(const std::vector<Mesh*>& meshes)
 		vertexData.projection = projectionMatrix;
 		vertexData.view = viewMatrix;
 		vertexData.world = worldMatrix;
-		UpdateVertexConstants((void*)&vertexData, sizeof(ConstantDepthVertex));
+		UpdateConstantBuffer((void*)&vertexData, sizeof(ConstantDepthVertex), _constantBufferVertex);
 
 		devCon->PSSetShaderResources(0, 1, meshes[i]->GetTextureArray());
 
@@ -673,7 +735,7 @@ void ShaderManager::RenderSkyBox(XMFLOAT4X4 worldMatrix)
 	vertexData.world = worldMatrix;
 	vertexData.view = viewMatrix;
 	vertexData.projection = projectionMatrix;		
-	UpdateVertexConstants((void*)&vertexData, sizeof(ConstantSkyBoxVertex));
+	UpdateConstantBuffer((void*)&vertexData, sizeof(ConstantSkyBoxVertex), _constantBufferVertex);
 	
 	// draw
 	devCon->DrawIndexed(36, 0, 0);
@@ -709,7 +771,7 @@ void ShaderManager::RenderParticles(const std::vector<ParticleEmitterComponent*>
 
 	vertexData.view = viewMatrix;
 	vertexData.projection = projectionMatrix;
-	UpdateVertexConstants((void*)&vertexData, sizeof(ConstantParticleVertex));
+	UpdateConstantBuffer((void*)&vertexData, sizeof(ConstantParticleVertex), _constantBufferVertex);
 		
 	// stuff that need to be set per emitter
 	for (int i = 0; i < emitters.size(); i++)
@@ -827,7 +889,7 @@ void ShaderManager::RenderGUI(ImDrawData* draw_data)
 	// update the vertexconstantbuffer
 	ConstantGUIVertex constantVertex;	
 	memcpy(&constantVertex.projection, wvp, sizeof(wvp));
-	UpdateVertexConstants(&constantVertex, sizeof(ConstantGUIVertex));
+	UpdateConstantBuffer(&constantVertex, sizeof(ConstantGUIVertex), _constantBufferVertex);
 
 	// Bind shader and vertex buffers
 	unsigned int stride = sizeof(ImDrawVert);
@@ -866,7 +928,7 @@ void ShaderManager::RenderGUI(ImDrawData* draw_data)
 	DXM.SetZBuffer(DEPTH_STATE::ENABLED);
 }
 
-void ShaderManager::UpdateVertexConstants(void* data, unsigned int size)
+void ShaderManager::UpdateConstantBuffer(void* data, unsigned int size, ID3D11Buffer*& buffer)
 {
 	
 	ID3D11DeviceContext* devCon = DXManager::GetInstance().GetDeviceCon();
@@ -874,13 +936,13 @@ void ShaderManager::UpdateVertexConstants(void* data, unsigned int size)
 
 	//get desc of the current constant buffer in use
 	D3D11_BUFFER_DESC old;
-	_constantBufferVertex->GetDesc(&old);
+	buffer->GetDesc(&old);
 
 	// if smaller then the new data we create a new bigger one and remove the old
     if (old.ByteWidth < size)
 	{
-		_constantBufferVertex->Release();
-		_constantBufferVertex = nullptr;		
+		buffer->Release();
+		buffer = nullptr;
 
 		HRESULT result = 0;
 		D3D11_BUFFER_DESC constVertexBufferDesc;
@@ -892,59 +954,20 @@ void ShaderManager::UpdateVertexConstants(void* data, unsigned int size)
 		constVertexBufferDesc.MiscFlags = 0; 
 		constVertexBufferDesc.StructureByteStride = 0;
 
-		result = device->CreateBuffer(&constVertexBufferDesc, NULL, &_constantBufferVertex);
+		result = device->CreateBuffer(&constVertexBufferDesc, NULL, &buffer);
 		if (FAILED(result))
-			printf("failed to create new ConstantVertexbuffer\n");
-
+			printf("failed to create new ConstantBuffer\n");
 	}
 
 	//uppdate the buffer with the new data
 	void* destination;
 	D3D11_MAPPED_SUBRESOURCE subResource;
-	devCon->Map(_constantBufferVertex, 0, D3D11_MAP_WRITE_DISCARD, 0, &subResource);
+	devCon->Map(buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &subResource);
 
 	destination = subResource.pData;
 	memcpy(destination, data, size);
 
-	devCon->Unmap(_constantBufferVertex, 0);	
-}
-
-void ShaderManager::UpdatePixelConstants(void* data, unsigned int size)
-{
-
-	ID3D11DeviceContext* devCon = DXManager::GetInstance().GetDeviceCon();
-	ID3D11Device* device = DXManager::GetInstance().GetDevice();
-
-	D3D11_BUFFER_DESC old;
-	_constantBufferPixel->GetDesc(&old);
-
-	if(old.ByteWidth < size)
-	{
-		D3D11_BUFFER_DESC constPixelBufferDesc;
-		HRESULT result = 0;
-
-		constPixelBufferDesc.Usage = D3D11_USAGE_DYNAMIC; 
-		constPixelBufferDesc.ByteWidth = size ; 
-		constPixelBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-		constPixelBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE; 
-		constPixelBufferDesc.MiscFlags = 0; 
-		constPixelBufferDesc.StructureByteStride = 0;
-
-		_constantBufferPixel->Release();
-
-		device->CreateBuffer(&constPixelBufferDesc, NULL, &_constantBufferPixel);
-		if (FAILED(result))
-			printf("failed to create new ConstantVertexbuffer\n");	
-	}
-	
-	void* destination;
-	D3D11_MAPPED_SUBRESOURCE subResource;
-	devCon->Map(_constantBufferPixel, 0, D3D11_MAP_WRITE_DISCARD, 0, &subResource);
-
-	destination = subResource.pData;
-	memcpy(destination, data, size);
-
-	devCon->Unmap(_constantBufferPixel, 0);
+	devCon->Unmap(buffer, 0);	
 }
 
 void ShaderManager::CreateVertexShader(LPCWSTR filePath, ID3D11VertexShader** shader, ID3D10Blob** buffer)

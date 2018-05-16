@@ -253,7 +253,7 @@ bool DXManager::CreateSwapchain(HWND hwnd, bool fullscreen, int screenWidth, int
 	// set the usage of the backbuffer
 	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;	
 	swapChainDesc.OutputWindow = hwnd;
-	swapChainDesc.SampleDesc.Count = ANTI_ALIASING;
+	swapChainDesc.SampleDesc.Count = 1;
 	swapChainDesc.SampleDesc.Quality = 0;		
 	swapChainDesc.Windowed = _fullscreen;	
 	swapChainDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
@@ -296,7 +296,7 @@ bool DXManager::CreateDepthStencil(int screenWidth, int screenHeight)
 	depthBufferDesc.MipLevels = 1;
 	depthBufferDesc.ArraySize = 1;
 	depthBufferDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT; 															
-	depthBufferDesc.SampleDesc.Count = ANTI_ALIASING;
+	depthBufferDesc.SampleDesc.Count = 1;
 	depthBufferDesc.SampleDesc.Quality = 0;
 	depthBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	depthBufferDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
@@ -312,7 +312,7 @@ bool DXManager::CreateDepthStencil(int screenWidth, int screenHeight)
 	ZeroMemory(&depthStencilViewDesc, sizeof(D3D11_DEPTH_STENCIL_VIEW_DESC));
 
 	depthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS;
+	depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 	depthStencilViewDesc.Texture2D.MipSlice = 0;
 
 	result = _device->CreateDepthStencilView(depthBuffer, &depthStencilViewDesc, &_depthStencilView);

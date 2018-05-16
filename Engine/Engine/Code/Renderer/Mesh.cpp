@@ -109,14 +109,21 @@ void Mesh::AddRemoveToRenderer(bool add)
 		return;
 	}
 
+	if ((_FLAGS & CAST_SHADOW_DIR) == CAST_SHADOW_DIR)
+		add ? renderer.AddToRenderer(this, SHADER_TYPE::S_DEPTH)    : renderer.RemoveFromRenderer(this, SHADER_TYPE::S_DEPTH);
+
+	// if using deffered rendering we dont have to check any other flags
+	if((_FLAGS & DEFERRED) == DEFERRED)
+	{
+		add ? renderer.AddToRenderer(this, SHADER_TYPE::S_DEFERRED) : renderer.RemoveFromRenderer(this, SHADER_TYPE::S_DEFERRED);
+		return;
+	}
+
     if ((_FLAGS & AMBIENT) == AMBIENT)
 		add ? renderer.AddToRenderer(this, SHADER_TYPE::S_AMBIENT)             : renderer.RemoveFromRenderer(this, SHADER_TYPE::S_AMBIENT);
 
 	if ((_FLAGS & DIRECTIONAL) == DIRECTIONAL)
 		add ? renderer.AddToRenderer(this, SHADER_TYPE::S_DIRECTIONAL)         : renderer.RemoveFromRenderer(this, SHADER_TYPE::S_DIRECTIONAL);
-
-	if ((_FLAGS & CAST_SHADOW_DIR) == CAST_SHADOW_DIR)
-		add ? renderer.AddToRenderer(this, SHADER_TYPE::S_DEPTH)               : renderer.RemoveFromRenderer(this, SHADER_TYPE::S_DEPTH);
 
 	if ((_FLAGS & RECIVE_SHADOW_DIR) == RECIVE_SHADOW_DIR) 
 		add ? renderer.AddToRenderer(this, SHADER_TYPE::S_DIRECTIONAL_SHADOWS) : renderer.RemoveFromRenderer(this, SHADER_TYPE::S_DIRECTIONAL_SHADOWS);

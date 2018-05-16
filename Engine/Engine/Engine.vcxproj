@@ -162,6 +162,7 @@
     <ClCompile Include="Code\Managers\CameraManager.cpp" />
     <ClCompile Include="Code\Managers\GuiManager.cpp" />
     <ClCompile Include="Code\Managers\LightManager.cpp" />
+    <ClCompile Include="Code\Renderer\GBuffer.cpp" />
     <ClCompile Include="Code\Renderer\Mesh.cpp" />
     <ClCompile Include="Code\Renderer\Renderer.cpp" />
     <ClCompile Include="Code\Renderer\RenderToTexture.cpp" />
@@ -201,6 +202,7 @@
     <ClInclude Include="Code\Managers\CameraManager.h" />
     <ClInclude Include="Code\Managers\GuiManager.h" />
     <ClInclude Include="Code\Managers\LightManager.h" />
+    <ClInclude Include="Code\Renderer\GBuffer.h" />
     <ClInclude Include="Code\Renderer\Mesh.h" />
     <ClInclude Include="Code\Renderer\Renderer.h" />
     <ClInclude Include="Code\Renderer\RenderToTexture.h" />

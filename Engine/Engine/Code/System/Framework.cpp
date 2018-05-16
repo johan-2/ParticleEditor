@@ -103,15 +103,15 @@ void Framework::Start()
 	Entity* box = new Entity();
 	box->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, -2, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(2,2,2));
 	box->AddComponent<TransformationComponent>()->Init(XMFLOAT3(1.0f, 1.0f, 0.0f), 40.0f);
-	box->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::CUBE, AMBIENT | POINT | CAST_SHADOW_DIR, L"Textures/metalBox.dds", L"Textures/metalBoxNormal.dds", L"Textures/metalBoxSpecular.dds");
+	box->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::CUBE, DEFERRED | CAST_SHADOW_DIR, L"Textures/metalBox.dds", L"Textures/metalBoxNormal.dds", L"Textures/metalBoxSpecular.dds");
 
 	Entity* floor = new Entity();
 	floor->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, -8, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(10, 1, 10));
-	floor->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::PLANE, AMBIENT | POINT | RECIVE_SHADOW_DIR, L"Textures/red.dds", L"Textures/bricksNormal.dds", L"Textures/bricksSpecular");
+	floor->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::PLANE, DEFERRED | CAST_SHADOW_DIR, L"Textures/red.dds", L"Textures/bricksNormal.dds", L"Textures/bricksSpecular");
 
 	Entity* wall = new Entity();
 	wall->AddComponent<TransformComponent>()->Init(XMFLOAT3(-20, -6.5f, 12), XMFLOAT3(0, -80, 0), XMFLOAT3(10, 10, 3));
-	wall->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::CUBE, AMBIENT | POINT| CAST_SHADOW_DIR, L"Textures/crateDamp.dds", L"Textures/crateDampNormal.dds", L"Textures/crateDampSpecular.dds");
+	wall->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::CUBE, DEFERRED | CAST_SHADOW_DIR, L"Textures/crateDamp.dds", L"Textures/crateDampNormal.dds", L"Textures/crateDampSpecular.dds");
 
 	Entity* fire = new Entity();
 	fire->AddComponent<TransformComponent>()->Init(XMFLOAT3(-15.0f, -7.5f, 12), XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1));
@@ -180,7 +180,7 @@ void Framework::Run()
 		DXManager& DXM = DXManager::GetInstance();
 
 		// clear rendertarget from last frame
-		DXM.ClearRenderTarget(0, 0, 0, 1);
+		DXM.ClearRenderTarget(0.5, 0.5, 0.5, 1);
 
 		// setup ImGui buffers before rendering
 		ImGui::Render();

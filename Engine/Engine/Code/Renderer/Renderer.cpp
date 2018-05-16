@@ -12,6 +12,7 @@
 #include "SystemDefs.h"
 #include <algorithm>
 #include <DirectXMath.h>
+#include "GBuffer.h"
 
 using namespace DirectX;
 
@@ -33,6 +34,7 @@ Renderer::Renderer()
 Renderer::~Renderer()
 {
 	delete _depthMap;
+	delete _gBuffer;
 }
 
 void Renderer::CreateDepthMap() 
@@ -41,9 +43,9 @@ void Renderer::CreateDepthMap()
 	const float orthoSize = 80;
 	const float res = 8192.0f;
 
-	// create depthmap rendertexture
+	// create depthmap rendertexturepositionQuad
 	_depthMap = new RenderToTexture(res, res, true);
-
+	
 	// create camera to render depth and give it a reference to the render texture it will use
 	_cameraDepth = new Entity();
 	_cameraDepth->AddComponent<TransformComponent>()->Init(XMFLOAT3(0.0f, 30.0f, -41.0f), XMFLOAT3(45.0f, 0.0f, 0));
@@ -53,15 +55,37 @@ void Renderer::CreateDepthMap()
 	_cameraDepth->GetComponent<CameraComponent>()->SetRSV(_depthMap->GetShaderResource());
 	CameraManager::GetInstance().SetCurrentCameraDepthMap(_cameraDepth->GetComponent<CameraComponent>());
 
+	// create gbuffer for deffered rendering
+	_gBuffer = new GBuffer();
+
+	// create skybox
+	_skyBox = new SkyBox(L"Skyboxes/EmptySpace.dds");
+
 	// create a quad that can render a preview of  the depthmap
 #ifdef _DEBUG
 	Entity* depthMapQuad = new Entity();
 	depthMapQuad->AddComponent<QuadComponent>()->Init(XMFLOAT2(SCREEN_WIDTH * 0.06f, SCREEN_HEIGHT * 0.1f), XMFLOAT2(SCREEN_WIDTH * 0.1f, SCREEN_WIDTH * 0.1f), L"");
 	depthMapQuad->GetComponent<QuadComponent>()->SetTexture(_depthMap->GetShaderResource());
+
+	Entity* positionQuad = new Entity();
+	positionQuad->AddComponent<QuadComponent>()->Init(XMFLOAT2(SCREEN_WIDTH * 0.18f, SCREEN_HEIGHT * 0.1f), XMFLOAT2(SCREEN_WIDTH * 0.1f, SCREEN_HEIGHT * 0.1f), L"");
+	positionQuad->GetComponent<QuadComponent>()->SetTexture(_gBuffer->GetSrvArray()[0]);
+
+	Entity* normalQuad = new Entity();
+	normalQuad->AddComponent<QuadComponent>()->Init(XMFLOAT2(SCREEN_WIDTH * 0.30f, SCREEN_HEIGHT * 0.1f), XMFLOAT2(SCREEN_WIDTH * 0.1f, SCREEN_HEIGHT * 0.1f), L"");
+	normalQuad->GetComponent<QuadComponent>()->SetTexture(_gBuffer->GetSrvArray()[1]);
+
+	Entity* DiffuseQuad = new Entity();
+	DiffuseQuad->AddComponent<QuadComponent>()->Init(XMFLOAT2(SCREEN_WIDTH * 0.42f, SCREEN_HEIGHT * 0.1f), XMFLOAT2(SCREEN_WIDTH * 0.1f, SCREEN_HEIGHT * 0.1f), L"");
+	DiffuseQuad->GetComponent<QuadComponent>()->SetTexture(_gBuffer->GetSrvArray()[2]);
+
+	Entity* specularQuad = new Entity();
+	specularQuad->AddComponent<QuadComponent>()->Init(XMFLOAT2(SCREEN_WIDTH * 0.54f, SCREEN_HEIGHT * 0.1f), XMFLOAT2(SCREEN_WIDTH * 0.1f, SCREEN_HEIGHT * 0.1f), L"");
+	specularQuad->GetComponent<QuadComponent>()->SetTexture(_gBuffer->GetSrvArray()[3]);
+
 #endif
 
-	// create skybox
-	_skyBox = new SkyBox(L"Skyboxes/EmptySpace.dds");
+	
 }
 
 
@@ -150,9 +174,11 @@ void Renderer::Render()
 	SM.SetConstantBuffers();
 	SM.SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT3D);
 
-	// render 3D
-	_skyBox->Render();
 	RenderDepth();
+	RenderDeferred();
+
+	// render 3D
+	//_skyBox->Render(); // need to render skybox differently
 	RenderLights();		
 	RenderLightsAlpha();
 
@@ -162,6 +188,21 @@ void Renderer::Render()
 	// set inputlayout for UI
 	SM.SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT2D);
 	RenderUI();
+}
+
+void Renderer::RenderDeferred()
+{
+	ShaderManager& SM = ShaderManager::GetInstance();
+	DXManager& dXM = DXManager::GetInstance();
+		
+	// set gbuffer and render the geometry data to the buffers		
+	_gBuffer->SetRenderTargets();		
+	SM.RenderGeometry(_meshes[S_DEFERRED]);
+
+	// set to defualt rendertarget and render the fullscreenquad for light calculations
+	dXM.SetRenderTarget(nullptr, nullptr, true);	
+	SM.RenderLights(); // send in fullscreenquad here, render with depth off
+
 }
 
 void Renderer::RenderDepth() 
