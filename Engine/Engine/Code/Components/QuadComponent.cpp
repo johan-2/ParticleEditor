@@ -66,7 +66,7 @@ void QuadComponent::CreateBuffers()
 	right = left + _size.x;	
 	top = (float)(SCREEN_HEIGHT / 2) - _position.y + (_size.y /2);	
 	bottom = top - _size.y;
-
+	
 	// set data of vertices
 	vertices[0].position = XMFLOAT3(left, top, 0.0f);  // Top left.
 	vertices[0].texture = XMFLOAT2(0.0f, 0.0f);
@@ -141,7 +141,7 @@ void QuadComponent::UpdateBuffers()
 		right = left + _size.x;
 		top = (float)(SCREEN_HEIGHT / 2) - _position.y + (_size.y / 2);
 		bottom = top - _size.y;
-		
+				
 		// set the data of vertices
 		vertices[0].position = XMFLOAT3(left, top, 0.0f);  // Top left.
 		vertices[0].texture = XMFLOAT2(0.0f, 0.0f);

@@ -1,0 +1,49 @@
+
+Texture2D shaderTexture[5]; // shadowmap, position, normal, diffuse, specular	
+SamplerState SampleType[2]; // wrap,clamp 	
+ 
+ struct PointLight
+{
+	float3 positionPoint;
+	float radiusPoint;
+	float3 colorPoint;
+	float intensityPoint;
+	float3 specularColorPoint;
+	float specularPowerPoint;
+	float attConstantPoint;
+	float attLinearPoint;
+	float attExponentialPoint;
+	int numLightsPoint;
+};
+
+cbuffer AmbientBuffer
+{
+	float4 ambientColor;
+	float4 cameraPosition;
+};
+
+cbuffer DirectionalBuffer
+{
+	float4x4 lightViewProj;
+	float4 lightColorDir;	
+	float4 specularColorDir;	
+	float3 lightDirectionDir;
+	float  specularPowerDir;	
+};
+
+cbuffer PointLightBuffer
+{
+	PointLight pointLights[25];
+};
+
+struct PixelInputType
+{
+    float4 position : SV_POSITION;
+    float2 tex : TEXCOORD0;		
+};
+
+
+float4 Main(PixelInputType input) : SV_TARGET
+{            
+   return float4(0,1,0,1); 	   
+}

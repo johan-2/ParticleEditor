@@ -10,6 +10,7 @@ using namespace DirectX;
 class Mesh;
 class QuadComponent;
 class ParticleEmitterComponent;
+class GBuffer;
 
 enum INPUT_LAYOUT_TYPE
 {
@@ -44,7 +45,7 @@ public:
 	void RenderGUI(ImDrawData* draw_data);
 
 	void RenderGeometry(const std::vector<Mesh*>& meshes);
-	void RenderLights();
+	void RenderLights(GBuffer*& gBuffer);
 
 	void RenderQuadUI(const std::vector<QuadComponent*>& quads);
 	
@@ -90,6 +91,9 @@ private:
 	ID3D11VertexShader* _vertexGeometryShader;
 	ID3D11PixelShader* _pixelGeometryShader;
 
+	ID3D11VertexShader* _vertexLightShader;
+	ID3D11PixelShader* _pixelLightShader;
+
 	ID3D11InputLayout* _inputlayout3D;
 	ID3D11InputLayout* _inputlayout2D;
 	ID3D11InputLayout* _inputlayoutParticle;
@@ -97,6 +101,11 @@ private:
 
 	ID3D11Buffer* _constantBufferVertex;
 	ID3D11Buffer* _constantBufferPixel;
+
+	// deferred buffers
+	ID3D11Buffer* _constantBufferDefPoint;
+	ID3D11Buffer* _constantBufferDefAmbient;
+	ID3D11Buffer* _constantBufferDefDirectional;
 				
 	// sprite constants
 	struct ConstantQuadUIVertex
@@ -227,5 +236,35 @@ private:
 		XMFLOAT2 pad;
 	};
 	
+	// deferred structs
+	struct ConstantDeferredAmbient
+	{
+		XMFLOAT4 ambientColor;
+		XMFLOAT4 cameraPosition;
+	};
+
+	struct ConstantDeferredDirectional
+	{
+		XMFLOAT4X4 lightViewProj;
+		XMFLOAT4 lightColor;
+		XMFLOAT4 lightSpecularColor;
+		XMFLOAT3 lightDirection;
+		float lightSpecularpower;
+	};
+
+	struct ConstantDeferredPoint
+	{
+		XMFLOAT3 lightPosition;
+		float radius;
+		XMFLOAT3 color;
+		float intensity;
+		XMFLOAT3 specularColor;
+		float specularPower;
+
+		float attConstant;
+		float attLinear;
+		float attExponential;
+		int numLights;
+	};
 };
 

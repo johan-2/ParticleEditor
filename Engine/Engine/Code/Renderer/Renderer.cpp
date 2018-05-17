@@ -170,20 +170,27 @@ void Renderer::Render()
 {	
 	ShaderManager& SM = ShaderManager::GetInstance();
 
-	// constantbuffers need to be set once per frame, set inputlayout for 3d meshes
-	SM.SetConstantBuffers();
+	// set input layout for 3dmeshes
 	SM.SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT3D);
+	
+	// set defualt constantbuffers (everything uses these exept for the deferred rendering that has its own buffers) 
+	SM.SetConstantBuffers();
 
+	// render shadowmap
 	RenderDepth();
+
+	// render all geometry and then fullscreen quad with lightcalculations
 	RenderDeferred();
 
-	// render 3D
-	//_skyBox->Render(); // need to render skybox differently
-	RenderLights();		
+	// set back regular constantbuffers and render alpha meshes with regular forward rendering
+	SM.SetConstantBuffers();
 	RenderLightsAlpha();
-
+	
+	// render particles (currently alpha meshes and particles cant be rendered perfect together, need to find solution for this)
 	SM.SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUTPARTICLE);
 	RenderParticles();
+
+	//_skyBox->Render(); // need to render skybox differently with deferred rendering
 
 	// set inputlayout for UI
 	SM.SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT2D);
@@ -199,9 +206,9 @@ void Renderer::RenderDeferred()
 	_gBuffer->SetRenderTargets();		
 	SM.RenderGeometry(_meshes[S_DEFERRED]);
 
-	// set to defualt rendertarget and render the fullscreenquad for light calculations
+	// set to defualt rendertarget and render the fullscreenquad and do light calculations
 	dXM.SetRenderTarget(nullptr, nullptr, true);	
-	SM.RenderLights(); // send in fullscreenquad here, render with depth off
+	SM.RenderLights(_gBuffer); 
 
 }
 

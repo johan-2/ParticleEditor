@@ -7,6 +7,7 @@
 #include "ParticleEmitterComponent.h"
 #include <iostream>
 #include "GuiManager.h"
+#include "GBuffer.h"
 #include <d3dcompiler.h>
 
 
@@ -109,6 +110,8 @@ void ShaderManager::CreateShaders()
 	ID3D10Blob* pixelShaderBufferGUI = nullptr;
 	ID3D10Blob* vertexShaderBufferGeometry = nullptr;
 	ID3D10Blob* pixelShaderBufferGeometry = nullptr;
+	ID3D10Blob* vertexShaderBufferLight = nullptr;
+	ID3D10Blob* pixelShaderBufferLight = nullptr;
 				
 	//COMPILE AND CREATE SHADERS
 	////create ambient shaders
@@ -147,9 +150,13 @@ void ShaderManager::CreateShaders()
 	CreateVertexShader(L"shaders/vertexImGui.vs", &_vertexGUIShader, &vertexShaderBufferGUI);
 	CreatePixelShader(L"shaders/pixelImGui.ps", &_pixelGUIShader, &pixelShaderBufferGUI);
 
-	//create gui shaders
+	//create geometry shaders
 	CreateVertexShader(L"shaders/vertexGeometry.vs", &_vertexGeometryShader, &vertexShaderBufferGeometry);
 	CreatePixelShader(L"shaders/pixelGeometry.ps", &_pixelGeometryShader, &pixelShaderBufferGeometry);
+
+	//create geometry shaders
+	CreateVertexShader(L"shaders/vertexLightning.vs", &_vertexLightShader, &vertexShaderBufferLight);
+	CreatePixelShader(L"shaders/pixelLightning.ps", &_pixelLightShader, &pixelShaderBufferLight);
 	
 	// create input layouts
 	D3D11_INPUT_ELEMENT_DESC inputLayout3D[5]
@@ -218,6 +225,18 @@ void ShaderManager::CreateShaders()
 		printf("failed to create vertex constantbuffer\n");
 
 	result = device->CreateBuffer(&constantBufferdesc, NULL, &_constantBufferPixel);
+	if (FAILED(result))
+		printf("Failed to create constantpixelbuffer\n");
+
+	result = device->CreateBuffer(&constantBufferdesc, NULL, &_constantBufferDefAmbient);
+	if (FAILED(result))
+		printf("Failed to create constantpixelbuffer\n");
+
+	result = device->CreateBuffer(&constantBufferdesc, NULL, &_constantBufferDefDirectional);
+	if (FAILED(result))
+		printf("Failed to create constantpixelbuffer\n");
+
+	result = device->CreateBuffer(&constantBufferdesc, NULL, &_constantBufferDefPoint);
 	if (FAILED(result))
 		printf("Failed to create constantpixelbuffer\n");
 
@@ -299,7 +318,6 @@ void ShaderManager::RenderGeometry(const std::vector<Mesh*>& meshes)
 		// upload vertex and indexbuffers
 		meshes[i]->UploadBuffers();
 
-		// get the world matrix and transpose it
 		// get and transpose the world matrix for the mesh
 		XMFLOAT4X4 worldMatrix = meshes[i]->GetWorldMatrix();
 		XMStoreFloat4x4(&worldMatrix, XMMatrixTranspose(XMLoadFloat4x4(&worldMatrix)));
@@ -319,8 +337,86 @@ void ShaderManager::RenderGeometry(const std::vector<Mesh*>& meshes)
 	}
 }
 
-void ShaderManager::RenderLights()
+void ShaderManager::RenderLights(GBuffer*& gBuffer)
 {
+	// get devicecontext
+	DXManager& DXM = DXManager::GetInstance();
+	ID3D11DeviceContext* devCon = DXM.GetDeviceCon();
+
+	// render with depth read/write Off
+	DXM.SetZBuffer(DEPTH_STATE::DISABLED);
+
+	// get camera 
+	CameraComponent* camera = CameraManager::GetInstance().GetCurrentCameraGame();
+	CameraComponent* cameraLight = CameraManager::GetInstance().GetCurrentCameraDepthMap();
+
+	// set shaders			
+	devCon->VSSetShader(_vertexLightShader, NULL, 0);
+	devCon->PSSetShader(_pixelLightShader, NULL, 0);
+
+	// get point lights
+	std::vector<LightPointComponent*>& pointLights = LightManager::GetInstance().GetPointLight();
+	const int size = pointLights.size();
+	
+	// constantbuffer structures
+	ConstantDeferredPoint pointLightData[MAX_POINT_LIGHTS];
+	ConstantDeferredAmbient ambientLightData;
+	ConstantDeferredDirectional directionalLightData;
+	
+	// set the pointlight data
+	for (int i = 0; i< pointLights.size(); i++)
+	{
+		pointLightData[i].color          = pointLights[i]->GetLightColor();
+		pointLightData[i].intensity      = pointLights[i]->GetIntensity();
+		pointLightData[i].radius         = pointLights[i]->GetRadius();
+		pointLightData[i].lightPosition  = pointLights[i]->GetComponent<TransformComponent>()->GetPositionRef();
+		pointLightData[i].specularColor  = pointLights[i]->GetSpecularColor();
+		pointLightData[i].specularPower  = pointLights[i]->GetSpecularPower();
+		pointLightData[i].attConstant    = pointLights[i]->GetAttConstant();
+		pointLightData[i].attLinear      = pointLights[i]->GetAttLinear();
+		pointLightData[i].attExponential = pointLights[i]->GetAttExponential();
+		pointLightData[i].numLights      = pointLights.size();
+	}
+
+	// set ambientdata(camerapos is in this buffer aswell)
+	ambientLightData.ambientColor = LightManager::GetInstance().GetAmbientColor();
+	XMFLOAT3 camPos = camera->GetComponent<TransformComponent>()->GetPositionVal();
+	ambientLightData.cameraPosition = XMFLOAT4(camPos.x, camPos.y, camPos.z, 1.0f);
+
+	// get directional light
+	LightDirectionComponent*& directionalLight = LightManager::GetInstance().GetDirectionalLight();
+
+	// get directionallight matrices for shadow calculations
+	XMFLOAT4X4 viewMatrixLight       = cameraLight->GetViewMatrix();
+	XMFLOAT4X4 projectionMatrixLight = cameraLight->GetProjectionMatrix();
+
+	// set the light data
+	XMStoreFloat4x4(&directionalLightData.lightViewProj, XMMatrixMultiplyTranspose(XMLoadFloat4x4(&viewMatrixLight), XMLoadFloat4x4(&projectionMatrixLight)));
+	XMStoreFloat3(&directionalLightData.lightDirection, XMVectorNegate(XMLoadFloat3(&directionalLight->GetLightDirection())));
+	directionalLightData.lightColor         = directionalLight->GetLightColor();
+	directionalLightData.lightSpecularColor = directionalLight->GetSpecularColor();
+	directionalLightData.lightSpecularpower = directionalLight->GetSpecularPower();
+
+	// update constantbuffers		
+	UpdateConstantBuffer((void*)&pointLightData,       sizeof(ConstantDeferredPoint) * pointLights.size(), _constantBufferDefPoint);					
+	UpdateConstantBuffer((void*)&ambientLightData,     sizeof(ConstantDeferredAmbient),                    _constantBufferDefAmbient);
+	UpdateConstantBuffer((void*)&directionalLightData, sizeof(ConstantDeferredDirectional),                _constantBufferDefDirectional);
+
+	// set textures
+	ID3D11ShaderResourceView**& gBufferTextures = gBuffer->GetSrvArray();
+	ID3D11ShaderResourceView* depthMap = cameraLight->GetRSV();
+	ID3D11ShaderResourceView* textureArray[5] = { depthMap, gBufferTextures[0], gBufferTextures[1], gBufferTextures[2], gBufferTextures[3] };	
+	devCon->PSSetShaderResources(0, 5, textureArray);
+
+	// set constantbuffers
+	devCon->PSSetConstantBuffers(0, 1, &_constantBufferDefPoint);
+	devCon->PSSetConstantBuffers(1, 1, &_constantBufferDefAmbient);
+	devCon->PSSetConstantBuffers(2, 1, &_constantBufferDefDirectional);
+
+	// draw
+	//devCon->DrawIndexed(6, 0, 0);
+	
+	DXM.SetZBuffer(DEPTH_STATE::ENABLED);
 
 }
 
@@ -356,7 +452,6 @@ void ShaderManager::RenderDirectional(const std::vector<Mesh*>& meshes)
 	XMStoreFloat4x4(&viewMatrix, XMMatrixTranspose(XMLoadFloat4x4(&viewMatrix)));
 	XMStoreFloat4x4(&projectionMatrix, XMMatrixTranspose(XMLoadFloat4x4(&projectionMatrix)));
 	
-
 	// set the light data
 	pixelData.diffuseColor = directionalLight->GetLightColor();
 	XMStoreFloat3(&pixelData.lightDir, XMVectorNegate(XMLoadFloat3(&directionalLight->GetLightDirection())));
@@ -481,10 +576,8 @@ void ShaderManager::RenderPoint(const std::vector<Mesh*>& meshes)
 	
 	CameraComponent* camera = CameraManager::GetInstance().GetCurrentCameraGame();
 
-	// get directional lights
+	// get point lights
 	std::vector<LightPointComponent*>& pointLights = LightManager::GetInstance().GetPointLight();
-	
-	// create constantbuffer structures
 	const int size = pointLights.size();
 	
 	ConstantPointVertex vertexData;
