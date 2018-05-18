@@ -64,7 +64,7 @@ void Renderer::CreateDepthMap()
 	// create a quad that can render a preview of  the depthmap
 #ifdef _DEBUG
 	Entity* depthMapQuad = new Entity();
-	depthMapQuad->AddComponent<QuadComponent>()->Init(XMFLOAT2(SCREEN_WIDTH * 0.06f, SCREEN_HEIGHT * 0.1f), XMFLOAT2(SCREEN_WIDTH * 0.1f, SCREEN_WIDTH * 0.1f), L"");
+	depthMapQuad->AddComponent<QuadComponent>()->Init(XMFLOAT2(SCREEN_WIDTH * 0.06f, SCREEN_HEIGHT * 0.1f), XMFLOAT2(SCREEN_WIDTH * 0.08f, SCREEN_WIDTH * 0.08f), L"");
 	depthMapQuad->GetComponent<QuadComponent>()->SetTexture(_depthMap->GetShaderResource());
 
 	Entity* positionQuad = new Entity();

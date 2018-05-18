@@ -52,23 +52,23 @@ void FreeMoveComponent::UpdateMovement()
 
 	// get the normalized stick vector relative to the right and forward of the camera
 	XMFLOAT3 leftStickX;
-	XMStoreFloat3(&leftStickX, XMVectorMultiply(XMLoadFloat3(&right), XMLoadFloat(&leftStickInput.x)));
+	XMStoreFloat3(&leftStickX, XMVectorMultiply(XMLoadFloat3(&right), XMLoadFloat3(&XMFLOAT3(leftStickInput.x, leftStickInput.x, leftStickInput.x))));
 
 	XMFLOAT3 leftStickY;
-	XMStoreFloat3(&leftStickY, XMVectorMultiply(XMLoadFloat3(&forward), XMLoadFloat(&leftStickInput.y)));
+	XMStoreFloat3(&leftStickY, XMVectorMultiply(XMLoadFloat3(&forward), XMLoadFloat3(&XMFLOAT3(leftStickInput.y, leftStickInput.y, leftStickInput.y))));
 
 	XMFLOAT3 leftStick;
-	XMStoreFloat3(&leftStick, XMVectorMultiply(XMLoadFloat3(&leftStickX), XMLoadFloat3(&leftStickY)));
+	XMStoreFloat3(&leftStick, XMVectorAdd(XMLoadFloat3(&leftStickX), XMLoadFloat3(&leftStickY)));
 
 	XMStoreFloat3(&leftStick, XMVector3Normalize(XMLoadFloat3(&leftStick)));
 
 	if (!_gamepad->RStickDead())
-		XMStoreFloat3(&rotation, XMVectorAdd(XMLoadFloat3(&rotation), XMLoadFloat3(&XMFLOAT3(rightStickInput.x * ROTATION_SPEED * deltaTime, -rightStickInput.y * ROTATION_SPEED * deltaTime, 0))));  
+		XMStoreFloat3(&rotation, XMVectorAdd(XMLoadFloat3(&rotation), XMLoadFloat3(&XMFLOAT3(-rightStickInput.y * ROTATION_SPEED * deltaTime, rightStickInput.x * ROTATION_SPEED * deltaTime, 0))));
 
 	float movement = MOVE_SPEED * deltaTime;
 
 	if (!_gamepad->LStickDead())
-		XMStoreFloat3(&pos, XMVectorAdd(XMLoadFloat3(&pos), XMVectorMultiply(XMLoadFloat3(&leftStick), XMLoadFloat(&movement))));
+		XMStoreFloat3(&pos, XMVectorAdd(XMLoadFloat3(&pos), XMVectorMultiply(XMLoadFloat3(&leftStick), XMLoadFloat3(&XMFLOAT3(movement, movement, movement)))));
 
 	// KEYBOARDMOUSE		
 	// mouse rotation
