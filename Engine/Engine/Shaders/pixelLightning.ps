@@ -46,6 +46,6 @@ struct PixelInputType
 float4 Main(PixelInputType input) : SV_TARGET
 {            
 
-	float4 color = Texture[4].Load(int3(input.position.xy,0));
-   return color * ambientColor;	   
+	float4 color = Texture[2].Load(int3(input.position.xy,0));
+   return color;// * ambientColor;	   
 }

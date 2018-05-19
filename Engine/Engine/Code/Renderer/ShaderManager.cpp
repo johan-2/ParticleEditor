@@ -820,7 +820,7 @@ void ShaderManager::RenderSkyBox(XMFLOAT4X4 worldMatrix)
 	//render with alpha blending
 	DXM.SetBlendState(BLEND_STATE::BLEND_OPAQUE);
 	DXM.SetRasterizerState(RASTERIZER_STATE::NOCULL);
-	DXM.SetZBuffer(DEPTH_STATE::DISABLED);
+	DXM.SetZBuffer(DEPTH_STATE::MASKED_SKYBOX);
 
 	// get and transpose camera matrices
 	XMFLOAT4X4 viewMatrix = camera->GetViewMatrix();

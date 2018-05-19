@@ -21,7 +21,8 @@ enum DEPTH_STATE
 {
 	ENABLED,
 	DISABLED,
-	READ_ONLY
+	READ_ONLY,
+	MASKED_SKYBOX
 };
 
 class DXManager
@@ -89,6 +90,7 @@ private:
 	ID3D11DepthStencilState* _depthStencilEnabled;
 	ID3D11DepthStencilState* _depthStencilDisabled;
 	ID3D11DepthStencilState* _depthStencilReadOnly;
+	ID3D11DepthStencilState* _depthStencilMaskedSkybox;
 
 	ID3D11SamplerState* _sampleStateWrap;
 	ID3D11SamplerState* _sampleStateClamp;

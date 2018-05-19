@@ -65,7 +65,7 @@ void Renderer::CreateDepthMap()
 	_screenQuad = new ScreenQuad();
 
 	// create skybox
-	_skyBox = new SkyBox(L"Skyboxes/EmptySpace.dds");
+	_skyBox = new SkyBox(L"Skyboxes/DarkCloudy.dds");
 
 	// create a quad that can render a preview of  the depthmap
 #ifdef _DEBUG
@@ -191,13 +191,14 @@ void Renderer::Render()
 	// set back regular constantbuffers and render alpha meshes with regular forward rendering
 	SM.SetConstantBuffers();
 	RenderLightsAlpha();
+
+	// render skybox, will mask out all pixels that contains geometry in the fullscreen quad, leaving only the skybox rendered on "empty" pixels
+	_skyBox->Render();
 	
 	// render particles (currently alpha meshes and particles cant be rendered perfect together, need to find solution for this)
 	SM.SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUTPARTICLE);
 	RenderParticles();
-
-	//_skyBox->Render(); // need to render skybox differently with deferred rendering
-
+	
 	// set inputlayout for UI
 	SM.SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT2D);
 	RenderUI();

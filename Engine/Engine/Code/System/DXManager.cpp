@@ -81,7 +81,7 @@ void DXManager::ClearRenderTarget(float r, float g, float b, float a)
 
 	// clear rendertarget and depth
 	_devCon->ClearRenderTargetView(_renderTargetView, color);	
-	_devCon->ClearDepthStencilView(_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+	_devCon->ClearDepthStencilView(_depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 1.0f);
 
 }
 void DXManager::PresentScene()
@@ -156,7 +156,7 @@ void DXManager::SetZBuffer(DEPTH_STATE state)
 	switch (state)
 	{
 	case ENABLED:
-		_devCon->OMSetDepthStencilState(_depthStencilEnabled, 1);
+		_devCon->OMSetDepthStencilState(_depthStencilEnabled, 5);
 		break;
 	case DISABLED:
 		_devCon->OMSetDepthStencilState(_depthStencilDisabled, 1);
@@ -164,6 +164,8 @@ void DXManager::SetZBuffer(DEPTH_STATE state)
 	case READ_ONLY:
 		_devCon->OMSetDepthStencilState(_depthStencilReadOnly, 1);
 		break;
+	case MASKED_SKYBOX:
+		_devCon->OMSetDepthStencilState(_depthStencilMaskedSkybox, 5);
 	}
 }
 
@@ -333,22 +335,23 @@ bool DXManager::CreateDepthstencilStates()
 
 	// Set up the description of the stencil state.
 	depthStencilDesc.DepthEnable = true; // enables depth
-	depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+	depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL; 
 	depthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
 	depthStencilDesc.StencilEnable = true;
-	depthStencilDesc.StencilReadMask = 0xFF;
-	depthStencilDesc.StencilWriteMask = 0xFF;
+	depthStencilDesc.StencilReadMask = 255;
+	depthStencilDesc.StencilWriteMask = 255;
 
-	// Stencil operations if pixel is front-facing.
-	depthStencilDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
-	depthStencilDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
-	depthStencilDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+	// Stencil operations
+	// replace the stencil value with the reference value on the rendered pixel no matter if the operation fails(only care that SOMETHING is rendered on the pixel)
+	// the skybox will later mask the pixels that has the reference value set in the stencil
+	depthStencilDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_REPLACE; 
+	depthStencilDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_REPLACE;
+	depthStencilDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_REPLACE;
 	depthStencilDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
 
-	// Stencil operations if pixel is back-facing.
-	depthStencilDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
-	depthStencilDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
-	depthStencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+	depthStencilDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_REPLACE;
+	depthStencilDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_REPLACE;
+	depthStencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_REPLACE;
 	depthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
 	
 	// depth enabled
@@ -356,16 +359,38 @@ bool DXManager::CreateDepthstencilStates()
 	if (FAILED(result)) 
 		return false;
 
+	// will only read the depthbuffer, the depthstencil is ignored here aswell
 	depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+	depthStencilDesc.StencilEnable = false;
 	result = _device->CreateDepthStencilState(&depthStencilDesc, &_depthStencilReadOnly);
 	if (FAILED(result))
 		return false;
 			
-	// depth disabled
-	depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-	depthStencilDesc.DepthEnable = false; // disables depth
+	// will not read or write the deptbuffer and stencilbuffer
+	depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+	depthStencilDesc.DepthEnable = false;
+	depthStencilDesc.StencilEnable = false;
 	result = _device->CreateDepthStencilState(&depthStencilDesc, &_depthStencilDisabled);
 	if (FAILED(result)) 
+		return false;
+
+	// masked depthstencil with reference set to the same as the regular depthEnabled depthstencil
+	depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+	depthStencilDesc.DepthEnable = false;
+	depthStencilDesc.StencilEnable = true;
+	
+	depthStencilDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+	depthStencilDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+	depthStencilDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+	depthStencilDesc.FrontFace.StencilFunc = D3D11_COMPARISON_NOT_EQUAL; 
+	
+	depthStencilDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+	depthStencilDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+	depthStencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+	depthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_NOT_EQUAL;
+
+	result = _device->CreateDepthStencilState(&depthStencilDesc, &_depthStencilMaskedSkybox);
+	if (FAILED(result))
 		return false;
 
 	_devCon->OMSetDepthStencilState(_depthStencilEnabled, 1);
