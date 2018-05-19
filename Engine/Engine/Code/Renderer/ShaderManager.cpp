@@ -359,9 +359,9 @@ void ShaderManager::RenderLights(GBuffer*& gBuffer)
 	const int size = pointLights.size();
 	
 	// constantbuffer structures
-	ConstantDeferredPoint pointLightData[MAX_POINT_LIGHTS];
 	ConstantDeferredAmbient ambientLightData;
 	ConstantDeferredDirectional directionalLightData;
+	ConstantDeferredPoint pointLightData[MAX_POINT_LIGHTS];
 	
 	// set the pointlight data
 	for (int i = 0; i< pointLights.size(); i++)
@@ -398,9 +398,9 @@ void ShaderManager::RenderLights(GBuffer*& gBuffer)
 	directionalLightData.lightSpecularpower = directionalLight->GetSpecularPower();
 
 	// update constantbuffers		
-	UpdateConstantBuffer((void*)&pointLightData,       sizeof(ConstantDeferredPoint) * pointLights.size(), _constantBufferDefPoint);					
 	UpdateConstantBuffer((void*)&ambientLightData,     sizeof(ConstantDeferredAmbient),                    _constantBufferDefAmbient);
 	UpdateConstantBuffer((void*)&directionalLightData, sizeof(ConstantDeferredDirectional),                _constantBufferDefDirectional);
+	UpdateConstantBuffer((void*)&pointLightData,       sizeof(ConstantDeferredPoint) * pointLights.size(), _constantBufferDefPoint);					
 
 	// set textures
 	ID3D11ShaderResourceView**& gBufferTextures = gBuffer->GetSrvArray();
@@ -409,12 +409,18 @@ void ShaderManager::RenderLights(GBuffer*& gBuffer)
 	devCon->PSSetShaderResources(0, 5, textureArray);
 
 	// set constantbuffers
-	devCon->PSSetConstantBuffers(0, 1, &_constantBufferDefPoint);
-	devCon->PSSetConstantBuffers(1, 1, &_constantBufferDefAmbient);
-	devCon->PSSetConstantBuffers(2, 1, &_constantBufferDefDirectional);
+	/*ID3D11Buffer* ba[3] = { _constantBufferDefAmbient, _constantBufferDefDirectional, _constantBufferDefPoint };
+	devCon->PSSetConstantBuffers(0, 3, ba);*/
+
+	devCon->PSSetConstantBuffers(0, 1, &_constantBufferDefAmbient);
+	devCon->PSSetConstantBuffers(1, 1, &_constantBufferDefDirectional);
+	devCon->PSSetConstantBuffers(2, 1, &_constantBufferDefPoint);
 
 	// draw
-	//devCon->DrawIndexed(6, 0, 0);
+	devCon->DrawIndexed(6, 0, 0);
+
+	ID3D11ShaderResourceView* nullTextureArray[5] = { nullptr, nullptr, nullptr, nullptr, nullptr };
+	devCon->PSSetShaderResources(0, 5, nullTextureArray);
 	
 	DXM.SetZBuffer(DEPTH_STATE::ENABLED);
 

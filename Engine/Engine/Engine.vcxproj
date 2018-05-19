@@ -166,6 +166,7 @@
     <ClCompile Include="Code\Renderer\Mesh.cpp" />
     <ClCompile Include="Code\Renderer\Renderer.cpp" />
     <ClCompile Include="Code\Renderer\RenderToTexture.cpp" />
+    <ClCompile Include="Code\Renderer\ScreenQuad.cpp" />
     <ClCompile Include="Code\Renderer\ShaderManager.cpp" />
     <ClCompile Include="Code\Renderer\SkyBox.cpp" />
     <ClCompile Include="Code\System\DXManager.cpp" />
@@ -206,6 +207,7 @@
     <ClInclude Include="Code\Renderer\Mesh.h" />
     <ClInclude Include="Code\Renderer\Renderer.h" />
     <ClInclude Include="Code\Renderer\RenderToTexture.h" />
+    <ClInclude Include="Code\Renderer\ScreenQuad.h" />
     <ClInclude Include="Code\Renderer\ShaderManager.h" />
     <ClInclude Include="Code\Renderer\SkyBox.h" />
     <ClInclude Include="Code\System\DXManager.h" />

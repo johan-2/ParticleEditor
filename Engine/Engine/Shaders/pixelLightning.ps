@@ -1,5 +1,5 @@
 
-Texture2D shaderTexture[5]; // shadowmap, position, normal, diffuse, specular	
+Texture2D Texture[5]; // shadowmap, position, normal, diffuse, specular	
 SamplerState SampleType[2]; // wrap,clamp 	
  
  struct PointLight
@@ -16,13 +16,13 @@ SamplerState SampleType[2]; // wrap,clamp
 	int numLightsPoint;
 };
 
-cbuffer AmbientBuffer
+cbuffer AmbientBuffer : register(b0)
 {
 	float4 ambientColor;
 	float4 cameraPosition;
 };
 
-cbuffer DirectionalBuffer
+cbuffer DirectionalBuffer : register(b1)
 {
 	float4x4 lightViewProj;
 	float4 lightColorDir;	
@@ -31,7 +31,7 @@ cbuffer DirectionalBuffer
 	float  specularPowerDir;	
 };
 
-cbuffer PointLightBuffer
+cbuffer PointLightBuffer : register(b2)
 {
 	PointLight pointLights[25];
 };
@@ -45,5 +45,7 @@ struct PixelInputType
 
 float4 Main(PixelInputType input) : SV_TARGET
 {            
-   return float4(0,1,0,1); 	   
+
+	float4 color = Texture[4].Load(int3(input.position.xy,0));
+   return color * ambientColor;	   
 }

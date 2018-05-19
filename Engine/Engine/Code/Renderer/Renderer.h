@@ -9,6 +9,7 @@ class Entity;
 class SkyBox;
 class ParticleEmitterComponent;
 class GBuffer;
+class ScreenQuad;
 
 enum SHADER_TYPE
 {
@@ -68,6 +69,7 @@ private:
 	RenderToTexture* _depthMap;
 
 	GBuffer* _gBuffer;
+	ScreenQuad* _screenQuad;
 	SkyBox* _skyBox;
 
 };

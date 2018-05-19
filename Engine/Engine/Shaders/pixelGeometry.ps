@@ -28,6 +28,8 @@ Output Main(PixelInputType input)
 	float4 normalMap    = Textures[1].Sample(SampleType[0],input.texCoord);
 	float4 specularMap  = Textures[2].Sample(SampleType[0],input.texCoord);
 	
+	specularMap.w = 1;
+	
 	normalMap = (normalMap * 2.0) -1.0;
 	
 	float3x3 tangentSpaceMatrix =float3x3(input.tangent, input.binormal, input.normal);	

@@ -13,6 +13,7 @@
 #include <algorithm>
 #include <DirectXMath.h>
 #include "GBuffer.h"
+#include "ScreenQuad.h"
 
 using namespace DirectX;
 
@@ -35,6 +36,8 @@ Renderer::~Renderer()
 {
 	delete _depthMap;
 	delete _gBuffer;
+	delete _screenQuad;
+	delete _skyBox;
 }
 
 void Renderer::CreateDepthMap() 
@@ -57,6 +60,9 @@ void Renderer::CreateDepthMap()
 
 	// create gbuffer for deffered rendering
 	_gBuffer = new GBuffer();
+
+	// create fullscreenquad for deferred rendering
+	_screenQuad = new ScreenQuad();
 
 	// create skybox
 	_skyBox = new SkyBox(L"Skyboxes/EmptySpace.dds");
@@ -208,6 +214,7 @@ void Renderer::RenderDeferred()
 
 	// set to defualt rendertarget and render the fullscreenquad and do light calculations
 	dXM.SetRenderTarget(nullptr, nullptr, true);	
+	_screenQuad->UploadBuffers();
 	SM.RenderLights(_gBuffer); 
 
 }

@@ -89,7 +89,7 @@ void Framework::Start()
 	CameraManager::GetInstance().SetCurrentCameraUI(cameraUI->GetComponent<CameraComponent>());
 
 	//set ambient light color	
-	LightManager::GetInstance().SetAmbientColor(XMFLOAT4(0.1f, 0.1f, 0.1f, 1.0f));
+	LightManager::GetInstance().SetAmbientColor(XMFLOAT4(0.3f, 0.3f, 0.3f, 1.0f));
 
 	// get transform of the camera that renders the depthmap
 	TransformComponent* dt = CameraManager::GetInstance().GetCurrentCameraDepthMap()->GetComponent<TransformComponent>();
@@ -97,7 +97,7 @@ void Framework::Start()
 	// create directional light and give it the same position/ rotation as depthrender camera
 	Entity* directionalLight = new Entity;
 	directionalLight->AddComponent<TransformComponent>()->Init(dt->GetPositionVal(), dt->GetRotationVal());
-	directionalLight->AddComponent<LightDirectionComponent>()->Init(XMFLOAT4(0.02f, 0.02f, 0.02f, 1), XMFLOAT4(1, 1, 1, 1), 100.0f);
+	directionalLight->AddComponent<LightDirectionComponent>()->Init(XMFLOAT4(0.8f, 0.8f, 0.8f, 1), XMFLOAT4(1, 1, 1, 1), 100.0f);
 
 	//// test entities
 	Entity* box = new Entity();
@@ -107,7 +107,7 @@ void Framework::Start()
 
 	Entity* floor = new Entity();
 	floor->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, -8, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(10, 1, 10));
-	floor->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::PLANE, DEFERRED | CAST_SHADOW_DIR, L"Textures/red.dds", L"Textures/bricksNormal.dds", L"Textures/bricksSpecular");
+	floor->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::PLANE, DEFERRED | CAST_SHADOW_DIR, L"Textures/red.dds", L"Textures/bricksNormal.dds", L"Textures/bricksSpecular.dds");
 
 	Entity* wall = new Entity();
 	wall->AddComponent<TransformComponent>()->Init(XMFLOAT3(-20, -6.5f, 12), XMFLOAT3(0, -80, 0), XMFLOAT3(10, 10, 3));
@@ -180,7 +180,7 @@ void Framework::Run()
 		DXManager& DXM = DXManager::GetInstance();
 
 		// clear rendertarget from last frame
-		DXM.ClearRenderTarget(0.5, 0.5, 0.5, 1);
+		DXM.ClearRenderTarget(0.5, 0.5, 0.9, 1);
 
 		// setup ImGui buffers before rendering
 		ImGui::Render();
