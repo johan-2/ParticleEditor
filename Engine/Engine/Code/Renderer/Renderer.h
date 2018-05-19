@@ -12,13 +12,10 @@ class GBuffer;
 class ScreenQuad;
 
 enum SHADER_TYPE
-{
-	S_AMBIENT,
-	S_DIRECTIONAL,
-	S_DEPTH,
-	S_DIRECTIONAL_SHADOWS,
-	S_POINT,
+{	
 	S_DEFERRED,
+	S_DEPTH,
+	S_FORWARD_ALPHA,
 	S_NUM_RENDER_TYPES
 };
 
@@ -36,9 +33,6 @@ public:
 	void AddQuadToUIRenderer(QuadComponent* quad);
 	void RemoveQuadFromUIRenderer(QuadComponent* quad);
 
-	void AddToAlphaMeshes(Mesh* mesh);
-	void RemoveFromAlphaMeshes(Mesh* mesh);
-
 	void AddParticleEmitter(ParticleEmitterComponent* emitter);
 	void RemoveParticleEmitter(ParticleEmitterComponent* emitter);
 	
@@ -49,11 +43,8 @@ private:
 
 	static Renderer* _instance;
 
-
 	void RenderDeferred();
-
 	void RenderDepth();
-	void RenderLights();
 	void RenderLightsAlpha();
 	void RenderParticles();
 	void RenderUI();
@@ -61,7 +52,6 @@ private:
 	void AlphaSort();	
 
 	std::vector<Mesh*> _meshes[S_NUM_RENDER_TYPES];	
-	std::vector<Mesh*> _meshesAlpha;
 	std::vector<QuadComponent*> _quads;
 	std::vector<ParticleEmitterComponent*> _particleEmitters;
 

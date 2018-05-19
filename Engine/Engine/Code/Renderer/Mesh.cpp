@@ -100,46 +100,25 @@ void Mesh::AddRemoveToRenderer(bool add)
 {
 	Renderer& renderer = Renderer::GetInstance();
 
-	if ((_FLAGS & HAS_ALPHA) == HAS_ALPHA) 
-	{
-		if ((_FLAGS & CAST_SHADOW_DIR) == CAST_SHADOW_DIR || (_FLAGS & LIGHTS_ALL) == LIGHTS_ALL)
-			add ? renderer.AddToRenderer(this, SHADER_TYPE::S_DEPTH) : renderer.RemoveFromRenderer(this, SHADER_TYPE::S_DEPTH);
-
-		add ? renderer.AddToAlphaMeshes(this) : renderer.RemoveFromAlphaMeshes(this);	
-		return;
-	}
-
+	// add to depth rendering
 	if ((_FLAGS & CAST_SHADOW_DIR) == CAST_SHADOW_DIR)
-		add ? renderer.AddToRenderer(this, SHADER_TYPE::S_DEPTH)    : renderer.RemoveFromRenderer(this, SHADER_TYPE::S_DEPTH);
+		add ? renderer.AddToRenderer(this, SHADER_TYPE::S_DEPTH) : renderer.RemoveFromRenderer(this, SHADER_TYPE::S_DEPTH);
 
 	// if using deffered rendering we dont have to check any other flags
-	if((_FLAGS & DEFERRED) == DEFERRED)
+	if ((_FLAGS & DEFERRED) == DEFERRED)
 	{
 		add ? renderer.AddToRenderer(this, SHADER_TYPE::S_DEFERRED) : renderer.RemoveFromRenderer(this, SHADER_TYPE::S_DEFERRED);
 		return;
 	}
 
-    if ((_FLAGS & AMBIENT) == AMBIENT)
-		add ? renderer.AddToRenderer(this, SHADER_TYPE::S_AMBIENT)             : renderer.RemoveFromRenderer(this, SHADER_TYPE::S_AMBIENT);
-
-	if ((_FLAGS & DIRECTIONAL) == DIRECTIONAL)
-		add ? renderer.AddToRenderer(this, SHADER_TYPE::S_DIRECTIONAL)         : renderer.RemoveFromRenderer(this, SHADER_TYPE::S_DIRECTIONAL);
-
-	if ((_FLAGS & RECIVE_SHADOW_DIR) == RECIVE_SHADOW_DIR) 
-		add ? renderer.AddToRenderer(this, SHADER_TYPE::S_DIRECTIONAL_SHADOWS) : renderer.RemoveFromRenderer(this, SHADER_TYPE::S_DIRECTIONAL_SHADOWS);
-
-	if ((_FLAGS & POINT) == POINT)
-		add ? renderer.AddToRenderer(this, SHADER_TYPE::S_POINT)               : renderer.RemoveFromRenderer(this, SHADER_TYPE::S_POINT);
-	
-
-	if ((_FLAGS & LIGHTS_ALL) == LIGHTS_ALL)
-	{
-		add ? renderer.AddToRenderer(this, SHADER_TYPE::S_AMBIENT)             : renderer.RemoveFromRenderer(this, SHADER_TYPE::S_AMBIENT);
-		add ? renderer.AddToRenderer(this, SHADER_TYPE::S_DEPTH)               : renderer.RemoveFromRenderer(this, SHADER_TYPE::S_DEPTH);
-		add ? renderer.AddToRenderer(this, SHADER_TYPE::S_DIRECTIONAL_SHADOWS) : renderer.RemoveFromRenderer(this, SHADER_TYPE::S_DIRECTIONAL_SHADOWS);
-		add ? renderer.AddToRenderer(this, SHADER_TYPE::S_POINT)               : renderer.RemoveFromRenderer(this, SHADER_TYPE::S_POINT);
+	// alpha needs to be forward rendered
+	if ((_FLAGS & HAS_ALPHA) == HAS_ALPHA) 
+	{		
+		add ? renderer.AddToRenderer(this, SHADER_TYPE::S_FORWARD_ALPHA) : renderer.RemoveFromRenderer(this, SHADER_TYPE::S_FORWARD_ALPHA);
+		return;
 	}
 
 	
+
 }
 

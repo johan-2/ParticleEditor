@@ -37,18 +37,22 @@ public:
 	void CreateVertexShader(LPCWSTR filePath, ID3D11VertexShader**, ID3D10Blob**);
 	void CreatePixelShader(LPCWSTR filePath, ID3D11PixelShader**, ID3D10Blob**);
 
-	void RenderAmbient(const std::vector<Mesh*>& meshes);
-	void RenderDirectional(const std::vector<Mesh*>& meshes);
-	void RenderPoint(const std::vector<Mesh*>& meshes);
-	void RenderDepth(const std::vector<Mesh*>& meshes);
-	void RenderDirectionalShadows(const std::vector<Mesh*>& meshes);
-	void RenderGUI(ImDrawData* draw_data);
+	// forward rendering for alpha meshes
+	void RenderAmbientAlpha(Mesh*& mesh);
+	void RenderDirectionalAlpha(Mesh*& mesh);
+	void RenderPointAlpha(Mesh*& mesh);
+	void RenderDirectionalShadowsAlpha(Mesh*& mesh);
 
+	// deferred rendering
+	void RenderDepth(const std::vector<Mesh*>& meshes);
 	void RenderGeometry(const std::vector<Mesh*>& meshes);
 	void RenderLights(GBuffer*& gBuffer);
 
+	// 2d rendering
 	void RenderQuadUI(const std::vector<QuadComponent*>& quads);
+	void RenderGUI(ImDrawData* draw_data);
 	
+	// skybox Particle rendering
 	void RenderSkyBox(XMFLOAT4X4 worldMatrix);
 	void RenderParticles(const std::vector<ParticleEmitterComponent*>& emitters);
 

@@ -166,6 +166,9 @@ void DXManager::SetZBuffer(DEPTH_STATE state)
 		break;
 	case MASKED_SKYBOX:
 		_devCon->OMSetDepthStencilState(_depthStencilMaskedSkybox, 5);
+		break;
+	case MASKED_LIGHTNING:
+		_devCon->OMSetDepthStencilState(_depthStencilMaskedLightning, 5);
 	}
 }
 
@@ -334,7 +337,7 @@ bool DXManager::CreateDepthstencilStates()
 	ZeroMemory(&depthStencilDesc, sizeof(depthStencilDesc));
 
 	// Set up the description of the stencil state.
-	depthStencilDesc.DepthEnable = true; // enables depth
+	depthStencilDesc.DepthEnable = true; 
 	depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL; 
 	depthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
 	depthStencilDesc.StencilEnable = true;
@@ -390,6 +393,15 @@ bool DXManager::CreateDepthstencilStates()
 	depthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_NOT_EQUAL;
 
 	result = _device->CreateDepthStencilState(&depthStencilDesc, &_depthStencilMaskedSkybox);
+	if (FAILED(result))
+		return false;
+
+	// wont render non geometry pixels for the fullscreen light pass
+	// only renders the masked pixels (opposite of skybox)
+	depthStencilDesc.FrontFace.StencilFunc = D3D11_COMPARISON_EQUAL;
+	depthStencilDesc.BackFace.StencilFunc  = D3D11_COMPARISON_EQUAL;
+
+	result = _device->CreateDepthStencilState(&depthStencilDesc, &_depthStencilMaskedLightning);
 	if (FAILED(result))
 		return false;
 

@@ -21,6 +21,8 @@ private:
 
 	void CreateWindowDx11(char* title, int x, int y, int width, int height);
 
+	float GetRandomFloat(float min, float max);
+
 	HINSTANCE _hInstance;
 	HWND _window;
 	std::string _applicationName;

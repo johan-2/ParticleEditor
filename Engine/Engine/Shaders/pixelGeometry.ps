@@ -33,12 +33,12 @@ Output Main(PixelInputType input)
 	normalMap = (normalMap * 2.0) -1.0;
 	
 	float3x3 tangentSpaceMatrix =float3x3(input.tangent, input.binormal, input.normal);	
-	float3 bumpNormal = normalize(mul(normalMap, tangentSpaceMatrix));   
+	float3 bumpNormal = normalize(mul(normalMap, tangentSpaceMatrix));   	
 			    		  					   		    				
 	output.position = input.worldPosition;
-	output.normal   = float4(bumpNormal,1);
-	output.diffuse  = textureColor;
-	output.specular = specularMap;
+	output.normal   = float4(bumpNormal.xyz,input.normal.x);
+	output.diffuse  = float4 (textureColor.xyz, input.normal.y);
+	output.specular = float4(specularMap.xyz, input.normal.z);
 	
 			
 	return output;    

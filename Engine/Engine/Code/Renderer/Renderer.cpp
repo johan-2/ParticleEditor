@@ -115,24 +115,7 @@ void Renderer::RemoveFromRenderer(Mesh* mesh, SHADER_TYPE type)
 	}
 }
 
-void Renderer::AddToAlphaMeshes(Mesh* mesh) 
-{
-	_meshesAlpha.push_back(mesh);
-}
 
-void Renderer::RemoveFromAlphaMeshes(Mesh* mesh) 
-{
-	for (int i = 0; i < _meshesAlpha.size(); i++)
-	{
-		if (mesh == _meshesAlpha[i])
-		{
-			Mesh* temp = _meshesAlpha.back();
-			_meshesAlpha.back() = _meshesAlpha[i];
-			_meshesAlpha[i] = temp;
-			_meshesAlpha.pop_back();
-		}
-	}
-}
 
 void Renderer::AddParticleEmitter(ParticleEmitterComponent* emitter)
 {
@@ -236,60 +219,35 @@ void Renderer::RenderDepth()
 	SM.RenderDepth(_meshes[S_DEPTH]);
 }
 
-void Renderer::RenderLights() 
-{
-	DXManager& dXM = DXManager::GetInstance();
-	ShaderManager& SM = ShaderManager::GetInstance();
-
-	// set to defualt rendertargets and viewport
-	dXM.SetRenderTarget(nullptr, nullptr, true);
-	dXM.SetViewport(nullptr, true);
-
-	if (_meshes[S_AMBIENT].size() >0)
-	    SM.RenderAmbient(_meshes[S_AMBIENT]);
-
-	if (_meshes[S_DIRECTIONAL].size() >0)
-	    SM.RenderDirectional(_meshes[S_DIRECTIONAL]);
-
-	if (_meshes[S_POINT].size() >0)
-		SM.RenderPoint(_meshes[S_POINT]);
-
-	if (_meshes[S_DIRECTIONAL_SHADOWS].size() >0)
-		SM.RenderDirectionalShadows(_meshes[S_DIRECTIONAL_SHADOWS]);	
-}
 
 void Renderer::RenderLightsAlpha() 
 {
-	if (_meshesAlpha.size() == 0)
+	if (_meshes[S_FORWARD_ALPHA].size() == 0)
 		return;
 
 	ShaderManager& SM = ShaderManager::GetInstance();
 
 	AlphaSort();
 
-	for (int i = 0; i < _meshesAlpha.size(); i++) 
+	// alpha meshes has to be forward rendered one by one
+	for (int i = 0; i < _meshes[S_FORWARD_ALPHA].size(); i++)
 	{
-		unsigned int flags = _meshesAlpha[i]->GetFlags();
-
-		// very bad temporary solution, the renderfunction takes a list of all meshes for each shader and renders in a batch
-		// but alpha meshes need to take one mesh and render it in all shaders before moving on to the next and doing the same thing(if not, shadows etc wont show throght alpha layers)
-		// since the renderfunction expects a list just put one mesh in a list at a time and send it in, will fix a better solution for this later
-		std::vector<Mesh*> temp;
-		temp.push_back(_meshesAlpha[i]);
+		unsigned int flags = _meshes[S_FORWARD_ALPHA][i]->GetFlags();		
+		Mesh* mesh = _meshes[S_FORWARD_ALPHA][i];
 
 		if ((flags & LIGHTS_ALL) == LIGHTS_ALL) 
 		{						
-			SM.RenderAmbient(temp);
-			SM.RenderDirectionalShadows(temp);
+			SM.RenderAmbientAlpha(mesh);
+			SM.RenderDirectionalShadowsAlpha(mesh);
 		}
 		if ((flags & AMBIENT) == AMBIENT)		
-			SM.RenderAmbient(temp);
+			SM.RenderAmbientAlpha(mesh);
 
 		if ((flags & DIRECTIONAL) == DIRECTIONAL)
-			SM.RenderDirectional(temp);
+			SM.RenderDirectionalAlpha(mesh);
 
 		if ((flags & RECIVE_SHADOW_DIR) == RECIVE_SHADOW_DIR)
-			SM.RenderDirectionalShadows(temp);			
+			SM.RenderDirectionalShadowsAlpha(mesh);
 	}
 }
 
@@ -315,15 +273,15 @@ void Renderer::AlphaSort()
 {
 	// right now alpha meshes and particles are not sorted against each other, Need to find a solution for this
 	XMFLOAT3 camPos = CameraManager::GetInstance().GetCurrentCameraGame()->GetComponent<TransformComponent>()->GetPositionVal();
-	for (int i = 0; i < _meshesAlpha.size(); i++) 
+	for (int i = 0; i < _meshes[S_FORWARD_ALPHA].size(); i++)
 	{
 		XMFLOAT3 vec;
 
-		XMStoreFloat3(&vec, XMVectorSubtract(XMLoadFloat3(&_meshesAlpha[i]->GetPosition()), XMLoadFloat3(&camPos)));
-		XMStoreFloat(&_meshesAlpha[i]->_distance, XMVector3Length(XMLoadFloat3(&vec)));
+		XMStoreFloat3(&vec, XMVectorSubtract(XMLoadFloat3(&_meshes[S_FORWARD_ALPHA][i]->GetPosition()), XMLoadFloat3(&camPos)));
+		XMStoreFloat(&_meshes[S_FORWARD_ALPHA][i]->_distance, XMVector3Length(XMLoadFloat3(&vec)));
 	}
 
-	std::sort(_meshesAlpha.begin(), _meshesAlpha.end(), [](Mesh* a, Mesh* b) -> bool {return a->_distance > b->_distance; });	
+	std::sort(_meshes[S_FORWARD_ALPHA].begin(), _meshes[S_FORWARD_ALPHA].end(), [](Mesh* a, Mesh* b) -> bool {return a->_distance > b->_distance; });
 }
 
 

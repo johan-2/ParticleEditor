@@ -4,6 +4,7 @@
 
 LightPointComponent::LightPointComponent() : IComponent(POINT_LIGHT_COMPONENT)
 {
+
 	LightManager::GetInstance().AddPointLight(this);
 }
 

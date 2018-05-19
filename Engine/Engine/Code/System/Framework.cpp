@@ -26,6 +26,9 @@
 #include <iostream>
 #include "GuiManager.h"
 #include "DebugStats.h"
+#include <algorithm>
+#include <random>
+#include <chrono>
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM Lparam);
 
@@ -39,6 +42,7 @@ Framework::Framework()
 	DXManager::GetInstance().Initialize(_window, SCREEN_WIDTH, SCREEN_HEIGHT, V_SYNC, FULLSCREEN);
 
 	GuiManager::GetInstance().Initialize(_window);
+
 	// load and create our shader objects	
 	ShaderManager::GetInstance().Initialize();
 
@@ -89,7 +93,7 @@ void Framework::Start()
 	CameraManager::GetInstance().SetCurrentCameraUI(cameraUI->GetComponent<CameraComponent>());
 
 	//set ambient light color	
-	LightManager::GetInstance().SetAmbientColor(XMFLOAT4(0.3f, 0.3f, 0.3f, 1.0f));
+	LightManager::GetInstance().SetAmbientColor(XMFLOAT4(0.01f, 0.01f, 0.01f, 1.0f));
 
 	// get transform of the camera that renders the depthmap
 	TransformComponent* dt = CameraManager::GetInstance().GetCurrentCameraDepthMap()->GetComponent<TransformComponent>();
@@ -97,17 +101,24 @@ void Framework::Start()
 	// create directional light and give it the same position/ rotation as depthrender camera
 	Entity* directionalLight = new Entity;
 	directionalLight->AddComponent<TransformComponent>()->Init(dt->GetPositionVal(), dt->GetRotationVal());
-	directionalLight->AddComponent<LightDirectionComponent>()->Init(XMFLOAT4(0.8f, 0.8f, 0.8f, 1), XMFLOAT4(1, 1, 1, 1), 100.0f);
+	directionalLight->AddComponent<LightDirectionComponent>()->Init(XMFLOAT4(0.1f, 0.1f, 0.1f, 1), XMFLOAT4(1, 1, 1, 1), 100.0f);
 
 	//// test entities
-	Entity* box = new Entity();
-	box->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, -2, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(2,2,2));
-	box->AddComponent<TransformationComponent>()->Init(XMFLOAT3(1.0f, 1.0f, 0.0f), 40.0f);
-	box->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::CUBE, DEFERRED | CAST_SHADOW_DIR, L"Textures/metalBox.dds", L"Textures/metalBoxNormal.dds", L"Textures/metalBoxSpecular.dds");
-
+	for(int i =0; i < 6; i++)
+	{
+		for(int y =0; y < 6; y++)
+		{
+			Entity* box = new Entity();
+			box->AddComponent<TransformComponent>()->Init(XMFLOAT3(-10 + (y *4.5f), -3, 10 - (i *5)), XMFLOAT3(0, 0, 0), XMFLOAT3(2, 2, 2));
+			box->AddComponent<TransformationComponent>()->Init(XMFLOAT3(GetRandomFloat(-10,10), GetRandomFloat(-10, 10), GetRandomFloat(-10, 10)), GetRandomFloat(0.1f, 5.0f));
+			box->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::CUBE, DEFERRED | CAST_SHADOW_DIR, L"Textures/metalBox.dds", L"Textures/metalBoxNormal.dds", L"Textures/metalBoxSpecular.dds");
+		}
+		
+	}
+	
 	Entity* floor = new Entity();
 	floor->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, -8, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(10, 1, 10));
-	floor->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::PLANE, DEFERRED | CAST_SHADOW_DIR, L"Textures/red.dds", L"Textures/bricksNormal.dds", L"Textures/bricksSpecular.dds");
+	floor->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::PLANE, DEFERRED | CAST_SHADOW_DIR, L"Textures/grey.dds", L"Textures/bricksNormal.dds", L"Textures/bricksSpecular.dds");
 
 	Entity* wall = new Entity();
 	wall->AddComponent<TransformComponent>()->Init(XMFLOAT3(-20, -6.5f, 12), XMFLOAT3(0, -80, 0), XMFLOAT3(10, 10, 3));
@@ -118,12 +129,43 @@ void Framework::Start()
 	fire->AddComponent<ParticleEmitterComponent>()->Init("Particles/fire.json");
 
 	Entity* pointLight1 = new Entity();
-	pointLight1->AddComponent<TransformComponent>()->Init(XMFLOAT3(0.0f, -3.0f, -5), XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1));
-	pointLight1->AddComponent<LightPointComponent>()->Init(10.0f, 3.0f, XMFLOAT3(1, 1.0f, 0.8f), XMFLOAT3(1, 1, 1), 80.0f, 0.0f, 1.0f, 0.01f);
+	pointLight1->AddComponent<TransformComponent>()->Init(XMFLOAT3(0.0f, -4.0f, -6), XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1));
+	pointLight1->AddComponent<LightPointComponent>()->Init(10.0f, 4.0f, XMFLOAT3(1, 1.0f, 1.0f), XMFLOAT3(1, 1, 1), 50.0f, 0.0f, 1.0f, 0.01f);
 
 	Entity* pointLight2 = new Entity();
 	pointLight2->AddComponent<TransformComponent>()->Init(XMFLOAT3(-15.0f, -5.0f, 12), XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1));
 	pointLight2->AddComponent<LightPointComponent>()->Init(15.0f, 3.0f, XMFLOAT3(1.0, 0.8, 0.0), XMFLOAT3(1, 0.8, 0.0), 80.0f, 0.0f, 0.6f, 0.1f);
+
+	Entity* pointLight3 = new Entity();
+	pointLight3->AddComponent<TransformComponent>()->Init(XMFLOAT3(5.0f, -4.0f, 12), XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1));
+	pointLight3->AddComponent<LightPointComponent>()->Init(10.0f, 5.0f, XMFLOAT3(0.5, 2.0, 0.5), XMFLOAT3(0.5, 2.0, 0.5), 80.0f, 0.0f, 1.0f, 0.1f);
+
+	Entity* pointLight4 = new Entity();
+	pointLight4->AddComponent<TransformComponent>()->Init(XMFLOAT3(15.0f, -3.0f, 10), XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1));
+	pointLight4->AddComponent<LightPointComponent>()->Init(10.0f, 5.0f, XMFLOAT3(0.0, 1.0, 1.0), XMFLOAT3(0, 1.0, 1.0), 80.0f, 0.0f, 1.0f, 0.1f);
+
+	Entity* pointLight5 = new Entity();
+	pointLight5->AddComponent<TransformComponent>()->Init(XMFLOAT3(15.0f, -3.0f, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1));
+	pointLight5->AddComponent<LightPointComponent>()->Init(15.0f, 5.0f, XMFLOAT3(1.0, 0.0, 1.0), XMFLOAT3(1, 0.0, 1.0), 80.0f, 0.0f, 1.0f, 0.01f);
+
+	
+	bool b = false;
+	for(int i =0; i < 8; i ++)
+	{
+		for(int y =0; y< 8; y++)
+		{
+			float height = 0.0f;
+			if (b)
+				height = -4;
+
+			XMFLOAT3 color = XMFLOAT3(GetRandomFloat(0, 2), GetRandomFloat(0, 2), GetRandomFloat(0, 2));
+
+			Entity* pointLight6 = new Entity();
+			pointLight6->AddComponent<TransformComponent>()->Init(XMFLOAT3(-15.0f + (y * 6), height, 10 - (i *5)), XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1));
+			pointLight6->AddComponent<LightPointComponent>()->Init(8.0f, 3.0f, color, color, 80.0f, 0.0f, 0.0f, 1.0f);
+		}
+		b = !b;
+	}
 
 #ifdef _DEBUG
 	_debugStats = new DebugStats();
@@ -273,4 +315,13 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM Lparam)
 	}
 
 	return 0;
+}
+
+float Framework::GetRandomFloat(float min, float max)
+{
+	unsigned int seed = std::chrono::system_clock::now().time_since_epoch().count();
+	std::mt19937 generator(seed);
+	std::uniform_real_distribution<float> distribution(min, max);
+
+	return distribution(generator);
 }

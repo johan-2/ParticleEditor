@@ -344,7 +344,7 @@ void ShaderManager::RenderLights(GBuffer*& gBuffer)
 	ID3D11DeviceContext* devCon = DXM.GetDeviceCon();
 
 	// render with depth read/write Off
-	DXM.SetZBuffer(DEPTH_STATE::DISABLED);
+	DXM.SetZBuffer(DEPTH_STATE::MASKED_LIGHTNING);
 
 	// get camera 
 	CameraComponent* camera = CameraManager::GetInstance().GetCurrentCameraGame();
@@ -393,6 +393,7 @@ void ShaderManager::RenderLights(GBuffer*& gBuffer)
 	// set the light data
 	XMStoreFloat4x4(&directionalLightData.lightViewProj, XMMatrixMultiplyTranspose(XMLoadFloat4x4(&viewMatrixLight), XMLoadFloat4x4(&projectionMatrixLight)));
 	XMStoreFloat3(&directionalLightData.lightDirection, XMVectorNegate(XMLoadFloat3(&directionalLight->GetLightDirection())));
+
 	directionalLightData.lightColor         = directionalLight->GetLightColor();
 	directionalLightData.lightSpecularColor = directionalLight->GetSpecularColor();
 	directionalLightData.lightSpecularpower = directionalLight->GetSpecularPower();
@@ -408,10 +409,6 @@ void ShaderManager::RenderLights(GBuffer*& gBuffer)
 	ID3D11ShaderResourceView* textureArray[5] = { depthMap, gBufferTextures[0], gBufferTextures[1], gBufferTextures[2], gBufferTextures[3] };	
 	devCon->PSSetShaderResources(0, 5, textureArray);
 
-	// set constantbuffers
-	/*ID3D11Buffer* ba[3] = { _constantBufferDefAmbient, _constantBufferDefDirectional, _constantBufferDefPoint };
-	devCon->PSSetConstantBuffers(0, 3, ba);*/
-
 	devCon->PSSetConstantBuffers(0, 1, &_constantBufferDefAmbient);
 	devCon->PSSetConstantBuffers(1, 1, &_constantBufferDefDirectional);
 	devCon->PSSetConstantBuffers(2, 1, &_constantBufferDefPoint);
@@ -426,7 +423,7 @@ void ShaderManager::RenderLights(GBuffer*& gBuffer)
 
 }
 
-void ShaderManager::RenderDirectional(const std::vector<Mesh*>& meshes)
+void ShaderManager::RenderDirectionalAlpha(Mesh*& mesh)
 {			
 	//// get devicecontext
 	DXManager& DXM = DXManager::GetInstance();
@@ -466,34 +463,31 @@ void ShaderManager::RenderDirectional(const std::vector<Mesh*>& meshes)
 
 	// upload new light data to pixelshader		
 	UpdateConstantBuffer((void*)&pixelData, sizeof(ConstantDirectionalPixel), _constantBufferPixel);
+			
+	// get and transpose the world matrix for the mesh
+	XMFLOAT4X4 worldMatrix = mesh->GetWorldMatrix();
+	XMStoreFloat4x4(&worldMatrix, XMMatrixTranspose(XMLoadFloat4x4(&worldMatrix)));
 	
-	for(int i =0; i< meshes.size(); i++)
-	{		
-		// get and transpose the world matrix for the mesh
-		XMFLOAT4X4 worldMatrix = meshes[i]->GetWorldMatrix();
-		XMStoreFloat4x4(&worldMatrix, XMMatrixTranspose(XMLoadFloat4x4(&worldMatrix)));
-		
-		// set vertex constants data and upload to gpu
-		vertexData.world = worldMatrix;
-		vertexData.view = viewMatrix;
-		vertexData.projection = projectionMatrix;
-		vertexData.camPos = cameraPos;
-		vertexData.uvOffset = meshes[i]->GetUvOffset();
-		UpdateConstantBuffer((void*)&vertexData, sizeof(ConstantDirectionalVertex), _constantBufferVertex);
-		
-		// set textures
-		devCon->PSSetShaderResources(0, 3, meshes[i]->GetTextureArray());
+	// set vertex constants data and upload to gpu
+	vertexData.world = worldMatrix;
+	vertexData.view = viewMatrix;
+	vertexData.projection = projectionMatrix;
+	vertexData.camPos = cameraPos;
+	vertexData.uvOffset = mesh->GetUvOffset();
+	UpdateConstantBuffer((void*)&vertexData, sizeof(ConstantDirectionalVertex), _constantBufferVertex);
+	
+	// set textures
+	devCon->PSSetShaderResources(0, 3, mesh->GetTextureArray());
 
-		//upload vertex and index buffers for this mesh
-		meshes[i]->UploadBuffers();
-				
-		// draw the mesh additivly for each light
-		devCon->DrawIndexed(meshes[i]->GetNumIndices(), 0, 0);
-		
-	}						
+	//upload vertex and index buffers for this mesh
+	mesh->UploadBuffers();
+			
+	// draw the mesh additivly for each light
+	devCon->DrawIndexed(mesh->GetNumIndices(), 0, 0);
+							
 }
 
-void ShaderManager::RenderDirectionalShadows(const std::vector<Mesh*>& meshes) 
+void ShaderManager::RenderDirectionalShadowsAlpha(Mesh*& mesh) 
 {
 	// get devicecontext
 	DXManager& DXM = DXManager::GetInstance();
@@ -542,39 +536,37 @@ void ShaderManager::RenderDirectionalShadows(const std::vector<Mesh*>& meshes)
 	UpdateConstantBuffer((void*)&pixelData, sizeof(ConstantDirectionalShadowPixel), _constantBufferPixel);
 
 	ID3D11ShaderResourceView* shadowMap = cameraLight->GetRSV();
-	
-	for (int i = 0; i< meshes.size(); i++)
-	{
-		// get and transpose the world matrix for the mesh
-		XMFLOAT4X4 worldMatrix = meshes[i]->GetWorldMatrix();
-		XMStoreFloat4x4(&worldMatrix, XMMatrixTranspose(XMLoadFloat4x4(&worldMatrix)));
-
-		// set vertex constants data and upload to gpu
-		vertexData.world = worldMatrix;
-		vertexData.view = viewMatrix;
-		vertexData.projection = projectionMatrix;
-		vertexData.lightView = viewMatrixLight;
-		vertexData.lightProjection = projectionMatrixLight;
-		vertexData.camPos = cameraPos;
-		vertexData.uvOffset = meshes[i]->GetUvOffset();
-		UpdateConstantBuffer((void*)&vertexData, sizeof(ConstantDirectionalShadowVertex), _constantBufferVertex);
 		
-		ID3D11ShaderResourceView** meshTextures = meshes[i]->GetTextureArray();
-		ID3D11ShaderResourceView* t[4] = { meshTextures[0], meshTextures[1], meshTextures[2], shadowMap };
+	// get and transpose the world matrix for the mesh
+	XMFLOAT4X4 worldMatrix = mesh->GetWorldMatrix();
+	XMStoreFloat4x4(&worldMatrix, XMMatrixTranspose(XMLoadFloat4x4(&worldMatrix)));
 
-		// set textures
-		devCon->PSSetShaderResources(0, 4, t);
+	// set vertex constants data and upload to gpu
+	vertexData.world = worldMatrix;
+	vertexData.view = viewMatrix;
+	vertexData.projection = projectionMatrix;
+	vertexData.lightView = viewMatrixLight;
+	vertexData.lightProjection = projectionMatrixLight;
+	vertexData.camPos = cameraPos;
+	vertexData.uvOffset = mesh->GetUvOffset();
+	UpdateConstantBuffer((void*)&vertexData, sizeof(ConstantDirectionalShadowVertex), _constantBufferVertex);
+	
+	ID3D11ShaderResourceView** meshTextures = mesh->GetTextureArray();
+	ID3D11ShaderResourceView* t[4] = { meshTextures[0], meshTextures[1], meshTextures[2], shadowMap };
 
-		//upload vertex and index buffers for this mesh
-		meshes[i]->UploadBuffers();
-					
-		// draw the mesh additivly for the light
-		devCon->DrawIndexed(meshes[i]->GetNumIndices(), 0, 0);		
-	}
+	// set textures
+	devCon->PSSetShaderResources(0, 4, t);
+
+	//upload vertex and index buffers for this mesh
+	mesh->UploadBuffers();
+				
+	// draw the mesh additivly for the light
+	devCon->DrawIndexed(mesh->GetNumIndices(), 0, 0);		
+	
 
 }
 
-void ShaderManager::RenderPoint(const std::vector<Mesh*>& meshes)
+void ShaderManager::RenderPointAlpha(Mesh*& mesh)
 {
 	//// get devicecontext
 	DXManager& DXM = DXManager::GetInstance();
@@ -624,33 +616,31 @@ void ShaderManager::RenderPoint(const std::vector<Mesh*>& meshes)
 
 	// upload new light data to pixelshader		
 	UpdateConstantBuffer((void*)&pixelData, sizeof(ConstantPointPixel) * pointLights.size(), _constantBufferPixel);
+	
+	// get and transpose the world matrix for the mesh
+	XMFLOAT4X4 worldMatrix = mesh->GetWorldMatrix();
+	XMStoreFloat4x4(&worldMatrix, XMMatrixTranspose(XMLoadFloat4x4(&worldMatrix)));
 
-	for (int y = 0; y< meshes.size(); y++)
-	{
-		// get and transpose the world matrix for the mesh
-		XMFLOAT4X4 worldMatrix = meshes[y]->GetWorldMatrix();
-		XMStoreFloat4x4(&worldMatrix, XMMatrixTranspose(XMLoadFloat4x4(&worldMatrix)));
+	// set vertex constants data and upload to gpu
+	vertexData.world = worldMatrix;
+	vertexData.view = viewMatrix;
+	vertexData.projection = projectionMatrix;
+	vertexData.camPos = cameraPos;
+	vertexData.uvOffset = mesh->GetUvOffset();
+	UpdateConstantBuffer((void*)&vertexData, sizeof(ConstantPointVertex), _constantBufferVertex);
 
-		// set vertex constants data and upload to gpu
-		vertexData.world = worldMatrix;
-		vertexData.view = viewMatrix;
-		vertexData.projection = projectionMatrix;
-		vertexData.camPos = cameraPos;
-		vertexData.uvOffset = meshes[y]->GetUvOffset();
-		UpdateConstantBuffer((void*)&vertexData, sizeof(ConstantPointVertex), _constantBufferVertex);
+	// set textures
+	devCon->PSSetShaderResources(0, 3, mesh->GetTextureArray());
 
-		// set textures
-		devCon->PSSetShaderResources(0, 3, meshes[y]->GetTextureArray());
+	//upload vertex and index buffers for this mesh
+	mesh->UploadBuffers();
 
-		//upload vertex and index buffers for this mesh
-		meshes[y]->UploadBuffers();
-
-		// draw the mesh additivly for each light
-		devCon->DrawIndexed(meshes[y]->GetNumIndices(), 0, 0);
-	}	
+	// draw the mesh additivly for each light
+	devCon->DrawIndexed(mesh->GetNumIndices(), 0, 0);
+	
 }
 
-void ShaderManager::RenderAmbient(const std::vector<Mesh*>& meshes)
+void ShaderManager::RenderAmbientAlpha(Mesh*& mesh)
 {		
 	// get devicecontext
 	DXManager& DXM = DXManager::GetInstance();
@@ -682,32 +672,28 @@ void ShaderManager::RenderAmbient(const std::vector<Mesh*>& meshes)
 	// set and update pixelconstants, only light color for now
 	pixelData.color = ambientColor;
 	UpdateConstantBuffer((void*)&pixelData, sizeof(ConstantAmbientPixel), _constantBufferPixel);
-
-	// stuff that need to be set per mesh
-	for (int i = 0; i < meshes.size(); i++) 
-	{
-		// upload vertex and indexbuffers
-		meshes[i]->UploadBuffers();
-
-		// get the world matrix and transpose it
-		// get and transpose the world matrix for the mesh
-		XMFLOAT4X4 worldMatrix = meshes[i]->GetWorldMatrix();
-		XMStoreFloat4x4(&worldMatrix, XMMatrixTranspose(XMLoadFloat4x4(&worldMatrix)));
-		
-		//set and upload vertexconstantdata 
-		vertexData.world = worldMatrix;
-		vertexData.view = viewMatrix;
-		vertexData.projection = projectionMatrix;
-		vertexData.uvOffset = meshes[i]->GetUvOffset();
-		UpdateConstantBuffer((void*)&vertexData, sizeof(ConstantAmbientVertex), _constantBufferVertex);
-						
-		// set textures
-		devCon->PSSetShaderResources(0, 1, meshes[i]->GetTextureArray());
-
-		// draw
-		devCon->DrawIndexed(meshes[i]->GetNumIndices(), 0, 0);
-	}
 	
+	// upload vertex and indexbuffers
+	mesh->UploadBuffers();
+
+	// get the world matrix and transpose it
+	// get and transpose the world matrix for the mesh
+	XMFLOAT4X4 worldMatrix = mesh->GetWorldMatrix();
+	XMStoreFloat4x4(&worldMatrix, XMMatrixTranspose(XMLoadFloat4x4(&worldMatrix)));
+	
+	//set and upload vertexconstantdata 
+	vertexData.world = worldMatrix;
+	vertexData.view = viewMatrix;
+	vertexData.projection = projectionMatrix;
+	vertexData.uvOffset = mesh->GetUvOffset();
+	UpdateConstantBuffer((void*)&vertexData, sizeof(ConstantAmbientVertex), _constantBufferVertex);
+					
+	// set textures
+	devCon->PSSetShaderResources(0, 1, mesh->GetTextureArray());
+
+	// draw
+	devCon->DrawIndexed(mesh->GetNumIndices(), 0, 0);
+		
 }
 
 void ShaderManager::RenderQuadUI(const std::vector<QuadComponent*>& quads)
@@ -723,7 +709,7 @@ void ShaderManager::RenderQuadUI(const std::vector<QuadComponent*>& quads)
 	devCon->PSSetShader(_pixelSpriteShader, NULL, 0);
 
 	//disable the zbuffer for the 2d rendering
-	DXM.SetBlendState(BLEND_STATE::BLEND_ALPHA);
+	DXM.SetBlendState(BLEND_STATE::BLEND_OPAQUE);
 	DXM.SetZBuffer(DEPTH_STATE::DISABLED);
 	
 	// get matrices 
