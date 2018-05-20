@@ -709,7 +709,7 @@ void ShaderManager::RenderQuadUI(const std::vector<QuadComponent*>& quads)
 	devCon->PSSetShader(_pixelSpriteShader, NULL, 0);
 
 	//disable the zbuffer for the 2d rendering
-	DXM.SetBlendState(BLEND_STATE::BLEND_OPAQUE);
+	DXM.SetBlendState(BLEND_STATE::BLEND_ALPHA);
 	DXM.SetZBuffer(DEPTH_STATE::DISABLED);
 	
 	// get matrices 

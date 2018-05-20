@@ -104,11 +104,10 @@ float4 GetDirectionalColor(float4 position, float4 diffuse, float4 normal, float
 	// add specular effect if the light is affecting the pixel
 	if(lightIntensity > 0)
 	{		
-		float3 vertexToCamera = normalize(cameraPosition.xyz - position.xyz);		
-		float3 vNormal = normalize(float3(normal.w, diffuse.w, specular.w));
+		float3 vertexToCamera = normalize(cameraPosition.xyz - position.xyz);				
 		
 		//phong
-		float3 reflection = normalize(2 * lightIntensity * vNormal - lightDirectionDir);		
+		float3 reflection = normalize(2 * lightIntensity * normal - lightDirectionDir);		
 		float specularIntensity = pow(saturate(dot(reflection, vertexToCamera)), specularPowerDir);
 		specular = specularColorDir * specularIntensity;
 		specular = specular	* lightColorDir * specularMap;		
@@ -143,12 +142,11 @@ float4 GetPointColor(float4 position, float4 diffuse, float4 normal, float4 spec
 			// add specular effect if the light is affecting the pixel, dont add specular effect if dst is more then radius
 			float4 specular = float4(0,0,0,0);		
 			if(lightIntensity > 0 && dst < pointLights[i].radius)
-			{		
-				float3 vNormal = normalize(float3(normal.w, diffuse.w, specular.w));
+			{						
 				float3 vertexToCamera = normalize(cameraPosition.xyz - position.xyz);
 							
 				//phong
-				float3 reflection = normalize(2 * lightIntensity * vNormal - lightDir);		
+				float3 reflection = normalize(2 * lightIntensity * normal - lightDir);		
 				float specularIntensity = pow(saturate(dot(reflection, vertexToCamera)), pointLights[i].specularPower);
 				specular.xyz = (pointLights[i].specularColor * specularIntensity);
 				specular = specular	* specularMap * lightIntensity;

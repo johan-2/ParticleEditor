@@ -8,9 +8,6 @@ c:\users\nilss\desktop\enginedx11\engine\engine\code\system\framework.cpp(137): 
 c:\users\nilss\desktop\enginedx11\engine\engine\code\system\framework.cpp(164): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
 c:\users\nilss\desktop\enginedx11\engine\engine\code\system\framework.cpp(225): warning C4305: 'argument': truncation from 'double' to 'float'
 c:\users\nilss\desktop\enginedx11\engine\engine\code\system\framework.cpp(322): warning C4244: 'initializing': conversion from 'std::chrono::system_clock::rep' to 'unsigned int', possible loss of data
-  DXManager.cpp
-c:\users\nilss\desktop\enginedx11\engine\engine\code\system\dxmanager.cpp(84): warning C4244: 'argument': conversion from 'float' to 'UINT8', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\system\dxmanager.cpp(607): warning C4018: '<': signed/unsigned mismatch
   ShaderManager.cpp
 c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(359): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
 c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(359): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
@@ -21,13 +18,6 @@ c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(
 c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(614): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
 c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(618): warning C4267: 'argument': conversion from 'size_t' to 'unsigned int', possible loss of data
 c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(864): warning C4018: '<': signed/unsigned mismatch
-  Renderer.cpp
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\renderer.cpp(50): warning C4244: 'argument': conversion from 'const float' to 'unsigned int', possible loss of data
-  Mesh.cpp
   Generating Code...
-  Skipping... (no relevant changes detected)
-  SkyBox.cpp
-  UVScrollComponent.cpp
-  ModelComponent.cpp
   Engine.vcxproj -> C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\Engine.exe
   Engine.vcxproj -> C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\Engine.pdb (Partial PDB)

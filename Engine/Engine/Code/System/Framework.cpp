@@ -101,7 +101,7 @@ void Framework::Start()
 	// create directional light and give it the same position/ rotation as depthrender camera
 	Entity* directionalLight = new Entity;
 	directionalLight->AddComponent<TransformComponent>()->Init(dt->GetPositionVal(), dt->GetRotationVal());
-	directionalLight->AddComponent<LightDirectionComponent>()->Init(XMFLOAT4(0.1f, 0.1f, 0.1f, 1), XMFLOAT4(1, 1, 1, 1), 100.0f);
+	directionalLight->AddComponent<LightDirectionComponent>()->Init(XMFLOAT4(0.1f, 0.1f, 0.1f, 1), XMFLOAT4(1, 1, 1, 1), 40.0f);
 
 	//// test entities
 	for(int i =0; i < 6; i++)
@@ -111,7 +111,7 @@ void Framework::Start()
 			Entity* box = new Entity();
 			box->AddComponent<TransformComponent>()->Init(XMFLOAT3(-10 + (y *4.5f), -3, 10 - (i *5)), XMFLOAT3(0, 0, 0), XMFLOAT3(2, 2, 2));
 			box->AddComponent<TransformationComponent>()->Init(XMFLOAT3(GetRandomFloat(-10,10), GetRandomFloat(-10, 10), GetRandomFloat(-10, 10)), GetRandomFloat(0.1f, 5.0f));
-			box->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::CUBE, DEFERRED | CAST_SHADOW_DIR, L"Textures/metalBox.dds", L"Textures/metalBoxNormal.dds", L"Textures/metalBoxSpecular.dds");
+			box->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::CUBE, DEFERRED | CAST_SHADOW_DIR, L"Textures/grey.dds", L"Textures/bricksNormal.dds", L"Textures/bricksSpecular.dds");
 		}
 		
 	}
