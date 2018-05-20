@@ -10,7 +10,7 @@ class FreeMoveComponent;
 class CameraComponent;
 class QuadComponent;
 class UVScrollComponent;
-class ParticleEmitterComponent;
+class ParticleSystemComponent;
 class LightDirectionComponent;
 class LightPointComponent;
 
@@ -72,7 +72,7 @@ private:
 													   
 		if (std::is_same<T, UVScrollComponent>::value)        { return UVSCROLL_COMPONENT; }
 
-		if (std::is_same<T, ParticleEmitterComponent>::value) { return PARTICLE_COMPONENT; }
+		if (std::is_same<T, ParticleSystemComponent>::value) { return PARTICLE_COMPONENT; }
 
 		return NUM_COMPONENT_TYPES;
 		

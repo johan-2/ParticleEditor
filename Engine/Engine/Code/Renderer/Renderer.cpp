@@ -115,23 +115,21 @@ void Renderer::RemoveFromRenderer(Mesh* mesh, SHADER_TYPE type)
 	}
 }
 
-
-
-void Renderer::AddParticleEmitter(ParticleEmitterComponent* emitter)
+void Renderer::AddParticleSystem(ParticleSystemComponent* emitter)
 {
-	_particleEmitters.push_back(emitter);
+	_particleSystems.push_back(emitter);
 }
 
-void Renderer::RemoveParticleEmitter(ParticleEmitterComponent* emitter)
+void Renderer::RemoveParticleSystem(ParticleSystemComponent* emitter)
 {
-	for (int i = 0; i < _particleEmitters.size(); i++)
+	for (int i = 0; i < _particleSystems.size(); i++)
 	{
-		if (emitter == _particleEmitters[i])
+		if (emitter == _particleSystems[i])
 		{
-			ParticleEmitterComponent* temp = _particleEmitters.back();
-			_particleEmitters.back() = _particleEmitters[i];
-			_particleEmitters[i] = temp;
-			_particleEmitters.pop_back();
+			ParticleSystemComponent* temp = _particleSystems.back();
+			_particleSystems.back() = _particleSystems[i];
+			_particleSystems[i] = temp;
+			_particleSystems.pop_back();
 		}
 	}
 }
@@ -253,11 +251,11 @@ void Renderer::RenderLightsAlpha()
 
 void Renderer::RenderParticles()
 {
-	if (_particleEmitters.size() == 0)
+	if (_particleSystems.size() == 0)
 		return;
 
 	ShaderManager& SM = ShaderManager::GetInstance();
-	SM.RenderParticles(_particleEmitters);
+	SM.RenderParticles(_particleSystems);
 }
 
 void Renderer::RenderUI() 

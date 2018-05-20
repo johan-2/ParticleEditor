@@ -148,7 +148,7 @@
     <ClCompile Include="Code\Components\LightDirectionComponent.cpp" />
     <ClCompile Include="Code\Components\LightPointComponent.cpp" />
     <ClCompile Include="Code\Components\ModelComponent.cpp" />
-    <ClCompile Include="Code\Components\ParticleEmitterComponent.cpp" />
+    <ClCompile Include="Code\Components\ParticleSystemComponent.cpp" />
     <ClCompile Include="Code\Components\QuadComponent.cpp" />
     <ClCompile Include="Code\Components\TransformationComponent.cpp" />
     <ClCompile Include="Code\Components\TransformComponent.cpp" />
@@ -186,7 +186,7 @@
     <ClInclude Include="Code\Components\LightDirectionComponent.h" />
     <ClInclude Include="Code\Components\LightPointComponent.h" />
     <ClInclude Include="Code\Components\ModelComponent.h" />
-    <ClInclude Include="Code\Components\ParticleEmitterComponent.h" />
+    <ClInclude Include="Code\Components\ParticleSystemComponent.h" />
     <ClInclude Include="Code\Components\QuadComponent.h" />
     <ClInclude Include="Code\Components\TransformationComponent.h" />
     <ClInclude Include="Code\Components\TransformComponent.h" />

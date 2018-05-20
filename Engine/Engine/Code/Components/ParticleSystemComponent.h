@@ -81,13 +81,13 @@ struct ParticleSettings
 	XMFLOAT3  inheritVelocityScale;
 };
 
-class ParticleEmitterComponent : public IComponent
+class ParticleSystemComponent : public IComponent
 {
 public:
 	
-	ParticleEmitterComponent();
+	ParticleSystemComponent();
 	
-	~ParticleEmitterComponent();
+	~ParticleSystemComponent();
 
 
 	void Init(char* particleFile);

@@ -21,7 +21,7 @@
 #include "CameraComponent.h"
 #include "QuadComponent.h"
 #include "ModelComponent.h"
-#include "ParticleEmitterComponent.h"
+#include "ParticleSystemComponent.h"
 #include "LightPointComponent.h"
 #include <iostream>
 #include "GuiManager.h"
@@ -126,7 +126,7 @@ void Framework::Start()
 
 	Entity* fire = new Entity();
 	fire->AddComponent<TransformComponent>()->Init(XMFLOAT3(-15.0f, -7.5f, 12), XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1));
-	fire->AddComponent<ParticleEmitterComponent>()->Init("Particles/fire.json");
+	fire->AddComponent<ParticleSystemComponent>()->Init("Particles/fire.json");
 
 	Entity* pointLight1 = new Entity();
 	pointLight1->AddComponent<TransformComponent>()->Init(XMFLOAT3(0.0f, -4.0f, -6), XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1));

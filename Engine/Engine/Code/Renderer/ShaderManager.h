@@ -9,7 +9,7 @@ using namespace DirectX;
 
 class Mesh;
 class QuadComponent;
-class ParticleEmitterComponent;
+class ParticleSystemComponent;
 class GBuffer;
 
 enum INPUT_LAYOUT_TYPE
@@ -54,7 +54,7 @@ public:
 	
 	// skybox Particle rendering
 	void RenderSkyBox(XMFLOAT4X4 worldMatrix);
-	void RenderParticles(const std::vector<ParticleEmitterComponent*>& emitters);
+	void RenderParticles(const std::vector<ParticleSystemComponent*>& emitters);
 
 	void SetConstantBuffers();
 	void SetInputLayout(INPUT_LAYOUT_TYPE type);

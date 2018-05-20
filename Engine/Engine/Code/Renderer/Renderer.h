@@ -7,7 +7,7 @@ class QuadComponent;
 class RenderToTexture;
 class Entity;
 class SkyBox;
-class ParticleEmitterComponent;
+class ParticleSystemComponent;
 class GBuffer;
 class ScreenQuad;
 
@@ -33,8 +33,8 @@ public:
 	void AddQuadToUIRenderer(QuadComponent* quad);
 	void RemoveQuadFromUIRenderer(QuadComponent* quad);
 
-	void AddParticleEmitter(ParticleEmitterComponent* emitter);
-	void RemoveParticleEmitter(ParticleEmitterComponent* emitter);
+	void AddParticleSystem(ParticleSystemComponent* emitter);
+	void RemoveParticleSystem(ParticleSystemComponent* emitter);
 	
 	void Render();
 	void CreateDepthMap();
@@ -53,7 +53,7 @@ private:
 
 	std::vector<Mesh*> _meshes[S_NUM_RENDER_TYPES];	
 	std::vector<QuadComponent*> _quads;
-	std::vector<ParticleEmitterComponent*> _particleEmitters;
+	std::vector<ParticleSystemComponent*> _particleSystems;
 
 	Entity* _cameraDepth;
 	RenderToTexture* _depthMap;
