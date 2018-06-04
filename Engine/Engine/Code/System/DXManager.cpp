@@ -345,15 +345,15 @@ bool DXManager::CreateDepthstencilStates()
 	depthStencilDesc.StencilWriteMask = 255;
 
 	// Stencil operations
-	// replace the stencil value with the reference value on the rendered pixel no matter if the operation fails(only care that SOMETHING is rendered on the pixel)
+	// replace the stencil value with the reference value on the rendered pixel
 	// the skybox will later mask the pixels that has the reference value set in the stencil
-	depthStencilDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_REPLACE; 
-	depthStencilDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_REPLACE;
+	depthStencilDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+	depthStencilDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
 	depthStencilDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_REPLACE;
 	depthStencilDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
 
-	depthStencilDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_REPLACE;
-	depthStencilDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_REPLACE;
+	depthStencilDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+	depthStencilDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
 	depthStencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_REPLACE;
 	depthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
 	
@@ -377,7 +377,8 @@ bool DXManager::CreateDepthstencilStates()
 	if (FAILED(result)) 
 		return false;
 
-	// masked depthstencil with reference set to the same as the regular depthEnabled depthstencil
+	// masked depthstencil with reference set to the same as the regular depthEnabled depthstencil that is used while rendering geometry
+	// comparison set to not equal meaning that the pixels that got flagged during the geometrypass will fail and skybox wont render over them
 	depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
 	depthStencilDesc.DepthEnable = false;
 	depthStencilDesc.StencilEnable = true;
@@ -397,7 +398,7 @@ bool DXManager::CreateDepthstencilStates()
 		return false;
 
 	// wont render non geometry pixels for the fullscreen light pass
-	// only renders the masked pixels (opposite of skybox)
+	// only renders the pixels that got flagged during the geometrypass (opposite of skybox)
 	depthStencilDesc.FrontFace.StencilFunc = D3D11_COMPARISON_EQUAL;
 	depthStencilDesc.BackFace.StencilFunc  = D3D11_COMPARISON_EQUAL;
 

@@ -15,8 +15,7 @@
 #include "rapidjson/stringbuffer.h"
 #include <fstream>
 #include <string>
-#include <AtlBase.h>
-#include <atlconv.h>
+
 
 
 ParticleSystemComponent::ParticleSystemComponent() : IComponent(PARTICLE_COMPONENT)
@@ -69,12 +68,11 @@ void ParticleSystemComponent::SetUp()
 		_currentParticlesLifetime[i] = _settings[i].particleLifetime; // if in burst mode we use one timer for every particle per emitter
 		_numSpawnedParticles[i] = 0; // init to zero
 
-		// append texturename and convert to widestring
+		// append texturename and convert to widestring(only supports asciII characters)
 		std::string tp = "Textures/";		
-		tp.append(_settings[i].texturePath.c_str());
-		CA2W convert(tp.c_str());
-		std::wstring wtp = convert;
-
+		tp.append(_settings[i].texturePath.c_str());				
+		std::wstring wtp(tp.begin(), tp.end());
+		
 		_texture[i] = _settings[i].texturePath.c_str() != "" ? TexturePool::GetInstance().GetTexture(wtp.c_str()) : TexturePool::GetInstance().GetTexture(L"textures/defaultDiffuse.dds");
 
 		// check if emitter have a limited lifetime or not(0 == magic number for no)

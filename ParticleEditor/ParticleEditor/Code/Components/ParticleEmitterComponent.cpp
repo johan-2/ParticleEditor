@@ -15,9 +15,6 @@
 #include "rapidjson/stringbuffer.h"
 #include <fstream>
 #include <string>
-#include <AtlBase.h>
-#include <atlconv.h>
-
 
 ParticleEmitterComponent::ParticleEmitterComponent() : IComponent(PARTICLE_COMPONENT)
 {
@@ -104,10 +101,9 @@ void ParticleEmitterComponent::SetUp()
 		_numSpawnedParticles[i] = 0; // init to zero
 
 		// append texturename and convert to widestring
-		std::string tp = "Textures/";		
+		std::string tp = "Textures/";
 		tp.append(_settings[i].texturePath.c_str());
-		CA2W convert(tp.c_str());
-		std::wstring wtp = convert;
+		std::wstring wtp(tp.begin(), tp.end());
 
 		_texture[i] = _settings[i].texturePath.c_str() != "" ? TexturePool::GetInstance().GetTexture(wtp.c_str()) : TexturePool::GetInstance().GetTexture(L"textures/defaultDiffuse.dds");
 
