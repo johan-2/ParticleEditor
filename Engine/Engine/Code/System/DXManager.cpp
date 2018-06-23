@@ -93,10 +93,11 @@ void DXManager::PresentScene()
 		_swapChain->Present(0, 0);	
 }
 
-void DXManager::SetRenderTarget(ID3D11RenderTargetView* renderTarget, ID3D11DepthStencilView* depthStencil, bool setDefault)
+void DXManager::SetRenderTarget(ID3D11RenderTargetView* renderTarget, ID3D11DepthStencilView* depthStencil, bool setDefault, bool setDepthReadOnly)
 {
-	setDefault ? _devCon->OMSetRenderTargets(1, &_renderTargetView, _depthStencilView) : _devCon->OMSetRenderTargets(1, &renderTarget, depthStencil);
-	
+	ID3D11DepthStencilView* depthStencilView = setDepthReadOnly ? _depthStencilViewReadOnly : _depthStencilView;
+
+	setDefault ? _devCon->OMSetRenderTargets(1, &_renderTargetView, depthStencilView) : _devCon->OMSetRenderTargets(1, &renderTarget, depthStencil);
 }
 
 void DXManager::SetViewport(D3D11_VIEWPORT* viewport, bool setDefault) 
@@ -151,12 +152,12 @@ void DXManager::SetRasterizerState(RASTERIZER_STATE state)
 }
 
 
-void DXManager::SetZBuffer(DEPTH_STATE state)
+void DXManager::SetDepthStencilState(DEPTH_STATE state)
 {
 	switch (state)
 	{
 	case ENABLED:
-		_devCon->OMSetDepthStencilState(_depthStencilEnabled, 5);
+		_devCon->OMSetDepthStencilState(_depthStencilEnabled, STENCIL_LIGHT_SKYBOX_MASK);
 		break;
 	case DISABLED:
 		_devCon->OMSetDepthStencilState(_depthStencilDisabled, 1);
@@ -165,10 +166,10 @@ void DXManager::SetZBuffer(DEPTH_STATE state)
 		_devCon->OMSetDepthStencilState(_depthStencilReadOnly, 1);
 		break;
 	case MASKED_SKYBOX:
-		_devCon->OMSetDepthStencilState(_depthStencilMaskedSkybox, 5);
+		_devCon->OMSetDepthStencilState(_depthStencilMaskedSkybox, STENCIL_LIGHT_SKYBOX_MASK);
 		break;
 	case MASKED_LIGHTNING:
-		_devCon->OMSetDepthStencilState(_depthStencilMaskedLightning, 5);
+		_devCon->OMSetDepthStencilState(_depthStencilMaskedLightning, STENCIL_LIGHT_SKYBOX_MASK);
 	}
 }
 
@@ -291,40 +292,68 @@ bool DXManager::CreateDepthStencil(int screenWidth, int screenHeight)
 {
 	HRESULT result;
 	
-	// set and create texture for depthbuffer
-	D3D11_TEXTURE2D_DESC depthBufferDesc;
-	ID3D11Texture2D* depthBuffer;
-	ZeroMemory(&depthBufferDesc, sizeof(D3D11_TEXTURE2D_DESC));
-	
-	depthBufferDesc.Width = screenWidth;
-	depthBufferDesc.Height = screenHeight;
-	depthBufferDesc.MipLevels = 1;
-	depthBufferDesc.ArraySize = 1;
-	depthBufferDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT; 															
-	depthBufferDesc.SampleDesc.Count = 1;
-	depthBufferDesc.SampleDesc.Quality = 0;
-	depthBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	depthBufferDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-	depthBufferDesc.CPUAccessFlags = 0;
-	depthBufferDesc.MiscFlags = 0;
+	// depth texture
+	ID3D11Texture2D* depthTex2D;
 
-	result = _device->CreateTexture2D(&depthBufferDesc, NULL, &depthBuffer);
-	if (FAILED(result)) 
-		return false;	
+	// setup the description for TEXTURE2D
+	D3D11_TEXTURE2D_DESC depthStencilTexDesc;
+	ZeroMemory(&depthStencilTexDesc, sizeof(D3D11_TEXTURE2D_DESC));
+	depthStencilTexDesc.Width = screenWidth;
+	depthStencilTexDesc.Height = screenHeight;
+	depthStencilTexDesc.MipLevels = 1;
+	depthStencilTexDesc.ArraySize = 1;
+	depthStencilTexDesc.Format = DXGI_FORMAT_R24G8_TYPELESS;
+	depthStencilTexDesc.SampleDesc.Count = 1;
+	depthStencilTexDesc.SampleDesc.Quality = 0;
+	depthStencilTexDesc.Usage = D3D11_USAGE_DEFAULT;
+	depthStencilTexDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
+	depthStencilTexDesc.CPUAccessFlags = 0;
+	depthStencilTexDesc.MiscFlags = 0;
 
-	// create the depthstencilview 
+	// setup description for depthstencilview 
 	D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
 	ZeroMemory(&depthStencilViewDesc, sizeof(D3D11_DEPTH_STENCIL_VIEW_DESC));
-
 	depthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 	depthStencilViewDesc.Texture2D.MipSlice = 0;
+	depthStencilViewDesc.Flags = 0;
 
-	result = _device->CreateDepthStencilView(depthBuffer, &depthStencilViewDesc, &_depthStencilView);
+	// setup description for depthstencilview 
+	D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewReadDesc;
+	ZeroMemory(&depthStencilViewReadDesc, sizeof(D3D11_DEPTH_STENCIL_VIEW_DESC));
+	depthStencilViewReadDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	depthStencilViewReadDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	depthStencilViewReadDesc.Texture2D.MipSlice = 0;
+	depthStencilViewReadDesc.Flags = D3D11_DSV_READ_ONLY_DEPTH;
+
+	// setup description for shaderresource
+	D3D11_SHADER_RESOURCE_VIEW_DESC resourceViewDesc;
+	ZeroMemory(&resourceViewDesc, sizeof(D3D11_SHADER_RESOURCE_VIEW_DESC));
+	resourceViewDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
+	resourceViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	resourceViewDesc.Texture2D.MostDetailedMip = 0;
+	resourceViewDesc.Texture2D.MipLevels = 1;
+
+	// create the depth texture using the description
+	result = _device->CreateTexture2D(&depthStencilTexDesc, NULL, &depthTex2D);
 	if (FAILED(result))
-		return false;
+		printf("Failed to create texture2D for depthbuffer\n");
 
-	depthBuffer->Release();
+	// create depthstencilview
+	result = _device->CreateDepthStencilView(depthTex2D, &depthStencilViewDesc, &_depthStencilView);
+	if (FAILED(result))
+		printf("failed to create depthstencilview \n");
+
+	// create depthstencilview
+	result = _device->CreateDepthStencilView(depthTex2D, &depthStencilViewReadDesc, &_depthStencilViewReadOnly);
+	if (FAILED(result))
+		printf("failed to create depthstencilview \n");
+
+	result = _device->CreateShaderResourceView(depthTex2D, &resourceViewDesc, &_depthShaderResourceView);
+	if (FAILED(result))
+		printf("failed to create shaderResourceView for deppthbuffer\n");
+
+	depthTex2D->Release();
 
 	return true;
 }

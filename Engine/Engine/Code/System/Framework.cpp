@@ -104,12 +104,12 @@ void Framework::Start()
 	directionalLight->AddComponent<LightDirectionComponent>()->Init(XMFLOAT4(0.1f, 0.1f, 0.1f, 1), XMFLOAT4(1, 1, 1, 1), 40.0f);
 
 	//// test entities
-	for(int i =0; i < 6; i++)
+	for(int i =0; i < 8; i++)
 	{
-		for(int y =0; y < 6; y++)
+		for(int y =0; y < 8; y++)
 		{
 			Entity* box = new Entity();
-			box->AddComponent<TransformComponent>()->Init(XMFLOAT3(-10 + (y *4.5f), -3, 10 - (i *5)), XMFLOAT3(0, 0, 0), XMFLOAT3(2, 2, 2));
+			box->AddComponent<TransformComponent>()->Init(XMFLOAT3(-14 + (y *4.5f), -3, 15 - (i *5)), XMFLOAT3(0, 0, 0), XMFLOAT3(2, 2, 2));
 			box->AddComponent<TransformationComponent>()->Init(XMFLOAT3(GetRandomFloat(-10,10), GetRandomFloat(-10, 10), GetRandomFloat(-10, 10)), GetRandomFloat(0.1f, 5.0f));
 			box->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::CUBE, DEFERRED | CAST_SHADOW_DIR, L"Textures/grey.dds", L"Textures/bricksNormal.dds", L"Textures/bricksSpecular.dds");
 		}
@@ -117,7 +117,7 @@ void Framework::Start()
 	}
 	
 	Entity* floor = new Entity();
-	floor->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, -8, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(10, 1, 10));
+	floor->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, -8, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(12, 1, 12));
 	floor->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::PLANE, DEFERRED | CAST_SHADOW_DIR, L"Textures/grey.dds", L"Textures/bricksNormal.dds", L"Textures/bricksSpecular.dds");
 
 	Entity* wall = new Entity();

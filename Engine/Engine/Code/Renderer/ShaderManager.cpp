@@ -390,7 +390,7 @@ void ShaderManager::RenderLights(GBuffer*& gBuffer)
 	ID3D11DeviceContext* devCon = DXM.GetDeviceCon();
 
 	// render with mask so we dont preform lighting calculations on non geometry pixels
-	DXM.SetZBuffer(DEPTH_STATE::MASKED_LIGHTNING);
+	DXM.SetDepthStencilState(DEPTH_STATE::MASKED_LIGHTNING);
 
 	// get camera 
 	CameraComponent* camera = CameraManager::GetInstance().GetCurrentCameraGame();
@@ -465,7 +465,7 @@ void ShaderManager::RenderLights(GBuffer*& gBuffer)
 	ID3D11ShaderResourceView* nullTextureArray[5] = { nullptr, nullptr, nullptr, nullptr, nullptr };
 	devCon->PSSetShaderResources(0, 5, nullTextureArray);
 	
-	DXM.SetZBuffer(DEPTH_STATE::ENABLED);
+	DXM.SetDepthStencilState(DEPTH_STATE::ENABLED);
 
 }
 
@@ -487,7 +487,7 @@ void ShaderManager::RenderSkyBox(XMFLOAT4X4 worldMatrix)
 	//render with alpha blending
 	DXM.SetBlendState(BLEND_STATE::BLEND_OPAQUE);
 	DXM.SetRasterizerState(RASTERIZER_STATE::NOCULL);
-	DXM.SetZBuffer(DEPTH_STATE::MASKED_SKYBOX);
+	DXM.SetDepthStencilState(DEPTH_STATE::MASKED_SKYBOX);
 
 	// get and transpose camera matrices
 	XMFLOAT4X4 viewMatrix = camera->GetViewMatrix();
@@ -506,7 +506,7 @@ void ShaderManager::RenderSkyBox(XMFLOAT4X4 worldMatrix)
 	// draw
 	devCon->DrawIndexed(36, 0, 0);
 
-	DXM.SetZBuffer(DEPTH_STATE::ENABLED);
+	DXM.SetDepthStencilState(DEPTH_STATE::ENABLED);
 	DXM.SetRasterizerState(RASTERIZER_STATE::BACKCULL);
 
 }
@@ -522,7 +522,7 @@ void ShaderManager::RenderParticles(const std::vector<ParticleSystemComponent*>&
 
 	CameraComponent* camera = CameraManager::GetInstance().GetCurrentCameraGame();
 
-	DXM.SetZBuffer(DEPTH_STATE::READ_ONLY);
+	DXM.SetDepthStencilState(DEPTH_STATE::READ_ONLY);
 
 	// set shaders			
 	devCon->VSSetShader(_vertexParticleShader, NULL, 0);
@@ -556,7 +556,7 @@ void ShaderManager::RenderParticles(const std::vector<ParticleSystemComponent*>&
 			devCon->DrawIndexedInstanced(6, emitters[i]->GetNumParticles(y), 0, 0, 0);
 		}
 	}
-	DXM.SetZBuffer(DEPTH_STATE::ENABLED);
+	DXM.SetDepthStencilState(DEPTH_STATE::ENABLED);
 }
 
 void ShaderManager::RenderQuadUI(const std::vector<QuadComponent*>& quads)
@@ -573,7 +573,7 @@ void ShaderManager::RenderQuadUI(const std::vector<QuadComponent*>& quads)
 
 	//disable the zbuffer for the 2d rendering
 	DXM.SetBlendState(BLEND_STATE::BLEND_ALPHA);
-	DXM.SetZBuffer(DEPTH_STATE::DISABLED);
+	DXM.SetDepthStencilState(DEPTH_STATE::DISABLED);
 	
 	// get matrices 
 	XMFLOAT4X4 viewMatrix = CameraManager::GetInstance().GetCurrentCameraUI()->GetViewMatrix(); 
@@ -605,7 +605,7 @@ void ShaderManager::RenderQuadUI(const std::vector<QuadComponent*>& quads)
 	}
 		
 	// change back the z buffer
-	DXM.SetZBuffer(DEPTH_STATE::ENABLED);
+	DXM.SetDepthStencilState(DEPTH_STATE::ENABLED);
 
 }
 
@@ -621,7 +621,7 @@ void ShaderManager::RenderGUI(ImDrawData* draw_data)
 
 	DXManager& DXM = DXManager::GetInstance();
 	DXM.SetBlendState(BLEND_STATE::BLEND_ALPHA);
-	DXM.SetZBuffer(DEPTH_STATE::DISABLED);
+	DXM.SetDepthStencilState(DEPTH_STATE::DISABLED);
 
 	// get current size of vertex and index buffers
 	D3D11_BUFFER_DESC currentSizevertex;
@@ -741,7 +741,7 @@ void ShaderManager::RenderGUI(ImDrawData* draw_data)
 		vtx_offset += cmd_list->VtxBuffer.Size;
 	}	
 
-	DXM.SetZBuffer(DEPTH_STATE::ENABLED);
+	DXM.SetDepthStencilState(DEPTH_STATE::ENABLED);
 }
 
 void ShaderManager::RenderDirectionalAlpha(Mesh*& mesh)

@@ -171,7 +171,7 @@ void Renderer::Render()
 
 	// set back regular constantbuffers and render alpha meshes with regular forward rendering
 	SM.SetConstantBuffers();
-	RenderLightsAlpha();
+	RenderLightsAlpha();	
 
 	// render skybox, will mask out all pixels that contains geometry in the fullscreen quad, leaving only the skybox rendered on "empty" pixels
 	_skyBox->Render();
@@ -182,7 +182,7 @@ void Renderer::Render()
 	
 	// set inputlayout for UI
 	SM.SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT2D);
-	RenderUI();
+	RenderUI();		
 }
 
 void Renderer::RenderDeferred()
@@ -194,11 +194,11 @@ void Renderer::RenderDeferred()
 	_gBuffer->SetRenderTargets();		
 	SM.RenderGeometry(_meshes[S_DEFERRED]);
 
-	// set to defualt rendertarget and render the fullscreenquad and do light calculations
-	dXM.SetRenderTarget(nullptr, nullptr, true);	
+	// set to defualt rendertarget with depth as read only and render the fullscreenquad and do light calculations
+	dXM.SetRenderTarget(nullptr, nullptr, true, true);
+
 	_screenQuad->UploadBuffers();
 	SM.RenderLights(_gBuffer); 
-
 }
 
 void Renderer::RenderDepth() 

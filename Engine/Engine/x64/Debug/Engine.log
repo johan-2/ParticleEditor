@@ -1,5 +1,8 @@
-﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(373,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
-  GBuffer.cpp
-c:\users\johan\documents\github\enginedx11\engine\engine\code\utils\systemdefs.h(3): warning C4244: '=': conversion from 'const float' to 'UINT', possible loss of data
-c:\users\johan\documents\github\enginedx11\engine\engine\code\utils\systemdefs.h(4): warning C4244: '=': conversion from 'const float' to 'UINT', possible loss of data
-  Engine.vcxproj -> C:\Users\Johan\Documents\GitHub\EngineDx11\Engine\Engine\Engine.exe
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(377,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
+  Renderer.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\renderer.cpp(50): warning C4244: 'argument': conversion from 'const float' to 'unsigned int', possible loss of data
+  DXManager.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\code\system\dxmanager.cpp(84): warning C4244: 'argument': conversion from 'float' to 'UINT8', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\system\dxmanager.cpp(637): warning C4018: '<': signed/unsigned mismatch
+  Generating Code...
+  Engine.vcxproj -> C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\Engine.exe

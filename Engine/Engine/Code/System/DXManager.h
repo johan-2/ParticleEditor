@@ -1,6 +1,8 @@
 #pragma once
 #include <D3D11.h>
 
+#define STENCIL_LIGHT_SKYBOX_MASK 2
+
 enum BLEND_STATE 
 {
 	BLEND_OPAQUE,
@@ -41,19 +43,19 @@ public:
 	void Shutdown();
 
 	void SetViewport(D3D11_VIEWPORT* viewport, bool setDefault = false);
-	void SetRenderTarget(ID3D11RenderTargetView* renderTarget, ID3D11DepthStencilView* depthStencil, bool setDefault = false);
+	void SetRenderTarget(ID3D11RenderTargetView* renderTarget, ID3D11DepthStencilView* depthStencil, bool setDefault = false, bool setDepthReadOnly = false);
 
 	void SetBlendState(BLEND_STATE blending);
 	void SetRasterizerState(RASTERIZER_STATE state);
 	
-	void SetZBuffer(DEPTH_STATE state);
-
+	void SetDepthStencilState(DEPTH_STATE state);	
 	void SetFullscreen(bool fullscreen, bool toggle = false);
 
 	ID3D11Device*& GetDevice(){ return _device; }
 	ID3D11DeviceContext*& GetDeviceCon() {  return _devCon;  }		
 	ID3D11DepthStencilView*& GetDeathStencilview() { return _depthStencilView; }
 	ID3D11RenderTargetView*& GetRenderTargetView() { return _renderTargetView; }
+	ID3D11ShaderResourceView*& GetDepthShaderResourceView() { return _depthShaderResourceView; }
 	char* GetGPUInfo() { return _videoCardDescriptiion; }
 
 private:
@@ -76,7 +78,9 @@ private:
 	ID3D11DeviceContext* _devCon;
 
 	ID3D11RenderTargetView* _renderTargetView;
-	ID3D11DepthStencilView* _depthStencilView;		
+	ID3D11DepthStencilView* _depthStencilView;
+	ID3D11DepthStencilView* _depthStencilViewReadOnly;
+	ID3D11ShaderResourceView* _depthShaderResourceView;
 	
 	ID3D11RasterizerState* _rasterizerBackCull;
 	ID3D11RasterizerState* _rasterizerFrontCull;
