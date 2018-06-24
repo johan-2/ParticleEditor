@@ -194,8 +194,8 @@ void Renderer::RenderDeferred()
 	_gBuffer->SetRenderTargets();		
 	SM.RenderGeometry(_meshes[S_DEFERRED]);
 
-	// set to defualt rendertarget with depth as read only and render the fullscreenquad and do light calculations
-	dXM.SetRenderTarget(nullptr, nullptr, true, true);
+	// set to defualt rendertarget render the fullscreenquad and do light calculations
+	dXM.SetRenderTarget(nullptr, nullptr, true, false);
 
 	_screenQuad->UploadBuffers();
 	SM.RenderLights(_gBuffer); 
