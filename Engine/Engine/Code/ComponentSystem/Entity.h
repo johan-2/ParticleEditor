@@ -14,7 +14,6 @@ class ParticleSystemComponent;
 class LightDirectionComponent;
 class LightPointComponent;
 
-
 class Entity
 {
 public:
@@ -51,7 +50,6 @@ private:
 
 	std::vector<IComponent*> _components;
 
-
 	template <class T> COMPONENT_TYPE GetTypeFromTemplate()
 	{
 		if (std::is_same<T, TransformComponent>::value)       { return TRANSFORM_COMPONENT; }
@@ -74,8 +72,7 @@ private:
 
 		if (std::is_same<T, ParticleSystemComponent>::value) { return PARTICLE_COMPONENT; }
 
-		return NUM_COMPONENT_TYPES;
-		
+		return NUM_COMPONENT_TYPES;		
 	}
 
 };

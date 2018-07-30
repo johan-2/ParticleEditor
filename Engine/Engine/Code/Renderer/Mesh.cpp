@@ -76,7 +76,6 @@ void Mesh::CreateBuffers(VertexData* verticesData, unsigned long* indicesData, u
 	result = device->CreateBuffer(&indexBufferDesc, &indexData, &_indexBuffer);
 	if (FAILED(result))
 		printf("failed to create indexbuffer for cube\n");
-
 }
 
 void Mesh::UploadBuffers() 
@@ -116,9 +115,6 @@ void Mesh::AddRemoveToRenderer(bool add)
 	{		
 		add ? renderer.AddToRenderer(this, SHADER_TYPE::S_FORWARD_ALPHA) : renderer.RemoveFromRenderer(this, SHADER_TYPE::S_FORWARD_ALPHA);
 		return;
-	}
-
-	
-
+	}	
 }
 

@@ -16,8 +16,6 @@
 #include <fstream>
 #include <string>
 
-
-
 ParticleSystemComponent::ParticleSystemComponent() : IComponent(PARTICLE_COMPONENT)
 {
 
@@ -25,7 +23,6 @@ ParticleSystemComponent::ParticleSystemComponent() : IComponent(PARTICLE_COMPONE
 
 void ParticleSystemComponent::Init(char* particleFile)
 {
-
 	ParsefromJson(particleFile);
 
 	// allocate memory for all settings
@@ -52,7 +49,6 @@ void ParticleSystemComponent::Init(char* particleFile)
 	}
 
 	SetUp();
-
 }
 
 void ParticleSystemComponent::SetUp()
@@ -132,8 +128,7 @@ ParticleSystemComponent::~ParticleSystemComponent()
 }
 
 void ParticleSystemComponent::CreateBuffers(XMFLOAT2 size, unsigned int index)
-{
-	
+{	
 	float halfX = size.x * 0.5f;
 	float halfY = size.y * 0.5f;
 
@@ -284,8 +279,7 @@ void ParticleSystemComponent::SpawnParticle(ParticleData& particle, unsigned int
 	particle.endScale                = endScale;
 	particle.zRotationSpeed          = rotationSpeed;
 	particle.uvOffset                = XMFLOAT2(0, 0);
-	particle.uvOffsetSpeed           = uvScrollSpeed;
-	
+	particle.uvOffsetSpeed           = uvScrollSpeed;	
 }
 
 void ParticleSystemComponent::Update() 
@@ -301,8 +295,7 @@ void ParticleSystemComponent::Update()
 		if(_settings[i].BLEND == BLEND_STATE::BLEND_ALPHA)
 		   SortParticles(i);
 
-	UpdateBuffer();
-		
+	UpdateBuffer();		
 }
 
 void ParticleSystemComponent::UpdateVelocity(const float& delta)
@@ -364,9 +357,7 @@ void ParticleSystemComponent::UpdateVelocity(const float& delta)
 			_particleData[i][y].uvOffset.y += _particleData[i][y].uvOffsetSpeed.y * delta;
 		}		
 	}
-
 	_previousPosition = EmitterPos;
-
 }
 
 void ParticleSystemComponent::UpdateLerps(const float& delta)
@@ -438,7 +429,6 @@ void ParticleSystemComponent::UpdateLifeTime(const float& delta)
 			_numSpawnedParticles[i]++;
 		}
 	}	
-
 }
 
 void ParticleSystemComponent::SortParticles(unsigned int index)
@@ -484,7 +474,6 @@ XMFLOAT3 ParticleSystemComponent::GetDirectionLocal(XMFLOAT3 direction)
 
 void ParticleSystemComponent::UpdateRotations(const float& delta)
 {
-
 	XMFLOAT3 forward, up, right;
 	CameraManager::GetInstance().GetCurrentCameraGame()->GetComponent<TransformComponent>()->GetAllAxis(forward, right, up);
 
@@ -609,10 +598,8 @@ void ParticleSystemComponent::UpdateBuffer()
 
 		//unmap
 		devCon->Unmap(_instanceBuffer[i], 0);
-	}
-	
+	}	
 }
-
 
 void ParticleSystemComponent::UploadBuffers(unsigned int index)
 {
@@ -822,8 +809,5 @@ void ParticleSystemComponent::ParsefromJson(char* file)
 		assert(d[key.c_str()].IsArray());
 		a = d[key.c_str()];
 		_settings[i].inheritVelocityScale = XMFLOAT3(a[0].GetFloat(), a[1].GetFloat(), a[2].GetFloat());
-	}
-
-	
-		
+	}			
 }

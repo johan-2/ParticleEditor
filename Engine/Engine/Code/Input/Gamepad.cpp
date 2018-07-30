@@ -19,7 +19,6 @@ void Gamepad::Update()
 		}					
 }
 
-
 bool Gamepad::LStickDead() 
 {
 	short X = _currentState.Gamepad.sThumbLX;

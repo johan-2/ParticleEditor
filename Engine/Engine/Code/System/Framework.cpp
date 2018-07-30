@@ -75,7 +75,6 @@ Framework::~Framework()
 
 void Framework::Start()
 {
-
 	// setup renderer to handle depthrendering
 	Renderer::GetInstance().CreateDepthMap();
 
@@ -112,8 +111,7 @@ void Framework::Start()
 			box->AddComponent<TransformComponent>()->Init(XMFLOAT3(-14 + (y *4.5f), -3, 15 - (i *5)), XMFLOAT3(0, 0, 0), XMFLOAT3(2, 2, 2));
 			box->AddComponent<TransformationComponent>()->Init(XMFLOAT3(GetRandomFloat(-10,10), GetRandomFloat(-10, 10), GetRandomFloat(-10, 10)), GetRandomFloat(0.1f, 5.0f));
 			box->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::CUBE, DEFERRED | CAST_SHADOW_DIR, L"Textures/grey.dds", L"Textures/bricksNormal.dds", L"Textures/bricksSpecular.dds");
-		}
-		
+		}		
 	}
 	
 	Entity* floor = new Entity();

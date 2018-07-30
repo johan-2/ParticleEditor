@@ -23,7 +23,6 @@ public:
 	const XMFLOAT4& GetAmbientColor() { return _ambientColor; }
 		
 	void RemoveDirectionalLight();
-
 	
 	LightDirectionComponent*& GetDirectionalLight() { return _directionalLight; }
 	std::vector<LightPointComponent*>&  GetPointLight() { return _pointLights; }
@@ -36,6 +35,5 @@ private:
 	std::vector<LightPointComponent*> _pointLights;
 	
 	static LightManager* _instance;
-
 };
 

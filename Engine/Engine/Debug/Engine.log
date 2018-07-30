@@ -1,120 +1,18 @@
-﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(373,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
-  Framework.cpp
-  c:\program files (x86)\windows kits\10\include\10.0.15063.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-c:\users\nilss\desktop\enginedx11\engine\engine\code\system\framework.cpp(36): warning C4244: 'argument': conversion from 'const float' to 'int', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\system\framework.cpp(39): warning C4244: 'argument': conversion from 'const float' to 'int', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\system\framework.cpp(109): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\system\framework.cpp(134): warning C4305: 'argument': truncation from 'double' to 'float'
-c:\users\nilss\desktop\enginedx11\engine\engine\code\system\framework.cpp(153): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\system\framework.cpp(213): warning C4305: 'argument': truncation from 'double' to 'float'
-c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\entity.h(36): warning C4018: '<': signed/unsigned mismatch
-  c:\users\nilss\desktop\enginedx11\engine\engine\code\system\framework.cpp(84): note: see reference to function template instantiation 'T *Entity::GetComponent<CameraComponent>(void)' being compiled
-          with
-          [
-              T=CameraComponent
-          ]
-  DXManager.cpp
-c:\users\nilss\desktop\enginedx11\engine\engine\code\system\dxmanager.cpp(84): warning C4244: 'argument': conversion from 'float' to 'UINT8', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\system\dxmanager.cpp(606): warning C4018: '<': signed/unsigned mismatch
-  ShaderManager.cpp
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(316): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(367): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(467): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(543): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(608): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(625): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(684): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(741): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(781): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(873): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(875): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\entity.h(36): warning C4018: '<': signed/unsigned mismatch
-  c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\icomponent.h(17): note: see reference to function template instantiation 'T *Entity::GetComponent<T>(void)' being compiled
-          with
-          [
-              T=TransformComponent
-          ]
-  c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(372): note: see reference to function template instantiation 'T *IComponent::GetComponent<TransformComponent>(void)' being compiled
-          with
-          [
-              T=TransformComponent
-          ]
-  ScreenQuad.cpp
-  RenderToTexture.cpp
-  Renderer.cpp
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\renderer.cpp(50): warning C4244: 'argument': conversion from 'const float' to 'unsigned int', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\renderer.cpp(105): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\renderer.cpp(125): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\renderer.cpp(144): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\renderer.cpp(163): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\renderer.cpp(270): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\renderer.cpp(318): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\entity.h(36): warning C4018: '<': signed/unsigned mismatch
-  c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\renderer.cpp(58): note: see reference to function template instantiation 'T *Entity::GetComponent<CameraComponent>(void)' being compiled
-          with
-          [
-              T=CameraComponent
-          ]
-  Mesh.cpp
-c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\entity.h(36): warning C4018: '<': signed/unsigned mismatch
-  c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\mesh.cpp(13): note: see reference to function template instantiation 'T *Entity::GetComponent<TransformComponent>(void)' being compiled
-          with
-          [
-              T=TransformComponent
-          ]
-  GBuffer.cpp
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\gbuffer.cpp(45): warning C4244: '=': conversion from 'const float' to 'UINT', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\gbuffer.cpp(46): warning C4244: '=': conversion from 'const float' to 'UINT', possible loss of data
-  QuadComponent.cpp
-  ParticleEmitterComponent.cpp
-c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particleemittercomponent.cpp(48): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particleemittercomponent.cpp(67): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particleemittercomponent.cpp(85): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particleemittercomponent.cpp(96): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particleemittercomponent.cpp(122): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particleemittercomponent.cpp(223): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particleemittercomponent.cpp(302): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particleemittercomponent.cpp(314): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particleemittercomponent.cpp(316): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particleemittercomponent.cpp(376): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particleemittercomponent.cpp(378): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particleemittercomponent.cpp(400): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particleemittercomponent.cpp(420): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particleemittercomponent.cpp(452): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particleemittercomponent.cpp(463): warning C4244: 'initializing': conversion from 'std::chrono::system_clock::rep' to 'unsigned int', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particleemittercomponent.cpp(495): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particleemittercomponent.cpp(499): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particleemittercomponent.cpp(548): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particleemittercomponent.cpp(572): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particleemittercomponent.cpp(574): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particleemittercomponent.cpp(662): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\entity.h(36): warning C4018: '<': signed/unsigned mismatch
-  c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\icomponent.h(17): note: see reference to function template instantiation 'T *Entity::GetComponent<T>(void)' being compiled
-          with
-          [
-              T=TransformComponent
-          ]
-  c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particleemittercomponent.cpp(65): note: see reference to function template instantiation 'T *IComponent::GetComponent<TransformComponent>(void)' being compiled
-          with
-          [
-              T=TransformComponent
-          ]
-  LightPointComponent.cpp
-  FreeMoveComponent.cpp
-  c:\program files (x86)\windows kits\10\include\10.0.15063.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\entity.h(36): warning C4018: '<': signed/unsigned mismatch
-  c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\icomponent.h(17): note: see reference to function template instantiation 'T *Entity::GetComponent<T>(void)' being compiled
-          with
-          [
-              T=TransformComponent
-          ]
-  c:\users\nilss\desktop\enginedx11\engine\engine\code\components\freemovecomponent.cpp(25): note: see reference to function template instantiation 'T *IComponent::GetComponent<TransformComponent>(void)' being compiled
-          with
-          [
-              T=TransformComponent
-          ]
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(377,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
+  Entity.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\entity.cpp(19): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\entity.cpp(41): warning C4018: '<': signed/unsigned mismatch
+  IComponent.cpp
+  World.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\world.cpp(32): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\world.cpp(69): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\world.cpp(85): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\world.cpp(104): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\world.cpp(115): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\world.cpp(127): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\world.cpp(134): warning C4018: '<': signed/unsigned mismatch
   CameraComponent.cpp
-c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\entity.h(36): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\entity.h(35): warning C4018: '<': signed/unsigned mismatch
   c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\icomponent.h(17): note: see reference to function template instantiation 'T *Entity::GetComponent<T>(void)' being compiled
           with
           [
@@ -125,60 +23,21 @@ c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\entity.h(36
           [
               T=TransformComponent
           ]
-  Generating Code...
-  Compiling...
-  Time.cpp
-c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\time.cpp(61): warning C4244: 'initializing': conversion from 'INT64' to 'int', possible loss of data
-  TexturePool.cpp
-c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\texturepool.cpp(28): warning C4477: 'printf' : format string '%s' requires an argument of type 'char *', but variadic argument 1 has type 'const std::wstring'
-  DebugStats.cpp
-c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\entity.h(36): warning C4018: '<': signed/unsigned mismatch
+  FreeMoveComponent.cpp
+  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\entity.h(35): warning C4018: '<': signed/unsigned mismatch
   c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\icomponent.h(17): note: see reference to function template instantiation 'T *Entity::GetComponent<T>(void)' being compiled
           with
           [
               T=TransformComponent
           ]
-  c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\debugstats.cpp(27): note: see reference to function template instantiation 'T *IComponent::GetComponent<TransformComponent>(void)' being compiled
+  c:\users\nilss\desktop\enginedx11\engine\engine\code\components\freemovecomponent.cpp(22): note: see reference to function template instantiation 'T *IComponent::GetComponent<TransformComponent>(void)' being compiled
           with
           [
               T=TransformComponent
           ]
-  SkyBox.cpp
-c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\entity.h(36): warning C4018: '<': signed/unsigned mismatch
-  c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\icomponent.h(17): note: see reference to function template instantiation 'T *Entity::GetComponent<T>(void)' being compiled
-          with
-          [
-              T=TransformComponent
-          ]
-  c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\skybox.cpp(244): note: see reference to function template instantiation 'T *IComponent::GetComponent<TransformComponent>(void)' being compiled
-          with
-          [
-              T=TransformComponent
-          ]
-  LightManager.cpp
-  GuiManager.cpp
-  c:\program files (x86)\windows kits\10\include\10.0.15063.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-  Input.cpp
-  c:\program files (x86)\windows kits\10\include\10.0.15063.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-c:\users\nilss\desktop\enginedx11\engine\engine\code\input\input.cpp(143): warning C4244: '=': conversion from 'LONG' to 'float', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\input\input.cpp(144): warning C4244: '=': conversion from 'LONG' to 'float', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\input\input.cpp(199): warning C4244: 'return': conversion from 'LONG' to 'float', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\input\input.cpp(204): warning C4244: 'return': conversion from 'LONG' to 'float', possible loss of data
-  UVScrollComponent.cpp
-c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\entity.h(36): warning C4018: '<': signed/unsigned mismatch
-  c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\icomponent.h(17): note: see reference to function template instantiation 'T *Entity::GetComponent<T>(void)' being compiled
-          with
-          [
-              T=ModelComponent
-          ]
-  c:\users\nilss\desktop\enginedx11\engine\engine\code\components\uvscrollcomponent.cpp(23): note: see reference to function template instantiation 'T *IComponent::GetComponent<ModelComponent>(void)' being compiled
-          with
-          [
-              T=ModelComponent
-          ]
-  ModelComponent.cpp
   LightDirectionComponent.cpp
-c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\entity.h(36): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\entity.h(35): warning C4018: '<': signed/unsigned mismatch
   c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\icomponent.h(17): note: see reference to function template instantiation 'T *Entity::GetComponent<T>(void)' being compiled
           with
           [
@@ -189,8 +48,177 @@ c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\entity.h(36
           [
               T=TransformComponent
           ]
-  Generating Code...
-  Skipping... (no relevant changes detected)
+  LightPointComponent.cpp
+  ModelComponent.cpp
+  ParticleSystemComponent.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(44): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(62): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(79): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(90): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(116): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(216): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(294): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(305): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(307): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(365): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(367): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(389): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(409): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(440): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(451): warning C4244: 'initializing': conversion from 'std::chrono::system_clock::rep' to 'unsigned int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(482): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(486): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(535): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(559): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(561): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(648): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\entity.h(35): warning C4018: '<': signed/unsigned mismatch
+  c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\icomponent.h(17): note: see reference to function template instantiation 'T *Entity::GetComponent<T>(void)' being compiled
+          with
+          [
+              T=TransformComponent
+          ]
+  c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(60): note: see reference to function template instantiation 'T *IComponent::GetComponent<TransformComponent>(void)' being compiled
+          with
+          [
+              T=TransformComponent
+          ]
+  QuadComponent.cpp
+  TransformationComponent.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\entity.h(35): warning C4018: '<': signed/unsigned mismatch
+  c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\icomponent.h(17): note: see reference to function template instantiation 'T *Entity::GetComponent<T>(void)' being compiled
+          with
+          [
+              T=TransformComponent
+          ]
+  c:\users\nilss\desktop\enginedx11\engine\engine\code\components\transformationcomponent.cpp(22): note: see reference to function template instantiation 'T *IComponent::GetComponent<TransformComponent>(void)' being compiled
+          with
+          [
+              T=TransformComponent
+          ]
+  TransformComponent.cpp
+  UVScrollComponent.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\entity.h(35): warning C4018: '<': signed/unsigned mismatch
+  c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\icomponent.h(17): note: see reference to function template instantiation 'T *Entity::GetComponent<T>(void)' being compiled
+          with
+          [
+              T=ModelComponent
+          ]
+  c:\users\nilss\desktop\enginedx11\engine\engine\code\components\uvscrollcomponent.cpp(23): note: see reference to function template instantiation 'T *IComponent::GetComponent<ModelComponent>(void)' being compiled
+          with
+          [
+              T=ModelComponent
+          ]
+  DDSTextureLoader.cpp
+  imgui.cpp
+  imgui_demo.cpp
+  imgui_draw.cpp
+  Gamepad.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\code\input\gamepad.cpp(101): warning C4244: '=': conversion from 'float' to 'WORD', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\input\gamepad.cpp(102): warning C4244: '=': conversion from 'float' to 'WORD', possible loss of data
+  Input.cpp
+  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+c:\users\nilss\desktop\enginedx11\engine\engine\code\input\input.cpp(143): warning C4244: '=': conversion from 'LONG' to 'float', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\input\input.cpp(144): warning C4244: '=': conversion from 'LONG' to 'float', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\input\input.cpp(199): warning C4244: 'return': conversion from 'LONG' to 'float', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\input\input.cpp(204): warning C4244: 'return': conversion from 'LONG' to 'float', possible loss of data
   CameraManager.cpp
+  Generating Code...
+  Compiling...
+  GuiManager.cpp
+  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  LightManager.cpp
+  GBuffer.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\systemdefs.h(3): warning C4244: '=': conversion from 'const float' to 'UINT', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\systemdefs.h(4): warning C4244: '=': conversion from 'const float' to 'UINT', possible loss of data
+  Mesh.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\entity.h(35): warning C4018: '<': signed/unsigned mismatch
+  c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\mesh.cpp(13): note: see reference to function template instantiation 'T *Entity::GetComponent<TransformComponent>(void)' being compiled
+          with
+          [
+              T=TransformComponent
+          ]
+  Renderer.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\renderer.cpp(50): warning C4244: 'argument': conversion from 'const float' to 'unsigned int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\renderer.cpp(102): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\renderer.cpp(122): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\renderer.cpp(141): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\renderer.cpp(231): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\renderer.cpp(274): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\entity.h(35): warning C4018: '<': signed/unsigned mismatch
+  c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\renderer.cpp(58): note: see reference to function template instantiation 'T *Entity::GetComponent<CameraComponent>(void)' being compiled
+          with
+          [
+              T=CameraComponent
+          ]
+  RenderToTexture.cpp
+  ScreenQuad.cpp
+  ShaderManager.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(315): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(362): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(413): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(543): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(545): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(593): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(922): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\entity.h(35): warning C4018: '<': signed/unsigned mismatch
+  c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\icomponent.h(17): note: see reference to function template instantiation 'T *Entity::GetComponent<T>(void)' being compiled
+          with
+          [
+              T=TransformComponent
+          ]
+  c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(418): note: see reference to function template instantiation 'T *IComponent::GetComponent<TransformComponent>(void)' being compiled
+          with
+          [
+              T=TransformComponent
+          ]
+  SkyBox.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\entity.h(35): warning C4018: '<': signed/unsigned mismatch
+  c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\icomponent.h(17): note: see reference to function template instantiation 'T *Entity::GetComponent<T>(void)' being compiled
+          with
+          [
+              T=TransformComponent
+          ]
+  c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\skybox.cpp(244): note: see reference to function template instantiation 'T *IComponent::GetComponent<TransformComponent>(void)' being compiled
+          with
+          [
+              T=TransformComponent
+          ]
+  DXManager.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\code\system\dxmanager.cpp(79): warning C4244: 'argument': conversion from 'float' to 'UINT8', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\system\dxmanager.cpp(626): warning C4018: '<': signed/unsigned mismatch
+  Framework.cpp
+  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+c:\users\nilss\desktop\enginedx11\engine\engine\code\system\framework.cpp(39): warning C4244: 'argument': conversion from 'const float' to 'int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\system\framework.cpp(42): warning C4244: 'argument': conversion from 'const float' to 'int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\system\framework.cpp(111): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\system\framework.cpp(135): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\system\framework.cpp(162): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\system\framework.cpp(223): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\system\framework.cpp(320): warning C4244: 'initializing': conversion from 'std::chrono::system_clock::rep' to 'unsigned int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\entity.h(35): warning C4018: '<': signed/unsigned mismatch
+  c:\users\nilss\desktop\enginedx11\engine\engine\code\system\framework.cpp(86): note: see reference to function template instantiation 'T *Entity::GetComponent<CameraComponent>(void)' being compiled
+          with
+          [
+              T=CameraComponent
+          ]
+  DebugStats.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\entity.h(35): warning C4018: '<': signed/unsigned mismatch
+  c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\icomponent.h(17): note: see reference to function template instantiation 'T *Entity::GetComponent<T>(void)' being compiled
+          with
+          [
+              T=TransformComponent
+          ]
+  c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\debugstats.cpp(27): note: see reference to function template instantiation 'T *IComponent::GetComponent<TransformComponent>(void)' being compiled
+          with
+          [
+              T=TransformComponent
+          ]
+  TexturePool.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\texturepool.cpp(28): warning C4477: 'printf' : format string '%s' requires an argument of type 'char *', but variadic argument 1 has type 'const std::wstring'
+  Time.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\time.cpp(61): warning C4244: 'initializing': conversion from 'INT64' to 'int', possible loss of data
+  Main.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\main.cpp(3): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+  Generating Code...
   Engine.vcxproj -> C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\Engine.exe
-  Engine.vcxproj -> C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\Engine.pdb (Partial PDB)

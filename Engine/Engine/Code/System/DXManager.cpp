@@ -26,10 +26,8 @@ DXManager::DXManager()
 	_blendStateOpaque = 0;
 	_depthStencilDisabled = 0;
 	_blendStateAlpha = 0;
-	_rasterizerWireframe = 0;
-	
+	_rasterizerWireframe = 0;	
 }
-
 
 DXManager::~DXManager()
 {
@@ -38,7 +36,6 @@ DXManager::~DXManager()
 
 void DXManager::Shutdown() 
 {
-
 	if (_swapChain) 
 		_swapChain->SetFullscreenState(false, NULL);
 	
@@ -70,10 +67,8 @@ void DXManager::Shutdown()
 		_blendStateAlpha->Release();
 
 	if (_rasterizerWireframe)
-		_rasterizerWireframe->Release();
-	
+		_rasterizerWireframe->Release();	
 }
-
 
 void DXManager::ClearRenderTarget(float r, float g, float b, float a) 
 {
@@ -151,7 +146,6 @@ void DXManager::SetRasterizerState(RASTERIZER_STATE state)
 	}					
 }
 
-
 void DXManager::SetDepthStencilState(DEPTH_STATE state)
 {
 	switch (state)
@@ -174,9 +168,7 @@ void DXManager::SetDepthStencilState(DEPTH_STATE state)
 }
 
 void DXManager::Initialize(HWND hwnd,int screenWidth, int screenHeight, bool vsync, bool fullscreen)
-{
-	
-	
+{		
 	ID3D11Texture2D* backBufferPtr = 0;
 	HRESULT result;
 
@@ -589,7 +581,6 @@ void DXManager::CreateSamplerStates()
 	_devCon->PSSetSamplers(0, 2, samplers);
 }
 
-
 void DXManager::GetHardwareProperties(int screenWidth, int screenHeight)
 {	
 	
@@ -611,15 +602,13 @@ void DXManager::GetHardwareProperties(int screenWidth, int screenHeight)
 	// use the factory to create a adapter for the primary graphics interface(video card), we can then use the adapter to get info about our monitor/video memory etc
 	result = factory->EnumAdapters(0, &adapter);
 	if (FAILED(result))	
-		printf("Failed to create adapter");
-	
+		printf("Failed to create adapter");	
 
 	// enumerate the primary adapter output(monitor) and store it in our adapterOutput
 	result = adapter->EnumOutputs(0, &_adapterOutput);
 	if (FAILED(result))	
 		printf("Failed to enumerate the primer adapter output");
 	
-
 	//get the number of modes that fit the DXGI_FORMATR8G8B8A8_UNORM display format for the adapter output
 	result = _adapterOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, NULL);
 	if (FAILED(result))	

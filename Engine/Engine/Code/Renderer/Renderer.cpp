@@ -89,11 +89,8 @@ void Renderer::CreateDepthMap()
 	specularQuad->AddComponent<QuadComponent>()->Init(XMFLOAT2(SCREEN_WIDTH * 0.54f, SCREEN_HEIGHT * 0.1f), XMFLOAT2(SCREEN_WIDTH * 0.1f, SCREEN_HEIGHT * 0.1f), L"");
 	specularQuad->GetComponent<QuadComponent>()->SetTexture(_gBuffer->GetSrvArray()[3]);
 
-#endif
-
-	
+#endif	
 }
-
 
 void Renderer::AddToRenderer(Mesh* mesh, SHADER_TYPE type) 
 {
@@ -194,10 +191,14 @@ void Renderer::RenderDeferred()
 	_gBuffer->SetRenderTargets();		
 	SM.RenderGeometry(_meshes[S_DEFERRED]);
 
-	// set to defualt rendertarget render the fullscreenquad and do light calculations
-	dXM.SetRenderTarget(nullptr, nullptr, true, false);
+	// set to defualt rendertarget with the depth buffer as read only so we still can use the depth texture as shader input
+	// TODO: recontruct position from depth so we can remove the position render target from the g-buffer completely
+	dXM.SetRenderTarget(nullptr, nullptr, true, true);
 
+	// upload the vertices of the screensized quad
 	_screenQuad->UploadBuffers();
+
+	// render lights as 2d post processing
 	SM.RenderLights(_gBuffer); 
 }
 
@@ -206,7 +207,7 @@ void Renderer::RenderDepth()
 	if (_meshes[S_DEPTH].size() == 0)
 		return;
 
-	DXManager& dXM = DXManager::GetInstance();
+	DXManager&    dXM = DXManager::GetInstance();
 	ShaderManager& SM = ShaderManager::GetInstance();
 
 	// set depth stuff
@@ -216,7 +217,6 @@ void Renderer::RenderDepth()
 
 	SM.RenderDepth(_meshes[S_DEPTH]);
 }
-
 
 void Renderer::RenderLightsAlpha() 
 {

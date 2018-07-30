@@ -1,13 +1,10 @@
 #include "FreeMoveComponent.h"
-
 #include <DirectXMath.h>
-
 #include "input.h"
 #include "Time.h"
 #include "TransformComponent.h"
 #include "Gamepad.h"
 #include "SystemDefs.h"
-
 
 FreeMoveComponent::FreeMoveComponent() : IComponent(COMPONENT_TYPE::FREE_MOVE_COMPONENT)
 {
@@ -28,9 +25,8 @@ void FreeMoveComponent::init()
 
 void FreeMoveComponent::Update()
 {	
-	UpdateMovement();	
+	UpdateMovement();		
 }
-
 
 void FreeMoveComponent::UpdateMovement()
 {	

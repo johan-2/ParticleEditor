@@ -884,7 +884,6 @@ void ShaderManager::RenderDirectionalShadowsAlpha(Mesh*& mesh)
 	// draw the mesh additivly for the light
 	devCon->DrawIndexed(mesh->GetNumIndices(), 0, 0);
 
-
 }
 
 void ShaderManager::RenderPointAlpha(Mesh*& mesh)
@@ -919,20 +918,19 @@ void ShaderManager::RenderPointAlpha(Mesh*& mesh)
 	XMStoreFloat4x4(&viewMatrix, XMMatrixTranspose(XMLoadFloat4x4(&viewMatrix)));
 	XMStoreFloat4x4(&projectionMatrix, XMMatrixTranspose(XMLoadFloat4x4(&projectionMatrix)));
 
-
 	// set the light data
 	for (int i = 0; i< pointLights.size(); i++)
 	{
-		pixelData[i].color = pointLights[i]->GetLightColor();
-		pixelData[i].intensity = pointLights[i]->GetIntensity();
-		pixelData[i].radius = pointLights[i]->GetRadius();
-		pixelData[i].lightPosition = pointLights[i]->GetComponent<TransformComponent>()->GetPositionRef();
-		pixelData[i].specularColor = pointLights[i]->GetSpecularColor();
-		pixelData[i].specularPower = pointLights[i]->GetSpecularPower();
-		pixelData[i].attConstant = pointLights[i]->GetAttConstant();
-		pixelData[i].attLinear = pointLights[i]->GetAttLinear();
+		pixelData[i].color          = pointLights[i]->GetLightColor();
+		pixelData[i].intensity      = pointLights[i]->GetIntensity();
+		pixelData[i].radius         = pointLights[i]->GetRadius();
+		pixelData[i].lightPosition  = pointLights[i]->GetComponent<TransformComponent>()->GetPositionRef();
+		pixelData[i].specularColor  = pointLights[i]->GetSpecularColor();
+		pixelData[i].specularPower  = pointLights[i]->GetSpecularPower();
+		pixelData[i].attConstant    = pointLights[i]->GetAttConstant();
+		pixelData[i].attLinear      = pointLights[i]->GetAttLinear();
 		pixelData[i].attExponential = pointLights[i]->GetAttExponential();
-		pixelData[i].numLights = pointLights.size();
+		pixelData[i].numLights      = pointLights.size();
 	}
 
 	// upload new light data to pixelshader		
@@ -1014,12 +1012,10 @@ void ShaderManager::RenderAmbientAlpha(Mesh*& mesh)
 
 	// draw
 	devCon->DrawIndexed(mesh->GetNumIndices(), 0, 0);
-
 }
 
 void ShaderManager::UpdateConstantBuffer(void* data, unsigned int size, ID3D11Buffer*& buffer)
-{
-	
+{	
 	ID3D11DeviceContext* devCon = DXManager::GetInstance().GetDeviceCon();
 	ID3D11Device* device = DXManager::GetInstance().GetDevice();
 
