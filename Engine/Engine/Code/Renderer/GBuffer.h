@@ -18,7 +18,5 @@ private:
 
 	ID3D11ShaderResourceView** _srvArray;
 	ID3D11RenderTargetView** _renderTargetArray;
-	ID3D11Texture2D** _tex2DArray;
-	
 };
 

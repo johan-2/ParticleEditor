@@ -32,8 +32,8 @@ void GBuffer::SetRenderTargets()
 void GBuffer::CreateRenderTargets()
 {
 	_renderTargetArray = new ID3D11RenderTargetView*[4];
-	_srvArray = new ID3D11ShaderResourceView*[4];
-	_tex2DArray = new ID3D11Texture2D*[4];
+	_srvArray = new ID3D11ShaderResourceView*[4];	
+	ID3D11Texture2D* tex2D;
 
 	ID3D11Device* device = DXManager::GetInstance().GetDevice();
 	HRESULT result;
@@ -68,33 +68,37 @@ void GBuffer::CreateRenderTargets()
 	resourceViewDesc.Texture2D.MipLevels = 1;	
 
 	// position use 16 byte (optimise so we reconstruct position from depth, this whole buffer can then be removed)
-	result = device->CreateTexture2D(&RenderTargetTexDesc, NULL, &_tex2DArray[0]);
+	result = device->CreateTexture2D(&RenderTargetTexDesc, NULL, &tex2D);
 	if (FAILED(result))
 		printf("failed to create position rendertexture2d in GBUFFER \n");
 	
-	result = device->CreateRenderTargetView(_tex2DArray[0], &renderTargetViewDesc, &_renderTargetArray[0]);
+	result = device->CreateRenderTargetView(tex2D, &renderTargetViewDesc, &_renderTargetArray[0]);
 	if (FAILED(result))
 		printf("failed to create position rendertargetview in GBUFFER\n");
 
-	result = device->CreateShaderResourceView(_tex2DArray[0], &resourceViewDesc, &_srvArray[0]);
+	result = device->CreateShaderResourceView(tex2D, &resourceViewDesc, &_srvArray[0]);
 	if (FAILED(result))
 		printf("failed to create position shaderResourceView in GBUFFER\n");
+
+	tex2D->Release();
 	
 	// 8 byte for normal 
 	RenderTargetTexDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
 	renderTargetViewDesc.Format = RenderTargetTexDesc.Format;
 	resourceViewDesc.Format = RenderTargetTexDesc.Format;
-	result = device->CreateTexture2D(&RenderTargetTexDesc, NULL, &_tex2DArray[1]);
+	result = device->CreateTexture2D(&RenderTargetTexDesc, NULL, &tex2D);
 	if (FAILED(result))
 		printf("failed to create normal rendertexture2d in GBUFFER to texture\n");
 	
-	result = device->CreateRenderTargetView(_tex2DArray[1], &renderTargetViewDesc, &_renderTargetArray[1]);
+	result = device->CreateRenderTargetView(tex2D, &renderTargetViewDesc, &_renderTargetArray[1]);
 	if (FAILED(result))
 		printf("failed to create normal rendertargetview in GBUFFER\n");
 
-	result = device->CreateShaderResourceView(_tex2DArray[1], &resourceViewDesc, &_srvArray[1]);
+	result = device->CreateShaderResourceView(tex2D, &resourceViewDesc, &_srvArray[1]);
 	if (FAILED(result))
 		printf("failed to create normal shaderResourceView in GBUFFER\n");
+
+	tex2D->Release();
 
 	// 4 byte for diffuse / specular
 	RenderTargetTexDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -102,22 +106,19 @@ void GBuffer::CreateRenderTargets()
 	resourceViewDesc.Format = RenderTargetTexDesc.Format;
 	for(int i =2; i< 4; i++)
 	{
-		result = device->CreateTexture2D(&RenderTargetTexDesc, NULL, &_tex2DArray[i]);
+		result = device->CreateTexture2D(&RenderTargetTexDesc, NULL, &tex2D);
 		if (FAILED(result))
 			printf("failed to create diffuse/specular rendertexture2d in GBUFFER to texture\n");
 
-		result = device->CreateRenderTargetView(_tex2DArray[i], &renderTargetViewDesc, &_renderTargetArray[i]);
+		result = device->CreateRenderTargetView(tex2D, &renderTargetViewDesc, &_renderTargetArray[i]);
 		if (FAILED(result))
 			printf("failed to create diffuse/specular rendertargetview in GBUFFER\n");
 
-		result = device->CreateShaderResourceView(_tex2DArray[i], &resourceViewDesc, &_srvArray[i]);
+		result = device->CreateShaderResourceView(tex2D, &resourceViewDesc, &_srvArray[i]);
 		if (FAILED(result))
 			printf("failed to create diffuse/specular shaderResourceView in GBUFFER\n");
+
+		tex2D->Release();
 	}
 		
-	for(int i =0; i< 4; i++)
-	   _tex2DArray[i]->Release();
-	
-	delete[] _tex2DArray;
-
 }
