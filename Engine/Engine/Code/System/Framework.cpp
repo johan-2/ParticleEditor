@@ -308,6 +308,16 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM Lparam)
 	case WM_SETCURSOR:
 		GuiManager::GetInstance().UpdateMouseCursor();
 		break;
+		// sent when size,position or Z order is changed
+		// works for everything that is freezing the application
+		// like draging window, fullscreen change and using any windows type functions 
+		// like opening the file directory to save/open files
+		// when this happens we need to save the last deltaTime
+		// so we can use it for the first frame when the application starts uppdating again
+		// otherwise we end up with a massive delta during the first frame
+	case WM_WINDOWPOSCHANGING:
+		Time::GetInstance().OnWindowChange();
+		break;
 	default:
 		return DefWindowProc(hwnd, msg, wParam, Lparam);
 	}

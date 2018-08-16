@@ -104,6 +104,7 @@ void DXManager::SetFullscreen(bool fullscreen, bool toggle)
 {
 	toggle ? _swapChain->SetFullscreenState(!_fullscreen, NULL) : _swapChain->SetFullscreenState(fullscreen, NULL);
 	toggle ? _fullscreen = !_fullscreen : _fullscreen = fullscreen;
+
 }
 
 void DXManager::SetBlendState(BLEND_STATE blending)

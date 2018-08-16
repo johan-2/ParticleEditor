@@ -6,7 +6,7 @@
 #include "LightManager.h"
 #include "Renderer.h"
 #include "World.h"
-#include "input.h"
+#include "Input.h"
 #include "Time.h"
 #include "Mesh.h"
 #include "Entity.h"
@@ -64,17 +64,13 @@ Framework::Framework()
 	
 }
 
-
 Framework::~Framework()
 {
 	DXManager::GetInstance().Shutdown();
 	ShaderManager::GetInstance().Shutdown();
 	
 	UnregisterClass((LPCSTR)_applicationName.c_str(), _hInstance);	
-
-
 }
-
 
 void Framework::Start()
 {
@@ -709,7 +705,6 @@ void Framework::SaveParticle(char* destination)
 		writer.Key(key.c_str());
 		writer.String(_particleSettings[i].texturePath.c_str());
 
-
 		key = "startSize";
 		key.append(index.c_str());
 		writer.Key(key.c_str());
@@ -717,7 +712,6 @@ void Framework::SaveParticle(char* destination)
 		writer.Double(_particleSettings[i].startSize.x);
 		writer.Double(_particleSettings[i].startSize.y);
 		writer.EndArray();
-
 
 		key = "direction";
 		key.append(index.c_str());
@@ -728,7 +722,6 @@ void Framework::SaveParticle(char* destination)
 		writer.Double(_particleSettings[i].direction.z);
 		writer.EndArray();
 
-
 		key = "minMaxSpeed";
 		key.append(index.c_str());
 		writer.Key(key.c_str());
@@ -736,7 +729,6 @@ void Framework::SaveParticle(char* destination)
 		writer.Double(_particleSettings[i].minMaxSpeed.x);
 		writer.Double(_particleSettings[i].minMaxSpeed.y);
 		writer.EndArray();
-
 
 		key = "gravity";
 		key.append(index.c_str());
@@ -747,12 +739,10 @@ void Framework::SaveParticle(char* destination)
 		writer.Double(_particleSettings[i].gravity.z);
 		writer.EndArray();
 
-
 		key = "drag";
 		key.append(index.c_str());
 		writer.Key(key.c_str());
 		writer.Double(_particleSettings[i].drag);
-
 
 		key = "velocitySpread";
 		key.append(index.c_str());
@@ -763,12 +753,10 @@ void Framework::SaveParticle(char* destination)
 		writer.Double(_particleSettings[i].velocitySpread.z);
 		writer.EndArray();
 
-
 		key = "emitterLifetime";
 		key.append(index.c_str());
 		writer.Key(key.c_str());
 		writer.Double(_particleSettings[i].emitterLifetime);
-
 
 		key = "particleLifetime";
 		key.append(index.c_str());
@@ -1046,6 +1034,9 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM Lparam)
 		break;
 	case WM_SETCURSOR:
 		GuiManager::GetInstance().UpdateMouseCursor();
+		break;
+	case WM_WINDOWPOSCHANGING:
+		Time::GetInstance().OnWindowChange();
 		break;
 	default:
 		return DefWindowProc(hwnd, msg, wParam, Lparam);

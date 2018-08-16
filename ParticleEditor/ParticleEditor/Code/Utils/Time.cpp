@@ -38,16 +38,20 @@ Time::Time() :
 		
 }
 
-
 Time::~Time()
 {
+}
+
+void Time::OnWindowChange()
+{
+	_useLastDelta = true;
+	_lastDelta = _delta;
 }
 
 void Time::Update() 
 {
 	CalculateDelta();
 	CalculateFPS();
-
 }
 
 void Time::CalculateDelta() 
@@ -62,6 +66,12 @@ void Time::CalculateDelta()
 
 	// divide elapsed ticks with tickrate per second 
 	_delta = difference / _ticksPerSecond;
+
+	if(_useLastDelta)
+	{
+		_delta = _lastDelta;
+		_useLastDelta = false;
+	}
 
 	// set start time for next frame;
 	_startTimeDelta = currentTime;

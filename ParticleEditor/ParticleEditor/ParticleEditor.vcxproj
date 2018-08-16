@@ -171,6 +171,7 @@
     <ClInclude Include="Code\Utils\DebugStats.h" />
     <ClInclude Include="Code\Utils\SystemDefs.h" />
     <ClInclude Include="Code\Utils\TexturePool.h" />
+    <ClInclude Include="Code\Utils\Time.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\ComponentSystem\Entity.cpp" />
