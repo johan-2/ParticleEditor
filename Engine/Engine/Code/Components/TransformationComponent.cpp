@@ -24,20 +24,13 @@ void TransformationComponent::Init(XMFLOAT3 rotation, float speedRotation, float
 
 
 void TransformationComponent::Update() 
-{
-
-	static float t = 30;
-
+{	
 	const float& delta = Time::GetInstance().GetDeltaTime();
 
 	float rotationAmount = _speedRotation * delta;
 
 	XMStoreFloat3(&_transform->GetRotationRef(), XMVectorAdd(XMLoadFloat3(&_transform->GetRotationRef()), XMVectorMultiply(XMLoadFloat3(&_rotation), XMLoadFloat3(&XMFLOAT3(rotationAmount, rotationAmount, rotationAmount)))));
-
-	t -= delta;
-	if (t <= 0)
-		_parent->RemoveEntity();
-
+	
 	if (_axis == TransformComponent::Axis::NONE)
 		return;
 

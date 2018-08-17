@@ -34,8 +34,7 @@ Time::Time() :
 	QueryPerformanceCounter((LARGE_INTEGER*)&_startTimeDelta);
 
 	// get time elapsed in ms
-	_startTimeFps = timeGetTime();
-		
+	_startTimeFps = timeGetTime();	
 }
 
 Time::~Time()

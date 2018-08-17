@@ -29,6 +29,7 @@
 #include <algorithm>
 #include <random>
 #include <chrono>
+#include "../../Color32.h"
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM Lparam);
 
@@ -55,7 +56,7 @@ Framework::Framework()
 	// start and run
 	Start();
 	Run();
-	
+		
 }
 
 
@@ -100,7 +101,7 @@ void Framework::Start()
 	// create directional light and give it the same position/ rotation as depthrender camera
 	Entity* directionalLight = new Entity;
 	directionalLight->AddComponent<TransformComponent>()->Init(dt->GetPositionVal(), dt->GetRotationVal());
-	directionalLight->AddComponent<LightDirectionComponent>()->Init(XMFLOAT4(0.1f, 0.1f, 0.1f, 1), XMFLOAT4(1, 1, 1, 1), 40.0f);
+	directionalLight->AddComponent<LightDirectionComponent>()->Init(XMFLOAT4(1.0f, 1.0f, 1.0f, 1), XMFLOAT4(1, 1, 1, 1), 40.0f);
 
 	//// test entities
 	for(int i =0; i < 8; i++)
@@ -126,7 +127,7 @@ void Framework::Start()
 	fire->AddComponent<TransformComponent>()->Init(XMFLOAT3(-15.0f, -7.5f, 12), XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1));
 	fire->AddComponent<ParticleSystemComponent>()->Init("Particles/fire.json");
 
-	Entity* pointLight1 = new Entity();
+	/*Entity* pointLight1 = new Entity();
 	pointLight1->AddComponent<TransformComponent>()->Init(XMFLOAT3(0.0f, -4.0f, -6), XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1));
 	pointLight1->AddComponent<LightPointComponent>()->Init(10.0f, 4.0f, XMFLOAT3(1, 1.0f, 1.0f), XMFLOAT3(1, 1, 1), 50.0f, 0.0f, 1.0f, 0.01f);
 
@@ -163,7 +164,7 @@ void Framework::Start()
 			pointLight6->AddComponent<LightPointComponent>()->Init(8.0f, 3.0f, color, color, 80.0f, 0.0f, 0.0f, 1.0f);
 		}
 		b = !b;
-	}
+	}*/
 
 #ifdef _DEBUG
 	_debugStats = new DebugStats();

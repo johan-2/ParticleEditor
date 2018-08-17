@@ -49,7 +49,6 @@ public:
 	float _distance;
 	
 private:
-
 	
 	void AddRemoveToRenderer(bool add);
 

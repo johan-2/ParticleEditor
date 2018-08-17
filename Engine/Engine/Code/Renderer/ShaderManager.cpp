@@ -466,7 +466,6 @@ void ShaderManager::RenderLights(GBuffer*& gBuffer)
 	devCon->PSSetShaderResources(0, 5, nullTextureArray);
 	
 	DXM.SetDepthStencilState(DEPTH_STATE::ENABLED);
-
 }
 
 void ShaderManager::RenderSkyBox(XMFLOAT4X4 worldMatrix)

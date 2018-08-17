@@ -1,6 +1,6 @@
 #pragma once
 
-#define MAX_POINT_LIGHTS 100
+#define MAX_POINT_LIGHTS 500
 
 #include <DirectXMath.h>
 #include "LightDirectionComponent.h"
