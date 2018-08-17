@@ -24,7 +24,7 @@ public:
 		b(b),
 		a(a){}
 
-	Color32 operator + (const Color32 obj)
+	Color32 operator + (const Color32& obj)
 	{		
 		return Color32(r + obj.r < 255 ? r + obj.r : 255,
 					   g + obj.g < 255 ? g + obj.g : 255,
@@ -32,7 +32,7 @@ public:
 					   a + obj.a < 255 ? a + obj.a : 255);
 	}
 
-	Color32 operator - (const Color32 obj)
+	Color32 operator - (const Color32& obj)
 	{
 		return Color32(r - obj.r > 0 ? r - obj.r :0,
 			           g - obj.g > 0 ? g - obj.g :0,
@@ -40,7 +40,7 @@ public:
 			           a - obj.a > 0 ? a - obj.a :0);
 	}
 
-	Color32 operator * (const Color32 obj)
+	Color32 operator * (const Color32& obj)
 	{
 		return Color32(r * obj.r < 255 ? r * obj.r : 255,
 			           g * obj.g < 255 ? g * obj.g : 255,
@@ -48,17 +48,17 @@ public:
 			           a * obj.a < 255 ? a * obj.a : 255);
 	}
 
-	Color32 operator / (const Color32 obj)
+	Color32 operator / (const Color32& obj)
 	{
 		return Color32(r / obj.r, g / obj.g, b / obj.b, a / obj.a);			           			           			            
 	}
 
-	bool operator == (const Color32 obj)
+	bool operator == (const Color32& obj)
 	{
 		return r == obj.r && g == obj.g && b == obj.b && a == obj.a;
 	}
 
-	bool operator != (const Color32 obj)
+	bool operator != (const Color32& obj)
 	{
 		return r != obj.r || g != obj.g || b != obj.b || a != obj.a;
 	}
