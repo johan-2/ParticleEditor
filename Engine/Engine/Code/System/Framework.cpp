@@ -101,7 +101,7 @@ void Framework::Start()
 	// create directional light and give it the same position/ rotation as depthrender camera
 	Entity* directionalLight = new Entity;
 	directionalLight->AddComponent<TransformComponent>()->Init(dt->GetPositionVal(), dt->GetRotationVal());
-	directionalLight->AddComponent<LightDirectionComponent>()->Init(XMFLOAT4(1.0f, 1.0f, 1.0f, 1), XMFLOAT4(1, 1, 1, 1), 40.0f);
+	directionalLight->AddComponent<LightDirectionComponent>()->Init(XMFLOAT4(1.0f, 1.0f, 1.0f, 1), XMFLOAT4(1, 1, 1, 1), 80.0f);
 
 	//// test entities
 	for(int i =0; i < 8; i++)
@@ -161,7 +161,7 @@ void Framework::Start()
 
 			Entity* pointLight6 = new Entity();
 			pointLight6->AddComponent<TransformComponent>()->Init(XMFLOAT3(-15.0f + (y * 6), height, 10 - (i *5)), XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1));
-			pointLight6->AddComponent<LightPointComponent>()->Init(8.0f, 3.0f, color, color, 80.0f, 0.0f, 0.0f, 1.0f);
+			pointLight6->AddComponent<LightPointComponent>()->Init(8.0f, 5.0f, color, color, 80.0f, 0.0f, 0.0f, 1.0f);
 		}
 		b = !b;
 	}*/

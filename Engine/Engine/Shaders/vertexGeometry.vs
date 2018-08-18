@@ -1,4 +1,3 @@
-
 uniform float4x4 u_worldMatrix;
 uniform float4x4 u_viewMatrix;
 uniform float4x4 u_projectionMatrix;
@@ -11,6 +10,7 @@ struct VertexInputType
 	float3 normal : NORMAL;
 	float3 tangent : TANGENT;
 	float3 binormal : BINORMAL;
+	float4 color : COLOR;
 };
 
 struct PixelInputType
@@ -21,9 +21,8 @@ struct PixelInputType
 	float3 tangent : TANGENT;
 	float3 binormal : BINORMAL;
 	float4 worldPosition : TEXCOORD1;
-		 
+	float4 color : COLOR;		 
 };
-
 
 PixelInputType Main(VertexInputType input)
 {
@@ -46,6 +45,8 @@ PixelInputType Main(VertexInputType input)
 	output.binormal = normalize(mul(input.binormal, (float3x3)u_worldMatrix));
 	
 	output.worldPosition = mul(input.position, u_worldMatrix);
+	
+	output.color = input.color;
 		   
     return output;
 }

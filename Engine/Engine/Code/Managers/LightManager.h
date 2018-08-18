@@ -1,6 +1,6 @@
 #pragma once
 
-#define MAX_POINT_LIGHTS 500
+#define MAX_POINT_LIGHTS 1024
 
 #include <DirectXMath.h>
 #include "LightDirectionComponent.h"
@@ -20,11 +20,11 @@ public:
 	void SetDirectionalLight(LightDirectionComponent* light);
 	void AddPointLight(LightPointComponent* light);
 	void SetAmbientColor(XMFLOAT4 color) { _ambientColor = color; }
-	const XMFLOAT4& GetAmbientColor() { return _ambientColor; }
+	const XMFLOAT4& GetAmbientColor()    { return _ambientColor; }
 		
 	void RemoveDirectionalLight();
 	
-	LightDirectionComponent*& GetDirectionalLight() { return _directionalLight; }
+	LightDirectionComponent*& GetDirectionalLight()     { return _directionalLight; }
 	std::vector<LightPointComponent*>&  GetPointLight() { return _pointLights; }
 
 private:

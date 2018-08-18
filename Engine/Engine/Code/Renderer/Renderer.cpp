@@ -167,6 +167,7 @@ void Renderer::Render()
 	RenderDeferred();
 
 	// set back regular constantbuffers and render alpha meshes with regular forward rendering
+	SM.SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT3D);
 	SM.SetConstantBuffers();
 	RenderLightsAlpha();	
 
@@ -191,6 +192,7 @@ void Renderer::RenderDeferred()
 	_gBuffer->SetRenderTargets();		
 	SM.RenderGeometry(_meshes[S_DEFERRED]);
 
+	SM.SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT2D);
 	// set to defualt rendertarget with the depth buffer as read only so we still can use the depth texture as shader input
 	// TODO: recontruct position from depth so we can remove the position render target from the g-buffer completely
 	dXM.SetRenderTarget(nullptr, nullptr, true, true);

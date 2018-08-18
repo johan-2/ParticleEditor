@@ -2,7 +2,6 @@
 #include "Entity.h"
 #include "IComponent.h"
 
-
 World* World::_instance = nullptr;
 
 World& World::GetInstance() 
@@ -18,7 +17,6 @@ World::World():
 	_isEntitiesDirty(false)
 {
 }
-
 
 World::~World()
 {

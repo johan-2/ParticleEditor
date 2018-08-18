@@ -1,4 +1,3 @@
-
 uniform matrix u_worldMatrix;
 uniform matrix u_viewMatrix;
 uniform matrix u_projectionMatrix;
@@ -10,6 +9,7 @@ struct VertexInputType
 	float3 normal : NORMAL;	
 	float3 tangent : TANGENT;
 	float3 binormal : BINORMAL;
+	float4 color : COLOR;
 };
 
 struct PixelInputType

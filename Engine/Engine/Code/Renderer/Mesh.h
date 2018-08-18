@@ -3,6 +3,7 @@
 #include <d3d11.h>
 #include <DirectXMath.h>
 #include "TransformComponent.h"
+#include "..//..//Color32.h";
 
 #define AMBIENT  1 << 0
 #define DIRECTIONAL  1 << 1
@@ -29,6 +30,7 @@ public:
 		XMFLOAT3 normal;
 		XMFLOAT3 tangent;
 		XMFLOAT3 binormal;
+		Color32  color;
 	};
 
 	void CreateBuffers(VertexData* verticesData, unsigned long* indicesData, unsigned int numVertices, unsigned int numIndices);

@@ -1,4 +1,3 @@
-
 uniform matrix u_worldMatrix;
 uniform matrix u_viewMatrix;
 uniform matrix u_projectionMatrix;
@@ -10,7 +9,7 @@ struct VertexInputType
 	float3 normal : NORMAL;
 	float3 tangent : TANGENT;
 	float3 binormal : BINORMAL;
-	
+	float4 color : COLOR;	
 };
 
 struct PixelInputType
@@ -18,7 +17,6 @@ struct PixelInputType
     float4 position : SV_POSITION;
     float3 tex : TEXCOORD0;		
 };
-
 
 PixelInputType Main(VertexInputType input)
 {
@@ -33,7 +31,6 @@ PixelInputType Main(VertexInputType input)
     	   			   		
 	// Store the texture coordinates for the pixel shader.
     output.tex = input.position;
-	
-    
+	  
     return output;
 }

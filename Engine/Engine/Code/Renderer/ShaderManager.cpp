@@ -159,13 +159,14 @@ void ShaderManager::CreateShaders()
 	CreatePixelShader(L"shaders/pixelLightning.ps", &_pixelLightShader, &pixelShaderBufferLight);
 	
 	// create input layouts
-	D3D11_INPUT_ELEMENT_DESC inputLayout3D[5]
+	D3D11_INPUT_ELEMENT_DESC inputLayout3D[6]
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "NORMAL",   0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "TANGENT",  0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "BINORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },		
+		{ "BINORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },	
+	    { "COLOR",    0, DXGI_FORMAT_R8G8B8A8_UNORM,  0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 	};
 
 	D3D11_INPUT_ELEMENT_DESC inputLayout2D[2]
@@ -195,15 +196,15 @@ void ShaderManager::CreateShaders()
 			
 
 	// create the inputLayout from the description and the vertexshaderbuffer
-	result = device->CreateInputLayout(inputLayout3D, sizeof(inputLayout3D) / sizeof(inputLayout3D[0]),  vertexShaderBufferDirectional->GetBufferPointer(), vertexShaderBufferDirectional->GetBufferSize(), &_inputlayout3D);
+	result = device->CreateInputLayout(inputLayout3D, 6, vertexShaderBufferGeometry->GetBufferPointer(), vertexShaderBufferGeometry->GetBufferSize(), &_inputlayout3D);
 	if (FAILED(result)) 
 		printf("failed to create Inputlayout\n");
 
-	result = device->CreateInputLayout(inputLayout2D, sizeof(inputLayout2D) / sizeof(inputLayout2D[0]), vertexShaderBufferSprite->GetBufferPointer(), vertexShaderBufferSprite->GetBufferSize(), &_inputlayout2D);
+	result = device->CreateInputLayout(inputLayout2D, 2, vertexShaderBufferSprite->GetBufferPointer(), vertexShaderBufferSprite->GetBufferSize(), &_inputlayout2D);
 	if (FAILED(result)) 
 		printf("failed to create Inputlayout2d\n");
 
-	result = device->CreateInputLayout(inputLayoutParticle, sizeof(inputLayoutParticle) / sizeof(inputLayoutParticle[0]), vertexShaderBufferParticle->GetBufferPointer(), vertexShaderBufferParticle->GetBufferSize(), &_inputlayoutParticle);
+	result = device->CreateInputLayout(inputLayoutParticle, 8, vertexShaderBufferParticle->GetBufferPointer(), vertexShaderBufferParticle->GetBufferSize(), &_inputlayoutParticle);
 	if (FAILED(result))
 		printf("failed to create InputlayoutParticle\n");
 
@@ -300,8 +301,7 @@ void ShaderManager::RenderDepth(const std::vector<Mesh*>& meshes)
 	ConstantAmbientVertex vertexData;
 
 	CameraComponent* camera = CameraManager::GetInstance().GetCurrentCameraDepthMap();
-
-	// only set vertexshader TODO: create pixelshader to handle depthmapping alpha meshes	
+	
 	devCon->VSSetShader(_vertexDepthShader, NULL, 0);
 	devCon->PSSetShader(_pixelDepthShader, NULL, 0);
 
@@ -330,7 +330,6 @@ void ShaderManager::RenderDepth(const std::vector<Mesh*>& meshes)
 
 		devCon->DrawIndexed(meshes[i]->GetNumIndices(), 0, 0);
 	}
-
 }
 
 void ShaderManager::RenderGeometry(const std::vector<Mesh*>& meshes)
