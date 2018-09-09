@@ -247,21 +247,21 @@ void ModelComponent::CreatePlane()
 	vertices[1].normal = XMFLOAT3(0.0f, 1.0f, 0.0f);
 	vertices[1].tangent = XMFLOAT3(1.0f, 0.0f, 0.0f);
 	vertices[1].binormal = XMFLOAT3(0.0f, 0.0f, 1.0f);
-	vertices[1].color = Color32(0, 0, 255, 255);
+	vertices[1].color = Color32(255, 255, 255, 255);
 
 	vertices[2].position = XMFLOAT3(-2.0f, 0.0f, -2.0f);
 	vertices[2].texture = XMFLOAT2(0.0f, 1.0f);
 	vertices[2].normal = XMFLOAT3(0.0f, 1.0f, 0.0f);
 	vertices[2].tangent = XMFLOAT3(1.0f, 0.0f, 0.0f);
 	vertices[2].binormal = XMFLOAT3(0.0f, 0.0f, 1.0f);
-	vertices[2].color = Color32(0, 255, 0, 255);
+	vertices[2].color = Color32(255, 255, 255, 255);
 
 	vertices[3].position = XMFLOAT3(2.0f, 0.0f, -2.0f);
 	vertices[3].texture = XMFLOAT2(1.0f, 1.0f);
 	vertices[3].normal = XMFLOAT3(0.0f, 1.0f, 0.0f);
 	vertices[3].tangent = XMFLOAT3(1.0f, 0.0f, 0.0f);
 	vertices[3].binormal = XMFLOAT3(0.0f, 0.0f, 1.0f);
-	vertices[3].color = Color32(255, 0, 0, 255);
+	vertices[3].color = Color32(255, 255, 255, 255);
 
 	unsigned long* indices = new unsigned long[6]{ 0,1,2,2,1,3 };
 

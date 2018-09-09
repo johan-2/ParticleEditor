@@ -101,7 +101,7 @@ void Framework::Start()
 	// create directional light and give it the same position/ rotation as depthrender camera
 	Entity* directionalLight = new Entity;
 	directionalLight->AddComponent<TransformComponent>()->Init(dt->GetPositionVal(), dt->GetRotationVal());
-	directionalLight->AddComponent<LightDirectionComponent>()->Init(XMFLOAT4(1.0f, 1.0f, 1.0f, 1), XMFLOAT4(1, 1, 1, 1), 80.0f);
+	directionalLight->AddComponent<LightDirectionComponent>()->Init(XMFLOAT4(0.1f, 0.1f, 0.1f, 1), XMFLOAT4(1, 1, 1, 1), 80.0f);
 
 	//// test entities
 	for(int i =0; i < 8; i++)
@@ -126,30 +126,9 @@ void Framework::Start()
 	Entity* fire = new Entity();
 	fire->AddComponent<TransformComponent>()->Init(XMFLOAT3(-15.0f, -7.5f, 12), XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1));
 	fire->AddComponent<ParticleSystemComponent>()->Init("Particles/fire.json");
-
-	/*Entity* pointLight1 = new Entity();
-	pointLight1->AddComponent<TransformComponent>()->Init(XMFLOAT3(0.0f, -4.0f, -6), XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1));
-	pointLight1->AddComponent<LightPointComponent>()->Init(10.0f, 4.0f, XMFLOAT3(1, 1.0f, 1.0f), XMFLOAT3(1, 1, 1), 50.0f, 0.0f, 1.0f, 0.01f);
-
-	Entity* pointLight2 = new Entity();
-	pointLight2->AddComponent<TransformComponent>()->Init(XMFLOAT3(-15.0f, -5.0f, 12), XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1));
-	pointLight2->AddComponent<LightPointComponent>()->Init(15.0f, 3.0f, XMFLOAT3(1.0, 0.8, 0.0), XMFLOAT3(1, 0.8, 0.0), 80.0f, 0.0f, 0.6f, 0.1f);
-
-	Entity* pointLight3 = new Entity();
-	pointLight3->AddComponent<TransformComponent>()->Init(XMFLOAT3(5.0f, -4.0f, 12), XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1));
-	pointLight3->AddComponent<LightPointComponent>()->Init(10.0f, 5.0f, XMFLOAT3(0.5, 2.0, 0.5), XMFLOAT3(0.5, 2.0, 0.5), 80.0f, 0.0f, 1.0f, 0.1f);
-
-	Entity* pointLight4 = new Entity();
-	pointLight4->AddComponent<TransformComponent>()->Init(XMFLOAT3(15.0f, -3.0f, 10), XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1));
-	pointLight4->AddComponent<LightPointComponent>()->Init(10.0f, 5.0f, XMFLOAT3(0.0, 1.0, 1.0), XMFLOAT3(0, 1.0, 1.0), 80.0f, 0.0f, 1.0f, 0.1f);
-
-	Entity* pointLight5 = new Entity();
-	pointLight5->AddComponent<TransformComponent>()->Init(XMFLOAT3(15.0f, -3.0f, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1));
-	pointLight5->AddComponent<LightPointComponent>()->Init(15.0f, 5.0f, XMFLOAT3(1.0, 0.0, 1.0), XMFLOAT3(1, 0.0, 1.0), 80.0f, 0.0f, 1.0f, 0.01f);
-
-	
+		
 	bool b = false;
-	for(int i =0; i < 8; i ++)
+	for(int i =0; i < 12; i ++)
 	{
 		for(int y =0; y< 8; y++)
 		{
@@ -160,11 +139,11 @@ void Framework::Start()
 			XMFLOAT3 color = XMFLOAT3(GetRandomFloat(0, 2), GetRandomFloat(0, 2), GetRandomFloat(0, 2));
 
 			Entity* pointLight6 = new Entity();
-			pointLight6->AddComponent<TransformComponent>()->Init(XMFLOAT3(-15.0f + (y * 6), height, 10 - (i *5)), XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1));
+			pointLight6->AddComponent<TransformComponent>()->Init(XMFLOAT3(-15.0f + (y * 6), height, 30 - (i *5)), XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1));
 			pointLight6->AddComponent<LightPointComponent>()->Init(8.0f, 5.0f, color, color, 80.0f, 0.0f, 0.0f, 1.0f);
 		}
 		b = !b;
-	}*/
+	}
 
 #ifdef _DEBUG
 	_debugStats = new DebugStats();
