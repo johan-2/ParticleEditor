@@ -343,7 +343,7 @@ void ShaderManager::RenderGeometry(const std::vector<Mesh*>& meshes)
 
 	CameraComponent* camera = CameraManager::GetInstance().GetCurrentCameraGame();
 
-	//render with alpha blending	
+	//render with no alpha blending	
 	DXM.SetBlendState(BLEND_STATE::BLEND_OPAQUE);
 
 	// set shaders			
@@ -351,7 +351,7 @@ void ShaderManager::RenderGeometry(const std::vector<Mesh*>& meshes)
 	devCon->PSSetShader(_pixelGeometryShader, NULL, 0);
 
 	// get and transpose camera matrices
-	XMFLOAT4X4 viewMatrix = camera->GetViewMatrix();
+	XMFLOAT4X4 viewMatrix       = camera->GetViewMatrix();
 	XMFLOAT4X4 projectionMatrix = camera->GetProjectionMatrix();
 
 	XMStoreFloat4x4(&viewMatrix, XMMatrixTranspose(XMLoadFloat4x4(&viewMatrix)));
@@ -392,7 +392,7 @@ void ShaderManager::RenderLights(GBuffer*& gBuffer)
 	DXM.SetDepthStencilState(DEPTH_STATE::MASKED_LIGHTNING);
 
 	// get camera 
-	CameraComponent* camera = CameraManager::GetInstance().GetCurrentCameraGame();
+	CameraComponent* camera      = CameraManager::GetInstance().GetCurrentCameraGame();
 	CameraComponent* cameraLight = CameraManager::GetInstance().GetCurrentCameraDepthMap();
 
 	// set shaders			
@@ -463,7 +463,7 @@ void ShaderManager::RenderLights(GBuffer*& gBuffer)
 
 	ID3D11ShaderResourceView* nullTextureArray[5] = { nullptr, nullptr, nullptr, nullptr, nullptr };
 	devCon->PSSetShaderResources(0, 5, nullTextureArray);
-	
+
 	DXM.SetDepthStencilState(DEPTH_STATE::ENABLED);
 }
 

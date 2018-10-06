@@ -59,7 +59,6 @@ Framework::Framework()
 		
 }
 
-
 Framework::~Framework()
 {
 	DXManager::GetInstance().Shutdown();
@@ -72,7 +71,6 @@ Framework::~Framework()
 #endif 
 
 }
-
 
 void Framework::Start()
 {
@@ -93,7 +91,7 @@ void Framework::Start()
 	CameraManager::GetInstance().SetCurrentCameraUI(cameraUI->GetComponent<CameraComponent>());
 
 	//set ambient light color	
-	LightManager::GetInstance().SetAmbientColor(XMFLOAT4(0.01f, 0.01f, 0.01f, 1.0f));
+	LightManager::GetInstance().SetAmbientColor(XMFLOAT4(0.3f, 0.3f, 0.3f, 1.0f));
 
 	// get transform of the camera that renders the depthmap
 	TransformComponent* dt = CameraManager::GetInstance().GetCurrentCameraDepthMap()->GetComponent<TransformComponent>();
@@ -101,49 +99,25 @@ void Framework::Start()
 	// create directional light and give it the same position/ rotation as depthrender camera
 	Entity* directionalLight = new Entity;
 	directionalLight->AddComponent<TransformComponent>()->Init(dt->GetPositionVal(), dt->GetRotationVal());
-	directionalLight->AddComponent<LightDirectionComponent>()->Init(XMFLOAT4(0.1f, 0.1f, 0.1f, 1), XMFLOAT4(1, 1, 1, 1), 80.0f);
-
-	//// test entities
-	for(int i =0; i < 8; i++)
-	{
-		for(int y =0; y < 8; y++)
-		{
-			Entity* box = new Entity();
-			box->AddComponent<TransformComponent>()->Init(XMFLOAT3(-14 + (y *4.5f), -3, 15 - (i *5)), XMFLOAT3(0, 0, 0), XMFLOAT3(2, 2, 2));
-			box->AddComponent<TransformationComponent>()->Init(XMFLOAT3(GetRandomFloat(-10,10), GetRandomFloat(-10, 10), GetRandomFloat(-10, 10)), GetRandomFloat(0.1f, 5.0f));
-			box->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::CUBE, DEFERRED | CAST_SHADOW_DIR, L"Textures/grey.dds", L"Textures/bricksNormal.dds", L"Textures/bricksSpecular.dds");
-		}		
-	}
+	directionalLight->AddComponent<LightDirectionComponent>()->Init(XMFLOAT4(0.8f, 0.8f, 0.8f, 1), XMFLOAT4(1, 1, 1, 1), 80.0f);
+	
+	Entity* box = new Entity();
+	box->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 4, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(2, 2, 2));
+	box->AddComponent<TransformationComponent>()->Init(XMFLOAT3(GetRandomFloat(-10,10), GetRandomFloat(-10, 10), GetRandomFloat(-10, 10)), GetRandomFloat(0.1f, 5.0f));
+	box->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::CUBE, DEFERRED | CAST_SHADOW_DIR, L"Textures/rock.dds", L"Textures/rockNormal.dds", L"Textures/rockSpecular.dds");
 	
 	Entity* floor = new Entity();
-	floor->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, -8, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(12, 1, 12));
-	floor->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::PLANE, DEFERRED | CAST_SHADOW_DIR, L"Textures/grey.dds", L"Textures/bricksNormal.dds", L"Textures/bricksSpecular.dds");
+	floor->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(12, 1, 12));
+	floor->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::PLANE, DEFERRED | CAST_SHADOW_DIR, L"Textures/bricks.dds", L"Textures/bricksNormal.dds", L"Textures/bricksSpecular.dds");
 
 	Entity* wall = new Entity();
-	wall->AddComponent<TransformComponent>()->Init(XMFLOAT3(-20, -6.5f, 12), XMFLOAT3(0, -80, 0), XMFLOAT3(10, 10, 3));
+	wall->AddComponent<TransformComponent>()->Init(XMFLOAT3(-20, 2, 12), XMFLOAT3(0, -80, 0), XMFLOAT3(10, 10, 3));
 	wall->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::CUBE, DEFERRED | CAST_SHADOW_DIR, L"Textures/crateDamp.dds", L"Textures/crateDampNormal.dds", L"Textures/crateDampSpecular.dds");
 
 	Entity* fire = new Entity();
-	fire->AddComponent<TransformComponent>()->Init(XMFLOAT3(-15.0f, -7.5f, 12), XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1));
+	fire->AddComponent<TransformComponent>()->Init(XMFLOAT3(-15.0f, 0.5f, 12), XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1));
 	fire->AddComponent<ParticleSystemComponent>()->Init("Particles/fire.json");
-		
-	bool b = false;
-	for(int i =0; i < 12; i ++)
-	{
-		for(int y =0; y< 8; y++)
-		{
-			float height = 0.0f;
-			if (b)
-				height = -4;
-
-			XMFLOAT3 color = XMFLOAT3(GetRandomFloat(0, 2), GetRandomFloat(0, 2), GetRandomFloat(0, 2));
-
-			Entity* pointLight6 = new Entity();
-			pointLight6->AddComponent<TransformComponent>()->Init(XMFLOAT3(-15.0f + (y * 6), height, 30 - (i *5)), XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1));
-			pointLight6->AddComponent<LightPointComponent>()->Init(8.0f, 5.0f, color, color, 80.0f, 0.0f, 0.0f, 1.0f);
-		}
-		b = !b;
-	}
+	fire->AddComponent<LightPointComponent>()->Init(6, 8, XMFLOAT3(0.8f, 0.4f, 0.0f), XMFLOAT3(0.8f, 0.4f, 0.0f), 80.0f, 0.0f, 1.0f, 0.1f);
 
 #ifdef _DEBUG
 	_debugStats = new DebugStats();
