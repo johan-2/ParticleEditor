@@ -1047,8 +1047,7 @@ void ShaderManager::UpdateConstantBuffer(void* data, unsigned int size, ID3D11Bu
 	D3D11_MAPPED_SUBRESOURCE subResource;
 	devCon->Map(buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &subResource);
 
-	destination = subResource.pData;
-	memcpy(destination, data, size);
+	memcpy(subResource.pData, data, size);
 
 	devCon->Unmap(buffer, 0);	
 }
