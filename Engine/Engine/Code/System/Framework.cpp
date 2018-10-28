@@ -79,7 +79,7 @@ void Framework::Start()
 
 	// create game camera
 	Entity* cameraGame = new Entity();
-	cameraGame->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0, -20), XMFLOAT3(0,0,0));
+	cameraGame->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 20, -40), XMFLOAT3(30,0,0));
 	cameraGame->AddComponent<CameraComponent>()->Init3D(70); 
 	cameraGame->AddComponent<FreeMoveComponent>()->init();
 	CameraManager::GetInstance().SetCurrentCameraGame(cameraGame->GetComponent<CameraComponent>());
@@ -118,6 +118,10 @@ void Framework::Start()
 	fire->AddComponent<TransformComponent>()->Init(XMFLOAT3(-15.0f, 0.5f, 12), XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1));
 	fire->AddComponent<ParticleSystemComponent>()->Init("Particles/fire.json");
 	fire->AddComponent<LightPointComponent>()->Init(6, 8, XMFLOAT3(0.8f, 0.4f, 0.0f), XMFLOAT3(0.8f, 0.4f, 0.0f), 80.0f, 0.0f, 1.0f, 0.1f);
+
+	Entity* explosion = new Entity();
+	explosion->AddComponent<TransformComponent>()->Init(XMFLOAT3(10, 5, 0));
+	explosion->AddComponent<ParticleSystemComponent>()->Init("Particles/explosion.json");
 
 #ifdef _DEBUG
 	_debugStats = new DebugStats();
