@@ -32,7 +32,7 @@ void Mesh::CreateBuffers(VertexData* verticesData, unsigned long* indicesData, u
 {
 	// save number of vertices/indices
 	_numVertices = numVertices;
-	_numIndices = numIndices;
+	_numIndices  = numIndices;
 
 	ID3D11Device* device = DXManager::GetInstance().GetDevice();
 

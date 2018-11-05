@@ -20,11 +20,11 @@ public:
 	
 	void Update();
 		
-	const XMFLOAT4X4& GetViewMatrix()       {  return _viewMatrix; }
+	const XMFLOAT4X4& GetViewMatrix()       { return _viewMatrix; }
 	const XMFLOAT4X4& GetProjectionMatrix() { return _projectionMatrix; }
 
-	ID3D11ShaderResourceView* GetRSV()         { return _renderTexture;}
-	void SetRSV(ID3D11ShaderResourceView* tex) { _renderTexture = tex; }
+	ID3D11ShaderResourceView* GetSRV()         { return _renderTexture;}
+	void SetSRV(ID3D11ShaderResourceView* tex) { _renderTexture = tex; }
 	
 private:
 	
@@ -34,7 +34,6 @@ private:
 	XMFLOAT4X4 _viewMatrix;
 	XMFLOAT4X4 _projectionMatrix;
 
-	ID3D11ShaderResourceView* _renderTexture;
-		
+	ID3D11ShaderResourceView* _renderTexture;		
 };
 

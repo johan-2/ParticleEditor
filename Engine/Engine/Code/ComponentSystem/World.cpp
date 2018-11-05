@@ -27,7 +27,9 @@ void World::Update()
 	// update all components
 	for (int i = 0; i < NUM_COMPONENT_TYPES; i++) 
 	{
-		for (int y = 0; y < _components[i].size(); y++)
+		unsigned int size = _components[i].size();
+
+		for (int y = 0; y < size; y++)
 			_components[i][y]->Update();
 	}
 
@@ -64,7 +66,9 @@ void World::RemoveEntity(Entity* entity)
 
 void World::DeleteComponent(COMPONENT_TYPE type, IComponent* component)
 {
-	for (int i = 0; i < _components[type].size(); i++)
+	unsigned int size = _components[type].size();
+
+	for (int i = 0; i < size; i++)
 	{
 		if (_components[type][i] == component)
 		{	// delete and remove component from vector
@@ -80,7 +84,9 @@ void World::DeleteComponent(COMPONENT_TYPE type, IComponent* component)
 
 void World::DeleteEntity(Entity* entity)
 {
-	for (int i = 0; i < _entities.size(); i++)
+	unsigned int size = _entities.size();
+
+	for (int i = 0; i < size; i++)
 	{	// delete and remove entity from vector
 		if (_entities[i] == entity)
 		{
@@ -99,7 +105,9 @@ void World::HandleDirtyComponents()
 	// delete and remove from list
 	for (int i = 0; i < NUM_COMPONENT_TYPES; i++)
 	{
-		for (int y = 0; y < _componentsToRemove[i].size(); y++)
+		unsigned int size = _componentsToRemove[i].size();
+
+		for (int y = 0; y < size; y++)
 			DeleteComponent((COMPONENT_TYPE)i, _componentsToRemove[i][y]);
 
 		_componentsToRemove[i].clear();
@@ -110,7 +118,9 @@ void World::HandleDirtyComponents()
 void World::HandleDirtyEntities()
 {
 	// delete and remove from list
-	for (int i = 0; i < _entitiesToRemove.size(); i++)
+	unsigned int size = _entitiesToRemove.size();
+
+	for (int i = 0; i < size; i++)
 		DeleteEntity(_entitiesToRemove[i]);
 
 	_entitiesToRemove.clear();
@@ -122,14 +132,18 @@ void World::Empty()
 	// delete all components and entitys in the world
 	for (int i = 0; i < NUM_COMPONENT_TYPES; i++) 
 	{
-		for (int y = 0; y < _components[i].size(); y++)
+		unsigned int size = _components[i].size();
+
+		for (int y = 0; y < size; y++)
 			delete _components[i][y];
 
 		_components[i].clear();
 		_componentsToRemove[i].clear();
 	}
 
-	for (int i = 0; i < _entities.size(); i++)
+	unsigned int size = _entities.size();
+
+	for (int i = 0; i < size; i++)
 		delete _entities[i];
 
 	_entities.clear();

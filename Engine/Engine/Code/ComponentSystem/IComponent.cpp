@@ -9,6 +9,5 @@ IComponent::IComponent(COMPONENT_TYPE type):
 }
 
 IComponent::~IComponent()
-{
-	
+{	
 }

@@ -4,13 +4,11 @@
 
 LightPointComponent::LightPointComponent() : IComponent(POINT_LIGHT_COMPONENT)
 {
-
 	LightManager::GetInstance().AddPointLight(this);
 }
 
 LightPointComponent::~LightPointComponent()
 {
-
 }
 
 void LightPointComponent::Init(float radius, float intensity, XMFLOAT3 color, XMFLOAT3 specularColor, float specularPower, float attConstant, float attLinear, float attExponential)
@@ -25,8 +23,6 @@ void LightPointComponent::Init(float radius, float intensity, XMFLOAT3 color, XM
 	_attExponential = attExponential;
 }
 
-
 void LightPointComponent::Update()
 {
-
 }

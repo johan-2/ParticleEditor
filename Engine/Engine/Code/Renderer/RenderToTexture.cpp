@@ -65,8 +65,7 @@ RenderToTexture::RenderToTexture(unsigned int width, unsigned int height, bool d
 		_viewport.TopLeftX = 0.0f;
 		_viewport.TopLeftY = 0.0f;
 
-		depthTex2D->Release();
-		
+		depthTex2D->Release();		
 	}
 	else 
 	{		
@@ -155,10 +154,8 @@ RenderToTexture::RenderToTexture(unsigned int width, unsigned int height, bool d
 		_viewport.TopLeftY = 0.0f;
 
 		depthTex2D->Release();
-		renderTex2D->Release();
-		
-	}
-	
+		renderTex2D->Release();		
+	}	
 }
 
 RenderToTexture::~RenderToTexture()
@@ -172,7 +169,6 @@ RenderToTexture::~RenderToTexture()
 	if (_renderTargetView)
 		_renderTargetView->Release();
 }
-
 
 void RenderToTexture::SetRendertarget()
 {
@@ -196,5 +192,4 @@ void RenderToTexture::ClearRenderTarget(float r, float g, float b, float a, bool
 
 	devCon->ClearRenderTargetView(_renderTargetView, color);
 	devCon->ClearDepthStencilView(_depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-
 }

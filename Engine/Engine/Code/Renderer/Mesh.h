@@ -3,7 +3,7 @@
 #include <d3d11.h>
 #include <DirectXMath.h>
 #include "TransformComponent.h"
-#include "..//..//Color32.h";
+#include "Color32.h";
 
 #define AMBIENT  1 << 0
 #define DIRECTIONAL  1 << 1
@@ -36,9 +36,10 @@ public:
 	void CreateBuffers(VertexData* verticesData, unsigned long* indicesData, unsigned int numVertices, unsigned int numIndices);
 	void UploadBuffers();
 
-	XMFLOAT4X4 GetWorldMatrix() { return _transform->GetWorldMatrix(); }
-	unsigned int GetNumIndices() { return _numIndices; }
+	XMFLOAT4X4  GetWorldMatrix()  { return _transform->GetWorldMatrix(); }
+	unsigned int GetNumIndices()  { return _numIndices; }
 	unsigned int GetNumVertices() { return _numVertices; }
+
 	ID3D11ShaderResourceView** GetTextureArray() { return _textures; }
 
 	unsigned int GetFlags() { return _FLAGS; }
@@ -49,7 +50,7 @@ public:
 	XMFLOAT3 GetPosition() { return _transform->GetPositionVal(); }
 
 	float _distance;
-	
+
 private:
 	
 	void AddRemoveToRenderer(bool add);

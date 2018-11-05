@@ -3,7 +3,6 @@
 
 LightDirectionComponent::LightDirectionComponent() : IComponent(COMPONENT_TYPE::DIR_LIGHT_COMPONENT)
 {
-	
 }
 
 LightDirectionComponent::~LightDirectionComponent()
@@ -23,5 +22,4 @@ void LightDirectionComponent::Init(XMFLOAT4 lightColor, XMFLOAT4 specularColor, 
 
 void LightDirectionComponent::Update()
 {
-
 }

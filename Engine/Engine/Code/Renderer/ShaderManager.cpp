@@ -19,71 +19,17 @@ ShaderManager& ShaderManager::GetInstance()
 		_instance = new ShaderManager;
 
 	return *_instance;
-
 }
 
 ShaderManager::ShaderManager()
 {
-	_vertexDirectionalShader = nullptr;
-	_pixelDirectionalShader = nullptr;
-	_inputlayout3D = nullptr;	
-	// initialize all missing things
 }
 
 ShaderManager::~ShaderManager()
 {
 }
 
-void ShaderManager::Initialize()
-{	
-	CreateShaders();		
-}
-
-void ShaderManager::Shutdown() 
-{
-	if (_inputlayout3D)
-	{
-		_inputlayout3D->Release();
-		_inputlayout3D = 0;
-	}
-	if (_inputlayout2D)
-	{
-		_inputlayout2D->Release();
-		_inputlayout2D = 0;
-	}
-	if (_pixelDirectionalShader)
-	{
-		_pixelDirectionalShader->Release();
-		_pixelDirectionalShader = 0;
-	}
-	if (_vertexDirectionalShader)
-	{
-		_vertexDirectionalShader->Release();
-		_vertexDirectionalShader = 0;
-	}
-	if (_pixelAmbientShader)
-	{
-		_pixelAmbientShader->Release();
-		_pixelAmbientShader = 0;
-	}
-	if (_vertexAmbientShader)
-	{
-		_vertexAmbientShader->Release();
-		_vertexAmbientShader = 0;
-	}
-	if (_pixelSpriteShader)
-	{
-		_pixelSpriteShader->Release();
-		_pixelSpriteShader = 0;
-	}
-	if (_vertexSpriteShader)
-	{
-		_vertexSpriteShader->Release();
-		_vertexSpriteShader = 0;
-	}
-}
-
-void ShaderManager::CreateShaders() 
+void ShaderManager::Initialize() 
 {
 	HRESULT result;
 
@@ -194,7 +140,6 @@ void ShaderManager::CreateShaders()
 		{ "COLOR",    0, DXGI_FORMAT_R8G8B8A8_UNORM, 0, (size_t)(&((ImDrawVert*)0)->col), D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
 			
-
 	// create the inputLayout from the description and the vertexshaderbuffer
 	result = device->CreateInputLayout(inputLayout3D, 6, vertexShaderBufferGeometry->GetBufferPointer(), vertexShaderBufferGeometry->GetBufferSize(), &_inputlayout3D);
 	if (FAILED(result)) 
@@ -312,7 +257,8 @@ void ShaderManager::RenderDepth(const std::vector<Mesh*>& meshes)
 	XMStoreFloat4x4(&viewMatrix, XMMatrixTranspose(XMLoadFloat4x4(&viewMatrix)));
 	XMStoreFloat4x4(&projectionMatrix, XMMatrixTranspose(XMLoadFloat4x4(&projectionMatrix)));
 
-	for (int i = 0; i < meshes.size(); i++)
+	unsigned int size = meshes.size();
+	for (int i = 0; i < size; i++)
 	{
 		// get and transpose worldmatrix
 		XMFLOAT4X4 worldMatrix = meshes[i]->GetWorldMatrix();
@@ -358,7 +304,8 @@ void ShaderManager::RenderGeometry(const std::vector<Mesh*>& meshes)
 	XMStoreFloat4x4(&projectionMatrix, XMMatrixTranspose(XMLoadFloat4x4(&projectionMatrix)));
 
 	// stuff that need to be set per mesh
-	for (int i = 0; i < meshes.size(); i++)
+	unsigned int size = meshes.size();
+	for (int i = 0; i < size; i++)
 	{
 		// upload vertex and indexbuffers
 		meshes[i]->UploadBuffers();
@@ -409,7 +356,7 @@ void ShaderManager::RenderLights(GBuffer*& gBuffer)
 	ConstantDeferredPoint pointLightData[MAX_POINT_LIGHTS];
 	
 	// set the pointlight data
-	for (int i = 0; i< pointLights.size(); i++)
+	for (int i = 0; i < size; i++)
 	{
 		pointLightData[i].color          = pointLights[i]->GetLightColor();
 		pointLightData[i].intensity      = pointLights[i]->GetIntensity();
@@ -450,7 +397,7 @@ void ShaderManager::RenderLights(GBuffer*& gBuffer)
 
 	// set textures
 	ID3D11ShaderResourceView**& gBufferTextures = gBuffer->GetSrvArray();
-	ID3D11ShaderResourceView* depthMap = cameraLight->GetRSV();
+	ID3D11ShaderResourceView* depthMap = cameraLight->GetSRV();
 	ID3D11ShaderResourceView* textureArray[5] = { depthMap, gBufferTextures[0], gBufferTextures[1], gBufferTextures[2], gBufferTextures[3] };	
 	devCon->PSSetShaderResources(0, 5, textureArray);
 
@@ -506,7 +453,6 @@ void ShaderManager::RenderSkyBox(XMFLOAT4X4 worldMatrix)
 
 	DXM.SetDepthStencilState(DEPTH_STATE::ENABLED);
 	DXM.SetRasterizerState(RASTERIZER_STATE::BACKCULL);
-
 }
 
 void ShaderManager::RenderParticles(const std::vector<ParticleSystemComponent*>& emitters)
@@ -761,7 +707,7 @@ void ShaderManager::RenderDirectionalAlpha(Mesh*& mesh)
 	XMFLOAT3 cameraPos = camera->GetComponent<TransformComponent>()->GetPositionRef();
 
 	// render with additive blend state
-	DXM.SetBlendState(BLEND_STATE::BLEND_ADDITIVE);
+	DXM.SetBlendState(BLEND_STATE::BLEND_ALPHA);
 
 	// set shaders	
 	devCon->VSSetShader(_vertexDirectionalShader, NULL, 0);
@@ -854,7 +800,7 @@ void ShaderManager::RenderDirectionalShadowsAlpha(Mesh*& mesh)
 	// upload new light data to pixelshader		
 	UpdateConstantBuffer((void*)&pixelData, sizeof(ConstantDirectionalShadowPixel), _constantBufferPixel);
 
-	ID3D11ShaderResourceView* shadowMap = cameraLight->GetRSV();
+	ID3D11ShaderResourceView* shadowMap = cameraLight->GetSRV();
 
 	// get and transpose the world matrix for the mesh
 	XMFLOAT4X4 worldMatrix = mesh->GetWorldMatrix();
@@ -952,9 +898,7 @@ void ShaderManager::RenderPointAlpha(Mesh*& mesh)
 	//upload vertex and index buffers for this mesh
 	mesh->UploadBuffers();
 
-	// draw the mesh additivly for each light
 	devCon->DrawIndexed(mesh->GetNumIndices(), 0, 0);
-
 }
 
 void ShaderManager::RenderAmbientAlpha(Mesh*& mesh)

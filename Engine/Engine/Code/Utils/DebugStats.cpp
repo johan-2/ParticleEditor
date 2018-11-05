@@ -24,7 +24,7 @@ void DebugStats::Update()
 	ImGuiIO& io = ImGui::GetIO();
 
 	// get camera position
-	XMFLOAT3& camPos = CameraManager::GetInstance().GetCurrentCameraGame()->GetComponent<TransformComponent>()->GetPositionRef();
+	const XMFLOAT3& camPos = CameraManager::GetInstance().GetCurrentCameraGame()->GetComponent<TransformComponent>()->GetPositionRef();
 
 	// set properties of next window
 	ImGui::SetNextWindowBgAlpha(0.3f);

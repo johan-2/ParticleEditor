@@ -10,10 +10,8 @@ LightManager& LightManager::GetInstance()
 	return *_instance;
 }
 
-
 LightManager::LightManager()
-{
-	
+{	
 }
 
 LightManager::~LightManager()
@@ -36,7 +34,6 @@ void LightManager::AddPointLight(LightPointComponent* light)
 	light->GetParent()->RemoveEntity();
 	printf("Could not add light, alredy at maximum\n");
 }
-
 
 void LightManager::RemoveDirectionalLight()
 {

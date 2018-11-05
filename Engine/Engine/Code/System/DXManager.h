@@ -30,7 +30,6 @@ enum DEPTH_STATE
 
 class DXManager
 {
-
 public:
 	static DXManager& GetInstance();
 
@@ -39,8 +38,7 @@ public:
 
 	void Initialize(HWND hwnd,int screenWidth, int screenHeight, bool vsunc, bool fullscreen);
 	void ClearRenderTarget(float r, float g, float b, float a);
-	void PresentScene();
-	void Shutdown();
+	void PresentScene();	
 
 	void SetViewport(D3D11_VIEWPORT* viewport, bool setDefault = false);
 	void SetRenderTarget(ID3D11RenderTargetView* renderTarget, ID3D11DepthStencilView* depthStencil, bool setDefault = false, bool setDepthReadOnly = false);
@@ -103,19 +101,11 @@ private:
 
 	D3D11_VIEWPORT _viewport;
 
-
 	IDXGIOutput* _adapterOutput;
 	unsigned int _numerator;
 	unsigned int _denominator;
 	unsigned int _refreshrate;
 	unsigned int  _videoCardMemory;
 	char _videoCardDescriptiion[128];
-	
-	
-	
-
-
-
-
 };
 

@@ -29,7 +29,6 @@ Renderer& Renderer::GetInstance()
 
 Renderer::Renderer()
 {
-	
 }
 
 Renderer::~Renderer()
@@ -55,7 +54,7 @@ void Renderer::CreateDepthMap()
 	_cameraDepth->AddComponent<CameraComponent>()->Init2D(XMFLOAT2(orthoSize, orthoSize), XMFLOAT2(0.01f, 1000.0f));
 
 	// give camera a reference to the shaderResource in depthmap
-	_cameraDepth->GetComponent<CameraComponent>()->SetRSV(_depthMap->GetShaderResource());
+	_cameraDepth->GetComponent<CameraComponent>()->SetSRV(_depthMap->GetShaderResource());
 	CameraManager::GetInstance().SetCurrentCameraDepthMap(_cameraDepth->GetComponent<CameraComponent>());
 
 	// create gbuffer for deffered rendering
@@ -67,7 +66,7 @@ void Renderer::CreateDepthMap()
 	// create skybox
 	_skyBox = new SkyBox(L"Skyboxes/DarkCloudy.dds");
 
-	// create a quad that can render a preview of  the depthmap
+	// create quads that can render a preview of all render textures
 #ifdef _DEBUG
 	Entity* depthMapQuad = new Entity();
 	depthMapQuad->AddComponent<QuadComponent>()->Init(XMFLOAT2(SCREEN_WIDTH * 0.06f, SCREEN_HEIGHT * 0.1f), XMFLOAT2(SCREEN_WIDTH * 0.08f, SCREEN_WIDTH * 0.08f), L"");

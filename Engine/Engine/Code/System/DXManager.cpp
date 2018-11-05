@@ -15,59 +15,10 @@ DXManager& DXManager::GetInstance()
 
 DXManager::DXManager()
 {
-	_swapChain = 0;
-	_device = 0;
-	_devCon = 0;
-	_renderTargetView = 0;
-	_depthStencilEnabled = 0;
-	_depthStencilView = 0;
-	_rasterizerBackCull = 0;
-	_blendStateAlpha = 0;
-	_blendStateOpaque = 0;
-	_depthStencilDisabled = 0;
-	_blendStateAlpha = 0;
-	_rasterizerWireframe = 0;	
 }
 
 DXManager::~DXManager()
-{
-	
-}
-
-void DXManager::Shutdown() 
-{
-	if (_swapChain) 
-		_swapChain->SetFullscreenState(false, NULL);
-	
-	if (_device) 
-		_device->Release();
-	
-	if (_devCon) 
-		_devCon->Release();
-	
-	if (_renderTargetView) 
-		_renderTargetView->Release();		
-	
-	if (_depthStencilEnabled) 
-		_depthStencilEnabled->Release();
-	
-	if (_rasterizerBackCull) 
-		_rasterizerBackCull->Release();
-	
-	if (_blendStateAlpha) 
-		_blendStateAlpha->Release();
-	
-	if (_blendStateOpaque) 
-		_blendStateOpaque->Release();
-	
-	if (_depthStencilDisabled) 
-		_depthStencilDisabled->Release();
-
-	if (_blendStateAlpha)
-		_blendStateAlpha->Release();
-
-	if (_rasterizerWireframe)
-		_rasterizerWireframe->Release();	
+{	
 }
 
 void DXManager::ClearRenderTarget(float r, float g, float b, float a) 

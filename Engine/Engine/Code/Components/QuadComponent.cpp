@@ -6,10 +6,8 @@
 #include "SystemDefs.h"
 
 QuadComponent::QuadComponent() : IComponent(COMPONENT_TYPE::QUAD_COMPONENT)
-{			
-	
+{				
 }
-
 
 QuadComponent::~QuadComponent()
 {
@@ -24,7 +22,6 @@ QuadComponent::~QuadComponent()
 
 void QuadComponent::Init(XMFLOAT2 position, XMFLOAT2 size, wchar_t* texturePath, XMFLOAT4 color)
 {
-
 	_size = size;
 	_position = position;
 	_color = color;
@@ -35,9 +32,7 @@ void QuadComponent::Init(XMFLOAT2 position, XMFLOAT2 size, wchar_t* texturePath,
 	_texture = TexturePool::GetInstance().GetTexture(texturePath);
 
 	Renderer::GetInstance().AddQuadToUIRenderer(this);
-
 }
-
 
 void QuadComponent::Update()
 {

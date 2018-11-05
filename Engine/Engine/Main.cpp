@@ -5,7 +5,6 @@
 
 int main()
 {
-
 	Framework* framework = new Framework();
 
 	delete framework;
@@ -16,5 +15,4 @@ int main()
 	std::cin >> kk;
 
 	return 0;
-
 }

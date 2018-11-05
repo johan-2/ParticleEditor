@@ -7,7 +7,6 @@ using namespace DirectX;
 
 ModelComponent::ModelComponent() : IComponent(COMPONENT_TYPE::MODEL_COMPONENT)
 {
-
 }
 
 void ModelComponent::InitPrimitive(PRIMITIVE_TYPE primitive, unsigned int flags, wchar_t* diffuseMap , wchar_t* normalMap , wchar_t* specularMap )
@@ -16,14 +15,12 @@ void ModelComponent::InitPrimitive(PRIMITIVE_TYPE primitive, unsigned int flags,
 
 	switch (primitive)
 	{
-
 	case PRIMITIVE_TYPE::CUBE:
 		CrateCube();
 		break;
 	case PRIMITIVE_TYPE::PLANE:
 		CreatePlane();
 		break;
-
 	default:
 		break;
 	}
@@ -53,7 +50,6 @@ void ModelComponent::CrateCube()
 		12,13,14,14,13,15,
 		16,17,18,18,17,19,
 		20,21,22,22,21,23
-
 	};
 
 	vertices[0].position = XMFLOAT3(-0.5, 0.5, -0.5);

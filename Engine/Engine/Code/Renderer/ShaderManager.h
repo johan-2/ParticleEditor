@@ -27,15 +27,11 @@ public:
 
 	ShaderManager();
 	~ShaderManager();	
-
+		
 	void Initialize();
-	void Shutdown();
 	
-	void CreateShaders();
-	void ShutdownShaders();
-
-	void CreateVertexShader(LPCWSTR filePath, ID3D11VertexShader**, ID3D10Blob**);
-	void CreatePixelShader(LPCWSTR filePath, ID3D11PixelShader**, ID3D10Blob**);
+	void CreateVertexShader(LPCWSTR filePath,  ID3D11VertexShader**, ID3D10Blob**);
+	void CreatePixelShader( LPCWSTR filePath,  ID3D11PixelShader** , ID3D10Blob**);
 
 	// forward rendering for alpha meshes
 	void RenderAmbientAlpha(Mesh*& mesh);
@@ -66,37 +62,37 @@ private:
 	void UpdateConstantBuffer(void* data, unsigned int size, ID3D11Buffer*& buffer);
 
 	ID3D11VertexShader* _vertexDirectionalShader;
-	ID3D11PixelShader* _pixelDirectionalShader;
+	ID3D11PixelShader*  _pixelDirectionalShader;
 
 	ID3D11VertexShader* _vertexPointShader;
-	ID3D11PixelShader* _pixelPointShader;
+	ID3D11PixelShader*  _pixelPointShader;
 
 	ID3D11VertexShader* _vertexDirectionalShadowsShader;
-	ID3D11PixelShader* _pixelDirectionalShadowsShader;
+	ID3D11PixelShader*  _pixelDirectionalShadowsShader;
 
 	ID3D11VertexShader* _vertexAmbientShader;
-	ID3D11PixelShader* _pixelAmbientShader;	
+	ID3D11PixelShader*  _pixelAmbientShader;	
 
 	ID3D11VertexShader* _vertexSpriteShader;
-	ID3D11PixelShader* _pixelSpriteShader;
+	ID3D11PixelShader*  _pixelSpriteShader;
 	
 	ID3D11VertexShader* _vertexDepthShader;
-	ID3D11PixelShader* _pixelDepthShader;
+	ID3D11PixelShader*  _pixelDepthShader;
 
 	ID3D11VertexShader* _vertexSkyBoxShader;
-	ID3D11PixelShader* _pixelSkyBoxShader;
+	ID3D11PixelShader*  _pixelSkyBoxShader;
 
 	ID3D11VertexShader* _vertexParticleShader;
-	ID3D11PixelShader* _pixelParticleShader;
+	ID3D11PixelShader*  _pixelParticleShader;
 
 	ID3D11VertexShader* _vertexGUIShader;
-	ID3D11PixelShader* _pixelGUIShader;
+	ID3D11PixelShader*  _pixelGUIShader;
 
 	ID3D11VertexShader* _vertexGeometryShader;
-	ID3D11PixelShader* _pixelGeometryShader;
+	ID3D11PixelShader*  _pixelGeometryShader;
 
 	ID3D11VertexShader* _vertexLightShader;
-	ID3D11PixelShader* _pixelLightShader;
+	ID3D11PixelShader*  _pixelLightShader;
 
 	ID3D11InputLayout* _inputlayout3D;
 	ID3D11InputLayout* _inputlayout2D;
@@ -111,7 +107,6 @@ private:
 	ID3D11Buffer* _constantBufferDefAmbient;
 	ID3D11Buffer* _constantBufferDefDirectional;
 				
-	// sprite constants
 	struct ConstantQuadUIVertex
 	{		
 		XMFLOAT4X4 view;
@@ -122,37 +117,35 @@ private:
 		XMFLOAT4 color;
 	};
 
-	//ambient constants
 	struct ConstantAmbientVertex
 	{
 		XMFLOAT4X4 world;
 		XMFLOAT4X4 view;
 		XMFLOAT4X4 projection;
-		XMFLOAT2 uvOffset;
-		XMFLOAT2 pad;
+		XMFLOAT2   uvOffset;
+		XMFLOAT2   pad;
 	};
 	struct ConstantAmbientPixel
 	{
 		XMFLOAT4 color;
 	};
 	
-	// directional
 	struct ConstantDirectionalVertex
 	{
 		XMFLOAT4X4 world;
 		XMFLOAT4X4 view;
 		XMFLOAT4X4 projection;
-		XMFLOAT3 camPos;
-		float pad1;
-		XMFLOAT2 uvOffset;
-		XMFLOAT2 pad2;
+		XMFLOAT3   camPos;
+		float      pad1;
+		XMFLOAT2   uvOffset;
+		XMFLOAT2   pad2;
 	};
 	struct ConstantDirectionalPixel
 	{
 		XMFLOAT4 diffuseColor;
 		XMFLOAT4 specularColor;		
 		XMFLOAT3 lightDir;
-		float specularPower;		
+		float    specularPower;		
 	};
 
 	struct ConstantDirectionalShadowVertex
@@ -164,20 +157,18 @@ private:
 		XMFLOAT4X4 lightProjection;
 		
 		XMFLOAT3 camPos;
-		float pad1;
+		float    pad1;
 		XMFLOAT2 uvOffset;
-		XMFLOAT2 pad2;
-		
+		XMFLOAT2 pad2;	
 	};
 	struct ConstantDirectionalShadowPixel
 	{
 		XMFLOAT4 diffuseColor;
 		XMFLOAT4 specularColor;
 		XMFLOAT3 lightDir;
-		float specularPower;
+		float    specularPower;
 	};
 
-	//depth map constants
 	struct ConstantDepthVertex
 	{
 		XMFLOAT4X4 world;
@@ -210,7 +201,7 @@ private:
 		XMFLOAT4X4 projection;
 				
 		XMFLOAT3 camPos;	
-		float pad1;
+		float    pad1;
 		XMFLOAT2 uvOffset;
 		XMFLOAT2 pad2;
 	
@@ -219,16 +210,16 @@ private:
 	struct ConstantPointPixel
 	{
 		XMFLOAT3 lightPosition;
-		float radius;
+		float    radius;
 		XMFLOAT3 color;
-		float intensity;
+		float    intensity;
 		XMFLOAT3 specularColor;
-		float specularPower;
+		float    specularPower;
 
 		float attConstant;
 		float attLinear;
 		float attExponential;
-		int numLights;		
+		int   numLights;		
 	};
 
 	struct ConstantGeometryVertex
@@ -236,11 +227,10 @@ private:
 		XMFLOAT4X4 world;
 		XMFLOAT4X4 view;
 		XMFLOAT4X4 projection;
-		XMFLOAT2 uvOffset;
-		XMFLOAT2 pad;
+		XMFLOAT2   uvOffset;
+		XMFLOAT2   pad;
 	};
 	
-	// deferred structs
 	struct ConstantDeferredAmbient
 	{
 		XMFLOAT4 ambientColor;
@@ -250,25 +240,25 @@ private:
 	struct ConstantDeferredDirectional
 	{
 		XMFLOAT4X4 lightViewProj;
-		XMFLOAT4 lightColor;
-		XMFLOAT4 lightSpecularColor;
-		XMFLOAT3 lightDirection;
-		float lightSpecularpower;
+		XMFLOAT4   lightColor;
+		XMFLOAT4   lightSpecularColor;
+		XMFLOAT3   lightDirection;
+		float      lightSpecularpower;
 	};
 
 	struct ConstantDeferredPoint
 	{
 		XMFLOAT3 lightPosition;
-		float radius;
+		float    radius;
 		XMFLOAT3 color;
-		float intensity;
+		float    intensity;
 		XMFLOAT3 specularColor;
-		float specularPower;
+		float    specularPower;
 
 		float attConstant;
 		float attLinear;
 		float attExponential;
-		int numLights;
+		int   numLights;
 	};
 };
 

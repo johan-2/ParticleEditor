@@ -70,20 +70,20 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SolutionDir)Engine/Code;$(SolutionDir)Engine/Code/System;$(SolutionDir)Engine/Code/Utils;$(SolutionDir)Engine/Code/ComponentSystem;$(SolutionDir)Engine/Code/Components;$(SolutionDir)Engine/Code/Managers;$(SolutionDir)Engine/Code/imGUI;$(SolutionDir)Engine/Code/Input;$(SolutionDir)Engine/Code/rapidjson;$(SolutionDir)Engine/Code/Renderer;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Engine/Code;$(SolutionDir)Engine/Code/System;$(SolutionDir)Engine/Code/Utils;$(SolutionDir)Engine/Code/ComponentSystem;$(SolutionDir)Engine/Code/Components;$(SolutionDir)Engine/Code/Managers;$(SolutionDir)Engine/Code/imGUI;$(SolutionDir)Engine/Code/Input;$(SolutionDir)Engine/Code/rapidjson;$(SolutionDir)Engine/Code/Renderer;$(SolutionDir)Engine/Code/DataTypes;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)Engine</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)Engine/Code;$(SolutionDir)Engine/Code/System;$(SolutionDir)Engine/Code/Utils;$(SolutionDir)Engine/Code/ComponentSystem;$(SolutionDir)Engine/Code/Components;$(SolutionDir)Engine/Code/Managers;$(SolutionDir)Engine/Code/imGUI;$(SolutionDir)Engine/Code/Input;$(SolutionDir)Engine/Code/rapidjson;$(SolutionDir)Engine/Code/Renderer;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Engine/Code;$(SolutionDir)Engine/Code/System;$(SolutionDir)Engine/Code/Utils;$(SolutionDir)Engine/Code/ComponentSystem;$(SolutionDir)Engine/Code/Components;$(SolutionDir)Engine/Code/Managers;$(SolutionDir)Engine/Code/imGUI;$(SolutionDir)Engine/Code/Input;$(SolutionDir)Engine/Code/rapidjson;$(SolutionDir)Engine/Code/Renderer;$(SolutionDir)Engine/Code/DataTypes;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)Engine</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)Engine</OutDir>
-    <IncludePath>$(SolutionDir)Engine/Code;$(SolutionDir)Engine/Code/System;$(SolutionDir)Engine/Code/Utils;$(SolutionDir)Engine/Code/ComponentSystem;$(SolutionDir)Engine/Code/Components;$(SolutionDir)Engine/Code/Managers;$(SolutionDir)Engine/Code/imGUI;$(SolutionDir)Engine/Code/Input;$(SolutionDir)Engine/Code/rapidjson;$(SolutionDir)Engine/Code/Renderer;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Engine/Code;$(SolutionDir)Engine/Code/System;$(SolutionDir)Engine/Code/Utils;$(SolutionDir)Engine/Code/ComponentSystem;$(SolutionDir)Engine/Code/Components;$(SolutionDir)Engine/Code/Managers;$(SolutionDir)Engine/Code/imGUI;$(SolutionDir)Engine/Code/Input;$(SolutionDir)Engine/Code/rapidjson;$(SolutionDir)Engine/Code/Renderer;$(SolutionDir)Engine/Code/DataTypes;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)Engine</OutDir>
-    <IncludePath>$(SolutionDir)Engine/Code;$(SolutionDir)Engine/Code/System;$(SolutionDir)Engine/Code/Utils;$(SolutionDir)Engine/Code/ComponentSystem;$(SolutionDir)Engine/Code/Components;$(SolutionDir)Engine/Code/Managers;$(SolutionDir)Engine/Code/imGUI;$(SolutionDir)Engine/Code/Input;$(SolutionDir)Engine/Code/rapidjson;$(SolutionDir)Engine/Code/Renderer;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Engine/Code;$(SolutionDir)Engine/Code/System;$(SolutionDir)Engine/Code/Utils;$(SolutionDir)Engine/Code/ComponentSystem;$(SolutionDir)Engine/Code/Components;$(SolutionDir)Engine/Code/Managers;$(SolutionDir)Engine/Code/imGUI;$(SolutionDir)Engine/Code/Input;$(SolutionDir)Engine/Code/rapidjson;$(SolutionDir)Engine/Code/Renderer;$(SolutionDir)Engine/Code/DataTypes;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -150,9 +150,10 @@
     <ClCompile Include="Code\Components\ModelComponent.cpp" />
     <ClCompile Include="Code\Components\ParticleSystemComponent.cpp" />
     <ClCompile Include="Code\Components\QuadComponent.cpp" />
-    <ClCompile Include="Code\Components\TransformationComponent.cpp" />
+    <ClCompile Include="Code\Components\RotationComponent.cpp" />
     <ClCompile Include="Code\Components\TransformComponent.cpp" />
     <ClCompile Include="Code\Components\UVScrollComponent.cpp" />
+    <ClCompile Include="Code\DataTypes\Color32.cpp" />
     <ClCompile Include="Code\DDSTextureLoader\DDSTextureLoader.cpp" />
     <ClCompile Include="Code\ImGUI\imgui.cpp" />
     <ClCompile Include="Code\ImGUI\imgui_demo.cpp" />
@@ -174,7 +175,6 @@
     <ClCompile Include="Code\Utils\DebugStats.cpp" />
     <ClCompile Include="Code\Utils\TexturePool.cpp" />
     <ClCompile Include="Code\Utils\Time.cpp" />
-    <ClCompile Include="Color32.cpp" />
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -189,9 +189,10 @@
     <ClInclude Include="Code\Components\ModelComponent.h" />
     <ClInclude Include="Code\Components\ParticleSystemComponent.h" />
     <ClInclude Include="Code\Components\QuadComponent.h" />
-    <ClInclude Include="Code\Components\TransformationComponent.h" />
+    <ClInclude Include="Code\Components\RotationComponent.h" />
     <ClInclude Include="Code\Components\TransformComponent.h" />
     <ClInclude Include="Code\Components\UVScrollComponent.h" />
+    <ClInclude Include="Code\DataTypes\Color32.h" />
     <ClInclude Include="Code\DDSTextureLoader\DDSTextureLoader.h" />
     <ClInclude Include="Code\ImGUI\imconfig.h" />
     <ClInclude Include="Code\ImGUI\imgui.h" />
@@ -217,7 +218,6 @@
     <ClInclude Include="Code\Utils\SystemDefs.h" />
     <ClInclude Include="Code\Utils\TexturePool.h" />
     <ClInclude Include="Code\Utils\Time.h" />
-    <ClInclude Include="Color32.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -16,7 +16,7 @@
 #include "Mesh.h"
 #include "Entity.h"
 #include "FreeMoveComponent.h"
-#include "TransformationComponent.h"
+#include "RotationComponent.h"
 #include "UVScrollComponent.h"
 #include "CameraComponent.h"
 #include "QuadComponent.h"
@@ -29,7 +29,7 @@
 #include <algorithm>
 #include <random>
 #include <chrono>
-#include "../../Color32.h"
+#include "Color32.h"
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM Lparam);
 
@@ -55,15 +55,11 @@ Framework::Framework()
 
 	// start and run
 	Start();
-	Run();
-		
+	Run();	
 }
 
 Framework::~Framework()
 {
-	DXManager::GetInstance().Shutdown();
-	ShaderManager::GetInstance().Shutdown();
-	
 	UnregisterClass((LPCSTR)_applicationName.c_str(), _hInstance);	
 
 #ifdef _DEBUG
@@ -103,7 +99,7 @@ void Framework::Start()
 	
 	Entity* box = new Entity();
 	box->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 4, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(2, 2, 2));
-	box->AddComponent<TransformationComponent>()->Init(XMFLOAT3(GetRandomFloat(-10,10), GetRandomFloat(-10, 10), GetRandomFloat(-10, 10)), GetRandomFloat(0.1f, 5.0f));
+	box->AddComponent<RotationComponent>()->Init(XMFLOAT3(GetRandomFloat(-10,10), GetRandomFloat(-10, 10), GetRandomFloat(-10, 10)), GetRandomFloat(0.1f, 5.0f));
 	box->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::CUBE, DEFERRED | CAST_SHADOW_DIR, L"Textures/rock.dds", L"Textures/rockNormal.dds", L"Textures/rockSpecular.dds");
 	
 	Entity* floor = new Entity();
@@ -118,10 +114,6 @@ void Framework::Start()
 	fire->AddComponent<TransformComponent>()->Init(XMFLOAT3(-15.0f, 0.5f, 12), XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1));
 	fire->AddComponent<ParticleSystemComponent>()->Init("Particles/fire.json");
 	fire->AddComponent<LightPointComponent>()->Init(6, 8, XMFLOAT3(0.8f, 0.4f, 0.0f), XMFLOAT3(0.8f, 0.4f, 0.0f), 80.0f, 0.0f, 1.0f, 0.1f);
-
-	Entity* explosion = new Entity();
-	explosion->AddComponent<TransformComponent>()->Init(XMFLOAT3(10, 5, 0));
-	explosion->AddComponent<ParticleSystemComponent>()->Init("Particles/explosion.json");
 
 #ifdef _DEBUG
 	_debugStats = new DebugStats();
