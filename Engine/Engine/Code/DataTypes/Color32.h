@@ -1,10 +1,14 @@
 #pragma once
 #include <algorithm>
 
+// struct for a 32 bit color structure
+// keeps all channels in a 8 bit unsigned char
+// clamp all values to stay within the size limit
 struct Color32
 {
 public:
 
+	// predefined colors to use
 	static Color32 WHITE; 
 	static Color32 BLACK;
 	static Color32 RED;

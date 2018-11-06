@@ -1,5 +1,7 @@
 #pragma once
 
+// define all types of components
+// will be updated in the order they are defined
 enum COMPONENT_TYPE
 {
 	TRANSFORM_COMPONENT,

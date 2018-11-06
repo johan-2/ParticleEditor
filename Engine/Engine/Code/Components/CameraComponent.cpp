@@ -36,6 +36,7 @@ void CameraComponent::Update()
 	CalculateViewMatrix();	
 }
 
+// calculates the view matrix from the position, forward and up vectors
 void CameraComponent::CalculateViewMatrix() 
 {
 	XMMATRIX rotationMatrix =  XMMatrixIdentity();

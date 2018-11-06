@@ -5,14 +5,11 @@
 #include "CameraManager.h"
 #include "TransformComponent.h"
 #include "DXManager.h"
-#include <DirectXMath.h>
-
-using namespace DirectX;
+#include "HardwareProperties.h"
 
 DebugStats::DebugStats()
 {
 }
-
 
 DebugStats::~DebugStats()
 {
@@ -26,6 +23,9 @@ void DebugStats::Update()
 	// get camera position
 	const XMFLOAT3& camPos = CameraManager::GetInstance().GetCurrentCameraGame()->GetComponent<TransformComponent>()->GetPositionRef();
 
+	// get hardware info
+	const HardwareInfo& info = DXManager::GetInstance().GetHardwareProperties()->GetHardwareInfo();
+
 	// set properties of next window
 	ImGui::SetNextWindowBgAlpha(0.3f);
 	ImGui::SetNextWindowSize(ImVec2(SCREEN_WIDTH * 0.15f, SCREEN_HEIGHT * 0.1f));
@@ -38,7 +38,7 @@ void DebugStats::Update()
 	ImGui::TextColored(ImVec4(1,1,1,1),"FPS : %.2f", io.Framerate);
 	ImGui::TextColored(ImVec4(1, 1, 1, 1), "FrameTime : %.3f", 1000.0f / io.Framerate);
 	ImGui::TextColored(ImVec4(1, 1, 1, 1), "CAMERA POS : X %.2f Y %.2f Z %.2f", camPos.x, camPos.y, camPos.z);
-	ImGui::TextColored(ImVec4(1, 1, 1, 1), "GPU : %s", DXManager::GetInstance().GetGPUInfo());
+	ImGui::TextColored(ImVec4(1, 1, 1, 1), "GPU : %s", info.videoCardDescription);
 
 	// end rendering of this window
 	ImGui::End();

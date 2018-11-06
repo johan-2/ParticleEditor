@@ -56,7 +56,7 @@ private:
 													   
 		if (std::is_same<T, ModelComponent>::value)           { return MODEL_COMPONENT; }
 															   
-		if (std::is_same<T, RotationComponent>::value)  { return TRANSFORMATION_COMPONENT; }
+		if (std::is_same<T, RotationComponent>::value)        { return TRANSFORMATION_COMPONENT; }
 													   
 		if (std::is_same<T, FreeMoveComponent>::value)        { return FREE_MOVE_COMPONENT; }
 													   

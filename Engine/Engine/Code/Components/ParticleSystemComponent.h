@@ -3,6 +3,7 @@
 #include <DirectXMath.h>
 #include "IComponent.h"
 #include "DXManager.h"
+#include "DXBlendStates.h"
 
 using namespace DirectX;
 

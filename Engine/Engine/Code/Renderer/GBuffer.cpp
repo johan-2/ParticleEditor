@@ -18,7 +18,7 @@ void GBuffer::SetRenderTargets()
 {
 	ID3D11DeviceContext* devCon = DXManager::GetInstance().GetDeviceCon();
 	DXManager& dXM = DXManager::GetInstance();
-	ID3D11DepthStencilView*& depthStencil = DXManager::GetInstance().GetDeathStencilview();
+	ID3D11DepthStencilView*& depthStencil = DXManager::GetInstance().GetDefaultDepthStencilView();
 	
 	float clear[4] = { 0,0,0,1 };
 

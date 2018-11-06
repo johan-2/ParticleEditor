@@ -9,6 +9,9 @@
 #include "GuiManager.h"
 #include "GBuffer.h"
 #include <d3dcompiler.h>
+#include "DXBlendStates.h"
+#include "DXRasterizerStates.h"
+#include "DXDepthStencilStates.h"
 
 
 ShaderManager* ShaderManager::_instance = 0;
@@ -290,7 +293,7 @@ void ShaderManager::RenderGeometry(const std::vector<Mesh*>& meshes)
 	CameraComponent* camera = CameraManager::GetInstance().GetCurrentCameraGame();
 
 	//render with no alpha blending	
-	DXM.SetBlendState(BLEND_STATE::BLEND_OPAQUE);
+	DXM.BlendStates()->SetBlendState(BLEND_STATE::BLEND_OPAQUE);
 
 	// set shaders			
 	devCon->VSSetShader(_vertexGeometryShader, NULL, 0);
@@ -336,7 +339,7 @@ void ShaderManager::RenderLights(GBuffer*& gBuffer)
 	ID3D11DeviceContext* devCon = DXM.GetDeviceCon();
 
 	// render with mask so we dont preform lighting calculations on non geometry pixels
-	DXM.SetDepthStencilState(DEPTH_STATE::MASKED_LIGHTNING);
+	DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::MASKED_LIGHTNING);
 
 	// get camera 
 	CameraComponent* camera      = CameraManager::GetInstance().GetCurrentCameraGame();
@@ -411,7 +414,7 @@ void ShaderManager::RenderLights(GBuffer*& gBuffer)
 	ID3D11ShaderResourceView* nullTextureArray[5] = { nullptr, nullptr, nullptr, nullptr, nullptr };
 	devCon->PSSetShaderResources(0, 5, nullTextureArray);
 
-	DXM.SetDepthStencilState(DEPTH_STATE::ENABLED);
+	DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::ENABLED);
 }
 
 void ShaderManager::RenderSkyBox(XMFLOAT4X4 worldMatrix)
@@ -430,9 +433,9 @@ void ShaderManager::RenderSkyBox(XMFLOAT4X4 worldMatrix)
 	devCon->PSSetShader(_pixelSkyBoxShader, NULL, 0);
 
 	//render with alpha blending
-	DXM.SetBlendState(BLEND_STATE::BLEND_OPAQUE);
-	DXM.SetRasterizerState(RASTERIZER_STATE::NOCULL);
-	DXM.SetDepthStencilState(DEPTH_STATE::MASKED_SKYBOX);
+	DXM.BlendStates()->SetBlendState(BLEND_STATE::BLEND_OPAQUE);
+	DXM.RasterizerStates()->SetRasterizerState(RASTERIZER_STATE::NOCULL);
+	DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::MASKED_SKYBOX);
 
 	// get and transpose camera matrices
 	XMFLOAT4X4 viewMatrix = camera->GetViewMatrix();
@@ -451,8 +454,8 @@ void ShaderManager::RenderSkyBox(XMFLOAT4X4 worldMatrix)
 	// draw
 	devCon->DrawIndexed(36, 0, 0);
 
-	DXM.SetDepthStencilState(DEPTH_STATE::ENABLED);
-	DXM.SetRasterizerState(RASTERIZER_STATE::BACKCULL);
+	DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::ENABLED);
+	DXM.RasterizerStates()->SetRasterizerState(RASTERIZER_STATE::BACKCULL);
 }
 
 void ShaderManager::RenderParticles(const std::vector<ParticleSystemComponent*>& emitters)
@@ -466,7 +469,7 @@ void ShaderManager::RenderParticles(const std::vector<ParticleSystemComponent*>&
 
 	CameraComponent* camera = CameraManager::GetInstance().GetCurrentCameraGame();
 
-	DXM.SetDepthStencilState(DEPTH_STATE::READ_ONLY);
+	DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::READ_ONLY);
 
 	// set shaders			
 	devCon->VSSetShader(_vertexParticleShader, NULL, 0);
@@ -490,7 +493,7 @@ void ShaderManager::RenderParticles(const std::vector<ParticleSystemComponent*>&
 		{
 			// upload vertex and indexbuffers
 			emitters[i]->UploadBuffers(y);
-			DXM.SetBlendState(emitters[i]->GetBlendState(y));
+			DXM.BlendStates()->SetBlendState(emitters[i]->GetBlendState(y));
 
 			// set texture
 			ID3D11ShaderResourceView* texture = emitters[i]->GetTexture(y);
@@ -500,7 +503,7 @@ void ShaderManager::RenderParticles(const std::vector<ParticleSystemComponent*>&
 			devCon->DrawIndexedInstanced(6, emitters[i]->GetNumParticles(y), 0, 0, 0);
 		}
 	}
-	DXM.SetDepthStencilState(DEPTH_STATE::ENABLED);
+	DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::ENABLED);
 }
 
 void ShaderManager::RenderQuadUI(const std::vector<QuadComponent*>& quads)
@@ -516,8 +519,8 @@ void ShaderManager::RenderQuadUI(const std::vector<QuadComponent*>& quads)
 	devCon->PSSetShader(_pixelSpriteShader, NULL, 0);
 
 	//disable the zbuffer for the 2d rendering
-	DXM.SetBlendState(BLEND_STATE::BLEND_ALPHA);
-	DXM.SetDepthStencilState(DEPTH_STATE::DISABLED);
+	DXM.BlendStates()->SetBlendState(BLEND_STATE::BLEND_ALPHA);
+	DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::DISABLED);
 	
 	// get matrices 
 	XMFLOAT4X4 viewMatrix = CameraManager::GetInstance().GetCurrentCameraUI()->GetViewMatrix(); 
@@ -549,7 +552,7 @@ void ShaderManager::RenderQuadUI(const std::vector<QuadComponent*>& quads)
 	}
 		
 	// change back the z buffer
-	DXM.SetDepthStencilState(DEPTH_STATE::ENABLED);
+	DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::ENABLED);
 
 }
 
@@ -564,8 +567,8 @@ void ShaderManager::RenderGUI(ImDrawData* draw_data)
 	HRESULT result;
 
 	DXManager& DXM = DXManager::GetInstance();
-	DXM.SetBlendState(BLEND_STATE::BLEND_ALPHA);
-	DXM.SetDepthStencilState(DEPTH_STATE::DISABLED);
+	DXM.BlendStates()->SetBlendState(BLEND_STATE::BLEND_ALPHA);
+	DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::DISABLED);
 
 	// get current size of vertex and index buffers
 	D3D11_BUFFER_DESC currentSizevertex;
@@ -685,7 +688,7 @@ void ShaderManager::RenderGUI(ImDrawData* draw_data)
 		vtx_offset += cmd_list->VtxBuffer.Size;
 	}	
 
-	DXM.SetDepthStencilState(DEPTH_STATE::ENABLED);
+	DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::ENABLED);
 }
 
 void ShaderManager::RenderDirectionalAlpha(Mesh*& mesh)
@@ -707,7 +710,7 @@ void ShaderManager::RenderDirectionalAlpha(Mesh*& mesh)
 	XMFLOAT3 cameraPos = camera->GetComponent<TransformComponent>()->GetPositionRef();
 
 	// render with additive blend state
-	DXM.SetBlendState(BLEND_STATE::BLEND_ALPHA);
+	DXM.BlendStates()->SetBlendState(BLEND_STATE::BLEND_ALPHA);
 
 	// set shaders	
 	devCon->VSSetShader(_vertexDirectionalShader, NULL, 0);
@@ -772,7 +775,7 @@ void ShaderManager::RenderDirectionalShadowsAlpha(Mesh*& mesh)
 	XMFLOAT3 cameraPos = camera->GetComponent<TransformComponent>()->GetPositionRef();
 
 	// render with additive blend state
-	DXM.SetBlendState(BLEND_STATE::BLEND_ADDITIVE);
+	DXM.BlendStates()->SetBlendState(BLEND_STATE::BLEND_ADDITIVE);
 
 	// set shaders	
 	devCon->VSSetShader(_vertexDirectionalShadowsShader, NULL, 0);
@@ -849,7 +852,7 @@ void ShaderManager::RenderPointAlpha(Mesh*& mesh)
 	XMFLOAT3 cameraPos = camera->GetComponent<TransformComponent>()->GetPositionRef();
 
 	// render with additive blend state
-	DXM.SetBlendState(BLEND_STATE::BLEND_ADDITIVE);
+	DXM.BlendStates()->SetBlendState(BLEND_STATE::BLEND_ADDITIVE);
 
 	// set shaders	
 	devCon->VSSetShader(_vertexPointShader, NULL, 0);
@@ -914,7 +917,7 @@ void ShaderManager::RenderAmbientAlpha(Mesh*& mesh)
 	CameraComponent* camera = CameraManager::GetInstance().GetCurrentCameraGame();
 
 	//render with alpha blending	
-	DXM.SetBlendState(BLEND_STATE::BLEND_ALPHA);
+	DXM.BlendStates()->SetBlendState(BLEND_STATE::BLEND_ALPHA);
 
 	// set shaders			
 	devCon->VSSetShader(_vertexAmbientShader, NULL, 0);

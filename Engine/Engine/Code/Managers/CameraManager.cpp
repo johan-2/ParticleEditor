@@ -2,6 +2,7 @@
 
 CameraManager* CameraManager::_instance = 0;
 
+// get and/or initialize the static instance of this class
 CameraManager& CameraManager::GetInstance()
 {
 	if (_instance == 0)

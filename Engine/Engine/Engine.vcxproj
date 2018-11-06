@@ -170,8 +170,13 @@
     <ClCompile Include="Code\Renderer\ScreenQuad.cpp" />
     <ClCompile Include="Code\Renderer\ShaderManager.cpp" />
     <ClCompile Include="Code\Renderer\SkyBox.cpp" />
+    <ClCompile Include="Code\System\DXBlendStates.cpp" />
+    <ClCompile Include="Code\System\DXDepthStencilStates.cpp" />
     <ClCompile Include="Code\System\DXManager.cpp" />
+    <ClCompile Include="Code\System\DXRasterizerStates.cpp" />
+    <ClCompile Include="Code\System\DXSamplerStates.cpp" />
     <ClCompile Include="Code\System\Framework.cpp" />
+    <ClCompile Include="Code\System\HardwareProperties.cpp" />
     <ClCompile Include="Code\Utils\DebugStats.cpp" />
     <ClCompile Include="Code\Utils\TexturePool.cpp" />
     <ClCompile Include="Code\Utils\Time.cpp" />
@@ -212,8 +217,13 @@
     <ClInclude Include="Code\Renderer\ScreenQuad.h" />
     <ClInclude Include="Code\Renderer\ShaderManager.h" />
     <ClInclude Include="Code\Renderer\SkyBox.h" />
+    <ClInclude Include="Code\System\DXBlendStates.h" />
+    <ClInclude Include="Code\System\DXDepthStencilStates.h" />
     <ClInclude Include="Code\System\DXManager.h" />
+    <ClInclude Include="Code\System\DXRasterizerStates.h" />
+    <ClInclude Include="Code\System\DXSamplerStates.h" />
     <ClInclude Include="Code\System\Framework.h" />
+    <ClInclude Include="Code\System\HardwareProperties.h" />
     <ClInclude Include="Code\Utils\DebugStats.h" />
     <ClInclude Include="Code\Utils\SystemDefs.h" />
     <ClInclude Include="Code\Utils\TexturePool.h" />

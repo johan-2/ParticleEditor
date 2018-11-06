@@ -8,14 +8,17 @@ TransformComponent::~TransformComponent()
 {	
 }
 
+// inits the transform properties and builds the world matrix
 void TransformComponent::Init(XMFLOAT3 position, XMFLOAT3 rotation, XMFLOAT3 scale)
 {
 	_position = position;
 	_rotation = rotation;
-	_scale = scale;
+	_scale    = scale;
+
 	UpdateWorldMatrix();
 }
 
+// add value to position
 void TransformComponent::AddTranslation(XMFLOAT3& amount)
 {
 	XMFLOAT3 zeroVector(0, 0, 0);
@@ -24,10 +27,9 @@ void TransformComponent::AddTranslation(XMFLOAT3& amount)
 		return;
 
 	XMStoreFloat3(&_position, XMVectorAdd(XMLoadFloat3(&amount), XMLoadFloat3(&_position)));
-
-	XMStoreFloat4x4(&_positionMatrix, XMMatrixTranslationFromVector(XMLoadFloat3(&_position)));
 }
 
+// add value to rotation
 void TransformComponent::AddRotation(XMFLOAT3& amount)
 {
 	XMFLOAT3 zeroVector(0, 0, 0);
@@ -36,10 +38,9 @@ void TransformComponent::AddRotation(XMFLOAT3& amount)
 		return;
 
 	XMStoreFloat3(&_rotation, XMVectorAdd(XMLoadFloat3(&amount), XMLoadFloat3(&_rotation)));
-
-	XMStoreFloat4x4(&_rotationMatrix, XMMatrixTranslationFromVector(XMLoadFloat3(&_rotation)));
 }
 
+// add value to scale
 void TransformComponent::AddScale(XMFLOAT3& amount)
 {
 	XMFLOAT3 zeroVector(0, 0, 0);
@@ -48,10 +49,9 @@ void TransformComponent::AddScale(XMFLOAT3& amount)
 		return;
 
 	XMStoreFloat3(&_scale, XMVectorAdd(XMLoadFloat3(&amount), XMLoadFloat3(&_scale)));
-
-	XMStoreFloat4x4(&_scaleMatrix, XMMatrixTranslationFromVector(XMLoadFloat3(&_scale)));
 }
 
+// calculate all matrices for position, scale, rotation and mutliply them all together
 void TransformComponent::UpdateWorldMatrix() 
 {		
 	XMStoreFloat4x4(&_positionMatrix, XMMatrixTranslationFromVector(XMLoadFloat3(&_position)));
@@ -62,43 +62,44 @@ void TransformComponent::UpdateWorldMatrix()
 	XMStoreFloat4x4(&_worldMatrix, XMMatrixMultiply(XMLoadFloat4x4(&_worldMatrix), XMLoadFloat4x4(&_positionMatrix)));
 }
 
-XMFLOAT3 TransformComponent::CalculateAxises(Axis axis, XMFLOAT3& forward, XMFLOAT3& right, XMFLOAT3& up)
+// get our forward orientation
+XMFLOAT3 TransformComponent::GetForward()
+{
+	XMFLOAT3 f = XMFLOAT3(0.0f, 0.0f, 1.0f);
+	XMStoreFloat3(&f, XMVector3Normalize(XMVector3TransformCoord(XMLoadFloat3(&f), XMLoadFloat4x4(&_rotationMatrix))));
+
+	return f;
+}
+
+// get our right orientation
+XMFLOAT3 TransformComponent::GetRight()
+{
+	XMFLOAT3 r = XMFLOAT3(1.0f, 0.0f, 0.0f);
+	XMStoreFloat3(&r, XMVector3Normalize(XMVector3TransformCoord(XMLoadFloat3(&r), XMLoadFloat4x4(&_rotationMatrix))));
+
+	return r;
+}
+
+// get our up orientation
+XMFLOAT3 TransformComponent::GetUp()
+{
+	XMFLOAT3 u = XMFLOAT3(0.0f, 1.0f, 0.0f);
+	XMStoreFloat3(&u, XMVector3Normalize(XMVector3TransformCoord(XMLoadFloat3(&u), XMLoadFloat4x4(&_rotationMatrix))));
+
+	return u;
+}
+
+// set all orientations by the references passed in
+void TransformComponent::GetAllAxis(XMFLOAT3& forward, XMFLOAT3& right, XMFLOAT3& up)
 {
 	XMFLOAT3 f = XMFLOAT3(0.0f, 0.0f, 1.0f);
 	XMFLOAT3 r = XMFLOAT3(1.0f, 0.0f, 0.0f);
 	XMFLOAT3 u = XMFLOAT3(0.0f, 1.0f, 0.0f);
 
-	XMStoreFloat3(&f, XMVector3TransformCoord(XMLoadFloat3(&f), XMLoadFloat4x4(&_rotationMatrix)));
-	XMStoreFloat3(&r, XMVector3TransformCoord(XMLoadFloat3(&r), XMLoadFloat4x4(&_rotationMatrix)));
-	XMStoreFloat3(&u, XMVector3TransformCoord(XMLoadFloat3(&u), XMLoadFloat4x4(&_rotationMatrix)));
-
-	switch (axis)
-	{
-	case TransformComponent::FORWARD:
-
-		XMStoreFloat3(&f, XMVector3Normalize(XMLoadFloat3(&f)));
-		return f;
-		break;
-	case TransformComponent::RIGHT:
-		XMStoreFloat3(&r, XMVector3Normalize(XMLoadFloat3(&r)));
-		return r;
-		break;
-	case TransformComponent::UP:
-		XMStoreFloat3(&u, XMVector3Normalize(XMLoadFloat3(&u)));
-		return u;
-		break;	
-	case TransformComponent::ALL:
-		XMStoreFloat3(&forward, XMVector3Normalize(XMLoadFloat3(&f)));
-		XMStoreFloat3(&right, XMVector3Normalize(XMLoadFloat3(&r)));
-		XMStoreFloat3(&up, XMVector3Normalize(XMLoadFloat3(&u)));
-		break;
-	}
-
-	return XMFLOAT3(0,0,0);
+	XMStoreFloat3(&forward, XMVector3Normalize(XMVector3TransformCoord(XMLoadFloat3(&f), XMLoadFloat4x4(&_rotationMatrix))));
+	XMStoreFloat3(&right,   XMVector3Normalize(XMVector3TransformCoord(XMLoadFloat3(&r), XMLoadFloat4x4(&_rotationMatrix))));
+	XMStoreFloat3(&up,      XMVector3Normalize(XMVector3TransformCoord(XMLoadFloat3(&u), XMLoadFloat4x4(&_rotationMatrix))));
 }
 
-void TransformComponent::Update() 
-{
-
-}
+void TransformComponent::Update(){}
 
