@@ -27,8 +27,8 @@ public:
 
 		// we asume that T inherits from IComponent (witch we know) 
 		// so we can call SetParent 
+		component->SetParent(this);
 		_components.push_back(component);
-		_components.back()->SetParent(this);
 		
 		return component;
 	}
