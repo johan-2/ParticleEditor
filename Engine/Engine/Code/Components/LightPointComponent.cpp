@@ -11,15 +11,16 @@ LightPointComponent::~LightPointComponent()
 {
 }
 
+// set light properties
 void LightPointComponent::Init(float radius, float intensity, XMFLOAT3 color, XMFLOAT3 specularColor, float specularPower, float attConstant, float attLinear, float attExponential)
 {
-	_radius = radius;
-	_intensity = intensity;
-	_color = color;
-	_specularColor = specularColor;
-	_specularPower = specularPower;
-	_attConstant = attConstant;
-	_attLinear = attLinear;
+	_radius         = radius;
+	_intensity      = intensity;
+	_color          = color;
+	_specularColor  = specularColor;
+	_specularPower  = specularPower;
+	_attConstant    = attConstant;
+	_attLinear      = attLinear;
 	_attExponential = attExponential;
 }
 

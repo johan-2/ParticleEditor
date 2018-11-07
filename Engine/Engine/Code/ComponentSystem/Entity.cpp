@@ -1,41 +1,30 @@
 #include "Entity.h"
 #include "IComponent.h"
 #include "World.h"
+#include "ComponentHelpers.h"
 
-
+// adds this entity to the world on creation
 Entity::Entity()
 {
 	World::GetInstance().AddEntity(this);
 }
 
-
 Entity::~Entity()
 {
-	
 }
 
-void Entity::RemoveComponent(IComponent* component) 
+// removes a component from the component list in entity
+// aswell as in the component list in world
+void Entity::RemoveComponent(IComponent*& component) 
 {
-	for (int i = 0; i < _components.size(); i++)
-	{
-		if (_components[i] == component)
-		{
-			// remove component from vector, memory is deleted in WORLD
-			IComponent* temp = _components.back();			
-			_components.back() = _components[i];
-			_components[i] = temp;
-			
-			World::GetInstance().RemoveComponent(_components.back()->Type(), _components.back());
-			_components.pop_back();
-
-			break;
-		}
-	}
+	RemoveComponentFromList(_components, component);
+	World::GetInstance().RemoveComponent(component->Type(), component);
 }
 
+// removes all components owned by this entity from world
+// aswell as removing the entity from entity list in world
 void Entity::RemoveEntity() 
 {
-	// memory will be deleted in WORLD
 	World& world = World::GetInstance();
 
 	for (int i = 0; i < _components.size(); i++)

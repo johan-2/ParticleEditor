@@ -30,24 +30,26 @@
 #include <random>
 #include <chrono>
 #include "Color32.h"
+#include "Window.h"
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM Lparam);
 
 Framework::Framework()
 {
-	// create window
-	CreateWindowDx11("Engine", 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	// create the window for the application
+	_window = new Window("Engine", 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, WndProc);
 	
 	// init all directX stuff
-	DXManager::GetInstance().Initialize(_window, SCREEN_WIDTH, SCREEN_HEIGHT, V_SYNC, FULLSCREEN);
+	DXManager::GetInstance().Initialize(_window->GetHWND(), SCREEN_WIDTH, SCREEN_HEIGHT, V_SYNC, FULLSCREEN);
 
-	GuiManager::GetInstance().Initialize(_window);
+	// initialize dear im gui
+	GuiManager::GetInstance().Initialize(_window->GetHWND());
 
 	// load and create our shader objects	
 	ShaderManager::GetInstance().Initialize();
 
 	// initialize directinput
-	Input::GetInstance().InitializeInputDevices(_hInstance, _window);
+	Input::GetInstance().InitializeInputDevices(_window->GetHINSTANCE(), _window->GetHWND());
 
 	// start timers
 	Time::GetInstance();
@@ -59,12 +61,11 @@ Framework::Framework()
 
 Framework::~Framework()
 {
-	UnregisterClass((LPCSTR)_applicationName.c_str(), _hInstance);	
+	delete _window;
 
 #ifdef _DEBUG
 	delete _debugStats;
 #endif 
-
 }
 
 void Framework::Start()
@@ -76,7 +77,7 @@ void Framework::Start()
 	Entity* cameraGame = new Entity();
 	cameraGame->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 20, -40), XMFLOAT3(30,0,0));
 	cameraGame->AddComponent<CameraComponent>()->Init3D(70); 
-	cameraGame->AddComponent<FreeMoveComponent>()->init();
+	cameraGame->AddComponent<FreeMoveComponent>()->init(20.0f, 0.25f);
 	CameraManager::GetInstance().SetCurrentCameraGame(cameraGame->GetComponent<CameraComponent>());
 
 	// create UIcamera
@@ -160,7 +161,7 @@ void Framework::Run()
 		if (Input::GetInstance().IskeyPressed(DIK_ESCAPE))
 		{
 			DXManager::GetInstance().SetFullscreen(false);
-			DestroyWindow(_window);
+			DestroyWindow(_window->GetHWND());
 		}
 
 		// update everything
@@ -169,7 +170,7 @@ void Framework::Run()
 		DXManager& DXM = DXManager::GetInstance();
 
 		// clear rendertarget from last frame
-		DXM.ClearRenderTarget(0.5, 0.5, 0.9, 1);
+		DXM.ClearRenderTarget(0, 0, 0, 1);
 
 		// setup ImGui buffers before rendering
 		ImGui::Render();
@@ -181,66 +182,6 @@ void Framework::Run()
 		DXM.PresentScene();
 	}
 }
-
-void Framework::CreateWindowDx11(char* title, int x, int y, int width, int height)
-{
-	_applicationName = title;
-	HWND hwnd;
-	WNDCLASSEX wc;
-	
-	_hInstance = GetModuleHandle(NULL);
-
-	ZeroMemory(&wc, sizeof(WNDCLASSEX));
-
-	// set up window class with default settings
-	wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
-	wc.lpfnWndProc = WndProc; // tell witch function that will be used when receving evnts from windows
-	wc.cbClsExtra = 0;
-	wc.cbWndExtra = 0;
-	wc.hInstance = _hInstance;
-	wc.hIcon = LoadIcon(NULL, IDI_WINLOGO);
-	wc.hIconSm = wc.hIcon;
-	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
-	wc.lpszMenuName = NULL;
-	wc.lpszClassName = title;
-	wc.cbSize = sizeof(WNDCLASSEX);
-
-	if (!RegisterClassEx(&wc))
-	{
-		MessageBox(NULL, "failed to register windowClass", "ERROR", MB_OK);
-		return;
-	}
-	// create the window 	
-	int nStyle = WS_OVERLAPPED | WS_SYSMENU | WS_VISIBLE | WS_CAPTION | WS_MINIMIZEBOX;
-	hwnd = CreateWindowEx(WS_EX_APPWINDOW,
-		title,
-		title,
-		nStyle,
-		x,
-		y,
-		width,
-		height,
-		NULL,
-		NULL,
-		_hInstance,
-		NULL);
-
-	// if window is null something went wrong and we return false
-	if (hwnd == NULL)
-	{
-		MessageBox(NULL, "Create window failed", "ERROR", MB_OK);
-		PostQuitMessage(0);
-		return;
-	}
-
-	// set focus on window
-	ShowWindow(hwnd, SW_SHOW);
-	SetForegroundWindow(hwnd);
-	SetFocus(hwnd);
-
-	_window = hwnd;
-}
-
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM Lparam)
 {

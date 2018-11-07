@@ -16,25 +16,30 @@ public:
 
 	void Update();
 
-	const XMFLOAT3& GetLightColor() { return _color; }
+	// get colors
+	const XMFLOAT3& GetLightColor()    { return _color; }
 	const XMFLOAT3& GetSpecularColor() { return _specularColor; }
-	const float& GetIntensity() { return _intensity; }
-	const float& GetSpecularPower() { return _specularPower; }
-	const float& GetRadius() { return _radius; }
-	const float& GetAttConstant() { return _attConstant; }
-	const float& GetAttLinear() { return _attLinear; }
-	const float& GetAttExponential() { return _attExponential; }
+
+	// get light properties
+	const float&  GetIntensity()      { return _intensity; }
+	const float&  GetSpecularPower()  { return _specularPower; }
+	const float&  GetRadius()         { return _radius; }
+	const float&  GetAttConstant()    { return _attConstant; }
+	const float&  GetAttLinear()      { return _attLinear; }
+	const float&  GetAttExponential() { return _attExponential; }
 
 private:
 
-	float _intensity;
-	float _radius;
+	// colors
 	XMFLOAT3 _color;
 	XMFLOAT3 _specularColor;
+
+	// properties
+	float _intensity;
+	float _radius;
 	float _specularPower;
 	float _attConstant;
 	float _attLinear;
-	float _attExponential;
-	
+	float _attExponential;	
 };
 

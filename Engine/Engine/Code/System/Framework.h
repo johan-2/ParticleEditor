@@ -1,10 +1,9 @@
 #pragma once
-
 #include <Windows.h>
 #include <string>
 
-class Entity;
 class DebugStats;
+class Window;
 
 class Framework
 {
@@ -14,19 +13,17 @@ public:
 
 private:
 
+	// functions that make up our application loop
 	void Start();
 	void Run();
 	void Update();
 	void Render();
 
-	void CreateWindowDx11(char* title, int x, int y, int width, int height);
-
+	// helper for generating a random float
 	float GetRandomFloat(float min, float max);
 
-	HINSTANCE _hInstance;
-	HWND _window;
-	std::string _applicationName;
-
+	// window and debug stats
+	Window*     _window;
 	DebugStats* _debugStats;
 };
 

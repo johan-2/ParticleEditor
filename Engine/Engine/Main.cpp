@@ -1,7 +1,5 @@
 #include <iostream>
-
 #include "Framework.h";
-
 
 int main()
 {

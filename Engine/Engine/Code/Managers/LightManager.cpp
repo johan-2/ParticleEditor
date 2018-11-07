@@ -18,11 +18,13 @@ LightManager::~LightManager()
 {
 }
 
+// set the pointer to the directional light to use
 void LightManager::SetDirectionalLight(LightDirectionComponent* light)
 {
 	_directionalLight = light;
 }
 
+// add a new point light
 void LightManager::AddPointLight(LightPointComponent* light)
 {
 	if(_pointLights.size() < MAX_POINT_LIGHTS)
@@ -30,7 +32,9 @@ void LightManager::AddPointLight(LightPointComponent* light)
 		_pointLights.push_back(light);
 		return;
 	}
-	// delete light if we have max lights alredy
+
+	// delete entity and all its components if we have more lights then
+	// our shader is set to be able to recive in one drawcall
 	light->GetParent()->RemoveEntity();
 	printf("Could not add light, alredy at maximum\n");
 }

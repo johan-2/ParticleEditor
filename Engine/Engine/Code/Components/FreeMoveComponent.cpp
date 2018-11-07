@@ -12,13 +12,13 @@ FreeMoveComponent::FreeMoveComponent() : IComponent(COMPONENT_TYPE::FREE_MOVE_CO
 
 FreeMoveComponent::~FreeMoveComponent()
 {
-	delete _gamepad;
 }
 
-void FreeMoveComponent::init()
+void FreeMoveComponent::init(float movementSpeed, float rotationSpeed)
 {	
-	_transform = GetComponent<TransformComponent>();
-	_gamepad = new Gamepad(0);
+	_moveSpeed     = movementSpeed;
+	_rotationSpeed = rotationSpeed;
+	_transform     = GetComponent<TransformComponent>();
 }
 
 void FreeMoveComponent::Update()
@@ -28,38 +28,47 @@ void FreeMoveComponent::Update()
 
 void FreeMoveComponent::UpdateMovement()
 {	
+	// get delta and access to input
 	const float& deltaTime = Time::GetInstance().GetDeltaTime();
-	Input& input = Input::GetInstance();
+	Input& input           = Input::GetInstance();
 
-	XMFLOAT3 forward, right;
-	_transform->GetAllAxis(forward, right, XMFLOAT3(0,0,0));
+	// get all axises of our transform
+	XMFLOAT3 forward, right, up;
+	_transform->GetAllAxis(forward, right, up);
 	
 	XMFLOAT3 translation(0, 0, 0);
 
-	float movement = MOVE_SPEED * deltaTime;
+	// get how much we should move
+	float movement = _moveSpeed * deltaTime;
 
+	// get mouse movement
 	float mouseX = input.GetMouseX();
 	float mouseY = input.GetMouseY();
 
-	XMFLOAT2 keyboardInput(0,0);
+	XMFLOAT2 keyInput(0,0);
 	
-	if (input.IsKeyHeld(DIK_A))
-		keyboardInput.x -= 1.0f;
-	if (input.IsKeyHeld(DIK_D))
-		keyboardInput.x += 1.0f;
-	if (input.IsKeyHeld(DIK_S))
-		keyboardInput.y -= 1.0f;
-	if (input.IsKeyHeld(DIK_W))
-		keyboardInput.y += 1.0f;	
+	// get keyboard input values
+	if (input.IsKeyHeld(DIK_A))	keyInput.x -= 1.0f;
+	if (input.IsKeyHeld(DIK_D)) keyInput.x += 1.0f;
+	if (input.IsKeyHeld(DIK_S)) keyInput.y -= 1.0f;
+	if (input.IsKeyHeld(DIK_W)) keyInput.y += 1.0f;	
 
+	// get normalized move direction based on orientation of transform and keyboard input
 	XMFLOAT3 direction; 
-	XMStoreFloat3(&direction, XMVectorAdd(XMVectorMultiply(XMLoadFloat3(&right), XMLoadFloat3(&XMFLOAT3(keyboardInput.x, keyboardInput.x, keyboardInput.x))), XMVectorMultiply(XMLoadFloat3(&forward), XMLoadFloat3(&XMFLOAT3(keyboardInput.y, keyboardInput.y, keyboardInput.y)))));
-	XMStoreFloat3(&direction, XMVector3Normalize(XMLoadFloat3(&direction)));
+	XMStoreFloat3(&direction,
+		XMVector3Normalize(
+		XMVectorAdd(
+			XMVectorMultiply(XMLoadFloat3(&right),   XMLoadFloat3(&XMFLOAT3(keyInput.x, keyInput.x, keyInput.x))),
+			XMVectorMultiply(XMLoadFloat3(&forward), XMLoadFloat3(&XMFLOAT3(keyInput.y, keyInput.y, keyInput.y))))));
+	
+	// get translation amount based on direction and how much we should move
 	XMStoreFloat3(&translation, XMVectorMultiply(XMLoadFloat3(&direction), XMLoadFloat3(&XMFLOAT3(movement, movement, movement))));
 	
-	_transform->AddRotation(XMFLOAT3(mouseY * MOUSE_SENSITIVITY, mouseX * MOUSE_SENSITIVITY, 0));
+	// add rotation and translation to transform
+	_transform->AddRotation(XMFLOAT3(mouseY * _rotationSpeed, mouseX * _rotationSpeed, 0));
 	_transform->AddTranslation(translation);
 
+	// calculate new world matrix
 	_transform->UpdateWorldMatrix();
 }
 
