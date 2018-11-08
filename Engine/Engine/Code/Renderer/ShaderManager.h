@@ -1,5 +1,4 @@
 #pragma once
-
 #include <d3d11.h>
 #include <vector>
 #include <DirectXMath.h>
@@ -12,12 +11,7 @@ class QuadComponent;
 class ParticleSystemComponent;
 class GBuffer;
 
-enum INPUT_LAYOUT_TYPE
-{
-	LAYOUT3D,
-	LAYOUT2D,
-	LAYOUTPARTICLE
-};
+
 
 class ShaderManager
 {	
@@ -29,37 +23,15 @@ public:
 	~ShaderManager();	
 		
 	void Initialize();
-	
-	void CreateVertexShader(LPCWSTR filePath, ID3D11VertexShader*& shader, ID3D10Blob*& buffer);
-	void CreatePixelShader( LPCWSTR filePath, ID3D11PixelShader*& shader,  ID3D10Blob*& buffer);
 
-	// forward rendering for alpha meshes
-	void RenderAmbientAlpha(Mesh*& mesh);
-	void RenderDirectionalAlpha(Mesh*& mesh);
-	void RenderPointAlpha(Mesh*& mesh);
-	void RenderDirectionalShadowsAlpha(Mesh*& mesh);
-
-	// deferred rendering
-	void RenderDepth(const std::vector<Mesh*>& meshes);
-	void RenderGeometry(const std::vector<Mesh*>& meshes);
-	void RenderLights(GBuffer*& gBuffer);
-
-	// 2d rendering
-	void RenderQuadUI(const std::vector<QuadComponent*>& quads);
 	void RenderGUI(ImDrawData* draw_data);
-	
-	// skybox Particle rendering
 	void RenderSkyBox(XMFLOAT4X4 worldMatrix);
 	void RenderParticles(const std::vector<ParticleSystemComponent*>& emitters);
-
-	void SetConstantBuffers();
-	void SetInputLayout(INPUT_LAYOUT_TYPE type);
-	
+		
 private:
 
 	static ShaderManager* _instance;
 	
-	void UpdateConstantBuffer(void* data, unsigned int size, ID3D11Buffer*& buffer);
 
 	ID3D11VertexShader* _vertexDirectionalShader;
 	ID3D11PixelShader*  _pixelDirectionalShader;
@@ -76,8 +48,7 @@ private:
 	ID3D11VertexShader* _vertexSpriteShader;
 	ID3D11PixelShader*  _pixelSpriteShader;
 	
-	ID3D11VertexShader* _vertexDepthShader;
-	ID3D11PixelShader*  _pixelDepthShader;
+	
 
 	ID3D11VertexShader* _vertexSkyBoxShader;
 	ID3D11PixelShader*  _pixelSkyBoxShader;
@@ -88,16 +59,7 @@ private:
 	ID3D11VertexShader* _vertexGUIShader;
 	ID3D11PixelShader*  _pixelGUIShader;
 
-	ID3D11VertexShader* _vertexGeometryShader;
-	ID3D11PixelShader*  _pixelGeometryShader;
-
-	ID3D11VertexShader* _vertexLightShader;
-	ID3D11PixelShader*  _pixelLightShader;
-
-	ID3D11InputLayout* _inputlayout3D;
-	ID3D11InputLayout* _inputlayout2D;
-	ID3D11InputLayout* _inputlayoutParticle;
-	ID3D11InputLayout* _inputlayoutGUI;
+	
 
 	ID3D11Buffer* _constantBufferVertex;
 	ID3D11Buffer* _constantBufferPixel;
@@ -168,13 +130,6 @@ private:
 		XMFLOAT3 lightDir;
 		float    specularPower;
 	};
-
-	struct ConstantDepthVertex
-	{
-		XMFLOAT4X4 world;
-		XMFLOAT4X4 view;
-		XMFLOAT4X4 projection;
-	};
 	
 	struct ConstantSkyBoxVertex
 	{
@@ -231,34 +186,6 @@ private:
 		XMFLOAT2   pad;
 	};
 	
-	struct ConstantDeferredAmbient
-	{
-		XMFLOAT4 ambientColor;
-		XMFLOAT4 cameraPosition;
-	};
-
-	struct ConstantDeferredDirectional
-	{
-		XMFLOAT4X4 lightViewProj;
-		XMFLOAT4   lightColor;
-		XMFLOAT4   lightSpecularColor;
-		XMFLOAT3   lightDirection;
-		float      lightSpecularpower;
-	};
-
-	struct ConstantDeferredPoint
-	{
-		XMFLOAT3 lightPosition;
-		float    radius;
-		XMFLOAT3 color;
-		float    intensity;
-		XMFLOAT3 specularColor;
-		float    specularPower;
-
-		float attConstant;
-		float attLinear;
-		float attExponential;
-		int   numLights;
-	};
+	
 };
 

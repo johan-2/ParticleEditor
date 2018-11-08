@@ -1,7 +1,7 @@
 #include "World.h"
 #include "Entity.h"
 #include "IComponent.h"
-#include "ComponentHelpers.h"
+#include "VectorHelpers.h"
 
 World* World::_instance = nullptr;
 
@@ -44,7 +44,7 @@ void World::DeleteComponent(COMPONENT_TYPE type, IComponent* component)
 {
 	unsigned int size = _components[type].size();
 
-	RemoveItemFromVector(_components[type], component);
+	VECTOR_HELPERS::RemoveItemFromVector(_components[type], component);
 	delete component;
 }
 
@@ -53,7 +53,7 @@ void World::DeleteEntity(Entity* entity)
 {
 	unsigned int size = _entities.size();
 
-	RemoveItemFromVector(_entities, entity);
+	VECTOR_HELPERS::RemoveItemFromVector(_entities, entity);
 	delete entity;	
 }
 

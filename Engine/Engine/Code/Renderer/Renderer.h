@@ -10,6 +10,10 @@ class SkyBox;
 class ParticleSystemComponent;
 class GBuffer;
 class ScreenQuad;
+class DepthShader;
+class DeferredShader;
+class QuadShader;
+class DXInputLayouts;
 
 enum SHADER_TYPE
 {	
@@ -40,6 +44,11 @@ public:
 	void CreateDepthMap();
 	
 private:
+
+	DepthShader*    _depthShader;
+	DeferredShader* _deferredShader;
+	QuadShader*     _quadShader;
+	DXInputLayouts* _inputLayouts;
 
 	static Renderer* _instance;
 

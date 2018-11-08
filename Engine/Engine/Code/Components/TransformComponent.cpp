@@ -60,6 +60,7 @@ void TransformComponent::UpdateWorldMatrix()
 
 	XMStoreFloat4x4(&_worldMatrix, XMMatrixMultiply(XMLoadFloat4x4(&_scaleMatrix), XMLoadFloat4x4(&_rotationMatrix)));
 	XMStoreFloat4x4(&_worldMatrix, XMMatrixMultiply(XMLoadFloat4x4(&_worldMatrix), XMLoadFloat4x4(&_positionMatrix)));
+	XMStoreFloat4x4(&_worldMatrix, XMMatrixTranspose(XMLoadFloat4x4(&_worldMatrix)));
 }
 
 // get our forward orientation

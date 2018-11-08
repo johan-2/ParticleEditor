@@ -167,8 +167,11 @@
     <ClCompile Include="Code\Managers\CameraManager.cpp" />
     <ClCompile Include="Code\Managers\GuiManager.cpp" />
     <ClCompile Include="Code\Managers\LightManager.cpp" />
+    <ClCompile Include="Code\Renderer\DeferredShader.cpp" />
+    <ClCompile Include="Code\Renderer\DepthShader.cpp" />
     <ClCompile Include="Code\Renderer\GBuffer.cpp" />
     <ClCompile Include="Code\Renderer\Mesh.cpp" />
+    <ClCompile Include="Code\Renderer\QuadShader.cpp" />
     <ClCompile Include="Code\Renderer\Renderer.cpp" />
     <ClCompile Include="Code\Renderer\RenderToTexture.cpp" />
     <ClCompile Include="Code\Renderer\ScreenQuad.cpp" />
@@ -176,6 +179,7 @@
     <ClCompile Include="Code\Renderer\SkyBox.cpp" />
     <ClCompile Include="Code\System\DXBlendStates.cpp" />
     <ClCompile Include="Code\System\DXDepthStencilStates.cpp" />
+    <ClCompile Include="Code\System\DXInputLayouts.cpp" />
     <ClCompile Include="Code\System\DXManager.cpp" />
     <ClCompile Include="Code\System\DXRasterizerStates.cpp" />
     <ClCompile Include="Code\System\DXSamplerStates.cpp" />
@@ -188,7 +192,6 @@
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Code\ComponentSystem\ComponentHelpers.h" />
     <ClInclude Include="Code\ComponentSystem\ComponentTypes.h" />
     <ClInclude Include="Code\ComponentSystem\Entity.h" />
     <ClInclude Include="Code\ComponentSystem\IComponent.h" />
@@ -216,8 +219,11 @@
     <ClInclude Include="Code\Managers\CameraManager.h" />
     <ClInclude Include="Code\Managers\GuiManager.h" />
     <ClInclude Include="Code\Managers\LightManager.h" />
+    <ClInclude Include="Code\Renderer\DeferredShader.h" />
+    <ClInclude Include="Code\Renderer\DepthShader.h" />
     <ClInclude Include="Code\Renderer\GBuffer.h" />
     <ClInclude Include="Code\Renderer\Mesh.h" />
+    <ClInclude Include="Code\Renderer\QuadShader.h" />
     <ClInclude Include="Code\Renderer\Renderer.h" />
     <ClInclude Include="Code\Renderer\RenderToTexture.h" />
     <ClInclude Include="Code\Renderer\ScreenQuad.h" />
@@ -225,6 +231,7 @@
     <ClInclude Include="Code\Renderer\SkyBox.h" />
     <ClInclude Include="Code\System\DXBlendStates.h" />
     <ClInclude Include="Code\System\DXDepthStencilStates.h" />
+    <ClInclude Include="Code\System\DXInputLayouts.h" />
     <ClInclude Include="Code\System\DXManager.h" />
     <ClInclude Include="Code\System\DXRasterizerStates.h" />
     <ClInclude Include="Code\System\DXSamplerStates.h" />
@@ -234,6 +241,7 @@
     <ClInclude Include="Code\Utils\SystemDefs.h" />
     <ClInclude Include="Code\Utils\TexturePool.h" />
     <ClInclude Include="Code\Utils\Time.h" />
+    <ClInclude Include="Code\Utils\VectorHelpers.h" />
     <ClInclude Include="Code\Utils\Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

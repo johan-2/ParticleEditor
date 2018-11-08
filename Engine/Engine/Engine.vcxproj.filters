@@ -141,6 +141,18 @@
     <ClCompile Include="Code\Utils\Window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Code\Renderer\DepthShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\System\DXInputLayouts.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Renderer\DeferredShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Renderer\QuadShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\System\DXManager.h">
@@ -278,10 +290,22 @@
     <ClInclude Include="Code\System\HardwareProperties.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Code\ComponentSystem\ComponentHelpers.h">
+    <ClInclude Include="Code\Utils\Window.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Utils\Window.h">
+    <ClInclude Include="Code\Renderer\DepthShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\System\DXInputLayouts.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Renderer\DeferredShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Renderer\QuadShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Utils\VectorHelpers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

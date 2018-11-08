@@ -3,8 +3,14 @@
     "",
     "\\Engine",
     "\\Engine\\Engine",
-    "\\Engine\\Engine\\Code"
+    "\\Engine\\Engine\\Code",
+    "\\Engine\\Engine\\Code\\Components",
+    "\\Engine\\Engine\\Code\\Renderer",
+    "\\ParticleEditor",
+    "\\ParticleEditor\\ParticleEditor",
+    "\\ParticleEditor\\ParticleEditor\\Code",
+    "\\ParticleEditor\\ParticleEditor\\Code\\Renderer"
   ],
-  "SelectedNode": "\\Engine\\Engine\\Code\\System",
+  "SelectedNode": "\\Engine\\Engine\\Code\\Renderer\\Renderer.cpp",
   "PreviewInSolutionExplorer": false
 }

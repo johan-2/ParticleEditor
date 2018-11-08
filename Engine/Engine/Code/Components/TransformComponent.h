@@ -14,7 +14,7 @@ public:
 	void Init(XMFLOAT3 position = XMFLOAT3(0, 0, 0), XMFLOAT3 rotation = XMFLOAT3(0, 0, 0), XMFLOAT3 scale = XMFLOAT3(1, 1, 1));
 	
 	// get the world matrix
-	XMFLOAT4X4 GetWorldMatrix() { return _worldMatrix; }
+	const XMFLOAT4X4& GetWorldMatrix() { return _worldMatrix; }
 
 	// get transform properties by constant references
 	const XMFLOAT3& GetPositionRef() { return _position; }

@@ -14,6 +14,8 @@ void CameraComponent::Init3D(const float& fov)
 
 	// Create the projection matrix for 3D rendering.	
 	XMStoreFloat4x4(&_projectionMatrix, XMMatrixPerspectiveFovLH(XMConvertToRadians(fov), SCREEN_WIDTH / SCREEN_HEIGHT, 0.1f, 500.0f));
+	XMStoreFloat4x4(&_projectionMatrix, XMMatrixTranspose(XMLoadFloat4x4(&_projectionMatrix)));
+
 	CalculateViewMatrix();
 }
 
@@ -24,6 +26,8 @@ void CameraComponent::Init2D(const XMFLOAT2& size, const XMFLOAT2& nearfar)
 
 	// create ortho projection
 	XMStoreFloat4x4(&_projectionMatrix, XMMatrixOrthographicLH(size.x, size.y, nearfar.x, nearfar.y));
+	XMStoreFloat4x4(&_projectionMatrix, XMMatrixTranspose(XMLoadFloat4x4(&_projectionMatrix)));
+
 	CalculateViewMatrix();
 }
 
@@ -49,4 +53,6 @@ void CameraComponent::CalculateViewMatrix()
 	XMStoreFloat3(&forward, XMVectorAdd(XMLoadFloat3(&pos), XMLoadFloat3(&forward)));
 
 	XMStoreFloat4x4(&_viewMatrix, XMMatrixLookAtLH(XMLoadFloat3(&pos), XMLoadFloat3(&forward), XMLoadFloat3(&up)));
+
+	XMStoreFloat4x4(&_viewMatrix, XMMatrixTranspose(XMLoadFloat4x4(&_viewMatrix)));
 }

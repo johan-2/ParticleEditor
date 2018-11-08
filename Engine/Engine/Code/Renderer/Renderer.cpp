@@ -14,6 +14,10 @@
 #include <DirectXMath.h>
 #include "GBuffer.h"
 #include "ScreenQuad.h"
+#include "DepthShader.h"
+#include "DXInputLayouts.h"
+#include "DeferredShader.h"
+#include "QuadShader.h"
 
 using namespace DirectX;
 
@@ -29,6 +33,14 @@ Renderer& Renderer::GetInstance()
 
 Renderer::Renderer()
 {
+	_depthShader    = new DepthShader();
+	_deferredShader = new DeferredShader();
+	_quadShader     = new QuadShader();
+
+	_inputLayouts = new DXInputLayouts();
+
+	_inputLayouts->CreateInputLayout3D(_deferredShader->GetVertexGeometryShaderByteCode());
+	_inputLayouts->CreateInputLayout2D(_quadShader->GetVertexShaderByteCode());
 }
 
 Renderer::~Renderer()
@@ -154,10 +166,9 @@ void Renderer::Render()
 	ShaderManager& SM = ShaderManager::GetInstance();
 
 	// set input layout for 3dmeshes
-	SM.SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT3D);
+	_inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT3D);
 	
-	// set defualt constantbuffers (everything uses these exept for the deferred rendering that has its own buffers) 
-	SM.SetConstantBuffers();
+	
 
 	// render shadowmap
 	RenderDepth();
@@ -166,41 +177,44 @@ void Renderer::Render()
 	RenderDeferred();
 
 	// set back regular constantbuffers and render alpha meshes with regular forward rendering
-	SM.SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT3D);
-	SM.SetConstantBuffers();
-	RenderLightsAlpha();	
+	_inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT3D);
+	
+	//RenderLightsAlpha();	
 
 	// render skybox, will mask out all pixels that contains geometry in the fullscreen quad, leaving only the skybox rendered on "empty" pixels
-	_skyBox->Render();
+	//_skyBox->Render();
 	
 	// render particles (currently alpha meshes and particles cant be rendered perfect together, need to find solution for this)
-	SM.SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUTPARTICLE);
-	RenderParticles();
+	//_inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUTPARTICLE);
+	//RenderParticles();
 	
 	// set inputlayout for UI
-	SM.SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT2D);
+	_inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT2D);
 	RenderUI();		
 }
 
 void Renderer::RenderDeferred()
 {
-	ShaderManager& SM = ShaderManager::GetInstance();
 	DXManager& dXM = DXManager::GetInstance();
 		
-	// set gbuffer and render the geometry data to the buffers		
+	// set the rendertargets of the GBuffer active		
 	_gBuffer->SetRenderTargets();		
-	SM.RenderGeometry(_meshes[S_DEFERRED]);
 
-	SM.SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT2D);
-	// set to defualt rendertarget with the depth buffer as read only so we still can use the depth texture as shader input
-	// TODO: recontruct position from depth so we can remove the position render target from the g-buffer completely
+	// render all geometry info to the render targets
+	_deferredShader->RenderGeometry(_meshes[S_DEFERRED]);
+
+	// set to 2D input Layout
+	_inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT2D);
+
+	// set to defualt rendertarget with the depth buffer as read only 
+	// so we still can use the depth texture as shader input during the lightning pass
 	dXM.SetRenderTarget(nullptr, nullptr, true, true);
 
 	// upload the vertices of the screensized quad
 	_screenQuad->UploadBuffers();
 
 	// render lights as 2d post processing
-	SM.RenderLights(_gBuffer); 
+	_deferredShader->RenderLightning(_gBuffer);
 }
 
 void Renderer::RenderDepth() 
@@ -208,15 +222,20 @@ void Renderer::RenderDepth()
 	if (_meshes[S_DEPTH].size() == 0)
 		return;
 
-	DXManager&    dXM = DXManager::GetInstance();
-	ShaderManager& SM = ShaderManager::GetInstance();
+	// get the DX manager
+	DXManager& dXM = DXManager::GetInstance();
 
-	// set depth stuff
+	// clear the depth map render texture to black
 	_depthMap->ClearRenderTarget(0, 0, 0, 0, true);
+
+	// set the depth stencil view active
 	dXM.SetRenderTarget(nullptr, _depthMap->GetDepthStencil());
+
+	// set the viewport of the camera that renders the depth
 	dXM.SetViewport(_depthMap->GetViewport(), false);
 
-	SM.RenderDepth(_meshes[S_DEPTH]);
+	// render all meshes 
+	_depthShader->RenderDepth(_meshes[S_DEPTH]);
 }
 
 void Renderer::RenderLightsAlpha() 
@@ -244,8 +263,7 @@ void Renderer::RenderUI()
 	if (_quads.size() == 0)
 		return;
 
-	ShaderManager& SM = ShaderManager::GetInstance();
-	SM.RenderQuadUI(_quads);
+	_quadShader->RenderQuadUI(_quads);
 }
 
 void Renderer::AlphaSort() 

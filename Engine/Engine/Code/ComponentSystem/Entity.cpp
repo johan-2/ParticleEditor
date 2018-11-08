@@ -1,7 +1,7 @@
 #include "Entity.h"
 #include "IComponent.h"
 #include "World.h"
-#include "ComponentHelpers.h"
+#include "vectorHelpers.h"
 
 // adds this entity to the world on creation
 Entity::Entity()
@@ -17,7 +17,7 @@ Entity::~Entity()
 // aswell as in the component list in world
 void Entity::RemoveComponent(IComponent* component) 
 {
-	RemoveItemFromVector(_components, component);
+	VECTOR_HELPERS::RemoveItemFromVector(_components, component);
 	World::GetInstance().RemoveComponent(component);
 }
 
