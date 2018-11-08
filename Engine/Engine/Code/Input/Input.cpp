@@ -87,9 +87,13 @@ void Input::Update()
 {
 	UpdateKeyboard();
 	UpdateMouse();
+
+#ifdef _DEBUG
 	UpdateGuiInput();
+#endif
 }
 
+// get the current state of the keyboard
 void Input::UpdateKeyboard() 
 {
 	HRESULT result;	
@@ -105,13 +109,9 @@ void Input::UpdateKeyboard()
 		else
 			printf("failed to get keyboardstate\n");		
 	}
-
-	// toggle fullscreen on allt + enter
-	if (IsKeyHeld(DIK_LALT) && IskeyPressed(DIK_RETURN))
-		DXManager::GetInstance().SetFullscreen(true, true);
-
 }
 
+// get the current state of the mouse
 void Input::UpdateMouse() 
 {
 	HRESULT result;
@@ -127,7 +127,6 @@ void Input::UpdateMouse()
 		else
 			printf("failed to get mousestate\n");
 	}
-	
 }
 
 void Input::UpdateGuiInput()
@@ -174,46 +173,52 @@ void Input::UpdateGuiInput()
 			if (c > 0)
 				io.AddInputCharacter((unsigned short)c);
 		}
-	}
-						
+	}						
 }
 
-
+// is a key down
 bool Input::IsKeyHeld(unsigned char key) 
 {
 	return (_currentkeyboardState[key] & 0x80);	
 }
 
+// was a key pressed this frame
 bool Input::IskeyPressed(unsigned char key) 
 {		
 	return (_currentkeyboardState[key] & 0x80) != 0 && (_previouskeyboardState[key] & 0x80) == 0;
 }
 
+// was a key released this frame
 bool Input::IsKeyReleased(unsigned char key) 
 {	
 	return (_currentkeyboardState[key] & 0x80) == 0 && (_previouskeyboardState[key] & 0x80) != 0;
 }
 
+// get mouse X movement of this frame
 float Input::GetMouseX() 
 {
 	return _currentMouseState.lX;	
 }
 
+// get mouse y movement of this frame
 float Input::GetMouseY() 
 {
 	return _currentMouseState.lY;
 }
 
+// is a mouse button down
 bool Input::IsMouseHeld(unsigned char button)
 {
 	return _currentMouseState.rgbButtons[button] & 0x80; 
 }
 
+// was a mouse button pressed this frame
 bool Input::IsMousePressed(unsigned char button)
 {
 	return (_currentMouseState.rgbButtons[button] & 0x80) != 0 && (_previousMouseState.rgbButtons[button] & 0x80) == 0;
 }
 
+// was a mouse button released this frame
 bool Input::IsMouseReleased(unsigned char button)
 {
 	return (_currentMouseState.rgbButtons[button] & 0x80) == 0 && (_previousMouseState.rgbButtons[button] & 0x80) != 0;

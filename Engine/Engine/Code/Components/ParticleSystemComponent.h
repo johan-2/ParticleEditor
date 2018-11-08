@@ -13,8 +13,8 @@ class TransformComponent;
 struct ParticleInstanceType
 {
 	XMFLOAT4X4 worldMatrix;
-	XMFLOAT4 color;
-	XMFLOAT2 uvOffset;
+	XMFLOAT4   color;
+	XMFLOAT2   uvOffset;
 };
 
 struct ParticleVertexType

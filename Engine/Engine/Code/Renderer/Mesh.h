@@ -1,28 +1,22 @@
 #pragma once
-
 #include <d3d11.h>
 #include <DirectXMath.h>
 #include "TransformComponent.h"
 #include "Color32.h";
 
-#define AMBIENT  1 << 0
-#define DIRECTIONAL  1 << 1
+#define DEFERRED 1 << 0
+#define ALPHA_FORWARD 1 << 1
 #define CAST_SHADOW_DIR  1 << 2
-#define RECIVE_SHADOW_DIR  1 << 3
-#define LIGHTS_ALL  1 << 4
-#define HAS_ALPHA  1 << 5
-#define POINT 1 << 6
-#define DEFERRED 1 << 7
 
 using namespace DirectX;
 
 class Mesh
 {
-public:
-	
+public:	
 	Mesh(Entity* parent, unsigned int FLAGS, wchar_t* diffuseMap, wchar_t* normalMap, wchar_t* specularMap);
 	~Mesh();
 
+	// vertex data structure
 	struct VertexData
 	{
 		XMFLOAT3 position;
@@ -33,39 +27,61 @@ public:
 		Color32  color;
 	};
 
+	// create vertex and index buffers
 	void CreateBuffers(VertexData* verticesData, unsigned long* indicesData, unsigned int numVertices, unsigned int numIndices);
+
+	// uploads the buffers before rendering
 	void UploadBuffers();
 
-	XMFLOAT4X4  GetWorldMatrix()  { return _transform->GetWorldMatrix(); }
-	unsigned int GetNumIndices()  { return _numIndices; }
-	unsigned int GetNumVertices() { return _numVertices; }
+	// get the world matrix of the transform this mesh belongs to
+	// get the position of the transform this mesh belongs to
+	XMFLOAT4X4 GetWorldMatrix()   { return _transform->GetWorldMatrix(); }
+	const XMFLOAT3& GetPosition() { return _transform->GetPositionRef(); }
 
+	// get number of vertices and indices
+	unsigned int GetNumVertices() { return _numVertices; }
+	unsigned int GetNumIndices()  { return _numIndices; }
+
+	// get all textures this mesh uses
 	ID3D11ShaderResourceView** GetTextureArray() { return _textures; }
 
+	// get rendering flags
 	unsigned int GetFlags() { return _FLAGS; }
 
-	const XMFLOAT2& GetUvOffset() { return _uvOffset; }
+	// set and get the offset of uv-coordinates for this mesh
 	void SetUvOffset(XMFLOAT2 offset) { _uvOffset = offset; }
+	const XMFLOAT2& GetUvOffset()     { return _uvOffset; }
 
-	XMFLOAT3 GetPosition() { return _transform->GetPositionVal(); }
-
-	float _distance;
+	// get and set distance to camera
+	const float& GetDistanceFromCamera()     { return _distance; }
+	void SetDistanceToCamera(float distance) { _distance = distance; }
 
 private:
 	
+	// adds and removes this mesh to/from the renderer
 	void AddRemoveToRenderer(bool add);
 
-	TransformComponent* _transform;
+	// pointers to the vertex/index buffers
 	ID3D11Buffer* _vertexBuffer;
 	ID3D11Buffer*_indexBuffer;
 
+	// count of vertices/indices
 	unsigned int _numVertices;
 	unsigned int _numIndices;
 
+	// texture array
 	ID3D11ShaderResourceView* _textures[3];
 
+	// uv offset
 	XMFLOAT2 _uvOffset;
 	
+	// rendering flags
 	unsigned int _FLAGS;
+
+	// distance from camera
+	float _distance;
+
+	// pointer to transform component
+	TransformComponent* _transform;
 };
 

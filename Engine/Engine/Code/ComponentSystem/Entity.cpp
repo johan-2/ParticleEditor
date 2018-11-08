@@ -15,10 +15,10 @@ Entity::~Entity()
 
 // removes a component from the component list in entity
 // aswell as in the component list in world
-void Entity::RemoveComponent(IComponent*& component) 
+void Entity::RemoveComponent(IComponent* component) 
 {
-	RemoveComponentFromList(_components, component);
-	World::GetInstance().RemoveComponent(component->Type(), component);
+	RemoveItemFromVector(_components, component);
+	World::GetInstance().RemoveComponent(component);
 }
 
 // removes all components owned by this entity from world
@@ -28,7 +28,7 @@ void Entity::RemoveEntity()
 	World& world = World::GetInstance();
 
 	for (int i = 0; i < _components.size(); i++)
-		world.RemoveComponent(_components[i]->Type(), _components[i]);
+		world.RemoveComponent(_components[i]);
 
 	world.RemoveEntity(this);
 }

@@ -2,19 +2,19 @@
 #include <vector>
 #include "IComponent.h"
 
-static void RemoveComponentFromList(std::vector<IComponent*>& components, IComponent*& componentToRemove)
+template <class T> void RemoveItemFromVector(std::vector<T*>& items, T*& item)
 {
-	for (int i =0; i< components.size(); i++)
+	for (int i =0; i< items.size(); i++)
 	{
-		if (components[i] == componentToRemove)
+		if (items[i] == item)
 		{
 			// switch place on the component last in list with the component we want to remove
-			IComponent* temp  = components.back();
-			components.back() = components[i];
-			components[i]     = temp;
+			T* temp  = items.back();
+			items.back() = items[i];
+			items[i]     = temp;
 
 			// remove the last component
-			components.pop_back();
+			items.pop_back();
 			return;
 		}
 	}

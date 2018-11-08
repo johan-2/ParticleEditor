@@ -30,8 +30,8 @@ public:
 		
 	void Initialize();
 	
-	void CreateVertexShader(LPCWSTR filePath,  ID3D11VertexShader**, ID3D10Blob**);
-	void CreatePixelShader( LPCWSTR filePath,  ID3D11PixelShader** , ID3D10Blob**);
+	void CreateVertexShader(LPCWSTR filePath, ID3D11VertexShader*& shader, ID3D10Blob*& buffer);
+	void CreatePixelShader( LPCWSTR filePath, ID3D11PixelShader*& shader,  ID3D10Blob*& buffer);
 
 	// forward rendering for alpha meshes
 	void RenderAmbientAlpha(Mesh*& mesh);

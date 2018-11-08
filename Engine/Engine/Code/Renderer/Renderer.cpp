@@ -227,27 +227,7 @@ void Renderer::RenderLightsAlpha()
 	ShaderManager& SM = ShaderManager::GetInstance();
 
 	AlphaSort();
-
-	// alpha meshes has to be forward rendered one by one
-	for (int i = 0; i < _meshes[S_FORWARD_ALPHA].size(); i++)
-	{
-		unsigned int flags = _meshes[S_FORWARD_ALPHA][i]->GetFlags();		
-		Mesh* mesh = _meshes[S_FORWARD_ALPHA][i];
-
-		if ((flags & LIGHTS_ALL) == LIGHTS_ALL) 
-		{						
-			SM.RenderAmbientAlpha(mesh);
-			SM.RenderDirectionalShadowsAlpha(mesh);
-		}
-		if ((flags & AMBIENT) == AMBIENT)		
-			SM.RenderAmbientAlpha(mesh);
-
-		if ((flags & DIRECTIONAL) == DIRECTIONAL)
-			SM.RenderDirectionalAlpha(mesh);
-
-		if ((flags & RECIVE_SHADOW_DIR) == RECIVE_SHADOW_DIR)
-			SM.RenderDirectionalShadowsAlpha(mesh);
-	}
+	
 }
 
 void Renderer::RenderParticles()
@@ -271,16 +251,19 @@ void Renderer::RenderUI()
 void Renderer::AlphaSort() 
 {
 	// right now alpha meshes and particles are not sorted against each other, Need to find a solution for this
-	XMFLOAT3 camPos = CameraManager::GetInstance().GetCurrentCameraGame()->GetComponent<TransformComponent>()->GetPositionVal();
+	const XMFLOAT3& camPos = CameraManager::GetInstance().GetCurrentCameraGame()->GetComponent<TransformComponent>()->GetPositionRef();
 	for (int i = 0; i < _meshes[S_FORWARD_ALPHA].size(); i++)
 	{
 		XMFLOAT3 vec;
+		float distance = 0;
 
 		XMStoreFloat3(&vec, XMVectorSubtract(XMLoadFloat3(&_meshes[S_FORWARD_ALPHA][i]->GetPosition()), XMLoadFloat3(&camPos)));
-		XMStoreFloat(&_meshes[S_FORWARD_ALPHA][i]->_distance, XMVector3Length(XMLoadFloat3(&vec)));
+		XMStoreFloat(&distance, XMVector3Length(XMLoadFloat3(&vec)));
+
+		_meshes[S_FORWARD_ALPHA][i]->SetDistanceToCamera(distance);
 	}
 
-	std::sort(_meshes[S_FORWARD_ALPHA].begin(), _meshes[S_FORWARD_ALPHA].end(), [](Mesh* a, Mesh* b) -> bool {return a->_distance > b->_distance; });
+	std::sort(_meshes[S_FORWARD_ALPHA].begin(), _meshes[S_FORWARD_ALPHA].end(), [](Mesh* a, Mesh* b) -> bool {return a->GetDistanceFromCamera() > b->GetDistanceFromCamera(); });
 }
 
 

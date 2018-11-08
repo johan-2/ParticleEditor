@@ -50,7 +50,7 @@ public:
 		return nullptr;
 	}
 
-	void RemoveComponent(IComponent*& component);
+	void RemoveComponent(IComponent* component);
 	void RemoveEntity();
 
 private:

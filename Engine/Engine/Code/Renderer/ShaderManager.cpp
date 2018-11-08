@@ -64,48 +64,48 @@ void ShaderManager::Initialize()
 				
 	//COMPILE AND CREATE SHADERS
 	////create ambient shaders
-	CreateVertexShader(L"shaders/vertexAmbient.vs", &_vertexAmbientShader, &vertexShaderBufferAmbient);
-	CreatePixelShader(L"shaders/pixelAmbient.ps", &_pixelAmbientShader, &pixelShaderBufferAmbient);
+	CreateVertexShader(L"shaders/vertexAmbient.vs", _vertexAmbientShader, vertexShaderBufferAmbient);
+	CreatePixelShader(L"shaders/pixelAmbient.ps", _pixelAmbientShader, pixelShaderBufferAmbient);
 
 	//create directional shaders
-	CreateVertexShader(L"shaders/vertexDirectional.vs",  &_vertexDirectionalShader, &vertexShaderBufferDirectional);
-	CreatePixelShader(L"shaders/pixelDirectional.ps",  &_pixelDirectionalShader, &pixelShaderBufferDirectional);
+	CreateVertexShader(L"shaders/vertexDirectional.vs",  _vertexDirectionalShader, vertexShaderBufferDirectional);
+	CreatePixelShader(L"shaders/pixelDirectional.ps",  _pixelDirectionalShader, pixelShaderBufferDirectional);
 
 	//create Point shaders
-	CreateVertexShader(L"shaders/vertexPoint.vs", &_vertexPointShader, &vertexShaderBufferPoint);
-	CreatePixelShader(L"shaders/pixelPoint.ps", &_pixelPointShader, &pixelShaderBufferPoint);
+	CreateVertexShader(L"shaders/vertexPoint.vs", _vertexPointShader, vertexShaderBufferPoint);
+	CreatePixelShader(L"shaders/pixelPoint.ps", _pixelPointShader, pixelShaderBufferPoint);
 	
 	//create sprite shaders
-	CreateVertexShader(L"shaders/vertexSprite.vs", &_vertexSpriteShader, &vertexShaderBufferSprite);
-	CreatePixelShader(L"shaders/pixelSprite.ps", &_pixelSpriteShader, &pixelShaderBufferSprite);	
+	CreateVertexShader(L"shaders/vertexSprite.vs", _vertexSpriteShader, vertexShaderBufferSprite);
+	CreatePixelShader(L"shaders/pixelSprite.ps", _pixelSpriteShader, pixelShaderBufferSprite);	
 	
 	//create depth shaders
-	CreateVertexShader(L"shaders/vertexDepth.vs", &_vertexDepthShader, &vertexShaderBufferDepth);
-	CreatePixelShader(L"shaders/pixelDepth.ps", &_pixelDepthShader, &pixelShaderBufferDepth);
+	CreateVertexShader(L"shaders/vertexDepth.vs", _vertexDepthShader, vertexShaderBufferDepth);
+	CreatePixelShader(L"shaders/pixelDepth.ps", _pixelDepthShader, pixelShaderBufferDepth);
 
 	//create skybox shaders
-	CreateVertexShader(L"shaders/vertexSkyBox.vs", &_vertexSkyBoxShader, &vertexShaderBufferSkyBox);
-	CreatePixelShader(L"shaders/pixelSkyBox.ps", &_pixelSkyBoxShader, &pixelShaderBufferSkyBox);
+	CreateVertexShader(L"shaders/vertexSkyBox.vs", _vertexSkyBoxShader, vertexShaderBufferSkyBox);
+	CreatePixelShader(L"shaders/pixelSkyBox.ps", _pixelSkyBoxShader, pixelShaderBufferSkyBox);
 
 	//create directional shadows shaders
-	CreateVertexShader(L"shaders/vertexDirectionalShadows.vs", &_vertexDirectionalShadowsShader, &vertexShaderBufferDirectionalShadows);
-	CreatePixelShader(L"shaders/pixelDirectionalShadows.ps", &_pixelDirectionalShadowsShader, &pixelShaderBufferDirectionalShadows);
+	CreateVertexShader(L"shaders/vertexDirectionalShadows.vs", _vertexDirectionalShadowsShader, vertexShaderBufferDirectionalShadows);
+	CreatePixelShader(L"shaders/pixelDirectionalShadows.ps", _pixelDirectionalShadowsShader, pixelShaderBufferDirectionalShadows);
 
 	//create particle shaders
-	CreateVertexShader(L"shaders/vertexParticle.vs", &_vertexParticleShader, &vertexShaderBufferParticle);
-	CreatePixelShader(L"shaders/pixelParticle.ps", &_pixelParticleShader, &pixelShaderBufferParticle);
+	CreateVertexShader(L"shaders/vertexParticle.vs", _vertexParticleShader, vertexShaderBufferParticle);
+	CreatePixelShader(L"shaders/pixelParticle.ps", _pixelParticleShader, pixelShaderBufferParticle);
 
 	//create gui shaders
-	CreateVertexShader(L"shaders/vertexImGui.vs", &_vertexGUIShader, &vertexShaderBufferGUI);
-	CreatePixelShader(L"shaders/pixelImGui.ps", &_pixelGUIShader, &pixelShaderBufferGUI);
+	CreateVertexShader(L"shaders/vertexImGui.vs", _vertexGUIShader, vertexShaderBufferGUI);
+	CreatePixelShader(L"shaders/pixelImGui.ps", _pixelGUIShader, pixelShaderBufferGUI);
 
 	//create deferred geometry shaders
-	CreateVertexShader(L"shaders/vertexGeometry.vs", &_vertexGeometryShader, &vertexShaderBufferGeometry);
-	CreatePixelShader(L"shaders/pixelGeometry.ps", &_pixelGeometryShader, &pixelShaderBufferGeometry);
+	CreateVertexShader(L"shaders/vertexGeometry.vs", _vertexGeometryShader, vertexShaderBufferGeometry);
+	CreatePixelShader(L"shaders/pixelGeometry.ps", _pixelGeometryShader, pixelShaderBufferGeometry);
 
 	//create deferred lightning shaders
-	CreateVertexShader(L"shaders/vertexLightning.vs", &_vertexLightShader, &vertexShaderBufferLight);
-	CreatePixelShader(L"shaders/pixelLightning.ps", &_pixelLightShader, &pixelShaderBufferLight);
+	CreateVertexShader(L"shaders/vertexLightning.vs", _vertexLightShader, vertexShaderBufferLight);
+	CreatePixelShader(L"shaders/pixelLightning.ps", _pixelLightShader, pixelShaderBufferLight);
 	
 	// create input layouts
 	D3D11_INPUT_ELEMENT_DESC inputLayout3D[6]
@@ -999,14 +999,14 @@ void ShaderManager::UpdateConstantBuffer(void* data, unsigned int size, ID3D11Bu
 	devCon->Unmap(buffer, 0);	
 }
 
-void ShaderManager::CreateVertexShader(LPCWSTR filePath, ID3D11VertexShader** shader, ID3D10Blob** buffer)
+void ShaderManager::CreateVertexShader(LPCWSTR filePath, ID3D11VertexShader*& shader, ID3D10Blob*& buffer)
 {
 	ID3D11Device* device = DXManager::GetInstance().GetDevice();
 	HRESULT result;
 	ID3D10Blob* errorMessage; 
 			
 	//compile the vertex shader code from the text file into temporeral buffers
-	result = D3DCompileFromFile(filePath, NULL, NULL, "Main", "vs_5_0", 0, 0, buffer, &errorMessage);
+	result = D3DCompileFromFile(filePath, NULL, NULL, "Main", "vs_5_0", 0, 0, &buffer, &errorMessage);
 	if (FAILED(result))
 	{
 		if (errorMessage) 
@@ -1019,19 +1019,19 @@ void ShaderManager::CreateVertexShader(LPCWSTR filePath, ID3D11VertexShader** sh
 			printf("failed to find Vertexshaderfile\n");					
 	}
 	//once the code have been compiled into the buffer we can create the shader objects themselfs from the blob objects
-	result = device->CreateVertexShader((*buffer)->GetBufferPointer(), (*buffer)->GetBufferSize(), NULL, shader);
+	result = device->CreateVertexShader(buffer->GetBufferPointer(), buffer->GetBufferSize(), NULL, &shader);
 	if (FAILED(result)) 
 		printf("failed to create the vertexShader from vertexbuffer\n");
 	
 }
 
-void ShaderManager::CreatePixelShader(LPCWSTR filePath, ID3D11PixelShader** shader, ID3D10Blob** buffer)
+void ShaderManager::CreatePixelShader(LPCWSTR filePath, ID3D11PixelShader*& shader, ID3D10Blob*& buffer)
 {
 	ID3D11Device* device = DXManager::GetInstance().GetDevice();
 	HRESULT result;
 	ID3D10Blob* errorMessage;
 		
-	result = D3DCompileFromFile(filePath, NULL, NULL, "Main", "ps_5_0", 0, 0, buffer, &errorMessage);
+	result = D3DCompileFromFile(filePath, NULL, NULL, "Main", "ps_5_0", 0, 0, &buffer, &errorMessage);
 	if (FAILED(result))
 	{
 		if (errorMessage) 
@@ -1043,7 +1043,7 @@ void ShaderManager::CreatePixelShader(LPCWSTR filePath, ID3D11PixelShader** shad
 			printf("failed to find Pixelshaderfile\n");					
 	}
 
-	result = device->CreatePixelShader((*buffer)->GetBufferPointer(), (*buffer)->GetBufferSize(), NULL, shader);
+	result = device->CreatePixelShader(buffer->GetBufferPointer(), buffer->GetBufferSize(), NULL, &shader);
 	if (FAILED(result)) 
 		printf("failed to create the pixelShader from pixelbuffer\n");
 				

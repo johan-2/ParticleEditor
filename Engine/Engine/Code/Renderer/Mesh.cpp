@@ -5,26 +5,31 @@
 
 
 Mesh::Mesh(Entity* parent, unsigned int FLAGS, wchar_t* diffuseMap, wchar_t* normalMap, wchar_t* specularMap ) :
-	_uvOffset(XMFLOAT2(0,0)),
-	_FLAGS(0)
+	_uvOffset(XMFLOAT2(0,0))
 {
+	// set rendering flags
 	_FLAGS = FLAGS;
 
+	// get pointer to transform components
 	_transform = parent->GetComponent<TransformComponent>();
 
+	// set passed in textures or defualt ones
 	TexturePool& TP = TexturePool::GetInstance();
 	diffuseMap  != L"" ? _textures[0] = TP.GetTexture(diffuseMap)  : _textures[0] = TP.GetTexture(L"Textures/defaultDiffuse.dds");
 	normalMap   != L"" ? _textures[1] = TP.GetTexture(normalMap)   : _textures[1] = TP.GetTexture(L"Textures/defaultNormal.dds");
 	specularMap != L"" ? _textures[2] = TP.GetTexture(specularMap) : _textures[2] = TP.GetTexture(L"Textures/defaultSpecular.dds");
 
+	// add this mesh to the renderer
 	AddRemoveToRenderer(true);
 }
 
 Mesh::~Mesh()
 {	
+	// release buffers
 	_vertexBuffer->Release();
 	_indexBuffer->Release();
 
+	// remove this mesh from renderer
 	AddRemoveToRenderer(false);
 }
 
@@ -82,16 +87,14 @@ void Mesh::UploadBuffers()
 {
 	ID3D11DeviceContext* devCon = DXManager::GetInstance().GetDeviceCon();
 
-	unsigned int stride;
-	unsigned int offset;
-
-	// Set vertex buffer stride and offset.
-	stride = sizeof(VertexData);
-	offset = 0;
-
-	// Set the vertex buffer to active in the input assembler so it can be rendered, the vertices is sent to the pipeline before the go trought the shader for rendering
+	// set stride and offset of one vertex
+	unsigned int stride = sizeof(VertexData);
+	unsigned int offset = 0;
+	
+	// Set the vertex buffer 
 	devCon->IASetVertexBuffers(0, 1, &_vertexBuffer, &stride, &offset);
-	// Set the index buffer to active in the input assembler so it can be rendered.
+
+	// Set the index buffer 
 	devCon->IASetIndexBuffer(_indexBuffer, DXGI_FORMAT_R32_UINT, 0);
 }
 
@@ -99,11 +102,12 @@ void Mesh::AddRemoveToRenderer(bool add)
 {
 	Renderer& renderer = Renderer::GetInstance();
 
-	// add to depth rendering
+	// add to depth rendering for shadow casting
+	// at the moment all meshes recive shadows
 	if ((_FLAGS & CAST_SHADOW_DIR) == CAST_SHADOW_DIR)
 		add ? renderer.AddToRenderer(this, SHADER_TYPE::S_DEPTH) : renderer.RemoveFromRenderer(this, SHADER_TYPE::S_DEPTH);
 
-	// if using deffered rendering we dont have to check any other flags
+	// if using deffered rendering 
 	if ((_FLAGS & DEFERRED) == DEFERRED)
 	{
 		add ? renderer.AddToRenderer(this, SHADER_TYPE::S_DEFERRED) : renderer.RemoveFromRenderer(this, SHADER_TYPE::S_DEFERRED);
@@ -111,7 +115,7 @@ void Mesh::AddRemoveToRenderer(bool add)
 	}
 
 	// alpha needs to be forward rendered
-	if ((_FLAGS & HAS_ALPHA) == HAS_ALPHA) 
+	if ((_FLAGS & ALPHA_FORWARD) == ALPHA_FORWARD) 
 	{		
 		add ? renderer.AddToRenderer(this, SHADER_TYPE::S_FORWARD_ALPHA) : renderer.RemoveFromRenderer(this, SHADER_TYPE::S_FORWARD_ALPHA);
 		return;

@@ -1,2 +1,107 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(377,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
+  Entity.cpp
+  IComponent.cpp
+  World.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\world.cpp(30): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\world.cpp(32): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\world.cpp(45): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\world.cpp(54): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\world.cpp(63): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\world.cpp(79): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\world.cpp(85): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\world.cpp(98): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\world.cpp(100): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\world.cpp(107): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\world.cpp(109): warning C4018: '<': signed/unsigned mismatch
+  CameraComponent.cpp
+  FreeMoveComponent.cpp
+  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  LightDirectionComponent.cpp
+  LightPointComponent.cpp
+  ModelComponent.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\modelcomponent.cpp(34): warning C4018: '<': signed/unsigned mismatch
+  ParticleSystemComponent.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(44): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(62): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(79): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(90): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(116): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(216): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(294): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(305): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(307): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(365): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(367): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(389): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(409): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(440): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(451): warning C4244: 'initializing': conversion from '_Rep' to 'unsigned int', possible loss of data
+          with
+          [
+              _Rep=std::chrono::system_clock::rep
+          ]
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(482): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(486): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(535): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(559): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(561): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(648): warning C4018: '<': signed/unsigned mismatch
+  QuadComponent.cpp
+  RotationComponent.cpp
+  TransformComponent.cpp
+  UVScrollComponent.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\uvscrollcomponent.cpp(38): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\uvscrollcomponent.cpp(40): warning C4018: '<': signed/unsigned mismatch
+  Input.cpp
+  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+c:\users\nilss\desktop\enginedx11\engine\engine\code\input\input.cpp(142): warning C4244: '=': conversion from 'LONG' to 'float', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\input\input.cpp(143): warning C4244: '=': conversion from 'LONG' to 'float', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\input\input.cpp(200): warning C4244: 'return': conversion from 'LONG' to 'float', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\input\input.cpp(206): warning C4244: 'return': conversion from 'LONG' to 'float', possible loss of data
+  CameraManager.cpp
+  GuiManager.cpp
+  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  LightManager.cpp
+  Mesh.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+  Renderer.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\renderer.cpp(49): warning C4244: 'argument': conversion from 'const float' to 'unsigned int', possible loss of data
+  ShaderManager.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(263): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(264): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(310): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(311): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(354): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(354): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(373): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(399): warning C4267: 'argument': conversion from 'size_t' to 'unsigned int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(492): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(846): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(846): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(880): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(884): warning C4267: 'argument': conversion from 'size_t' to 'unsigned int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shadermanager.cpp(993): warning C4101: 'destination': unreferenced local variable
+  Compiling...
+  SkyBox.cpp
+  Framework.cpp
+  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+c:\users\nilss\desktop\enginedx11\engine\engine\code\system\framework.cpp(40): warning C4244: 'argument': conversion from 'const float' to 'int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\system\framework.cpp(43): warning C4244: 'argument': conversion from 'const float' to 'int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\system\framework.cpp(220): warning C4244: 'initializing': conversion from '_Rep' to 'unsigned int', possible loss of data
+          with
+          [
+              _Rep=std::chrono::system_clock::rep
+          ]
+  DebugStats.cpp
+  Window.cpp
+  Generating code
+  245 of 2111 functions (11.6%) were compiled, the rest were copied from previous compilation.
+    25 functions were new in current compilation
+    66 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
   Engine.vcxproj -> C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\Engine.exe

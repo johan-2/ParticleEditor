@@ -7,8 +7,7 @@ class Entity;
 
 class LightPointComponent : public IComponent
 {
-public:
-	
+public:	
 	LightPointComponent();
 	~LightPointComponent();
 

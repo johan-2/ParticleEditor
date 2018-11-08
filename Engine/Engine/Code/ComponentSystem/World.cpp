@@ -1,6 +1,7 @@
 #include "World.h"
 #include "Entity.h"
 #include "IComponent.h"
+#include "ComponentHelpers.h"
 
 World* World::_instance = nullptr;
 
@@ -12,19 +13,18 @@ World& World::GetInstance()
 	return *_instance;
 }
 
-World::World():
-	_isComponentsDirty(false),
-	_isEntitiesDirty(false)
+World::World()
 {
 }
 
 World::~World()
 {
+	Empty();
 }
 
 void World::Update()
 {
-	// update all components
+	// update all components one type at the time
 	for (int i = 0; i < NUM_COMPONENT_TYPES; i++) 
 	{
 		unsigned int size = _components[i].size();
@@ -33,100 +33,63 @@ void World::Update()
 			_components[i][y]->Update();
 	}
 
-	// remove and delete all components/entities that got flagged dirty during the update
-	if (_isComponentsDirty)
-		HandleDirtyComponents();
-	
-	if (_isEntitiesDirty)
-		HandleDirtyEntities();
-		
+	// remove and delete all components/entities that got flagged 
+	// for removal during the update
+	HandleDirtyComponents();	
+	HandleDirtyEntities();	
 }
 
-void World::AddComponent(COMPONENT_TYPE type, IComponent* component)
-{
-	_components[type].push_back(component);
-}
-
-void World::AddEntity(Entity* entity)
-{
-	_entities.push_back(entity);
-}
-
-void World::RemoveComponent(COMPONENT_TYPE type, IComponent* component) 
-{	// add to dirtylist
-	_componentsToRemove[type].push_back(component);
-	_isComponentsDirty = true;
-}
-
-void World::RemoveEntity(Entity* entity) 
-{	// add to dirtylist
-	_entitiesToRemove.push_back(entity);
-	_isEntitiesDirty = true;
-}
-
+// removes and deletes a component from the active component list
 void World::DeleteComponent(COMPONENT_TYPE type, IComponent* component)
 {
 	unsigned int size = _components[type].size();
 
-	for (int i = 0; i < size; i++)
-	{
-		if (_components[type][i] == component)
-		{	// delete and remove component from vector
-			IComponent* temp = _components[type].back();
-			_components[type].back() = _components[type][i];
-			_components[type][i] = temp;
-			delete _components[type].back();
-			_components[type].pop_back();
-			break;
-		}
-	}
+	RemoveItemFromVector(_components[type], component);
+	delete component;
 }
 
+// removes and deletes an entity from the active entity list
 void World::DeleteEntity(Entity* entity)
 {
 	unsigned int size = _entities.size();
 
-	for (int i = 0; i < size; i++)
-	{	// delete and remove entity from vector
-		if (_entities[i] == entity)
-		{
-			Entity* temp = _entities.back();
-			_entities.back() = _entities[i];
-			_entities[i] = temp;
-			delete _entities.back();
-			_entities.pop_back();
-			break;
-		}
-	}
+	RemoveItemFromVector(_entities, entity);
+	delete entity;	
 }
 
+// check if we have any components flagged for removal
 void World::HandleDirtyComponents() 
 {
-	// delete and remove from list
-	for (int i = 0; i < NUM_COMPONENT_TYPES; i++)
-	{
-		unsigned int size = _componentsToRemove[i].size();
+	int count = _componentsToRemove.size();
 
-		for (int y = 0; y < size; y++)
-			DeleteComponent((COMPONENT_TYPE)i, _componentsToRemove[i][y]);
+	if (count == 0)
+		return;
 
-		_componentsToRemove[i].clear();
-	}
-	_isComponentsDirty = false;
+	// delete all components that is flagged dirty
+	for (int i = 0; i < count; i++)			
+		DeleteComponent(_componentsToRemove[i]->Type(), _componentsToRemove[i]);
+
+	// clear list
+	_componentsToRemove.clear();
 }
 
+// check if we have any entities flagged for removal
 void World::HandleDirtyEntities()
 {
-	// delete and remove from list
-	unsigned int size = _entitiesToRemove.size();
+	unsigned int count = _entitiesToRemove.size();
 
-	for (int i = 0; i < size; i++)
+	if (count == 0)
+		return;
+
+	// delete and remove from list
+	for (int i = 0; i < count; i++)
 		DeleteEntity(_entitiesToRemove[i]);
 
+	// clear list
 	_entitiesToRemove.clear();
-	_isEntitiesDirty = false;
 }
 
+// clear the world of all entities and components
 void World::Empty() 
 {
 	// delete all components and entitys in the world
@@ -137,8 +100,8 @@ void World::Empty()
 		for (int y = 0; y < size; y++)
 			delete _components[i][y];
 
+		// clear list of this component type
 		_components[i].clear();
-		_componentsToRemove[i].clear();
 	}
 
 	unsigned int size = _entities.size();
@@ -146,7 +109,8 @@ void World::Empty()
 	for (int i = 0; i < size; i++)
 		delete _entities[i];
 
+	// clear all lists
 	_entities.clear();
 	_entitiesToRemove.clear();
-
+	_componentsToRemove.clear();
 }

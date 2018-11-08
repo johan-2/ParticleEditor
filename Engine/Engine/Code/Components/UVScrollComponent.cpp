@@ -5,7 +5,6 @@
 #include "Time.h"
 #include "Mesh.h"
 
-
 UVScrollComponent::UVScrollComponent() : IComponent(COMPONENT_TYPE::UVSCROLL_COMPONENT)
 {
 	
@@ -35,6 +34,9 @@ void UVScrollComponent::Update()
 	_uvOffset.x += translation.x;
 	_uvOffset.y += translation.y;
 
-	_modelComponent->GetMesh()->SetUvOffset(_uvOffset);
-	
+	const std::vector<Mesh*>& meshes = _modelComponent->GetMeshes(); 
+	unsigned int count = meshes.size();
+
+	for (int i = 0; i < count; i++)
+		meshes[i]->SetUvOffset(_uvOffset);
 }
