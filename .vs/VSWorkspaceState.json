@@ -6,11 +6,11 @@
     "\\Engine\\Engine\\Code",
     "\\Engine\\Engine\\Code\\Components",
     "\\Engine\\Engine\\Code\\Renderer",
+    "\\Engine\\Engine\\Code\\Utils",
     "\\ParticleEditor",
     "\\ParticleEditor\\ParticleEditor",
-    "\\ParticleEditor\\ParticleEditor\\Code",
-    "\\ParticleEditor\\ParticleEditor\\Code\\Renderer"
+    "\\ParticleEditor\\ParticleEditor\\Code"
   ],
-  "SelectedNode": "\\Engine\\Engine\\Code\\Renderer\\Renderer.cpp",
+  "SelectedNode": "\\Engine\\Engine\\Code\\Renderer\\ShaderHelpers.h",
   "PreviewInSolutionExplorer": false
 }

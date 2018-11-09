@@ -171,6 +171,7 @@
     <ClCompile Include="Code\Renderer\DepthShader.cpp" />
     <ClCompile Include="Code\Renderer\GBuffer.cpp" />
     <ClCompile Include="Code\Renderer\Mesh.cpp" />
+    <ClCompile Include="Code\Renderer\ParticleShader.cpp" />
     <ClCompile Include="Code\Renderer\QuadShader.cpp" />
     <ClCompile Include="Code\Renderer\Renderer.cpp" />
     <ClCompile Include="Code\Renderer\RenderToTexture.cpp" />
@@ -223,6 +224,7 @@
     <ClInclude Include="Code\Renderer\DepthShader.h" />
     <ClInclude Include="Code\Renderer\GBuffer.h" />
     <ClInclude Include="Code\Renderer\Mesh.h" />
+    <ClInclude Include="Code\Renderer\ParticleShader.h" />
     <ClInclude Include="Code\Renderer\QuadShader.h" />
     <ClInclude Include="Code\Renderer\Renderer.h" />
     <ClInclude Include="Code\Renderer\RenderToTexture.h" />

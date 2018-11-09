@@ -20,6 +20,14 @@ QuadShader::QuadShader()
 
 QuadShader::~QuadShader()
 {
+	_vertexShaderByteCode->Release();
+	_pixelShaderByteCode->Release();
+
+	_vertexShader->Release();
+	_pixelShader->Release();
+
+	_constantBufferPixel->Release();
+	_constantBufferVertex->Release();
 }
 
 void QuadShader::RenderQuadUI(const std::vector<QuadComponent*>& quads)

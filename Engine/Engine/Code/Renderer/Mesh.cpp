@@ -105,19 +105,19 @@ void Mesh::AddRemoveToRenderer(bool add)
 	// add to depth rendering for shadow casting
 	// at the moment all meshes recive shadows
 	if ((_FLAGS & CAST_SHADOW_DIR) == CAST_SHADOW_DIR)
-		add ? renderer.AddToRenderer(this, SHADER_TYPE::S_DEPTH) : renderer.RemoveFromRenderer(this, SHADER_TYPE::S_DEPTH);
+		add ? renderer.AddMeshToRenderer(this, SHADER_TYPE::S_DEPTH) : renderer.RemoveMeshFromRenderer(this, SHADER_TYPE::S_DEPTH);
 
 	// if using deffered rendering 
 	if ((_FLAGS & DEFERRED) == DEFERRED)
 	{
-		add ? renderer.AddToRenderer(this, SHADER_TYPE::S_DEFERRED) : renderer.RemoveFromRenderer(this, SHADER_TYPE::S_DEFERRED);
+		add ? renderer.AddMeshToRenderer(this, SHADER_TYPE::S_DEFERRED) : renderer.RemoveMeshFromRenderer(this, SHADER_TYPE::S_DEFERRED);
 		return;
 	}
 
 	// alpha needs to be forward rendered
 	if ((_FLAGS & ALPHA_FORWARD) == ALPHA_FORWARD) 
 	{		
-		add ? renderer.AddToRenderer(this, SHADER_TYPE::S_FORWARD_ALPHA) : renderer.RemoveFromRenderer(this, SHADER_TYPE::S_FORWARD_ALPHA);
+		add ? renderer.AddMeshToRenderer(this, SHADER_TYPE::S_FORWARD_ALPHA) : renderer.RemoveMeshFromRenderer(this, SHADER_TYPE::S_FORWARD_ALPHA);
 		return;
 	}	
 }

@@ -53,8 +53,8 @@ private:
 	ID3D11VertexShader* _vertexSkyBoxShader;
 	ID3D11PixelShader*  _pixelSkyBoxShader;
 
-	ID3D11VertexShader* _vertexParticleShader;
-	ID3D11PixelShader*  _pixelParticleShader;
+	
+	
 
 	ID3D11VertexShader* _vertexGUIShader;
 	ID3D11PixelShader*  _pixelGUIShader;
@@ -138,11 +138,7 @@ private:
 		XMFLOAT4X4 projection;
 	};
 
-	struct ConstantParticleVertex
-	{
-		XMFLOAT4X4 view;
-		XMFLOAT4X4 projection;
-	};
+	
 	
 	struct ConstantGUIVertex
 	{

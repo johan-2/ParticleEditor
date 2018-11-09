@@ -1,6 +1,7 @@
 #pragma once
 #include <d3d11.h>
 #include <d3dcompiler.h>
+#include "DXErrorHandler.h"
 
 namespace SHADER_HELPERS
 {
@@ -31,7 +32,7 @@ namespace SHADER_HELPERS
 
 			result = device->CreateBuffer(&constVertexBufferDesc, NULL, &buffer);
 			if (FAILED(result))
-				printf("failed to create new ConstantBuffer\n");
+				DX_ERROR::PrintError(result, "failed to create new constant buffer when upgrading size");
 		}
 
 		//uppdate the buffer with the new data
@@ -60,7 +61,7 @@ namespace SHADER_HELPERS
 
 		result = device->CreateBuffer(&constantBufferdesc, NULL, &buffer);
 		if (FAILED(result))
-			printf("failed to create vertex constantbuffer\n");
+			DX_ERROR::PrintError(result, "failed to create new constant buffer");
 	}
 
 	static void CreateVertexShader(LPCWSTR filePath, ID3D11VertexShader*& shader, ID3D10Blob*& buffer)
@@ -69,24 +70,20 @@ namespace SHADER_HELPERS
 		HRESULT result;
 		ID3D10Blob* errorMessage;
 
-		//compile the vertex shader code from the text file into temporeral buffers
+		// compile the vertex shader code from the text file into temporal buffers
 		result = D3DCompileFromFile(filePath, NULL, NULL, "Main", "vs_5_0", 0, 0, &buffer, &errorMessage);
 		if (FAILED(result))
 		{
-			if (errorMessage)
-			{
-				printf("failed to compile Vertexshadercode\n");
-				printf("%s", (char*)errorMessage->GetBufferPointer());
-			}
+			DX_ERROR::PrintError(result, (std::string("failed to compile Vertex shader : ") + DX_ERROR::ConvertFromWString((wchar_t*)filePath)).c_str());
 
-			else
-				printf("failed to find Vertexshaderfile\n");
+			if (errorMessage)			
+				printf("%s", (char*)errorMessage->GetBufferPointer());		
 		}
-		//once the code have been compiled into the buffer we can create the shader objects themselfs from the blob objects
+
+		// once the code have been compiled into the buffer we can create the shader objects themselfs from the blob objects
 		result = device->CreateVertexShader(buffer->GetBufferPointer(), buffer->GetBufferSize(), NULL, &shader);
 		if (FAILED(result))
-			printf("failed to create the vertexShader from vertexbuffer\n");
-
+			DX_ERROR::PrintError(result, (std::string("failed to create vertex shader from ID3D10Blob, shader file = : ") + DX_ERROR::ConvertFromWString((wchar_t*)filePath)).c_str());
 	}
 
 	static void CreatePixelShader(LPCWSTR filePath, ID3D11PixelShader*& shader, ID3D10Blob*& buffer)
@@ -95,20 +92,19 @@ namespace SHADER_HELPERS
 		HRESULT result;
 		ID3D10Blob* errorMessage;
 
+		// compile the pixel shader code from the text file into temporal buffers
 		result = D3DCompileFromFile(filePath, NULL, NULL, "Main", "ps_5_0", 0, 0, &buffer, &errorMessage);
 		if (FAILED(result))
 		{
-			if (errorMessage)
-			{
-				printf("failed to compile Pixelshadercode\n");
-				printf("%s", (char*)errorMessage->GetBufferPointer());
-			}
-			else
-				printf("failed to find Pixelshaderfile\n");
+			DX_ERROR::PrintError(result, (std::string("failed to compile Pixel shader : ") + DX_ERROR::ConvertFromWString((wchar_t*)filePath)).c_str());
+
+			if (errorMessage)			
+				printf("%s", (char*)errorMessage->GetBufferPointer());			
 		}
 
+		//once the code have been compiled into the buffer we can create the shader objects themselfs from the blob objects
 		result = device->CreatePixelShader(buffer->GetBufferPointer(), buffer->GetBufferSize(), NULL, &shader);
 		if (FAILED(result))
-			printf("failed to create the pixelShader from pixelbuffer\n");
+			DX_ERROR::PrintError(result, (std::string("failed to create pixel shader from ID3D10Blob, shader file = : ") + DX_ERROR::ConvertFromWString((wchar_t*)filePath)).c_str());
 	}
 }

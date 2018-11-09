@@ -17,7 +17,7 @@ QuadComponent::~QuadComponent()
 	if (_vertexBuffer)
 		_vertexBuffer->Release();	
 
-	Renderer::GetInstance().RemoveQuadFromUIRenderer(this);
+	Renderer::GetInstance().RemoveQuadFromRenderer(this);
 }
 
 void QuadComponent::Init(XMFLOAT2 position, XMFLOAT2 size, wchar_t* texturePath, XMFLOAT4 color)
@@ -31,7 +31,7 @@ void QuadComponent::Init(XMFLOAT2 position, XMFLOAT2 size, wchar_t* texturePath,
 	CreateBuffers();
 	_texture = TexturePool::GetInstance().GetTexture(texturePath);
 
-	Renderer::GetInstance().AddQuadToUIRenderer(this);
+	Renderer::GetInstance().AddQuadToRenderer(this);
 }
 
 void QuadComponent::Update()

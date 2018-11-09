@@ -22,6 +22,8 @@ DepthShader::~DepthShader()
 
 	_vertexShader->Release();
 	_pixelShader->Release();
+
+	_constantBufferVertex->Release();
 }
 
 void DepthShader::RenderDepth(std::vector<Mesh*>& meshes)

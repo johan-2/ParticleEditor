@@ -1,5 +1,4 @@
 #pragma once
-
 #include <d3d11.h>
 #include <DirectXMath.h>
 
@@ -11,24 +10,39 @@ public:
 	SkyBox(wchar_t* textureFile);
 	~SkyBox();
 	
+	// upload buffers and render
 	void Render();
 	
 private:
 
-	void Update();
+	// create box mesh
 	void CreateBox();
-	void Loadtexture(wchar_t* file);
 
-	XMFLOAT4X4 _worldMatrix;
+	// load cubemap
+	void LoadCubemap(wchar_t* file);
+
+	// constant buffers
+	ID3D11Buffer* _constantBufferVertex;
+
+	// compiled shaders
+	ID3D11VertexShader* _vertexShader;
+	ID3D11PixelShader*  _pixelShader;
+
+	// the shader bytecode
+	ID3D10Blob* _vertexShaderByteCode;
+	ID3D10Blob* _pixelShaderByteCode;
+
+	// vertex and index buffers
 	ID3D11Buffer* _vertexBuffer;
-	ID3D11Buffer*_indexBuffer;
+	ID3D11Buffer* _indexBuffer;
 
+	// num vertices and indices
 	unsigned int _numVertices;
 	unsigned int _numIndices;
 
 	ID3D11ShaderResourceView* _texture;
 
-
+	// vertex input data structure
 	struct VertexData
 	{
 		XMFLOAT3 position;
@@ -36,6 +50,14 @@ private:
 		XMFLOAT3 normal;
 		XMFLOAT3 tangent;
 		XMFLOAT3 binormal;
+	};
+
+	// vertex constant buffer
+	struct ConstantVertex
+	{
+		XMFLOAT4X4 world;
+		XMFLOAT4X4 view;
+		XMFLOAT4X4 projection;
 	};
 
 };

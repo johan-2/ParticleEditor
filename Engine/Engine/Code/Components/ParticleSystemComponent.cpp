@@ -56,7 +56,7 @@ void ParticleSystemComponent::SetUp()
 	_hasLifetime = true;
 
 	// add to renderer and get transform reference
-	Renderer::GetInstance().AddParticleSystem(this);
+	Renderer::GetInstance().AddParticleSystemToRenderer(this);
 	_transform = GetComponent<TransformComponent>();
 
 	for(int i =0; i < _numEmitters; i++)
@@ -124,7 +124,7 @@ ParticleSystemComponent::~ParticleSystemComponent()
 	delete[] _indexBuffer;
 	delete[] _instanceBuffer;
 
-	Renderer::GetInstance().RemoveParticleSystem(this);
+	Renderer::GetInstance().RemoveParticleSystemFromRenderer(this);
 }
 
 void ParticleSystemComponent::CreateBuffers(XMFLOAT2 size, unsigned int index)

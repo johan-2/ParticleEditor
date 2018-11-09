@@ -7,21 +7,21 @@ struct VertexInputType
 {
     float4 position : POSITION;
     float2 texCoord : TEXCOORD0;
-	float3 normal : NORMAL;
-	float3 tangent : TANGENT;
+	float3 normal   : NORMAL;
+	float3 tangent  : TANGENT;
 	float3 binormal : BINORMAL;
-	float4 color : COLOR;
+	float4 color    : COLOR;
 };
 
 struct PixelInputType
 {
-    float4 position : SV_POSITION;
-    float2 texCoord : TEXCOORD0;
-	float3 normal : NORMAL;
-	float3 tangent : TANGENT;
-	float3 binormal : BINORMAL;
+    float4 position      : SV_POSITION;
+    float2 texCoord      : TEXCOORD0;
+	float3 normal        : NORMAL;
+	float3 tangent       : TANGENT;
+	float3 binormal      : BINORMAL;
 	float4 worldPosition : TEXCOORD1;
-	float4 color : COLOR;		 
+	float4 color         : COLOR;		 
 };
 
 PixelInputType Main(VertexInputType input)

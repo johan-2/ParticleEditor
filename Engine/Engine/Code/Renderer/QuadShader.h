@@ -17,7 +17,7 @@ public:
 
 	// get byte code from shaders
 	ID3D10Blob*& GetVertexShaderByteCode() { return _vertexShaderByteCode; }
-	ID3D10Blob*& GetPixelShaderByteCode() { return _pixelShaderByteCode; }
+	ID3D10Blob*& GetPixelShaderByteCode()  { return _pixelShaderByteCode; }
 
 private:
 

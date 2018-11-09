@@ -28,6 +28,22 @@ DeferredShader::DeferredShader()
 
 DeferredShader::~DeferredShader()
 {
+	_vertexGeometryShaderByteCode->Release();
+	_pixelGeometryShaderByteCode->Release();
+
+	_vertexLightningShaderByteCode->Release();
+	_pixelLightningShaderByteCode->Release();
+
+	_vertexGeometryShader->Release();
+	_pixelGeometryShader->Release();
+
+	_vertexLightShader->Release();
+	_pixelLightShader->Release();
+
+	_constantBufferGeometry->Release();
+	_constantBufferDefAmbient->Release();
+	_constantBufferDefDirectional->Release();
+	_constantBufferDefPoint->Release();
 }
 
 void DeferredShader::RenderGeometry(std::vector<Mesh*>& meshes)

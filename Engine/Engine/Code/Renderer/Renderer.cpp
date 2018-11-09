@@ -1,5 +1,4 @@
 #include "Renderer.h"
-#include "ShaderManager.h"
 #include "DXManager.h"
 #include "TransformComponent.h"
 #include "CameraComponent.h"
@@ -18,6 +17,8 @@
 #include "DXInputLayouts.h"
 #include "DeferredShader.h"
 #include "QuadShader.h"
+#include "ParticleShader.h"
+
 
 using namespace DirectX;
 
@@ -33,14 +34,20 @@ Renderer& Renderer::GetInstance()
 
 Renderer::Renderer()
 {
+	// create and compile shaders
 	_depthShader    = new DepthShader();
 	_deferredShader = new DeferredShader();
 	_quadShader     = new QuadShader();
+	_particleShader = new ParticleShader();
 
+	// create skybox
+	_skyBox = new SkyBox(L"Skyboxes/DarkCloudy.dds");
+
+	// create input layouts
 	_inputLayouts = new DXInputLayouts();
-
 	_inputLayouts->CreateInputLayout3D(_deferredShader->GetVertexGeometryShaderByteCode());
 	_inputLayouts->CreateInputLayout2D(_quadShader->GetVertexShaderByteCode());
+	_inputLayouts->CreateInputLayoutParticle(_particleShader->GetVertexShaderByteCode());
 }
 
 Renderer::~Renderer()
@@ -75,9 +82,6 @@ void Renderer::CreateDepthMap()
 	// create fullscreenquad for deferred rendering
 	_screenQuad = new ScreenQuad();
 
-	// create skybox
-	_skyBox = new SkyBox(L"Skyboxes/DarkCloudy.dds");
-
 	// create quads that can render a preview of all render textures
 #ifdef _DEBUG
 	Entity* depthMapQuad = new Entity();
@@ -103,73 +107,11 @@ void Renderer::CreateDepthMap()
 #endif	
 }
 
-void Renderer::AddToRenderer(Mesh* mesh, SHADER_TYPE type) 
-{
-	_meshes[type].push_back(mesh);
-}
-
-void Renderer::RemoveFromRenderer(Mesh* mesh, SHADER_TYPE type) 
-{
-	for (int i = 0; i < _meshes[type].size(); i++) 
-	{
-		if (mesh == _meshes[type][i]) 
-		{
-			Mesh* temp = _meshes[type].back();
-			_meshes[type].back() = _meshes[type][i];
-			_meshes[type][i] = temp;
-
-			_meshes[type].pop_back();
-		}
-	}
-}
-
-void Renderer::AddParticleSystem(ParticleSystemComponent* emitter)
-{
-	_particleSystems.push_back(emitter);
-}
-
-void Renderer::RemoveParticleSystem(ParticleSystemComponent* emitter)
-{
-	for (int i = 0; i < _particleSystems.size(); i++)
-	{
-		if (emitter == _particleSystems[i])
-		{
-			ParticleSystemComponent* temp = _particleSystems.back();
-			_particleSystems.back() = _particleSystems[i];
-			_particleSystems[i] = temp;
-			_particleSystems.pop_back();
-		}
-	}
-}
-
-void Renderer::AddQuadToUIRenderer(QuadComponent* quad) 
-{
-	_quads.push_back(quad);
-}
-
-void Renderer::RemoveQuadFromUIRenderer(QuadComponent* quad) 
-{
-	for (int i = 0; i < _quads.size(); i++) 
-	{
-		if (quad == _quads[i]) 
-		{
-			QuadComponent* temp = _quads.back();
-			_quads.back() = _quads[i];
-			_quads[i] = temp;
-			_quads.pop_back();
-		}
-	}
-}
-
 void Renderer::Render() 
 {	
-	ShaderManager& SM = ShaderManager::GetInstance();
-
 	// set input layout for 3dmeshes
 	_inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT3D);
 	
-	
-
 	// render shadowmap
 	RenderDepth();
 
@@ -177,20 +119,19 @@ void Renderer::Render()
 	RenderDeferred();
 
 	// set back regular constantbuffers and render alpha meshes with regular forward rendering
-	_inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT3D);
-	
+	_inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT3D);	
 	//RenderLightsAlpha();	
 
 	// render skybox, will mask out all pixels that contains geometry in the fullscreen quad, leaving only the skybox rendered on "empty" pixels
-	//_skyBox->Render();
+	_skyBox->Render();
 	
 	// render particles (currently alpha meshes and particles cant be rendered perfect together, need to find solution for this)
-	//_inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUTPARTICLE);
-	//RenderParticles();
+	_inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUTPARTICLE);
+	RenderParticles();
 	
 	// set inputlayout for UI
 	_inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT2D);
-	RenderUI();		
+	RenderQuads();		
 }
 
 void Renderer::RenderDeferred()
@@ -243,10 +184,7 @@ void Renderer::RenderLightsAlpha()
 	if (_meshes[S_FORWARD_ALPHA].size() == 0)
 		return;
 
-	ShaderManager& SM = ShaderManager::GetInstance();
-
 	AlphaSort();
-	
 }
 
 void Renderer::RenderParticles()
@@ -254,11 +192,10 @@ void Renderer::RenderParticles()
 	if (_particleSystems.size() == 0)
 		return;
 
-	ShaderManager& SM = ShaderManager::GetInstance();
-	SM.RenderParticles(_particleSystems);
+	_particleShader->RenderParticles(_particleSystems);
 }
 
-void Renderer::RenderUI() 
+void Renderer::RenderQuads() 
 {
 	if (_quads.size() == 0)
 		return;

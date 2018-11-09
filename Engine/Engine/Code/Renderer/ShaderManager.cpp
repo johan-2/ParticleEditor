@@ -65,7 +65,7 @@ void ShaderManager::Initialize()
 
 	////create particle shaders
 	//CreateVertexShader(L"shaders/vertexParticle.vs", _vertexParticleShader, vertexShaderBufferParticle);
-	//CreatePixelShader(L"shaders/pixelParticle.ps", _pixelParticleShader, pixelShaderBufferParticle);
+	//CreatePixelShader(L"shaders/ pixelParticle.ps", _pixelParticleShader, pixelShaderBufferParticle);
 
 	////create gui shaders
 	//CreateVertexShader(L"shaders/vertexImGui.vs", _vertexGUIShader, vertexShaderBufferGUI);
@@ -87,94 +87,9 @@ void ShaderManager::Initialize()
 
 
 
-void ShaderManager::RenderSkyBox(XMFLOAT4X4 worldMatrix)
-{
-	////// get devicecontext
-	//DXManager& DXM = DXManager::GetInstance();
-	//ID3D11DeviceContext* devCon = DXM.GetDeviceCon();
 
-	//// constantbuffer structures
-	//ConstantSkyBoxVertex vertexData;
 
-	//CameraComponent* camera = CameraManager::GetInstance().GetCurrentCameraGame();
 
-	//// set shaders			
-	//devCon->VSSetShader(_vertexSkyBoxShader, NULL, 0);
-	//devCon->PSSetShader(_pixelSkyBoxShader, NULL, 0);
-
-	////render with alpha blending
-	//DXM.BlendStates()->SetBlendState(BLEND_STATE::BLEND_OPAQUE);
-	//DXM.RasterizerStates()->SetRasterizerState(RASTERIZER_STATE::NOCULL);
-	//DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::MASKED_SKYBOX);
-
-	//// get and transpose camera matrices
-	//XMFLOAT4X4 viewMatrix = camera->GetViewMatrix();
-	//XMFLOAT4X4 projectionMatrix = camera->GetProjectionMatrix();
-
-	//XMStoreFloat4x4(&viewMatrix, XMMatrixTranspose(XMLoadFloat4x4(&viewMatrix)));
-	//XMStoreFloat4x4(&projectionMatrix, XMMatrixTranspose(XMLoadFloat4x4(&projectionMatrix)));
-	//XMStoreFloat4x4(&worldMatrix, XMMatrixTranspose(XMLoadFloat4x4(&worldMatrix)));
-
-	////set and upload vertexconstantdata 
-	//vertexData.world = worldMatrix;
-	//vertexData.view = viewMatrix;
-	//vertexData.projection = projectionMatrix;
-	//UpdateConstantBuffer((void*)&vertexData, sizeof(ConstantSkyBoxVertex), _constantBufferVertex);
-
-	//// draw
-	//devCon->DrawIndexed(36, 0, 0);
-
-	//DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::ENABLED);
-	//DXM.RasterizerStates()->SetRasterizerState(RASTERIZER_STATE::BACKCULL);
-}
-
-void ShaderManager::RenderParticles(const std::vector<ParticleSystemComponent*>& emitters)
-{
-	////// get devicecontext
-	//DXManager& DXM = DXManager::GetInstance();
-	//ID3D11DeviceContext* devCon = DXM.GetDeviceCon();
-
-	//// constantbuffer structures
-	//ConstantParticleVertex vertexData;
-
-	//CameraComponent* camera = CameraManager::GetInstance().GetCurrentCameraGame();
-
-	//DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::READ_ONLY);
-
-	//// set shaders			
-	//devCon->VSSetShader(_vertexParticleShader, NULL, 0);
-	//devCon->PSSetShader(_pixelParticleShader, NULL, 0);
-
-	//// get and transpose camera matrices
-	//XMFLOAT4X4 viewMatrix = camera->GetViewMatrix();
-	//XMFLOAT4X4 projectionMatrix = camera->GetProjectionMatrix();
-
-	//XMStoreFloat4x4(&viewMatrix, XMMatrixTranspose(XMLoadFloat4x4(&viewMatrix)));
-	//XMStoreFloat4x4(&projectionMatrix, XMMatrixTranspose(XMLoadFloat4x4(&projectionMatrix)));
-
-	//vertexData.view = viewMatrix;
-	//vertexData.projection = projectionMatrix;
-	//UpdateConstantBuffer((void*)&vertexData, sizeof(ConstantParticleVertex), _constantBufferVertex);
-
-	//// stuff that need to be set per emitter
-	//for (int i = 0; i < emitters.size(); i++)
-	//{
-	//	for (int y = 0; y < emitters[i]->GetNumEmitters(); y++)
-	//	{
-	//		// upload vertex and indexbuffers
-	//		emitters[i]->UploadBuffers(y);
-	//		DXM.BlendStates()->SetBlendState(emitters[i]->GetBlendState(y));
-
-	//		// set texture
-	//		ID3D11ShaderResourceView* texture = emitters[i]->GetTexture(y);
-	//		devCon->PSSetShaderResources(0, 1, &texture);
-
-	//		// draw		
-	//		devCon->DrawIndexedInstanced(6, emitters[i]->GetNumParticles(y), 0, 0, 0);
-	//	}
-	//}
-	//DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::ENABLED);
-}
 
 
 

@@ -42,7 +42,7 @@ void DXInputLayouts::CreateInputLayout2D(ID3D10Blob*& vertexShaderByteCode)
 	};
 
 	HRESULT result;
-	result = device->CreateInputLayout(inputLayout2D, 6, vertexShaderByteCode->GetBufferPointer(), vertexShaderByteCode->GetBufferSize(), &_inputLayout2D);
+	result = device->CreateInputLayout(inputLayout2D, 2, vertexShaderByteCode->GetBufferPointer(), vertexShaderByteCode->GetBufferSize(), &_inputLayout2D);
 	if (FAILED(result))
 		printf("failed to create Inputlayout\n");
 }
@@ -64,7 +64,7 @@ void DXInputLayouts::CreateInputLayoutParticle(ID3D10Blob*& vertexShaderByteCode
 	};
 
 	HRESULT result;
-	result = device->CreateInputLayout(inputLayoutParticle, 6, vertexShaderByteCode->GetBufferPointer(), vertexShaderByteCode->GetBufferSize(), &_inputLayoutParticle);
+	result = device->CreateInputLayout(inputLayoutParticle, 8, vertexShaderByteCode->GetBufferPointer(), vertexShaderByteCode->GetBufferSize(), &_inputLayoutParticle);
 	if (FAILED(result))
 		printf("failed to create Inputlayout\n");
 }
@@ -81,7 +81,7 @@ void DXInputLayouts::CreateInputLayoutGUI(ID3D10Blob*& vertexShaderByteCode)
 	};
 
 	HRESULT result;
-	result = device->CreateInputLayout(inputLayoutGui, 6, vertexShaderByteCode->GetBufferPointer(), vertexShaderByteCode->GetBufferSize(), &_inputLayoutGUI);
+	result = device->CreateInputLayout(inputLayoutGui, 3, vertexShaderByteCode->GetBufferPointer(), vertexShaderByteCode->GetBufferSize(), &_inputLayoutGUI);
 	if (FAILED(result))
 		printf("failed to create Inputlayout\n");
 }
