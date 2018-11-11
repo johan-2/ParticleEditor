@@ -1,26 +1,53 @@
-
-Texture2D Textures[4];	// diffuse, normal, specular, shadowmap
+Texture2D Textures[4];	    // diffuse, normal, specular, shadowmap
 SamplerState SampleType[2]; // wrap,clamp 	
- 		
-uniform	float4 u_lightColor;	
-uniform	float4 u_specularColor;	
-uniform	float3 u_lightDirection;
-uniform	float  u_specularPower;
+
+struct PointLight
+{
+	float3 position;
+	float radius;
+	float3 color;
+	float intensity;
+	float3 specularColor;
+	float specularPower;
+	float attConstant;
+	float attLinear;
+	float attExponential;
+	int numLights;
+};
+
+cbuffer AmbientDirectionalBuffer : register(b0)
+{
+	float4 ambientColor;
+	float4 dirDiffuseColor;
+	float4 dirSpecularColor;
+	float3 lightDirection;
+	float  specularPower;
+}
+
+cbuffer PointLightBuffer : register(b1)
+{
+	PointLight pointLights[1024];
+};
 
 struct PixelInputType
 {
-    float4 position : SV_POSITION;
-    float2 texCoord : TEXCOORD0;
-	float3 normal : NORMAL;
-	float3 tangent : TANGENT;
-	float3 binormal : BINORMAL;
-	float3 vertexToCamera : TEXCOORD1;
+    float4 position           : SV_POSITION;
+    float2 texCoord           : TEXCOORD0;
+	float3 normal             : NORMAL;
+	float3 tangent            : TANGENT;
+	float3 binormal           : BINORMAL;
+	float3 vertexToCamera     : TEXCOORD1;
 	float4 positionLightSpace : TEXCOORD2;
-	
+	float3 worldPos           : TEXCOORD3;
 };
 
-float4 Main(PixelInputType input) : SV_TARGET
-{				
+float4 GetAmbientColor()
+{
+	return Textures[0].Sample(SampleType[0], texCoord);
+}
+
+float4 GetDirectionalColor()
+{
 	// do all shadow calculations first to decide if the pixel should be discarded or not
 	float bias = 0.00001;
 	float numInLight = 0;
@@ -63,7 +90,7 @@ float4 Main(PixelInputType input) : SV_TARGET
 										  
 	// sample from textures, multiply texturecolor with light percent to get blured shadow edges		
 	float4 textureColor = Textures[0].Sample(SampleType[0], input.texCoord) * lightPercent;
-	float4 bumpValues = Textures[1].Sample(SampleType[0],input.texCoord);
+	float4 bumpValues   = Textures[1].Sample(SampleType[0],input.texCoord);
 	
 	// convert normalmap sample to range -1 to 1
 	bumpValues = (bumpValues * 2.0) -1.0;
@@ -72,33 +99,91 @@ float4 Main(PixelInputType input) : SV_TARGET
 	float3x3 tangentSpaceMatrix = float3x3(input.tangent,input.binormal,input.normal);	
 	float3 bumpNormal = normalize(mul(bumpValues, tangentSpaceMatrix));   
 	    		  					   		
-    float lightIntensity = saturate(dot(bumpNormal, u_lightDirection)); 
+    float lightIntensity = saturate(dot(bumpNormal, lightDirection)); 
 	
 	// get color based on texture, intensity and color of light
-    float4 color = textureColor * lightIntensity * u_lightColor; 
+    float4 color = textureColor * lightIntensity * dirLightColor; 
 	saturate(color);
 	float4 specular = float4(0,0,0,0);
 	
 	// add specular effect if the light is affecting the pixel
 	if(lightIntensity > 0)
-	{
-		
+	{		
 		float4 specularValue = Textures[2].Sample(SampleType[0],input.texCoord);
-	
-		//blinn phong
-		//float3 half = normalize(u_lightDirection + input.vertexToCamera);		
-		//float specularIntensity = pow( max( 0.0, dot( input.normal, half ) ), specularPower );
-		//specular = specularColor * specularIntensity;
 		
 		//phong
-		float3 reflection = normalize(2 * lightIntensity * input.normal - u_lightDirection);		
-		float specularIntensity = pow(saturate(dot(reflection, input.vertexToCamera)),u_specularPower);
-		specular = u_specularColor * specularIntensity;
+		float3 reflection = normalize(2 * lightIntensity * input.normal - lightDirection);		
+		float specularIntensity = pow(saturate(dot(reflection, input.vertexToCamera)),specularPower);
+		specular = dirSpecularColor * specularIntensity;
 		specular = specular	* specularValue;
 	} 
 			
 	return (color += specular); 
-	 				                            		   
+}
+
+float4 GetPointColor()
+{
+	float4 finalColor = float4(0,0,0,1);
+	int numLights     = pointLights[0].numLights;
+	
+	for (int i =0; i < numLights; i++)
+	{	
+		// get light direction and distance from light	
+		float3 lightDir = -normalize(input.worldPos - pointLights[i].position);	
+		float dst       = length(input.worldPos - pointLights[i].position);
+		
+		// calculate attuniation	
+		float fallOff     = 1 - ((dst / pointLights[i].radius) * 0.5);	// make the falloff 50% slower then the radius to give more control of result depending of attuniation settings
+		float attuniation = 1 / (pointLights[i].attConstant + pointLights[i].attLinear * dst + pointLights[i].attExponential * dst * dst);
+		attuniation       = (attuniation * pointLights[i].intensity) * fallOff;
+		
+		if (fallOff >= 0)
+		{	
+			// sample from textures		
+			float4 textureColor = Textures[0].Sample(SampleType[0], input.texCoord); 	
+			float4 bumpValues   = Textures[1].Sample(SampleType[0], input.texCoord);
+			
+			// convert normalmap sample to range -1 to 1
+			bumpValues = (bumpValues * 2.0) -1.0;
+			
+			// get tangentSpaceMatrix for normalmapping and multiply with normalmapsample to get the bumpnormal
+			float3x3 tangentSpaceMatrix = float3x3(input.tangent,input.binormal,input.normal);	
+			float3 bumpNormal           = normalize(mul(bumpValues, tangentSpaceMatrix));   
+				
+			// get intensity from the normal from normalmap and lightdirection
+			float lightIntensity = saturate(dot(bumpNormal, lightDir)); 
+			
+			// get color based on texture, intensity and color of light
+			float4 color = textureColor * lightIntensity * float4(pointLights[i].color,1); 
+			
+			// add specular effect if the light is affecting the pixel, dont add specular effect if dst is more then radius
+			float4 specular = float4(0,0,0,0);		
+			if(lightIntensity > 0 && dst < pointLights[i].radius)
+			{		
+				float4 specularValue = Textures[2].Sample(SampleType[0],input.texCoord);
+							
+				//phong
+				float3 reflection       = normalize(2 * lightIntensity * input.normal - lightDir);		
+				float specularIntensity = pow(saturate(dot(reflection, input.vertexToCamera)), pointLights[i].specularPower);
+				specular.xyz            = (pointLights[i].specularColor * specularIntensity);
+				specular                = specular * specularValue;
+			} 
+						
+			color      += specular;	
+			finalColor += (color * attuniation);
+		}
+	}
+     
+    return finalColor;
+}
+
+float4 Main(PixelInputType input) : SV_TARGET
+{					
+	float4 baseColor        = GetAmbientColor();
+	float4 directionalColor = GetDirectionalColor();
+	float4 pointColor       = GetPointColor();
+	
+	return baseColor + directionalColor + pointColor;	 				                            		   
 }
 
 

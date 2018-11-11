@@ -132,7 +132,6 @@ void Framework::Update()
 void Framework::Render()
 {
 	Renderer::GetInstance().Render();
-	ShaderManager::GetInstance().RenderGUI(ImGui::GetDrawData());
 }
 
 void Framework::Run()
@@ -171,9 +170,6 @@ void Framework::Run()
 
 		// clear rendertarget from last frame
 		DXM.ClearRenderTarget(0, 0, 0, 1);
-
-		// setup ImGui buffers before rendering
-		ImGui::Render();
 
 		// render everything
 		Render();

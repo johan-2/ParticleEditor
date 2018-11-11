@@ -140,10 +140,7 @@ private:
 
 	
 	
-	struct ConstantGUIVertex
-	{
-		float projection[4][4];
-	};
+	
 	
 	struct ConstantPointVertex
 	{

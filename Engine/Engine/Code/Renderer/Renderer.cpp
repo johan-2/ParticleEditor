@@ -18,7 +18,8 @@
 #include "DeferredShader.h"
 #include "QuadShader.h"
 #include "ParticleShader.h"
-
+#include "ImGUIShader.h"
+#include "ForwardAlphaShader.h"
 
 using namespace DirectX;
 
@@ -35,10 +36,12 @@ Renderer& Renderer::GetInstance()
 Renderer::Renderer()
 {
 	// create and compile shaders
-	_depthShader    = new DepthShader();
-	_deferredShader = new DeferredShader();
-	_quadShader     = new QuadShader();
-	_particleShader = new ParticleShader();
+	_depthShader        = new DepthShader();
+	_deferredShader     = new DeferredShader();
+	_quadShader         = new QuadShader();
+	_particleShader     = new ParticleShader();
+	_imGUIShader        = new ImGUIShader();
+	_forwardAlphaShader = new ForwardAlphaShader();
 
 	// create skybox
 	_skyBox = new SkyBox(L"Skyboxes/DarkCloudy.dds");
@@ -48,6 +51,7 @@ Renderer::Renderer()
 	_inputLayouts->CreateInputLayout3D(_deferredShader->GetVertexGeometryShaderByteCode());
 	_inputLayouts->CreateInputLayout2D(_quadShader->GetVertexShaderByteCode());
 	_inputLayouts->CreateInputLayoutParticle(_particleShader->GetVertexShaderByteCode());
+	_inputLayouts->CreateInputLayoutGUI(_imGUIShader->GetVertexShaderByteCode());
 }
 
 Renderer::~Renderer()
@@ -118,20 +122,35 @@ void Renderer::Render()
 	// render all geometry and then fullscreen quad with lightcalculations
 	RenderDeferred();
 
-	// set back regular constantbuffers and render alpha meshes with regular forward rendering
+	// set back to 3d layout after the deferred 2d lightning pass
 	_inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT3D);	
-	//RenderLightsAlpha();	
+	
+	// render alpha meshes if we have any
+	if (_meshes[S_FORWARD_ALPHA].size() > 0)
+	{
+		AlphaSort();
+		_forwardAlphaShader->RenderForward(_meshes[S_FORWARD_ALPHA]);
+	}
 
 	// render skybox, will mask out all pixels that contains geometry in the fullscreen quad, leaving only the skybox rendered on "empty" pixels
 	_skyBox->Render();
 	
-	// render particles (currently alpha meshes and particles cant be rendered perfect together, need to find solution for this)
-	_inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUTPARTICLE);
-	RenderParticles();
+	// render particles if we have any
+	if (_particleSystems.size() > 0)
+	{
+		_inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUTPARTICLE);
+		_particleShader->RenderParticles(_particleSystems);
+	}
 	
-	// set inputlayout for UI
-	_inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT2D);
-	RenderQuads();		
+	// render 2D quads if we have any
+	if (_quads.size() > 0)
+	{
+		_inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT2D);
+		_quadShader->RenderQuadUI(_quads);
+	}
+
+	_inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUTGUI);
+	_imGUIShader->RenderGUI();
 }
 
 void Renderer::RenderDeferred()
@@ -177,30 +196,6 @@ void Renderer::RenderDepth()
 
 	// render all meshes 
 	_depthShader->RenderDepth(_meshes[S_DEPTH]);
-}
-
-void Renderer::RenderLightsAlpha() 
-{
-	if (_meshes[S_FORWARD_ALPHA].size() == 0)
-		return;
-
-	AlphaSort();
-}
-
-void Renderer::RenderParticles()
-{
-	if (_particleSystems.size() == 0)
-		return;
-
-	_particleShader->RenderParticles(_particleSystems);
-}
-
-void Renderer::RenderQuads() 
-{
-	if (_quads.size() == 0)
-		return;
-
-	_quadShader->RenderQuadUI(_quads);
 }
 
 void Renderer::AlphaSort() 

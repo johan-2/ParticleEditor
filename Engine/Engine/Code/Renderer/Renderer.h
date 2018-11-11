@@ -2,6 +2,7 @@
 #include <vector>
 #include "VectorHelpers.h"
 
+// forward declare types
 class Mesh;
 class QuadComponent;
 class RenderToTexture;
@@ -15,7 +16,10 @@ class DeferredShader;
 class QuadShader;
 class ParticleShader;
 class DXInputLayouts;
+class ImGUIShader;
+class ForwardAlphaShader;
 
+// the different render lists we have
 enum SHADER_TYPE
 {	
 	S_DEFERRED,
@@ -42,26 +46,34 @@ public:
 	void RemoveQuadFromRenderer(QuadComponent* quad)                        { VECTOR_HELPERS::RemoveItemFromVector(_quads, quad); }
 	void RemoveParticleSystemFromRenderer(ParticleSystemComponent* emitter) { VECTOR_HELPERS::RemoveItemFromVector(_particleSystems, emitter); }
 	
-	void Render();
 	void CreateDepthMap();
+
+	// will render everything
+	void Render();
 	
 private:
 
-	DepthShader*    _depthShader;
-	DeferredShader* _deferredShader;
-	QuadShader*     _quadShader;
-	ParticleShader* _particleShader;
-	DXInputLayouts* _inputLayouts;
-
-	static Renderer* _instance;
-
+	// render functions
 	void RenderDeferred();
 	void RenderDepth();
-	void RenderLightsAlpha();
-	void RenderParticles();
-	void RenderQuads();
 
+	// mesh sort function
 	void AlphaSort();	
+
+	// shader "programs" that will handle all preperations
+	// for rendering with a specific shader
+	DepthShader*        _depthShader;
+	DeferredShader*     _deferredShader;
+	QuadShader*         _quadShader;
+	ParticleShader*     _particleShader;
+	ImGUIShader*        _imGUIShader;
+	ForwardAlphaShader* _forwardAlphaShader;
+
+	// skybox class with all rendering built in
+	SkyBox* _skyBox;
+
+	// contains all input layouts
+	DXInputLayouts* _inputLayouts;
 
 	// list of meshes for each shader type
 	// one mesh can be added to several shader types
@@ -73,12 +85,19 @@ private:
 	// all particle systems
 	std::vector<ParticleSystemComponent*> _particleSystems;
 
+	// the camera entity that renders the depth map for shadows
 	Entity* _cameraDepth;
+
+	// the render texure that the depth camera renders to
 	RenderToTexture* _depthMap;
 
-	GBuffer* _gBuffer;
+	// the Gbuffer for deferred rendering
+	// and the fullscreen quad where we will 
+	// project the deferred lightningpass
+	GBuffer*    _gBuffer;
 	ScreenQuad* _screenQuad;
-	SkyBox* _skyBox;
 
+	// instance to this class
+	static Renderer* _instance;
 };
 

@@ -1,6 +1,7 @@
 #pragma once
 #include <d3d11.h>
 #include <d3dcompiler.h>
+#include "DXManager.h"
 #include "DXErrorHandler.h"
 
 namespace SHADER_HELPERS
@@ -8,7 +9,7 @@ namespace SHADER_HELPERS
 	static void UpdateConstantBuffer(void* data, unsigned int size, ID3D11Buffer*& buffer)
 	{
 		ID3D11DeviceContext* devCon = DXManager::GetInstance().GetDeviceCon();
-		ID3D11Device* device = DXManager::GetInstance().GetDevice();
+		ID3D11Device* device        = DXManager::GetInstance().GetDevice();
 
 		//get desc of the current constant buffer in use
 		D3D11_BUFFER_DESC old;
