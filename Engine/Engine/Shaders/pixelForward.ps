@@ -1,4 +1,4 @@
-Texture2D Textures[4];	    // diffuse, normal, specular, shadowmap
+Texture2D Texture[4];	    // diffuse, normal, specular, shadowmap
 SamplerState SampleType[2]; // wrap,clamp 	
 
 struct PointLight
@@ -20,8 +20,8 @@ cbuffer AmbientDirectionalBuffer : register(b0)
 	float4 ambientColor;
 	float4 dirDiffuseColor;
 	float4 dirSpecularColor;
-	float3 lightDirection;
-	float  specularPower;
+	float3 dirLightDirection;
+	float  dirSpecularPower;
 }
 
 cbuffer PointLightBuffer : register(b1)
@@ -43,63 +43,62 @@ struct PixelInputType
 
 float4 GetAmbientColor(PixelInputType input)
 {
-	return Textures[0].Sample(SampleType[0], input.texCoord);
+	return Texture[0].Sample(SampleType[0], input.texCoord) * ambientColor;
 }
 
 float4 GetDirectionalColor(PixelInputType input)
 {
-	// do all shadow calculations first to decide if the pixel should be discarded or not
-	float bias = 0.00001;
-	float numInLight = 0;
+	// do all shadow calculations first to decide if the pixel should be lit or not
+	float bias         = 0.00001;
+	float numInLight   = 0;
 	float lightPercent = 0;
 	
 	// get the projected texture coordinates based on the position in eye of the light
 	float2 smTexCoord;
 	smTexCoord.x = ((input.positionLightSpace.x / input.positionLightSpace.w) / 2.0) + 0.5;
 	smTexCoord.y = ((-input.positionLightSpace.y / input.positionLightSpace.w) / 2.0) + 0.5;
-				
+	
 	if((saturate(smTexCoord.x) == smTexCoord.x) && (saturate(smTexCoord.y) == smTexCoord.y))
 	{
 		float neighbour = 1 / 8192.0;	// hardcoded for now, dont forget to change if depthmap res change	
 		float depthMapValues[9];
 		
-		depthMapValues[0] = Textures[3].Sample(SampleType[1], float2(smTexCoord.x, smTexCoord.y)).r; // middle
-		depthMapValues[1] = Textures[3].Sample(SampleType[1], float2(smTexCoord.x - neighbour, smTexCoord.y)).r; // left
-		depthMapValues[2] = Textures[3].Sample(SampleType[1], float2(smTexCoord.x - neighbour, smTexCoord.y - neighbour)).r; // top left
-		depthMapValues[3] = Textures[3].Sample(SampleType[1], float2(smTexCoord.x, smTexCoord.y - neighbour)).r; // top
-		depthMapValues[4] = Textures[3].Sample(SampleType[1], float2(smTexCoord.x + neighbour, smTexCoord.y - neighbour)).r; // top right
-		depthMapValues[5] = Textures[3].Sample(SampleType[1], float2(smTexCoord.x + neighbour, smTexCoord.y)).r; // right
-		depthMapValues[6] = Textures[3].Sample(SampleType[1], float2(smTexCoord.x + neighbour, smTexCoord.y + neighbour)).r; // bottom right
-		depthMapValues[7] = Textures[3].Sample(SampleType[1], float2(smTexCoord.x, smTexCoord.y + neighbour)).r; // bottom 
-		depthMapValues[8] = Textures[3].Sample(SampleType[1], float2(smTexCoord.x - neighbour, smTexCoord.y + neighbour)).r; // bottom left
+		depthMapValues[0] = Texture[3].Sample(SampleType[1], float2(smTexCoord.x, smTexCoord.y)).r; // middle
+		depthMapValues[1] = Texture[3].Sample(SampleType[1], float2(smTexCoord.x - neighbour, smTexCoord.y)).r; // left
+		depthMapValues[2] = Texture[3].Sample(SampleType[1], float2(smTexCoord.x - neighbour, smTexCoord.y - neighbour)).r; // top left
+		depthMapValues[3] = Texture[3].Sample(SampleType[1], float2(smTexCoord.x, smTexCoord.y - neighbour)).r; // top
+		depthMapValues[4] = Texture[3].Sample(SampleType[1], float2(smTexCoord.x + neighbour, smTexCoord.y - neighbour)).r; // top right
+		depthMapValues[5] = Texture[3].Sample(SampleType[1], float2(smTexCoord.x + neighbour, smTexCoord.y)).r; // right
+		depthMapValues[6] = Texture[3].Sample(SampleType[1], float2(smTexCoord.x + neighbour, smTexCoord.y + neighbour)).r; // bottom right
+		depthMapValues[7] = Texture[3].Sample(SampleType[1], float2(smTexCoord.x, smTexCoord.y + neighbour)).r; // bottom 
+		depthMapValues[8] = Texture[3].Sample(SampleType[1], float2(smTexCoord.x - neighbour, smTexCoord.y + neighbour)).r; // bottom left
 		
 		float lightDepthValue = (input.positionLightSpace.z / input.positionLightSpace.w) - bias;
 		
-		for(int i =0; i < 9; i++)
+		for (int i =0; i < 9; i++)
 		{
-			if( lightDepthValue <= depthMapValues[i])
+			if (lightDepthValue <= depthMapValues[i])
 				numInLight++;
 		}
 		
 		if(numInLight == 0)
-			discard;	
+			return float4(0,0,0,0);	
 	}
 	
 	// get how many pixels that not was ocluded in range 0-1 
 	lightPercent = numInLight / 9;
 										  
 	// sample from textures, multiply texturecolor with light percent to get blured shadow edges		
-	float4 textureColor = Textures[0].Sample(SampleType[0], input.texCoord) * lightPercent;
-	float4 bumpValues   = Textures[1].Sample(SampleType[0],input.texCoord);
+	float4 textureColor = Texture[0].Sample(SampleType[0], input.texCoord) * lightPercent;		
+	float4 normalMap    = Texture[1].Sample(SampleType[0], input.texCoord);
+	float4 specularMap  = Texture[2].Sample(SampleType[0], input.texCoord);
+			
+	normalMap = (normalMap * 2.0) -1.0;
 	
-	// convert normalmap sample to range -1 to 1
-	bumpValues = (bumpValues * 2.0) -1.0;
-	
-	// get tangentSpaceMatrix for normalmapping and multiply with normalmapsample to get the bumpnormal
-	float3x3 tangentSpaceMatrix = float3x3(input.tangent,input.binormal,input.normal);	
-	float3 bumpNormal = normalize(mul(bumpValues, tangentSpaceMatrix));   
-	    		  					   		
-    float lightIntensity = saturate(dot(bumpNormal, lightDirection)); 
+	float3x3 tangentSpaceMatrix = float3x3(input.tangent, input.binormal, input.normal);
+	float3 bumpNormal           = normalize(mul(normalMap, tangentSpaceMatrix));   	
+			    		  					   		
+    float lightIntensity = saturate(dot(bumpNormal.xyz, dirLightDirection)); 
 	
 	// get color based on texture, intensity and color of light
     float4 color = textureColor * lightIntensity * dirDiffuseColor; 
@@ -108,17 +107,14 @@ float4 GetDirectionalColor(PixelInputType input)
 	
 	// add specular effect if the light is affecting the pixel
 	if(lightIntensity > 0)
-	{		
-		float4 specularValue = Textures[2].Sample(SampleType[0],input.texCoord);
-		
+	{					
 		//phong
-		float3 reflection = normalize(2 * lightIntensity * input.normal - lightDirection);		
-		float specularIntensity = pow(saturate(dot(reflection, input.vertexToCamera)),specularPower);
-		specular = dirSpecularColor * specularIntensity;
-		specular = specular	* specularValue;
+		float3 reflection = normalize(2 * lightIntensity * bumpNormal - dirLightDirection);		
+		float specularIntensity = pow(saturate(dot(reflection, input.vertexToCamera)), dirSpecularPower);
+		specular = (dirSpecularColor * specularIntensity) * specularMap;	
 	} 
 			
-	return (color += specular); 
+	return color + specular; 
 }
 
 float4 GetPointColor(PixelInputType input)
@@ -140,8 +136,8 @@ float4 GetPointColor(PixelInputType input)
 		if (fallOff >= 0)
 		{	
 			// sample from textures		
-			float4 textureColor = Textures[0].Sample(SampleType[0], input.texCoord); 	
-			float4 bumpValues   = Textures[1].Sample(SampleType[0], input.texCoord);
+			float4 textureColor = Texture[0].Sample(SampleType[0], input.texCoord); 	
+			float4 bumpValues   = Texture[1].Sample(SampleType[0], input.texCoord);
 			
 			// convert normalmap sample to range -1 to 1
 			bumpValues = (bumpValues * 2.0) -1.0;
@@ -160,10 +156,10 @@ float4 GetPointColor(PixelInputType input)
 			float4 specular = float4(0,0,0,0);		
 			if(lightIntensity > 0 && dst < pointLights[i].radius)
 			{		
-				float4 specularValue = Textures[2].Sample(SampleType[0],input.texCoord);
+				float4 specularValue = Texture[2].Sample(SampleType[0],input.texCoord);
 							
 				//phong
-				float3 reflection       = normalize(2 * lightIntensity * input.normal - lightDir);		
+				float3 reflection       = normalize(2 * lightIntensity * bumpNormal - lightDir);		
 				float specularIntensity = pow(saturate(dot(reflection, input.vertexToCamera)), pointLights[i].specularPower);
 				specular.xyz            = (pointLights[i].specularColor * specularIntensity);
 				specular                = specular * specularValue;
@@ -183,7 +179,10 @@ float4 Main(PixelInputType input) : SV_TARGET
 	float4 directionalColor = GetDirectionalColor(input);
 	float4 pointColor       = GetPointColor(input);
 	
-	return baseColor + directionalColor + pointColor;	 				                            		   
+	float4 finalColor = baseColor + directionalColor + pointColor; 
+	finalColor.a = baseColor.a;
+	
+	return finalColor; 		                            		   
 }
 
 

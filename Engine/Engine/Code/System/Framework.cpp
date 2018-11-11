@@ -2,12 +2,10 @@
 #include <d3d11.h>
 #include <iostream>
 #include <DirectXMath.h>
-
 #include "Framework.h"
 #include "SystemDefs.h"
 #include "DXManager.h"
 #include "CameraManager.h"
-#include "ShaderManager.h"
 #include "LightManager.h"
 #include "Renderer.h"
 #include "World.h"
@@ -45,14 +43,14 @@ Framework::Framework()
 	// initialize dear im gui
 	GuiManager::GetInstance().Initialize(_window->GetHWND());
 
-	// load and create our shader objects	
-	ShaderManager::GetInstance().Initialize();
-
 	// initialize directinput
 	Input::GetInstance().InitializeInputDevices(_window->GetHINSTANCE(), _window->GetHWND());
 
 	// start timers
 	Time::GetInstance();
+
+	// setup renderer 
+	Renderer::GetInstance().Initailize();
 
 	// start and run
 	Start();
@@ -70,9 +68,6 @@ Framework::~Framework()
 
 void Framework::Start()
 {
-	// setup renderer to handle depthrendering
-	Renderer::GetInstance().CreateDepthMap();
-
 	// create game camera
 	Entity* cameraGame = new Entity();
 	cameraGame->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 20, -40), XMFLOAT3(30,0,0));
@@ -83,7 +78,7 @@ void Framework::Start()
 	// create UIcamera
 	Entity* cameraUI = new Entity();
 	cameraUI->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0, -1));
-	cameraUI->AddComponent<CameraComponent>()->Init2D(XMFLOAT2(SCREEN_WIDTH, SCREEN_HEIGHT), XMFLOAT2(0.01f, 1.0f));
+	cameraUI->AddComponent<CameraComponent>()->Init2D(XMFLOAT2(SCREEN_WIDTH, SCREEN_HEIGHT), XMFLOAT2(0.01f, 10.0f));
 	CameraManager::GetInstance().SetCurrentCameraUI(cameraUI->GetComponent<CameraComponent>());
 
 	//set ambient light color	
@@ -106,8 +101,12 @@ void Framework::Start()
 	floor->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(12, 1, 12));
 	floor->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::PLANE, DEFERRED | CAST_SHADOW_DIR, L"Textures/bricks.dds", L"Textures/bricksNormal.dds", L"Textures/bricksSpecular.dds");
 
+	Entity* alphaTest = new Entity();
+	alphaTest->AddComponent<TransformComponent>()->Init(XMFLOAT3(-18, 5, -20), XMFLOAT3(90, 0, 0), XMFLOAT3(12, 1, 12));
+	alphaTest->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::CUBE, ALPHA_FORWARD | CAST_SHADOW_DIR, L"Textures/AlphaTest.dds", L"Textures/pavingNormal.dds", L"Textures/pavingSpecular.dds");
+
 	Entity* wall = new Entity();
-	wall->AddComponent<TransformComponent>()->Init(XMFLOAT3(-20, 2, 12), XMFLOAT3(0, -80, 0), XMFLOAT3(10, 10, 3));
+	wall->AddComponent<TransformComponent>()->Init(XMFLOAT3(-20, 2, 12), XMFLOAT3(0, -70, 0), XMFLOAT3(10, 10, 3));
 	wall->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::CUBE, DEFERRED | CAST_SHADOW_DIR, L"Textures/crateDamp.dds", L"Textures/crateDampNormal.dds", L"Textures/crateDampSpecular.dds");
 
 	Entity* fire = new Entity();

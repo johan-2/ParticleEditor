@@ -90,7 +90,7 @@ float4 GetDirectionalColor()
 										  
 	// sample from textures, multiply texturecolor with light percent to get blured shadow edges		
 	float4 textureColor = Textures[0].Sample(SampleType[0], input.texCoord) * lightPercent;
-	float4 bumpValues   = Textures[1].Sample(SampleType[0],input.texCoord);
+	float4 bumpValues   = Textures[1].Sample(SampleType[0], input.texCoord);
 	
 	// convert normalmap sample to range -1 to 1
 	bumpValues = (bumpValues * 2.0) -1.0;

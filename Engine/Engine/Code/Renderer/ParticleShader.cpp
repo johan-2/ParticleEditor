@@ -29,6 +29,9 @@ ParticleShader::~ParticleShader()
 
 void ParticleShader::RenderParticles(const std::vector<ParticleSystemComponent*>& systems)
 {
+	if (systems.size() == 0)
+		return;
+
 	// get DX manager
 	DXManager& DXM = DXManager::GetInstance();
 

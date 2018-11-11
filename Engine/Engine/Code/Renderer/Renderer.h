@@ -46,12 +46,19 @@ public:
 	void RemoveQuadFromRenderer(QuadComponent* quad)                        { VECTOR_HELPERS::RemoveItemFromVector(_quads, quad); }
 	void RemoveParticleSystemFromRenderer(ParticleSystemComponent* emitter) { VECTOR_HELPERS::RemoveItemFromVector(_particleSystems, emitter); }
 	
-	void CreateDepthMap();
+	void Initailize();
+
+	
 
 	// will render everything
 	void Render();
 	
 private:
+
+	// setupFunctions
+	void SetupDeferred();
+	void CreateDepthMap();
+	void CreateDebugImages();
 
 	// render functions
 	void RenderDeferred();

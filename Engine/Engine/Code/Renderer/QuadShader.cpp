@@ -32,6 +32,9 @@ QuadShader::~QuadShader()
 
 void QuadShader::RenderQuadUI(const std::vector<QuadComponent*>& quads)
 {
+	if (quads.size() == 0)
+		return;
+
 	// get DXManager
 	DXManager& DXM = DXManager::GetInstance();
 
@@ -40,7 +43,7 @@ void QuadShader::RenderQuadUI(const std::vector<QuadComponent*>& quads)
 
 	// set shaders			
 	devCon->VSSetShader(_vertexShader, NULL, 0);
-	devCon->PSSetShader(_pixelShader, NULL, 0);
+	devCon->PSSetShader(_pixelShader,  NULL, 0);
 
 	// set constant buffers
 	devCon->VSSetConstantBuffers(0, 1, &_constantBufferVertex);

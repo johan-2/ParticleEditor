@@ -178,7 +178,6 @@
     <ClCompile Include="Code\Renderer\Renderer.cpp" />
     <ClCompile Include="Code\Renderer\RenderToTexture.cpp" />
     <ClCompile Include="Code\Renderer\ScreenQuad.cpp" />
-    <ClCompile Include="Code\Renderer\ShaderManager.cpp" />
     <ClCompile Include="Code\Renderer\SkyBox.cpp" />
     <ClCompile Include="Code\System\DXBlendStates.cpp" />
     <ClCompile Include="Code\System\DXDepthStencilStates.cpp" />
@@ -233,7 +232,6 @@
     <ClInclude Include="Code\Renderer\Renderer.h" />
     <ClInclude Include="Code\Renderer\RenderToTexture.h" />
     <ClInclude Include="Code\Renderer\ScreenQuad.h" />
-    <ClInclude Include="Code\Renderer\ShaderManager.h" />
     <ClInclude Include="Code\Renderer\SkyBox.h" />
     <ClInclude Include="Code\System\DXBlendStates.h" />
     <ClInclude Include="Code\System\DXDepthStencilStates.h" />

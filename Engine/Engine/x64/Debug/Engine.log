@@ -25,7 +25,6 @@ c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemco
 c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(559): warning C4018: '<': signed/unsigned mismatch
 c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(561): warning C4018: '<': signed/unsigned mismatch
 c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(648): warning C4018: '<': signed/unsigned mismatch
-  QuadComponent.cpp
   DeferredShader.cpp
 c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
 c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shaderhelpers.h(40): warning C4101: 'destination': unreferenced local variable
@@ -34,35 +33,25 @@ c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\deferredshader.cpp
 c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\deferredshader.cpp(132): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
 c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\deferredshader.cpp(132): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
 c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\deferredshader.cpp(172): warning C4267: 'argument': conversion from 'size_t' to 'unsigned int', possible loss of data
-  DepthShader.cpp
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shaderhelpers.h(40): warning C4101: 'destination': unreferenced local variable
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\depthshader.cpp(51): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\depthshader.cpp(52): warning C4018: '<': signed/unsigned mismatch
   ForwardAlphaShader.cpp
 c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shaderhelpers.h(40): warning C4101: 'destination': unreferenced local variable
-  ImGUIShader.cpp
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shaderhelpers.h(40): warning C4101: 'destination': unreferenced local variable
-  Mesh.cpp
 c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-  ParticleShader.cpp
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shaderhelpers.h(40): warning C4101: 'destination': unreferenced local variable
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\particleshader.cpp(65): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\forwardalphashader.cpp(83): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\forwardalphashader.cpp(83): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\forwardalphashader.cpp(116): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\forwardalphashader.cpp(116): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
   QuadShader.cpp
 c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shaderhelpers.h(40): warning C4101: 'destination': unreferenced local variable
-  Renderer.cpp
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\renderer.cpp(72): warning C4244: 'argument': conversion from 'const float' to 'unsigned int', possible loss of data
-  ShaderManager.cpp
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
   SkyBox.cpp
 c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shaderhelpers.h(40): warning C4101: 'destination': unreferenced local variable
+  DXManager.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\code\system\dxmanager.cpp(241): warning C4244: 'argument': conversion from 'float' to 'UINT8', possible loss of data
   Framework.cpp
   c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
 c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-c:\users\nilss\desktop\enginedx11\engine\engine\code\system\framework.cpp(40): warning C4244: 'argument': conversion from 'const float' to 'int', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\system\framework.cpp(43): warning C4244: 'argument': conversion from 'const float' to 'int', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\system\framework.cpp(216): warning C4244: 'initializing': conversion from '_Rep' to 'unsigned int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\system\framework.cpp(38): warning C4244: 'argument': conversion from 'const float' to 'int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\system\framework.cpp(41): warning C4244: 'argument': conversion from 'const float' to 'int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\system\framework.cpp(215): warning C4244: 'initializing': conversion from '_Rep' to 'unsigned int', possible loss of data
           with
           [
               _Rep=std::chrono::system_clock::rep
