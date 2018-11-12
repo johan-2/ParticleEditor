@@ -12,12 +12,12 @@
 DeferredShader::DeferredShader()
 {
 	//create deferred geometry shaders
-	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexGeometry.vs", _vertexGeometryShader, _vertexGeometryShaderByteCode);
-	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelGeometry.ps",   _pixelGeometryShader,  _pixelGeometryShaderByteCode);
+	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexDeferredGeometry.vs", _vertexGeometryShader, _vertexGeometryShaderByteCode);
+	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelDeferredGeometry.ps",   _pixelGeometryShader,  _pixelGeometryShaderByteCode);
 
 	//create deferred lightning shaders
-	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexLightning.vs", _vertexLightShader, _vertexLightningShaderByteCode);
-	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelLightning.ps",   _pixelLightShader,    _pixelLightningShaderByteCode);
+	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexDeferredLightning.vs", _vertexLightShader, _vertexLightningShaderByteCode);
+	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelDeferredLightning.ps",   _pixelLightShader,    _pixelLightningShaderByteCode);
 
 	// create constant buffers for the deferred passes
 	SHADER_HELPERS::CreateConstantBuffer(_constantBufferGeometry);

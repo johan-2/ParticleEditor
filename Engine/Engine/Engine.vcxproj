@@ -70,20 +70,20 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SolutionDir)Engine/Code;$(SolutionDir)Engine/Code/System;$(SolutionDir)Engine/Code/Utils;$(SolutionDir)Engine/Code/ComponentSystem;$(SolutionDir)Engine/Code/Components;$(SolutionDir)Engine/Code/Managers;$(SolutionDir)Engine/Code/imGUI;$(SolutionDir)Engine/Code/Input;$(SolutionDir)Engine/Code/rapidjson;$(SolutionDir)Engine/Code/Renderer;$(SolutionDir)Engine/Code/DataTypes;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Engine/Code;$(SolutionDir)Engine/Code/System;$(SolutionDir)Engine/Code/Utils;$(SolutionDir)Engine/Code/ComponentSystem;$(SolutionDir)Engine/Code/Components;$(SolutionDir)Engine/Code/Managers;$(SolutionDir)Engine/Code/imGUI;$(SolutionDir)Engine/Code/Input;$(SolutionDir)Engine/Code/rapidjson;$(SolutionDir)Engine/Code/Renderer;$(SolutionDir)Engine/Code/DataTypes;$(SolutionDir)Engine/Code/System/DXModules;$(SolutionDir)Engine/Code/Renderer/ShaderPrograms;$(SolutionDir)Engine/Code/Renderer/Deferred;$(SolutionDir)Engine/Code/Renderer/Objects;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)Engine</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)Engine/Code;$(SolutionDir)Engine/Code/System;$(SolutionDir)Engine/Code/Utils;$(SolutionDir)Engine/Code/ComponentSystem;$(SolutionDir)Engine/Code/Components;$(SolutionDir)Engine/Code/Managers;$(SolutionDir)Engine/Code/imGUI;$(SolutionDir)Engine/Code/Input;$(SolutionDir)Engine/Code/rapidjson;$(SolutionDir)Engine/Code/Renderer;$(SolutionDir)Engine/Code/DataTypes;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Engine/Code;$(SolutionDir)Engine/Code/System;$(SolutionDir)Engine/Code/Utils;$(SolutionDir)Engine/Code/ComponentSystem;$(SolutionDir)Engine/Code/Components;$(SolutionDir)Engine/Code/Managers;$(SolutionDir)Engine/Code/imGUI;$(SolutionDir)Engine/Code/Input;$(SolutionDir)Engine/Code/rapidjson;$(SolutionDir)Engine/Code/Renderer;$(SolutionDir)Engine/Code/DataTypes;$(SolutionDir)Engine/Code/System/DXModules;$(SolutionDir)Engine/Code/Renderer/ShaderPrograms;$(SolutionDir)Engine/Code/Renderer/Deferred;$(SolutionDir)Engine/Code/Renderer/Objects;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)Engine</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)Engine</OutDir>
-    <IncludePath>$(SolutionDir)Engine/Code;$(SolutionDir)Engine/Code/System;$(SolutionDir)Engine/Code/Utils;$(SolutionDir)Engine/Code/ComponentSystem;$(SolutionDir)Engine/Code/Components;$(SolutionDir)Engine/Code/Managers;$(SolutionDir)Engine/Code/imGUI;$(SolutionDir)Engine/Code/Input;$(SolutionDir)Engine/Code/rapidjson;$(SolutionDir)Engine/Code/Renderer;$(SolutionDir)Engine/Code/DataTypes;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Engine/Code;$(SolutionDir)Engine/Code/System;$(SolutionDir)Engine/Code/Utils;$(SolutionDir)Engine/Code/ComponentSystem;$(SolutionDir)Engine/Code/Components;$(SolutionDir)Engine/Code/Managers;$(SolutionDir)Engine/Code/imGUI;$(SolutionDir)Engine/Code/Input;$(SolutionDir)Engine/Code/rapidjson;$(SolutionDir)Engine/Code/Renderer;$(SolutionDir)Engine/Code/DataTypes;$(SolutionDir)Engine/Code/System/DXModules;$(SolutionDir)Engine/Code/Renderer/ShaderPrograms;$(SolutionDir)Engine/Code/Renderer/Deferred;$(SolutionDir)Engine/Code/Renderer/Objects;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)Engine</OutDir>
-    <IncludePath>$(SolutionDir)Engine/Code;$(SolutionDir)Engine/Code/System;$(SolutionDir)Engine/Code/Utils;$(SolutionDir)Engine/Code/ComponentSystem;$(SolutionDir)Engine/Code/Components;$(SolutionDir)Engine/Code/Managers;$(SolutionDir)Engine/Code/imGUI;$(SolutionDir)Engine/Code/Input;$(SolutionDir)Engine/Code/rapidjson;$(SolutionDir)Engine/Code/Renderer;$(SolutionDir)Engine/Code/DataTypes;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Engine/Code;$(SolutionDir)Engine/Code/System;$(SolutionDir)Engine/Code/Utils;$(SolutionDir)Engine/Code/ComponentSystem;$(SolutionDir)Engine/Code/Components;$(SolutionDir)Engine/Code/Managers;$(SolutionDir)Engine/Code/imGUI;$(SolutionDir)Engine/Code/Input;$(SolutionDir)Engine/Code/rapidjson;$(SolutionDir)Engine/Code/Renderer;$(SolutionDir)Engine/Code/DataTypes;$(SolutionDir)Engine/Code/System/DXModules;$(SolutionDir)Engine/Code/Renderer/ShaderPrograms;$(SolutionDir)Engine/Code/Renderer/Deferred;$(SolutionDir)Engine/Code/Renderer/Objects;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -159,33 +159,33 @@
     <ClCompile Include="Code\Components\UVScrollComponent.cpp" />
     <ClCompile Include="Code\DataTypes\Color32.cpp" />
     <ClCompile Include="Code\DDSTextureLoader\DDSTextureLoader.cpp" />
+    <ClCompile Include="Code\Framework.cpp" />
     <ClCompile Include="Code\ImGUI\imgui.cpp" />
     <ClCompile Include="Code\ImGUI\imgui_demo.cpp" />
     <ClCompile Include="Code\ImGUI\imgui_draw.cpp" />
     <ClCompile Include="Code\Input\Gamepad.cpp" />
     <ClCompile Include="Code\Input\Input.cpp" />
     <ClCompile Include="Code\Managers\CameraManager.cpp" />
+    <ClCompile Include="Code\Managers\DXManager.cpp" />
     <ClCompile Include="Code\Managers\GuiManager.cpp" />
     <ClCompile Include="Code\Managers\LightManager.cpp" />
-    <ClCompile Include="Code\Renderer\DeferredShader.cpp" />
-    <ClCompile Include="Code\Renderer\DepthShader.cpp" />
-    <ClCompile Include="Code\Renderer\ForwardAlphaShader.cpp" />
-    <ClCompile Include="Code\Renderer\GBuffer.cpp" />
-    <ClCompile Include="Code\Renderer\ImGUIShader.cpp" />
-    <ClCompile Include="Code\Renderer\Mesh.cpp" />
-    <ClCompile Include="Code\Renderer\ParticleShader.cpp" />
-    <ClCompile Include="Code\Renderer\QuadShader.cpp" />
+    <ClCompile Include="Code\Renderer\Deferred\GBuffer.cpp" />
+    <ClCompile Include="Code\Renderer\Deferred\ScreenQuad.cpp" />
+    <ClCompile Include="Code\Renderer\Objects\Mesh.cpp" />
+    <ClCompile Include="Code\Renderer\Objects\SkyBox.cpp" />
     <ClCompile Include="Code\Renderer\Renderer.cpp" />
     <ClCompile Include="Code\Renderer\RenderToTexture.cpp" />
-    <ClCompile Include="Code\Renderer\ScreenQuad.cpp" />
-    <ClCompile Include="Code\Renderer\SkyBox.cpp" />
-    <ClCompile Include="Code\System\DXBlendStates.cpp" />
-    <ClCompile Include="Code\System\DXDepthStencilStates.cpp" />
-    <ClCompile Include="Code\System\DXInputLayouts.cpp" />
-    <ClCompile Include="Code\System\DXManager.cpp" />
-    <ClCompile Include="Code\System\DXRasterizerStates.cpp" />
-    <ClCompile Include="Code\System\DXSamplerStates.cpp" />
-    <ClCompile Include="Code\System\Framework.cpp" />
+    <ClCompile Include="Code\Renderer\ShaderPrograms\DeferredShader.cpp" />
+    <ClCompile Include="Code\Renderer\ShaderPrograms\DepthShader.cpp" />
+    <ClCompile Include="Code\Renderer\ShaderPrograms\ForwardAlphaShader.cpp" />
+    <ClCompile Include="Code\Renderer\ShaderPrograms\ImGUIShader.cpp" />
+    <ClCompile Include="Code\Renderer\ShaderPrograms\ParticleShader.cpp" />
+    <ClCompile Include="Code\Renderer\ShaderPrograms\QuadShader.cpp" />
+    <ClCompile Include="Code\System\DXModules\DXBlendStates.cpp" />
+    <ClCompile Include="Code\System\DXModules\DXDepthStencilStates.cpp" />
+    <ClCompile Include="Code\System\DXModules\DXInputLayouts.cpp" />
+    <ClCompile Include="Code\System\DXModules\DXRasterizerStates.cpp" />
+    <ClCompile Include="Code\System\DXModules\DXSamplerStates.cpp" />
     <ClCompile Include="Code\System\HardwareProperties.cpp" />
     <ClCompile Include="Code\Utils\DebugStats.cpp" />
     <ClCompile Include="Code\Utils\TexturePool.cpp" />
@@ -210,6 +210,7 @@
     <ClInclude Include="Code\Components\UVScrollComponent.h" />
     <ClInclude Include="Code\DataTypes\Color32.h" />
     <ClInclude Include="Code\DDSTextureLoader\DDSTextureLoader.h" />
+    <ClInclude Include="Code\Framework.h" />
     <ClInclude Include="Code\ImGUI\imconfig.h" />
     <ClInclude Include="Code\ImGUI\imgui.h" />
     <ClInclude Include="Code\ImGUI\imgui_internal.h" />
@@ -219,29 +220,29 @@
     <ClInclude Include="Code\Input\Gamepad.h" />
     <ClInclude Include="Code\Input\Input.h" />
     <ClInclude Include="Code\Managers\CameraManager.h" />
+    <ClInclude Include="Code\Managers\DXManager.h" />
     <ClInclude Include="Code\Managers\GuiManager.h" />
     <ClInclude Include="Code\Managers\LightManager.h" />
-    <ClInclude Include="Code\Renderer\DeferredShader.h" />
-    <ClInclude Include="Code\Renderer\DepthShader.h" />
-    <ClInclude Include="Code\Renderer\ForwardAlphaShader.h" />
-    <ClInclude Include="Code\Renderer\GBuffer.h" />
-    <ClInclude Include="Code\Renderer\ImGUIShader.h" />
-    <ClInclude Include="Code\Renderer\Mesh.h" />
-    <ClInclude Include="Code\Renderer\ParticleShader.h" />
-    <ClInclude Include="Code\Renderer\QuadShader.h" />
+    <ClInclude Include="Code\Renderer\Deferred\GBuffer.h" />
+    <ClInclude Include="Code\Renderer\Deferred\ScreenQuad.h" />
+    <ClInclude Include="Code\Renderer\Objects\Mesh.h" />
+    <ClInclude Include="Code\Renderer\Objects\SkyBox.h" />
     <ClInclude Include="Code\Renderer\Renderer.h" />
     <ClInclude Include="Code\Renderer\RenderToTexture.h" />
-    <ClInclude Include="Code\Renderer\ScreenQuad.h" />
-    <ClInclude Include="Code\Renderer\SkyBox.h" />
-    <ClInclude Include="Code\System\DXBlendStates.h" />
-    <ClInclude Include="Code\System\DXDepthStencilStates.h" />
-    <ClInclude Include="Code\System\DXInputLayouts.h" />
-    <ClInclude Include="Code\System\DXManager.h" />
-    <ClInclude Include="Code\System\DXRasterizerStates.h" />
-    <ClInclude Include="Code\System\DXSamplerStates.h" />
-    <ClInclude Include="Code\System\Framework.h" />
+    <ClInclude Include="Code\Renderer\ShaderPrograms\DeferredShader.h" />
+    <ClInclude Include="Code\Renderer\ShaderPrograms\DepthShader.h" />
+    <ClInclude Include="Code\Renderer\ShaderPrograms\ForwardAlphaShader.h" />
+    <ClInclude Include="Code\Renderer\ShaderPrograms\ImGUIShader.h" />
+    <ClInclude Include="Code\Renderer\ShaderPrograms\ParticleShader.h" />
+    <ClInclude Include="Code\Renderer\ShaderPrograms\QuadShader.h" />
+    <ClInclude Include="Code\System\DXModules\DXBlendStates.h" />
+    <ClInclude Include="Code\System\DXModules\DXDepthStencilStates.h" />
+    <ClInclude Include="Code\System\DXModules\DXInputLayouts.h" />
+    <ClInclude Include="Code\System\DXModules\DXRasterizerStates.h" />
+    <ClInclude Include="Code\System\DXModules\DXSamplerStates.h" />
     <ClInclude Include="Code\System\HardwareProperties.h" />
     <ClInclude Include="Code\Utils\DebugStats.h" />
+    <ClInclude Include="Code\Utils\ShaderHelpers.h" />
     <ClInclude Include="Code\Utils\SystemDefs.h" />
     <ClInclude Include="Code\Utils\TexturePool.h" />
     <ClInclude Include="Code\Utils\Time.h" />
