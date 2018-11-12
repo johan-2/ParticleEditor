@@ -161,7 +161,6 @@ void Renderer::Render()
 		
 	// set to 3D layout and render alpha meshes
 	_inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT3D);
-	AlphaSort();
 	_forwardAlphaShader->RenderForward(_meshes[S_FORWARD_ALPHA]);
 			
 	// render UI quads
@@ -217,23 +216,6 @@ void Renderer::RenderDepth()
 	_depthShader->RenderDepth(_meshes[S_DEPTH]);
 }
 
-void Renderer::AlphaSort() 
-{
-	// right now alpha meshes and particles are not sorted against each other, Need to find a solution for this
-	const XMFLOAT3& camPos = CameraManager::GetInstance().GetCurrentCameraGame()->GetComponent<TransformComponent>()->GetPositionRef();
-	for (int i = 0; i < _meshes[S_FORWARD_ALPHA].size(); i++)
-	{
-		XMFLOAT3 vec;
-		float distance = 0;
-
-		XMStoreFloat3(&vec, XMVectorSubtract(XMLoadFloat3(&_meshes[S_FORWARD_ALPHA][i]->GetPosition()), XMLoadFloat3(&camPos)));
-		XMStoreFloat(&distance, XMVector3Length(XMLoadFloat3(&vec)));
-
-		_meshes[S_FORWARD_ALPHA][i]->SetDistanceToCamera(distance);
-	}
-
-	std::sort(_meshes[S_FORWARD_ALPHA].begin(), _meshes[S_FORWARD_ALPHA].end(), [](Mesh* a, Mesh* b) -> bool {return a->GetDistanceFromCamera() > b->GetDistanceFromCamera(); });
-}
 
 
 

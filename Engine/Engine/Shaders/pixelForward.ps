@@ -39,11 +39,12 @@ struct PixelInputType
 	float3 vertexToCamera     : TEXCOORD1;
 	float4 positionLightSpace : TEXCOORD2;
 	float3 worldPos           : TEXCOORD3;
+	float4 vertexColor        : COLOR;
 };
 
-float4 GetAmbientColor(PixelInputType input)
+float4 GetBaseColor(PixelInputType input)
 {
-	return Texture[0].Sample(SampleType[0], input.texCoord) * ambientColor;
+	return (Texture[0].Sample(SampleType[0], input.texCoord) * input.vertexColor) * ambientColor;
 }
 
 float4 GetDirectionalColor(PixelInputType input)
@@ -60,7 +61,7 @@ float4 GetDirectionalColor(PixelInputType input)
 	
 	if((saturate(smTexCoord.x) == smTexCoord.x) && (saturate(smTexCoord.y) == smTexCoord.y))
 	{
-		float neighbour = 1 / 8192.0;	// hardcoded for now, dont forget to change if depthmap res change	
+		float neighbour = 1 / 8192.0; // hardcoded for now, dont forget to change if depthmap res change	
 		float depthMapValues[9];
 		
 		depthMapValues[0] = Texture[3].Sample(SampleType[1], float2(smTexCoord.x, smTexCoord.y)).r; // middle
@@ -101,16 +102,19 @@ float4 GetDirectionalColor(PixelInputType input)
     float lightIntensity = saturate(dot(bumpNormal.xyz, dirLightDirection)); 
 	
 	// get color based on texture, intensity and color of light
-    float4 color = textureColor * lightIntensity * dirDiffuseColor; 
+    float4 color = textureColor * input.vertexColor * lightIntensity * dirDiffuseColor; 
 	saturate(color);
 	float4 specular = float4(0,0,0,0);
 	
 	// add specular effect if the light is affecting the pixel
-	if(lightIntensity > 0)
+	if (lightIntensity > 0)
 	{					
-		//phong
+		// normalize vertex to camera direction vector
+		float3 vtc = normalize(input.vertexToCamera);
+		
+		// phong
 		float3 reflection = normalize(2 * lightIntensity * bumpNormal - dirLightDirection);		
-		float specularIntensity = pow(saturate(dot(reflection, input.vertexToCamera)), dirSpecularPower);
+		float specularIntensity = pow(saturate(dot(reflection, vtc)), dirSpecularPower);
 		specular = (dirSpecularColor * specularIntensity) * specularMap;	
 	} 
 			
@@ -150,19 +154,23 @@ float4 GetPointColor(PixelInputType input)
 			float lightIntensity = saturate(dot(bumpNormal, lightDir)); 
 			
 			// get color based on texture, intensity and color of light
-			float4 color = textureColor * lightIntensity * float4(pointLights[i].color,1); 
+			float4 color = textureColor * input.vertexColor * lightIntensity * float4(pointLights[i].color,1); 
 			
 			// add specular effect if the light is affecting the pixel, dont add specular effect if dst is more then radius
 			float4 specular = float4(0,0,0,0);		
-			if(lightIntensity > 0 && dst < pointLights[i].radius)
+			if (lightIntensity > 0 && dst < pointLights[i].radius)
 			{		
+				// sample the specualr map
 				float4 specularValue = Texture[2].Sample(SampleType[0],input.texCoord);
+				
+				// normalize vertex to camera direction vector
+				float3 vtc = normalize(input.vertexToCamera);
 							
-				//phong
+				// phong
 				float3 reflection       = normalize(2 * lightIntensity * bumpNormal - lightDir);		
-				float specularIntensity = pow(saturate(dot(reflection, input.vertexToCamera)), pointLights[i].specularPower);
+				float specularIntensity = pow(saturate(dot(reflection, vtc)), pointLights[i].specularPower);
 				specular.xyz            = (pointLights[i].specularColor * specularIntensity);
-				specular                = specular * specularValue;
+				specular                = specular * specularValue * lightIntensity;
 			} 
 						
 			color      += specular;	
@@ -175,12 +183,12 @@ float4 GetPointColor(PixelInputType input)
 
 float4 Main(PixelInputType input) : SV_TARGET
 {					
-	float4 baseColor        = GetAmbientColor(input);
+	float4 baseColor        = GetBaseColor(input);
 	float4 directionalColor = GetDirectionalColor(input);
 	float4 pointColor       = GetPointColor(input);
 	
 	float4 finalColor = baseColor + directionalColor + pointColor; 
-	finalColor.a = baseColor.a;
+	finalColor.a      = baseColor.a;
 	
 	return finalColor; 		                            		   
 }

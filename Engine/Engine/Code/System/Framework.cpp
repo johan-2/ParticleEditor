@@ -102,8 +102,12 @@ void Framework::Start()
 	floor->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::PLANE, DEFERRED | CAST_SHADOW_DIR, L"Textures/bricks.dds", L"Textures/bricksNormal.dds", L"Textures/bricksSpecular.dds");
 
 	Entity* alphaTest = new Entity();
-	alphaTest->AddComponent<TransformComponent>()->Init(XMFLOAT3(-18, 5, -20), XMFLOAT3(90, 0, 0), XMFLOAT3(12, 1, 12));
+	alphaTest->AddComponent<TransformComponent>()->Init(XMFLOAT3(-18, 5, -20), XMFLOAT3(90, 0, 0), XMFLOAT3(12, 0.01f, 12));
 	alphaTest->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::CUBE, ALPHA_FORWARD | CAST_SHADOW_DIR, L"Textures/AlphaTest.dds", L"Textures/pavingNormal.dds", L"Textures/pavingSpecular.dds");
+
+	Entity* alphaTest2 = new Entity();
+	alphaTest2->AddComponent<TransformComponent>()->Init(XMFLOAT3(-15, 5, -10), XMFLOAT3(90, 0, 0), XMFLOAT3(12, 0.01f, 12));
+	alphaTest2->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::CUBE, ALPHA_FORWARD | CAST_SHADOW_DIR, L"Textures/AlphaTest.dds", L"Textures/pavingNormal.dds", L"Textures/pavingSpecular.dds");
 
 	Entity* wall = new Entity();
 	wall->AddComponent<TransformComponent>()->Init(XMFLOAT3(-20, 2, 12), XMFLOAT3(0, -70, 0), XMFLOAT3(10, 10, 3));

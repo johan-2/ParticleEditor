@@ -3,6 +3,8 @@
 #include <d3dcompiler.h>
 #include "DXManager.h"
 #include "DXErrorHandler.h"
+#include <vector>
+#include "Mesh.h"
 
 namespace SHADER_HELPERS
 {
@@ -107,5 +109,26 @@ namespace SHADER_HELPERS
 		result = device->CreatePixelShader(buffer->GetBufferPointer(), buffer->GetBufferSize(), NULL, &shader);
 		if (FAILED(result))
 			DX_ERROR::PrintError(result, (std::string("failed to create pixel shader from ID3D10Blob, shader file = : ") + DX_ERROR::ConvertFromWString((wchar_t*)filePath)).c_str());
+	}
+
+	static void MeshSort(std::vector<Mesh*>& meshes, const XMFLOAT3& position, bool backToFront)
+	{
+		const int size = meshes.size();
+
+		for (int i = 0; i < size; i++)
+		{
+			XMFLOAT3 vec;
+			float distance = 0;
+
+			XMStoreFloat3(&vec, XMVectorSubtract(XMLoadFloat3(&meshes[i]->GetPosition()), XMLoadFloat3(&position)));
+			XMStoreFloat(&distance, XMVector3Length(XMLoadFloat3(&vec)));
+
+			meshes[i]->SetDistanceToCamera(distance);
+		}
+
+		if (backToFront)
+			std::sort(meshes.begin(), meshes.end(), [](Mesh* a, Mesh* b) -> bool {return a->GetDistanceFromCamera() > b->GetDistanceFromCamera(); });
+		else
+			std::sort(meshes.begin(), meshes.end(), [](Mesh* a, Mesh* b) -> bool {return a->GetDistanceFromCamera() < b->GetDistanceFromCamera(); });
 	}
 }

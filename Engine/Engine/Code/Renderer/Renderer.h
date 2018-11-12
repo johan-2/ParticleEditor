@@ -46,26 +46,21 @@ public:
 	void RemoveQuadFromRenderer(QuadComponent* quad)                        { VECTOR_HELPERS::RemoveItemFromVector(_quads, quad); }
 	void RemoveParticleSystemFromRenderer(ParticleSystemComponent* emitter) { VECTOR_HELPERS::RemoveItemFromVector(_particleSystems, emitter); }
 	
+	// initialize everything
 	void Initailize();
-
 	
-
 	// will render everything
 	void Render();
 	
 private:
 
 	// setupFunctions
-	void SetupDeferred();
 	void CreateDepthMap();
 	void CreateDebugImages();
 
 	// render functions
 	void RenderDeferred();
 	void RenderDepth();
-
-	// mesh sort function
-	void AlphaSort();	
 
 	// shader "programs" that will handle all preperations
 	// for rendering with a specific shader

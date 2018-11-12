@@ -113,6 +113,9 @@ void ForwardAlphaShader::RenderForward(std::vector<Mesh*>& meshes)
 	SHADER_HELPERS::UpdateConstantBuffer((void*)&constantAmbDirPixel, sizeof(ConstantAmbientDirectionalPixel), _constantBufferPixelAmbDir);
 	SHADER_HELPERS::UpdateConstantBuffer((void*)&constantPointPixel,  sizeof(ConstantPointPixel) * size,       _constantBufferPixelPoint);
 
+	// sort alpha meshes to render back to front
+	SHADER_HELPERS::MeshSort(meshes, cameraPos, true);
+
 	const int numMeshes = meshes.size();
 	for (int i =0; i < numMeshes; i++)
 	{
