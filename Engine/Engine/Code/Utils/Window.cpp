@@ -1,7 +1,7 @@
 #include "Window.h"
 #include "FrameWork.h"
 
-Window::Window(char* title, int x, int y, int width, int height, WNDPROC wndProc)
+Window::Window(const char* title, int x, int y, int width, int height, WNDPROC wndProc)
 {
 	CreateApplicationWindow(title, x, y, width, height, wndProc);
 }
@@ -11,7 +11,7 @@ Window::~Window()
 	UnregisterClass((LPCSTR)_windowName, _HINSTANCE);
 }
 
-void Window::CreateApplicationWindow(char* title, int x, int y, int width, int height, WNDPROC wndProc)
+void Window::CreateApplicationWindow(const char* title, int x, int y, int width, int height, WNDPROC wndProc)
 {
 	_windowName = title;
 	HWND hwnd;

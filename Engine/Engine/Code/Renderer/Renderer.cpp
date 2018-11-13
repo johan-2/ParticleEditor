@@ -117,9 +117,9 @@ void Renderer::CreateDepthMap()
 void Renderer::CreateDebugImages()
 {
 	// create debug images to show each texture in the G buffer and the depth map
-	Entity* depthMapQuad = new Entity();
-	depthMapQuad->AddComponent<QuadComponent>()->Init(XMFLOAT2(SCREEN_WIDTH * 0.06f, SCREEN_HEIGHT * 0.1f), XMFLOAT2(SCREEN_WIDTH * 0.08f, SCREEN_WIDTH * 0.08f), L"");
-	depthMapQuad->GetComponent<QuadComponent>()->SetTexture(_depthMap->GetShaderResource());
+	Entity* shadowMapQuad = new Entity();
+	shadowMapQuad->AddComponent<QuadComponent>()->Init(XMFLOAT2(SCREEN_WIDTH * 0.06f, SCREEN_HEIGHT * 0.1f), XMFLOAT2(SCREEN_WIDTH * 0.08f, SCREEN_WIDTH * 0.08f), L"");
+	shadowMapQuad->GetComponent<QuadComponent>()->SetTexture(_depthMap->GetShaderResource());
 
 	Entity* positionQuad = new Entity();
 	positionQuad->AddComponent<QuadComponent>()->Init(XMFLOAT2(SCREEN_WIDTH * 0.18f, SCREEN_HEIGHT * 0.1f), XMFLOAT2(SCREEN_WIDTH * 0.1f, SCREEN_HEIGHT * 0.1f), L"");
@@ -162,7 +162,7 @@ void Renderer::Render()
 	// set to 3D layout and render alpha meshes
 	_inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT3D);
 	_forwardAlphaShader->RenderForward(_meshes[S_FORWARD_ALPHA]);
-			
+
 	// render UI quads
 	_inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT2D);
 	_quadShader->RenderQuadUI(_quads);

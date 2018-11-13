@@ -3,7 +3,7 @@
 class Window
 {
 public:
-	Window(char* title, int x, int y, int width, int height, WNDPROC wndProc);
+	Window(const char* title, int x, int y, int width, int height, WNDPROC wndProc);
 	~Window();
 
 	// get window handles
@@ -11,16 +11,16 @@ public:
 	HWND GetHWND()           { return _HWND; }
 
 	// get the name of the window
-	char* GetWindowName()    { return _windowName; }
+	const char* GetWindowName()    { return _windowName; }
 
 private:
 
 	// creates the window
-	void CreateApplicationWindow(char* title, int x, int y, int width, int height, WNDPROC wndProc);
+	void CreateApplicationWindow(const char* title, int x, int y, int width, int height, WNDPROC wndProc);
 
 	// window handles
-	HINSTANCE _HINSTANCE;
-	HWND      _HWND;
-	char*     _windowName;
+	HINSTANCE   _HINSTANCE;
+	HWND        _HWND;
+	const char* _windowName;
 };
 

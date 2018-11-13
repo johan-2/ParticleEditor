@@ -6,4 +6,4 @@ const float SCREEN_HEIGHT = 1080.0f;
 #define V_SYNC false
 #define FULLSCREEN false
 
-#define ANTI_ALIASING 4
+

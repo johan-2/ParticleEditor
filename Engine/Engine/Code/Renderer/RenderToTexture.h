@@ -21,7 +21,6 @@ private:
 	ID3D11RenderTargetView* _renderTargetView;
 	ID3D11DepthStencilView* _depthStencilView;
 	ID3D11ShaderResourceView* _shaderResoureView;
-	D3D11_VIEWPORT _viewport;
-	
+	D3D11_VIEWPORT _viewport;	
 };
 
