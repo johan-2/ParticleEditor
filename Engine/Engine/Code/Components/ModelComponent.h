@@ -2,6 +2,7 @@
 #include <d3d11.h>
 #include "IComponent.h"
 #include <vector>
+#include "Color32.h"
 
 // hardcoded primitive types
 enum PRIMITIVE_TYPE
@@ -21,6 +22,9 @@ public:
 
 	// creates a primitive model
 	void InitPrimitive(PRIMITIVE_TYPE primitive, unsigned int flags, wchar_t* diffuseMap = L"", wchar_t* normalMap = L"", wchar_t* specularMap = L"");
+
+	// creates a 2D grid along x and y axis
+	void InitGrid(unsigned int size, float cellSize, Color32 gridColor);
 
 	// creates a model from file
 	void InitModel(char* model, unsigned int flags, wchar_t* diffuseMap = L"", wchar_t* normalMap = L"", wchar_t* specularMap = L"");

@@ -4,9 +4,10 @@
 #include "TransformComponent.h"
 #include "Color32.h";
 
-#define DEFERRED 1 << 0
-#define ALPHA_FORWARD 1 << 1
-#define CAST_SHADOW_DIR  1 << 2
+#define DEFERRED        1 << 0
+#define ALPHA_FORWARD   1 << 1
+#define CAST_SHADOW_DIR 1 << 2
+#define WIREFRAME_COLOR 1 << 3
 
 using namespace DirectX;
 

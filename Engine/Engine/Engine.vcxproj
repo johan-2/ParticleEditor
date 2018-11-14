@@ -181,6 +181,7 @@
     <ClCompile Include="Code\Renderer\ShaderPrograms\ImGUIShader.cpp" />
     <ClCompile Include="Code\Renderer\ShaderPrograms\ParticleShader.cpp" />
     <ClCompile Include="Code\Renderer\ShaderPrograms\QuadShader.cpp" />
+    <ClCompile Include="Code\Renderer\ShaderPrograms\WireframeShader.cpp" />
     <ClCompile Include="Code\System\DXModules\DXBlendStates.cpp" />
     <ClCompile Include="Code\System\DXModules\DXDepthStencilStates.cpp" />
     <ClCompile Include="Code\System\DXModules\DXInputLayouts.cpp" />
@@ -235,6 +236,7 @@
     <ClInclude Include="Code\Renderer\ShaderPrograms\ImGUIShader.h" />
     <ClInclude Include="Code\Renderer\ShaderPrograms\ParticleShader.h" />
     <ClInclude Include="Code\Renderer\ShaderPrograms\QuadShader.h" />
+    <ClInclude Include="Code\Renderer\ShaderPrograms\WireframeShader.h" />
     <ClInclude Include="Code\System\DXModules\DXBlendStates.h" />
     <ClInclude Include="Code\System\DXModules\DXDepthStencilStates.h" />
     <ClInclude Include="Code\System\DXModules\DXInputLayouts.h" />
