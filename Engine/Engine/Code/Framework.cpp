@@ -87,7 +87,7 @@ void Framework::Start()
 	// get transform of the camera that renders the depthmap
 	TransformComponent* dt = CameraManager::GetInstance().GetCurrentCameraDepthMap()->GetComponent<TransformComponent>();
 
-	// create directional light and give it the same position/ rotation as depthrender camera
+	// create directional light and give it the same position/rotation as the depth render camera
 	Entity* directionalLight = new Entity;
 	directionalLight->AddComponent<TransformComponent>()->Init(dt->GetPositionVal(), dt->GetRotationVal());
 	directionalLight->AddComponent<LightDirectionComponent>()->Init(XMFLOAT4(0.8f, 0.8f, 0.8f, 1), XMFLOAT4(1, 1, 1, 1), 80.0f);
@@ -214,6 +214,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM Lparam)
 	return 0;
 }
 
+// returns a randomized float
 float Framework::GetRandomFloat(float min, float max)
 {
 	unsigned int seed = std::chrono::system_clock::now().time_since_epoch().count();
