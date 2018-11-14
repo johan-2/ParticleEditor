@@ -18,6 +18,7 @@ class ParticleShader;
 class DXInputLayouts;
 class ImGUIShader;
 class ForwardAlphaShader;
+class WireframeShader;
 
 // the different render lists we have
 enum SHADER_TYPE
@@ -25,6 +26,7 @@ enum SHADER_TYPE
 	S_DEFERRED,
 	S_DEPTH,
 	S_FORWARD_ALPHA,
+	S_WIREFRAME,
 	S_NUM_RENDER_TYPES,
 };
 
@@ -69,6 +71,7 @@ private:
 	ParticleShader*     _particleShader;
 	ImGUIShader*        _imGUIShader;
 	ForwardAlphaShader* _forwardAlphaShader;
+	WireframeShader*    _wireframeShader;
 
 	// skybox class with all rendering built in
 	SkyBox* _skyBox;

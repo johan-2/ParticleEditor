@@ -108,17 +108,15 @@ void Mesh::AddRemoveToRenderer(bool add)
 		add ? renderer.AddMeshToRenderer(this, SHADER_TYPE::S_DEPTH) : renderer.RemoveMeshFromRenderer(this, SHADER_TYPE::S_DEPTH);
 
 	// if using deffered rendering 
-	if ((_FLAGS & DEFERRED) == DEFERRED)
-	{
+	if ((_FLAGS & DEFERRED) == DEFERRED)	
 		add ? renderer.AddMeshToRenderer(this, SHADER_TYPE::S_DEFERRED) : renderer.RemoveMeshFromRenderer(this, SHADER_TYPE::S_DEFERRED);
-		return;
-	}
-
+	
 	// alpha needs to be forward rendered
-	if ((_FLAGS & ALPHA_FORWARD) == ALPHA_FORWARD) 
-	{		
+	if ((_FLAGS & ALPHA_FORWARD) == ALPHA_FORWARD) 	
 		add ? renderer.AddMeshToRenderer(this, SHADER_TYPE::S_FORWARD_ALPHA) : renderer.RemoveMeshFromRenderer(this, SHADER_TYPE::S_FORWARD_ALPHA);
-		return;
-	}	
+
+	// debug meshes that only renders a wireframe
+	if ((_FLAGS & WIREFRAME_COLOR) == WIREFRAME_COLOR)
+		add ? renderer.AddMeshToRenderer(this, SHADER_TYPE::S_WIREFRAME) : renderer.RemoveMeshFromRenderer(this, SHADER_TYPE::S_WIREFRAME);
 }
 

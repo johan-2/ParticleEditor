@@ -21,6 +21,7 @@
 #include "ImGUIShader.h"
 #include "ForwardAlphaShader.h"
 #include "DXRasterizerStates.h"
+#include "WireframeShader.h"
 
 using namespace DirectX;
 
@@ -64,6 +65,7 @@ void Renderer::Initailize()
 	_particleShader     = new ParticleShader();
 	_imGUIShader        = new ImGUIShader();
 	_forwardAlphaShader = new ForwardAlphaShader();
+	_wireframeShader    = new WireframeShader();
 
 	// create skybox
 	_skyBox = new SkyBox(L"Skyboxes/DarkCloudy.dds");
@@ -126,6 +128,9 @@ void Renderer::Render()
 
 	// render skybox, will mask out all pixels that contains geometry in the fullscreen quad, leaving only the skybox rendered on "empty" pixels
 	_skyBox->Render();
+
+	// render debug wireframe meshes, these are forward rendered
+	_wireframeShader->RenderWireFrame(_meshes[S_WIREFRAME]);
 
 	// render particles
 	_inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUTPARTICLE);
