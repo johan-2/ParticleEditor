@@ -70,20 +70,20 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SolutionDir)Engine/Code;$(SolutionDir)Engine/Code/System;$(SolutionDir)Engine/Code/Utils;$(SolutionDir)Engine/Code/ComponentSystem;$(SolutionDir)Engine/Code/Components;$(SolutionDir)Engine/Code/Managers;$(SolutionDir)Engine/Code/imGUI;$(SolutionDir)Engine/Code/Input;$(SolutionDir)Engine/Code/rapidjson;$(SolutionDir)Engine/Code/Renderer;$(SolutionDir)Engine/Code/DataTypes;$(SolutionDir)Engine/Code/System/DXModules;$(SolutionDir)Engine/Code/Renderer/ShaderPrograms;$(SolutionDir)Engine/Code/Renderer/Deferred;$(SolutionDir)Engine/Code/Renderer/Objects;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Engine/Code;$(SolutionDir)Engine/Code/System;$(SolutionDir)Engine/Code/Utils;$(SolutionDir)Engine/Code/ComponentSystem;$(SolutionDir)Engine/Code/Components;$(SolutionDir)Engine/Code/Managers;$(SolutionDir)Engine/Code/imGUI;$(SolutionDir)Engine/Code/Input;$(SolutionDir)Engine/Code/rapidjson;$(SolutionDir)Engine/Code/Renderer;$(SolutionDir)Engine/Code/DataTypes;$(SolutionDir)Engine/Code/System/DXModules;$(SolutionDir)Engine/Code/Renderer/ShaderPrograms;$(SolutionDir)Engine/Code/Renderer/Deferred;$(SolutionDir)Engine/Code/Renderer/Objects;$(SolutionDir)Engine/Code/ParticleEditor;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)Engine</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)Engine/Code;$(SolutionDir)Engine/Code/System;$(SolutionDir)Engine/Code/Utils;$(SolutionDir)Engine/Code/ComponentSystem;$(SolutionDir)Engine/Code/Components;$(SolutionDir)Engine/Code/Managers;$(SolutionDir)Engine/Code/imGUI;$(SolutionDir)Engine/Code/Input;$(SolutionDir)Engine/Code/rapidjson;$(SolutionDir)Engine/Code/Renderer;$(SolutionDir)Engine/Code/DataTypes;$(SolutionDir)Engine/Code/System/DXModules;$(SolutionDir)Engine/Code/Renderer/ShaderPrograms;$(SolutionDir)Engine/Code/Renderer/Deferred;$(SolutionDir)Engine/Code/Renderer/Objects;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Engine/Code;$(SolutionDir)Engine/Code/System;$(SolutionDir)Engine/Code/Utils;$(SolutionDir)Engine/Code/ComponentSystem;$(SolutionDir)Engine/Code/Components;$(SolutionDir)Engine/Code/Managers;$(SolutionDir)Engine/Code/imGUI;$(SolutionDir)Engine/Code/Input;$(SolutionDir)Engine/Code/rapidjson;$(SolutionDir)Engine/Code/Renderer;$(SolutionDir)Engine/Code/DataTypes;$(SolutionDir)Engine/Code/System/DXModules;$(SolutionDir)Engine/Code/Renderer/ShaderPrograms;$(SolutionDir)Engine/Code/Renderer/Deferred;$(SolutionDir)Engine/Code/Renderer/Objects;$(SolutionDir)Engine/Code/ParticleEditor;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)Engine</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)Engine</OutDir>
-    <IncludePath>$(SolutionDir)Engine/Code;$(SolutionDir)Engine/Code/System;$(SolutionDir)Engine/Code/Utils;$(SolutionDir)Engine/Code/ComponentSystem;$(SolutionDir)Engine/Code/Components;$(SolutionDir)Engine/Code/Managers;$(SolutionDir)Engine/Code/imGUI;$(SolutionDir)Engine/Code/Input;$(SolutionDir)Engine/Code/rapidjson;$(SolutionDir)Engine/Code/Renderer;$(SolutionDir)Engine/Code/DataTypes;$(SolutionDir)Engine/Code/System/DXModules;$(SolutionDir)Engine/Code/Renderer/ShaderPrograms;$(SolutionDir)Engine/Code/Renderer/Deferred;$(SolutionDir)Engine/Code/Renderer/Objects;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Engine/Code;$(SolutionDir)Engine/Code/System;$(SolutionDir)Engine/Code/Utils;$(SolutionDir)Engine/Code/ComponentSystem;$(SolutionDir)Engine/Code/Components;$(SolutionDir)Engine/Code/Managers;$(SolutionDir)Engine/Code/imGUI;$(SolutionDir)Engine/Code/Input;$(SolutionDir)Engine/Code/rapidjson;$(SolutionDir)Engine/Code/Renderer;$(SolutionDir)Engine/Code/DataTypes;$(SolutionDir)Engine/Code/System/DXModules;$(SolutionDir)Engine/Code/Renderer/ShaderPrograms;$(SolutionDir)Engine/Code/Renderer/Deferred;$(SolutionDir)Engine/Code/Renderer/Objects;$(SolutionDir)Engine/Code/ParticleEditor;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)Engine</OutDir>
-    <IncludePath>$(SolutionDir)Engine/Code;$(SolutionDir)Engine/Code/System;$(SolutionDir)Engine/Code/Utils;$(SolutionDir)Engine/Code/ComponentSystem;$(SolutionDir)Engine/Code/Components;$(SolutionDir)Engine/Code/Managers;$(SolutionDir)Engine/Code/imGUI;$(SolutionDir)Engine/Code/Input;$(SolutionDir)Engine/Code/rapidjson;$(SolutionDir)Engine/Code/Renderer;$(SolutionDir)Engine/Code/DataTypes;$(SolutionDir)Engine/Code/System/DXModules;$(SolutionDir)Engine/Code/Renderer/ShaderPrograms;$(SolutionDir)Engine/Code/Renderer/Deferred;$(SolutionDir)Engine/Code/Renderer/Objects;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Engine/Code;$(SolutionDir)Engine/Code/System;$(SolutionDir)Engine/Code/Utils;$(SolutionDir)Engine/Code/ComponentSystem;$(SolutionDir)Engine/Code/Components;$(SolutionDir)Engine/Code/Managers;$(SolutionDir)Engine/Code/imGUI;$(SolutionDir)Engine/Code/Input;$(SolutionDir)Engine/Code/rapidjson;$(SolutionDir)Engine/Code/Renderer;$(SolutionDir)Engine/Code/DataTypes;$(SolutionDir)Engine/Code/System/DXModules;$(SolutionDir)Engine/Code/Renderer/ShaderPrograms;$(SolutionDir)Engine/Code/Renderer/Deferred;$(SolutionDir)Engine/Code/Renderer/Objects;$(SolutionDir)Engine/Code/ParticleEditor;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -169,6 +169,7 @@
     <ClCompile Include="Code\Managers\DXManager.cpp" />
     <ClCompile Include="Code\Managers\GuiManager.cpp" />
     <ClCompile Include="Code\Managers\LightManager.cpp" />
+    <ClCompile Include="Code\ParticleEditor\ParticleEditor.cpp" />
     <ClCompile Include="Code\Renderer\Deferred\GBuffer.cpp" />
     <ClCompile Include="Code\Renderer\Deferred\ScreenQuad.cpp" />
     <ClCompile Include="Code\Renderer\Objects\Mesh.cpp" />
@@ -223,6 +224,7 @@
     <ClInclude Include="Code\Managers\DXManager.h" />
     <ClInclude Include="Code\Managers\GuiManager.h" />
     <ClInclude Include="Code\Managers\LightManager.h" />
+    <ClInclude Include="Code\ParticleEditor\ParticleEditor.h" />
     <ClInclude Include="Code\Renderer\Deferred\GBuffer.h" />
     <ClInclude Include="Code\Renderer\Deferred\ScreenQuad.h" />
     <ClInclude Include="Code\Renderer\Objects\Mesh.h" />

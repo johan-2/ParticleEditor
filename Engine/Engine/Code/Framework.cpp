@@ -29,6 +29,7 @@
 #include <chrono>
 #include "Color32.h"
 #include "Window.h"
+#include "ParticleEditor.h"
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM Lparam);
 
@@ -84,11 +85,15 @@ void Framework::Start()
 	Entity* directionalLight = new Entity;
 	directionalLight->AddComponent<TransformComponent>()->Init(XMFLOAT3(0,0,0), XMFLOAT3(60, 30, 0));
 	directionalLight->AddComponent<LightDirectionComponent>()->Init(XMFLOAT4(0.8f, 0.8f, 0.8f, 1), XMFLOAT4(1, 1, 1, 1), 80.0f);
+
+	_particleEditor = new ParticleEditor();
+	_particleEditor->Setup();
 }
 
 void Framework::Update()
 {
 	World::GetInstance().Update();
+	_particleEditor->Update();
 }
 
 void Framework::Render()

@@ -1,44 +1,20 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(377,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
-  ParticleSystemComponent.cpp
-c:\users\nilss\desktop\particleeditor\engine\engine\code\components\particlesystemcomponent.cpp(34): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\particleeditor\engine\engine\code\components\particlesystemcomponent.cpp(65): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\particleeditor\engine\engine\code\components\particlesystemcomponent.cpp(84): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\particleeditor\engine\engine\code\components\particlesystemcomponent.cpp(115): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\particleeditor\engine\engine\code\components\particlesystemcomponent.cpp(219): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\particleeditor\engine\engine\code\components\particlesystemcomponent.cpp(317): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\particleeditor\engine\engine\code\components\particlesystemcomponent.cpp(329): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\particleeditor\engine\engine\code\components\particlesystemcomponent.cpp(331): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\particleeditor\engine\engine\code\components\particlesystemcomponent.cpp(393): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\particleeditor\engine\engine\code\components\particlesystemcomponent.cpp(395): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\particleeditor\engine\engine\code\components\particlesystemcomponent.cpp(420): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\particleeditor\engine\engine\code\components\particlesystemcomponent.cpp(440): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\particleeditor\engine\engine\code\components\particlesystemcomponent.cpp(471): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\particleeditor\engine\engine\code\components\particlesystemcomponent.cpp(482): warning C4244: 'initializing': conversion from '_Rep' to 'unsigned int', possible loss of data
-          with
-          [
-              _Rep=std::chrono::system_clock::rep
-          ]
-c:\users\nilss\desktop\particleeditor\engine\engine\code\components\particlesystemcomponent.cpp(513): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\particleeditor\engine\engine\code\components\particlesystemcomponent.cpp(517): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\particleeditor\engine\engine\code\components\particlesystemcomponent.cpp(566): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\particleeditor\engine\engine\code\components\particlesystemcomponent.cpp(590): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\particleeditor\engine\engine\code\components\particlesystemcomponent.cpp(592): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\particleeditor\engine\engine\code\components\particlesystemcomponent.cpp(679): warning C4018: '<': signed/unsigned mismatch
-  QuadComponent.cpp
   Framework.cpp
   c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
 c:\users\nilss\desktop\particleeditor\engine\engine\code\renderer\objects\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-c:\users\nilss\desktop\particleeditor\engine\engine\code\framework.cpp(38): warning C4244: 'argument': conversion from 'const float' to 'int', possible loss of data
-c:\users\nilss\desktop\particleeditor\engine\engine\code\framework.cpp(41): warning C4244: 'argument': conversion from 'const float' to 'int', possible loss of data
-c:\users\nilss\desktop\particleeditor\engine\engine\code\framework.cpp(178): warning C4244: 'initializing': conversion from '_Rep' to 'unsigned int', possible loss of data
+c:\users\nilss\desktop\particleeditor\engine\engine\code\framework.cpp(39): warning C4244: 'argument': conversion from 'const float' to 'int', possible loss of data
+c:\users\nilss\desktop\particleeditor\engine\engine\code\framework.cpp(42): warning C4244: 'argument': conversion from 'const float' to 'int', possible loss of data
+c:\users\nilss\desktop\particleeditor\engine\engine\code\framework.cpp(184): warning C4244: 'initializing': conversion from '_Rep' to 'unsigned int', possible loss of data
           with
           [
               _Rep=std::chrono::system_clock::rep
           ]
-  Mesh.cpp
-c:\users\nilss\desktop\particleeditor\engine\engine\code\renderer\objects\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+  ParticleEditor.cpp
   Renderer.cpp
 c:\users\nilss\desktop\particleeditor\engine\engine\code\renderer\objects\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
 c:\users\nilss\desktop\particleeditor\engine\engine\code\renderer\renderer.cpp(96): warning C4244: 'argument': conversion from 'const float' to 'unsigned int', possible loss of data
+  Window.cpp
+  Main.cpp
+c:\users\nilss\desktop\particleeditor\engine\engine\main.cpp(2): warning C4067: unexpected tokens following preprocessor directive - expected a newline
   Generating Code...
   Engine.vcxproj -> C:\Users\nilss\Desktop\ParticleEditor\Engine\Engine\Engine.exe

@@ -2,8 +2,8 @@
 #include <Windows.h>
 #include <string>
 
-class DebugStats;
 class Window;
+class ParticleEditor;
 
 class Framework
 {
@@ -23,7 +23,7 @@ private:
 	float GetRandomFloat(float min, float max);
 
 	// window and debug stats
-	Window*     _window;
-	DebugStats* _debugStats;
+	Window*         _window;
+	ParticleEditor* _particleEditor;
 };
 
