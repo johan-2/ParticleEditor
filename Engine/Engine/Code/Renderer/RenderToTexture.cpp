@@ -8,6 +8,7 @@ RenderToTexture::RenderToTexture(unsigned int width, unsigned int height, bool d
 	ID3D11Device* device = DXManager::GetInstance().GetDevice();
 	HRESULT result;
 
+	// if we are only interessted in rendering to a new depth stencil view
 	if (depthOnly)
 	{
 		// depth texture
@@ -67,7 +68,7 @@ RenderToTexture::RenderToTexture(unsigned int width, unsigned int height, bool d
 
 		depthTex2D->Release();		
 	}
-	else 
+	else // create both a render target view and a depth stencil view
 	{		
 		ID3D11Texture2D* depthTex2D = nullptr;
 		ID3D11Texture2D* renderTex2D = nullptr;
