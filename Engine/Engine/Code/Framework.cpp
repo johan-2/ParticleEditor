@@ -80,7 +80,7 @@ void Framework::Start()
 	//set ambient light color	
 	LightManager::GetInstance().SetAmbientColor(XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
 
-	// create directional light and give it the same position/ rotation as depthrender camera
+	// create directional light and give it the same position/rotation as the depth render camera
 	Entity* directionalLight = new Entity;
 	directionalLight->AddComponent<TransformComponent>()->Init(XMFLOAT3(0,0,0), XMFLOAT3(60, 30, 0));
 	directionalLight->AddComponent<LightDirectionComponent>()->Init(XMFLOAT4(0.8f, 0.8f, 0.8f, 1), XMFLOAT4(1, 1, 1, 1), 80.0f);
@@ -173,6 +173,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM Lparam)
 	return 0;
 }
 
+// returns a randomized float
 float Framework::GetRandomFloat(float min, float max)
 {
 	unsigned int seed = std::chrono::system_clock::now().time_since_epoch().count();
