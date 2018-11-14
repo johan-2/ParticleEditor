@@ -82,10 +82,6 @@ void Renderer::Initailize()
 	_screenQuad = new ScreenQuad();
 
 	CreateDepthMap();
-
-#ifdef _DEBUG
-	CreateDebugImages();
-#endif
 }
 
 void Renderer::CreateDepthMap() 
@@ -112,30 +108,6 @@ void Renderer::CreateDepthMap()
 
 	// set this camera to the active depth render camera
 	CM.SetCurrentCameraDepthMap(depthCamera);
-}
-
-void Renderer::CreateDebugImages()
-{
-	// create debug images to show each texture in the G buffer and the depth map
-	Entity* shadowMapQuad = new Entity();
-	shadowMapQuad->AddComponent<QuadComponent>()->Init(XMFLOAT2(SCREEN_WIDTH * 0.06f, SCREEN_HEIGHT * 0.1f), XMFLOAT2(SCREEN_WIDTH * 0.08f, SCREEN_WIDTH * 0.08f), L"");
-	shadowMapQuad->GetComponent<QuadComponent>()->SetTexture(_depthMap->GetShaderResource());
-
-	Entity* positionQuad = new Entity();
-	positionQuad->AddComponent<QuadComponent>()->Init(XMFLOAT2(SCREEN_WIDTH * 0.18f, SCREEN_HEIGHT * 0.1f), XMFLOAT2(SCREEN_WIDTH * 0.1f, SCREEN_HEIGHT * 0.1f), L"");
-	positionQuad->GetComponent<QuadComponent>()->SetTexture(_gBuffer->GetSrvArray()[0]);
-
-	Entity* normalQuad = new Entity();
-	normalQuad->AddComponent<QuadComponent>()->Init(XMFLOAT2(SCREEN_WIDTH * 0.30f, SCREEN_HEIGHT * 0.1f), XMFLOAT2(SCREEN_WIDTH * 0.1f, SCREEN_HEIGHT * 0.1f), L"");
-	normalQuad->GetComponent<QuadComponent>()->SetTexture(_gBuffer->GetSrvArray()[1]);
-
-	Entity* DiffuseQuad = new Entity();
-	DiffuseQuad->AddComponent<QuadComponent>()->Init(XMFLOAT2(SCREEN_WIDTH * 0.42f, SCREEN_HEIGHT * 0.1f), XMFLOAT2(SCREEN_WIDTH * 0.1f, SCREEN_HEIGHT * 0.1f), L"");
-	DiffuseQuad->GetComponent<QuadComponent>()->SetTexture(_gBuffer->GetSrvArray()[2]);
-
-	Entity* specularQuad = new Entity();
-	specularQuad->AddComponent<QuadComponent>()->Init(XMFLOAT2(SCREEN_WIDTH * 0.54f, SCREEN_HEIGHT * 0.1f), XMFLOAT2(SCREEN_WIDTH * 0.1f, SCREEN_HEIGHT * 0.1f), L"");
-	specularQuad->GetComponent<QuadComponent>()->SetTexture(_gBuffer->GetSrvArray()[3]);
 }
 
 void Renderer::Render() 

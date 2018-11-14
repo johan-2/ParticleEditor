@@ -56,7 +56,6 @@ private:
 
 	// setupFunctions
 	void CreateDepthMap();
-	void CreateDebugImages();
 
 	// render functions
 	void RenderDeferred();

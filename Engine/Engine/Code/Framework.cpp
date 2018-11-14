@@ -60,10 +60,6 @@ Framework::Framework()
 Framework::~Framework()
 {
 	delete _window;
-
-#ifdef _DEBUG
-	delete _debugStats;
-#endif 
 }
 
 void Framework::Start()
@@ -82,54 +78,17 @@ void Framework::Start()
 	CameraManager::GetInstance().SetCurrentCameraUI(cameraUI->GetComponent<CameraComponent>());
 
 	//set ambient light color	
-	LightManager::GetInstance().SetAmbientColor(XMFLOAT4(0.3f, 0.3f, 0.3f, 1.0f));
-
-	// get transform of the camera that renders the depthmap
-	TransformComponent* dt = CameraManager::GetInstance().GetCurrentCameraDepthMap()->GetComponent<TransformComponent>();
+	LightManager::GetInstance().SetAmbientColor(XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
 
 	// create directional light and give it the same position/ rotation as depthrender camera
 	Entity* directionalLight = new Entity;
-	directionalLight->AddComponent<TransformComponent>()->Init(dt->GetPositionVal(), dt->GetRotationVal());
+	directionalLight->AddComponent<TransformComponent>()->Init(XMFLOAT3(0,0,0), XMFLOAT3(60, 30, 0));
 	directionalLight->AddComponent<LightDirectionComponent>()->Init(XMFLOAT4(0.8f, 0.8f, 0.8f, 1), XMFLOAT4(1, 1, 1, 1), 80.0f);
-	
-	Entity* box = new Entity();
-	box->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 4, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(2, 2, 2));
-	box->AddComponent<RotationComponent>()->Init(XMFLOAT3(GetRandomFloat(-10,10), GetRandomFloat(-10, 10), GetRandomFloat(-10, 10)), GetRandomFloat(0.1f, 5.0f));
-	box->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::CUBE, DEFERRED | CAST_SHADOW_DIR, L"Textures/rock.dds", L"Textures/rockNormal.dds", L"Textures/rockSpecular.dds");
-	
-	Entity* floor = new Entity();
-	floor->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(12, 1, 12));
-	floor->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::PLANE, DEFERRED | CAST_SHADOW_DIR, L"Textures/bricks.dds", L"Textures/bricksNormal.dds", L"Textures/bricksSpecular.dds");
-
-	Entity* alphaTest = new Entity();
-	alphaTest->AddComponent<TransformComponent>()->Init(XMFLOAT3(-18, 5, -20), XMFLOAT3(90, 0, 0), XMFLOAT3(12, 0.01f, 12));
-	alphaTest->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::CUBE, ALPHA_FORWARD | CAST_SHADOW_DIR, L"Textures/AlphaTest.dds", L"Textures/pavingNormal.dds", L"Textures/pavingSpecular.dds");
-
-	Entity* alphaTest2 = new Entity();
-	alphaTest2->AddComponent<TransformComponent>()->Init(XMFLOAT3(-15, 5, -10), XMFLOAT3(90, 0, 0), XMFLOAT3(12, 0.01f, 12));
-	alphaTest2->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::CUBE, ALPHA_FORWARD | CAST_SHADOW_DIR, L"Textures/AlphaTest.dds", L"Textures/pavingNormal.dds", L"Textures/pavingSpecular.dds");
-
-	Entity* wall = new Entity();
-	wall->AddComponent<TransformComponent>()->Init(XMFLOAT3(-20, 2, 12), XMFLOAT3(0, -70, 0), XMFLOAT3(10, 10, 3));
-	wall->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::CUBE, DEFERRED | CAST_SHADOW_DIR, L"Textures/crateDamp.dds", L"Textures/crateDampNormal.dds", L"Textures/crateDampSpecular.dds");
-
-	Entity* fire = new Entity();
-	fire->AddComponent<TransformComponent>()->Init(XMFLOAT3(-15.0f, 0.5f, 12), XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1));
-	fire->AddComponent<ParticleSystemComponent>()->Init("Particles/fire.json");
-	fire->AddComponent<LightPointComponent>()->Init(6, 8, XMFLOAT3(0.8f, 0.4f, 0.0f), XMFLOAT3(0.8f, 0.4f, 0.0f), 80.0f, 0.0f, 1.0f, 0.1f);
-
-#ifdef _DEBUG
-	_debugStats = new DebugStats();
-#endif
 }
 
 void Framework::Update()
 {
 	World::GetInstance().Update();
-
-#ifdef _DEBUG
-	_debugStats->Update();
-#endif
 }
 
 void Framework::Render()
