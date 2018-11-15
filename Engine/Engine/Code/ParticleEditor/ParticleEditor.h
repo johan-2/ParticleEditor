@@ -1,26 +1,30 @@
 #pragma once
 #include <vector>
 #include "ParticleSystemComponent.h"
+#include "Input.h"
 
 class Entity;
 class TransformComponent;
+class FreeMoveComponent;
 
 class ParticleEditor
 {
 public:
-	ParticleEditor();
+	ParticleEditor(Input& input, FreeMoveComponent* moveComponent);
 	~ParticleEditor();
 
-	void Setup();
 	void Update();
 
 private:
 
+	// window functions
 	void UpdateParticleSettingsWindow();
+	void UpdateInfoWindow();
+	void UpdateKeyCommands();
 
 	// helper functions
 	void ShowToolTip(const char* tip);
-	void ReloadEmitter();
+	void ReloadSystem();
 	char* GetNumEmittersAsString();
 
 	// entities needed for editor
@@ -31,6 +35,7 @@ private:
 	// cached components
 	ParticleSystemComponent* _systemParticleComponent;
 	TransformComponent*      _systemTransformComponent;
+	FreeMoveComponent*       _cameraFreeMoveComponent;
 
 	// stores the settings of each emitter in the current system
 	std::vector<ParticleSettings> _particleSettings;
@@ -42,5 +47,12 @@ private:
 	// and which emitter is currently bieng edited 
 	unsigned int _numEmitters;
 	unsigned int _currentEmitterIndex;
+
+	// Camera Toggle
+	bool _cameraMoveToggle;
+	bool _systemUpdateToggle;
+
+	// instance to input system
+	Input& _input;
 };
 

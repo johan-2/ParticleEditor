@@ -69,7 +69,7 @@ void Renderer::Initailize()
 	_wireframeShader    = new WireframeShader();
 
 	// create skybox
-	_skyBox = new SkyBox(L"Skyboxes/ThickCloudsWater.dds");
+	_skyBox = new SkyBox(L"Skyboxes/EmptySpace.dds");
 
 	// create input layouts
 	_inputLayouts = new DXInputLayouts();

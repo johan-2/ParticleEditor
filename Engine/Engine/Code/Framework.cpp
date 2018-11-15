@@ -67,7 +67,7 @@ void Framework::Start()
 {
 	// create game camera
 	Entity* cameraGame = new Entity();
-	cameraGame->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 20, -40), XMFLOAT3(30,0,0));
+	cameraGame->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 5, -12), XMFLOAT3(5,0,0));
 	cameraGame->AddComponent<CameraComponent>()->Init3D(70); 
 	cameraGame->AddComponent<FreeMoveComponent>()->init(20.0f, 0.25f);
 	CameraManager::GetInstance().SetCurrentCameraGame(cameraGame->GetComponent<CameraComponent>());
@@ -86,8 +86,8 @@ void Framework::Start()
 	directionalLight->AddComponent<TransformComponent>()->Init(XMFLOAT3(0,0,0), XMFLOAT3(60, 30, 0));
 	directionalLight->AddComponent<LightDirectionComponent>()->Init(XMFLOAT4(0.8f, 0.8f, 0.8f, 1), XMFLOAT4(1, 1, 1, 1), 80.0f);
 
-	_particleEditor = new ParticleEditor();
-	_particleEditor->Setup();
+	// create the particle editor and pass in some dependencies
+	_particleEditor = new ParticleEditor(Input::GetInstance(), cameraGame->GetComponent<FreeMoveComponent>());
 }
 
 void Framework::Update()

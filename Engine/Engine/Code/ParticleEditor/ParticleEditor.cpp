@@ -16,25 +16,22 @@
 #include <fstream>
 #include "GuiManager.h"
 #include "SystemDefs.h"
+#include "FreeMoveComponent.h"
 
-ParticleEditor::ParticleEditor()
-{
-}
-
-ParticleEditor::~ParticleEditor()
-{
-}
-
-void ParticleEditor::Setup()
+ParticleEditor::ParticleEditor(Input& input, FreeMoveComponent* moveComponent) :
+	_input(input),
+	_cameraFreeMoveComponent(moveComponent),
+	_cameraMoveToggle(false),
+	_systemUpdateToggle(true)
 {
 	// create a grid
 	_grid = new Entity();
 	_grid->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0, 0));
-	_grid->AddComponent<ModelComponent>()->InitGrid(100, 1, Color32(255, 0, 0, 1));
+	_grid->AddComponent<ModelComponent>()->InitGrid(50, 1, Color32(100, 100, 100, 1));
 
 	// create particle system entity
 	_particleEntity = new Entity();
-	_particleEntity->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0.5f, 0)); 
+	_particleEntity->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0.5f, 0));
 	_particleEntity->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::CUBE, WIREFRAME_COLOR);
 	_particleEntity->AddComponent<ParticleSystemComponent>()->Init("Particles/fire.json");
 
@@ -44,6 +41,9 @@ void ParticleEditor::Setup()
 
 	// get how many emitters exist in the start particle system
 	_numEmitters = _systemParticleComponent->GetNumEmitters();
+
+	// start camera frozen
+	_cameraFreeMoveComponent->SetActive(_cameraMoveToggle);
 
 	// loop over all emitters and get a cache of the settings and the blend states
 	for (int i = 0; i < _numEmitters; i++)
@@ -59,9 +59,36 @@ void ParticleEditor::Setup()
 	_currentEmitterIndex = 0;
 }
 
+ParticleEditor::~ParticleEditor()
+{
+}
+
 void ParticleEditor::Update()
 {
 	UpdateParticleSettingsWindow();
+	UpdateInfoWindow();
+	UpdateKeyCommands();	
+}
+
+void ParticleEditor::UpdateKeyCommands()
+{
+	// reload the system with F2
+	if (_input.IskeyPressed(DIK_F2))
+		ReloadSystem();
+
+	// toggle the freeFlight component in camera
+	if (_input.IskeyPressed(DIK_F1))
+	{
+		_cameraMoveToggle = !_cameraMoveToggle;
+		_cameraFreeMoveComponent->SetActive(_cameraMoveToggle);
+	}
+
+	// toggle if particle system is frozen
+	if (_input.IskeyPressed(DIK_F3))
+	{
+		_systemUpdateToggle = !_systemUpdateToggle;
+		_systemParticleComponent->SetActive(_systemUpdateToggle);
+	}
 }
 
 void ParticleEditor::UpdateParticleSettingsWindow()
@@ -119,7 +146,7 @@ void ParticleEditor::UpdateParticleSettingsWindow()
 		}
 
 		// reload the emitter so the texture is changed
-		ReloadEmitter();
+		ReloadSystem();
 	}
 
 	// texture input
@@ -360,7 +387,7 @@ void ParticleEditor::UpdateParticleSettingsWindow()
 			_blendEnum.push_back(_blendEnum[_currentEmitterIndex]);
 			_numEmitters++;
 			_currentEmitterIndex = _numEmitters - 1; // set the current emitter to the newly created
-			ReloadEmitter();
+			ReloadSystem();
 		}
 	}
 
@@ -374,7 +401,7 @@ void ParticleEditor::UpdateParticleSettingsWindow()
 
 			_numEmitters--;
 			_currentEmitterIndex = 0;
-			ReloadEmitter();
+			ReloadSystem();
 		}
 	}
 
@@ -382,12 +409,50 @@ void ParticleEditor::UpdateParticleSettingsWindow()
 	ImGui::Combo("Emitter to edit", (int*)&_currentEmitterIndex, GetNumEmittersAsString());
 
 	// apply button
-	ImGui::Spacing();
 	if (ImGui::Button("APPLY SETTINGS"))
-		ReloadEmitter();
+		ReloadSystem();
+
+	// freeze and unfreeze the particle system
+	if (ImGui::Button("FREEZE/UNFREEZE"))
+	{
+		_systemUpdateToggle = !_systemUpdateToggle;
+		_systemParticleComponent->SetActive(_systemUpdateToggle);
+	}
 
 	ImGui::End();
+}
 
+void ParticleEditor::UpdateInfoWindow()
+{
+	// info window with short commands	
+	ImGui::SetNextWindowSize(ImVec2(SCREEN_WIDTH * 0.15f, SCREEN_HEIGHT * 0.1f));
+	ImGui::SetNextWindowPos(ImVec2(SCREEN_WIDTH * 0.01f, SCREEN_HEIGHT * 0.95f), 0, ImVec2(0, 1));
+
+	ImGui::Begin("short commands", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoInputs);
+
+	ImGuiIO& io = ImGui::GetIO();
+
+	ImGui::TextColored(ImVec4(0.9, 0.9, 0.9, 1), "FPS : %.2f", io.Framerate);
+
+	ImGui::TextColored(ImVec4(0.9, 0.9, 0.9, 1), "PRESS");
+	ImGui::SameLine();
+	ImGui::TextColored(ImVec4(0, 1, 0, 1), "F1");
+	ImGui::SameLine();
+	ImGui::TextColored(ImVec4(0.9, 0.9, 0.9, 1), "TO TOGGLE FREE MOVE CAMERA");
+
+	ImGui::TextColored(ImVec4(0.9, 0.9, 0.9, 1), "PRESS");
+	ImGui::SameLine();
+	ImGui::TextColored(ImVec4(0, 1, 0, 1), "F2");
+	ImGui::SameLine();
+	ImGui::TextColored(ImVec4(0.9, 0.9, 0.9, 1), "TO APPLY CHANGES");
+
+	ImGui::TextColored(ImVec4(0.9, 0.9, 0.9, 1), "PRESS");
+	ImGui::SameLine();
+	ImGui::TextColored(ImVec4(0, 1, 0, 1), "F3");
+	ImGui::SameLine();
+	ImGui::TextColored(ImVec4(0.9, 0.9, 0.9, 1), "TO TOGGLE IF FROZEN");
+
+	ImGui::End();
 }
 
 void ParticleEditor::ShowToolTip(const char* tip)
@@ -434,7 +499,7 @@ char* ParticleEditor::GetNumEmittersAsString()
 	}
 }
 
-void ParticleEditor::ReloadEmitter()
+void ParticleEditor::ReloadSystem()
 {
 	for (int i = 0; i < _numEmitters; i++)
 	{
@@ -443,6 +508,13 @@ void ParticleEditor::ReloadEmitter()
 		_particleSettings[i].BLEND = (BLEND_STATE)blendEnumID;
 	}
 
-	//_particleEntity->RemoveComponent(_systemParticleComponent);
-	//_systemParticleComponent = _particleEntity->AddComponent<ParticleSystemComponent>(); _systemParticleComponent->Init(_particleSettings, _numEmitters);
+	// always set to update when reloading
+	_systemUpdateToggle = true;
+
+	// remove old particle component and create a new one with the updated settings
+	_particleEntity->RemoveComponent(_systemParticleComponent);
+	_particleEntity->AddComponent<ParticleSystemComponent>()->Init(_particleSettings);
+
+	// get cache to component
+	_systemParticleComponent = _particleEntity->GetComponent<ParticleSystemComponent>();
 }
