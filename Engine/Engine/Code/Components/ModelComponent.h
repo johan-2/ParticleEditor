@@ -30,7 +30,12 @@ public:
 	void InitModel(char* model, unsigned int flags, wchar_t* diffuseMap = L"", wchar_t* normalMap = L"", wchar_t* specularMap = L"");
 	void Update();
 
+	// overides and calls base
+	// also removes/adds all meshes to renderer
 	void SetActive(bool) override;
+
+	// set render flags on all meshes in this model
+	void SetRenderFlags(unsigned int flags); 
 
 	// get mesh list and how many meshes this model have
 	const std::vector<Mesh*>& GetMeshes()    { return _meshes; }
