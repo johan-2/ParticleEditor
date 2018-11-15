@@ -30,7 +30,8 @@ void World::Update()
 		unsigned int size = _components[i].size();
 
 		for (int y = 0; y < size; y++)
-			_components[i][y]->Update();
+			if (_components[i][y]->IsActive())
+				_components[i][y]->Update();
 	}
 
 	// remove and delete all components/entities that got flagged 

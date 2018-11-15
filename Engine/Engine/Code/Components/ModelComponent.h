@@ -30,6 +30,8 @@ public:
 	void InitModel(char* model, unsigned int flags, wchar_t* diffuseMap = L"", wchar_t* normalMap = L"", wchar_t* specularMap = L"");
 	void Update();
 
+	void SetActive(bool) override;
+
 	// get mesh list and how many meshes this model have
 	const std::vector<Mesh*>& GetMeshes()    { return _meshes; }
 	const unsigned int&       GetNumMeshes() { return _numMeshes; }

@@ -16,6 +16,13 @@ public:
 	// everyone have thier own update defined
 	virtual void Update() = 0;
 
+	// inactivate this component meaning update wont be called
+	// can overide this from each component if some more functionality is wanted
+	virtual void SetActive(bool active) { _isActive = active; }
+
+	// is this component active
+	bool IsActive() { return _isActive; }
+
 	// get the type of component this is
 	COMPONENT_TYPE Type() { return _type; }
 
@@ -33,5 +40,6 @@ protected:
 	// type and pointer to entity
 	COMPONENT_TYPE _type;
 	Entity*        _parent;
+	bool           _isActive;
 };
 

@@ -50,26 +50,48 @@ void ParticleSystemComponent::Init(char* particleFile)
 	// get particle settings
 	ParsefromJson(particleFile);
 
+	// create arrays of memory
+	AllocateMemory();
+
+	// setup based on settings
+	SetUp();
+}
+
+void ParticleSystemComponent::Init(std::vector<ParticleSettings> settings)
+{
+	_numEmitters = settings.size();
+	_settings    = new ParticleSettings[_numEmitters];
+
+	// set all settings
+	for (int i = 0; i < _numEmitters; i++)
+		_settings[i] = settings[i];
+
+	// create arrays of memory
+	AllocateMemory();
+
+	// setup based on settings
+	SetUp();
+}
+
+void ParticleSystemComponent::AllocateMemory()
+{
 	// allocate memory for all settings
-	_vertexBuffer             = new ID3D11Buffer*[_numEmitters];
-	_indexBuffer              = new ID3D11Buffer*[_numEmitters];
-	_instanceBuffer           = new ID3D11Buffer*[_numEmitters];
+	_vertexBuffer         = new ID3D11Buffer*[_numEmitters];
+	_indexBuffer          = new ID3D11Buffer*[_numEmitters];
+	_instanceBuffer       = new ID3D11Buffer*[_numEmitters];
 
-	_particleInstanceData     = new ParticleInstanceType*[_numEmitters];
-	_particleData             = new ParticleData*[_numEmitters];
+	_particleInstanceData = new ParticleInstanceType*[_numEmitters];
+	_particleData         = new ParticleData*[_numEmitters];
 
-	_emitterData              = new EmitterData[_numEmitters];
-	_texture                  = new ID3D11ShaderResourceView*[_numEmitters] {nullptr};
+	_emitterData          = new EmitterData[_numEmitters];
+	_texture              = new ID3D11ShaderResourceView*[_numEmitters] {nullptr};
 
 	// allocate arrays for each particle
-	for (int i = 0; i< _numEmitters; i++)
+	for (int i = 0; i < _numEmitters; i++)
 	{
 		_particleInstanceData[i] = new ParticleInstanceType[_settings[i].numParticles];
 		_particleData[i]         = new ParticleData[_settings[i].numParticles];
 	}
-
-	// setup based on settings
-	SetUp();
 }
 
 void ParticleSystemComponent::SetUp()

@@ -107,6 +107,7 @@ public:
 
 	// will read the particle settings and create memory for all buffers
 	void Init(char* particleFile);
+	void Init(std::vector<ParticleSettings> settings);
 
 	// updates the simulation
 	void Update();
@@ -133,6 +134,9 @@ public:
 	ID3D11ShaderResourceView** GetTextureArray() { return _texture; }
 
 private:
+
+	// will allocate memory for all particle data
+	void AllocateMemory();
 
 	// will setup all emitters depending on settings
 	void SetUp();
