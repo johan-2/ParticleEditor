@@ -57,11 +57,11 @@ public:
 	const float& GetDistanceFromCamera()     { return _distance; }
 	void SetDistanceToCamera(float distance) { _distance = distance; }
 
-private:
-	
 	// adds and removes this mesh to/from the renderer
 	void AddRemoveToRenderer(bool add);
 
+private:
+	
 	// pointers to the vertex/index buffers
 	ID3D11Buffer* _vertexBuffer;
 	ID3D11Buffer*_indexBuffer;

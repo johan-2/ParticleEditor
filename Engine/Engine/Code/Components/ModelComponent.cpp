@@ -340,8 +340,15 @@ void ModelComponent::CreatePlane(unsigned int flags, wchar_t* diffuseMap, wchar_
 }
 
 void ModelComponent::Update() 
+{	
+}
+
+void ModelComponent::SetActive(bool active) 
 {
+	IComponent::SetActive(active);
 	
+	for (int i = 0; i < _meshes.size(); i++)
+		_meshes[i]->AddRemoveToRenderer(active);
 }
 
 
