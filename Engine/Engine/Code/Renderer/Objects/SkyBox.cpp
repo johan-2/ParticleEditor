@@ -241,6 +241,10 @@ void SkyBox::CreateBox()
 
 void SkyBox::LoadCubemap(wchar_t* file) 
 {
+	// remove the old cubemap texture if one exist
+	if (_texture != nullptr)
+		_texture->Release();
+
 	// create cubemap from file
 	HRESULT result = DirectX::CreateDDSTextureFromFile(DXManager::GetInstance().GetDevice(), file, NULL, &_texture);
 

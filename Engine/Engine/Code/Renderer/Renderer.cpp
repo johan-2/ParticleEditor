@@ -22,6 +22,7 @@
 #include "ForwardAlphaShader.h"
 #include "DXRasterizerStates.h"
 #include "WireframeShader.h"
+#include "Input.h"
 
 using namespace DirectX;
 
@@ -68,7 +69,7 @@ void Renderer::Initailize()
 	_wireframeShader    = new WireframeShader();
 
 	// create skybox
-	_skyBox = new SkyBox(L"Skyboxes/DarkCloudy.dds");
+	_skyBox = new SkyBox(L"Skyboxes/ThickCloudsWater.dds");
 
 	// create input layouts
 	_inputLayouts = new DXInputLayouts();

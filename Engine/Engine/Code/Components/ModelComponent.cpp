@@ -347,8 +347,20 @@ void ModelComponent::SetActive(bool active)
 {
 	IComponent::SetActive(active);
 	
+	// remove/add meshes to renderer
 	for (int i = 0; i < _meshes.size(); i++)
 		_meshes[i]->AddRemoveToRenderer(active);
+}
+
+// set the flag on all meshes in this model
+void ModelComponent::SetRenderFlags(unsigned int flags)
+{ 
+	for (int i = 0; i < _numMeshes; i++)
+	{
+		_meshes[i]->AddRemoveToRenderer(false);
+		_meshes[i]->SetFlags(flags);
+		_meshes[i]->AddRemoveToRenderer(true);
+	}
 }
 
 

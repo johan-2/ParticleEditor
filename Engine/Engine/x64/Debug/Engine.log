@@ -1,46 +1,12 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(377,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
-  ParticleSystemComponent.cpp
-c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(34): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(62): warning C4267: '=': conversion from 'size_t' to 'unsigned int', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(66): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(90): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(106): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(137): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(241): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(339): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(351): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(353): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(415): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(417): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(442): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(462): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(493): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(504): warning C4244: 'initializing': conversion from '_Rep' to 'unsigned int', possible loss of data
-          with
-          [
-              _Rep=std::chrono::system_clock::rep
-          ]
-c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(535): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(539): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(588): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(612): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(614): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(701): warning C4018: '<': signed/unsigned mismatch
-  Framework.cpp
+  ModelComponent.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\objects\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\modelcomponent.cpp(14): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\modelcomponent.cpp(44): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\components\modelcomponent.cpp(358): warning C4018: '<': signed/unsigned mismatch
+  Renderer.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\objects\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
   c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\objects\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-c:\users\nilss\desktop\enginedx11\engine\engine\code\framework.cpp(38): warning C4244: 'argument': conversion from 'const float' to 'int', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\framework.cpp(41): warning C4244: 'argument': conversion from 'const float' to 'int', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\framework.cpp(237): warning C4244: 'initializing': conversion from '_Rep' to 'unsigned int', possible loss of data
-          with
-          [
-              _Rep=std::chrono::system_clock::rep
-          ]
-  ParticleShader.cpp
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\objects\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\shaderhelpers.h(42): warning C4101: 'destination': unreferenced local variable
-c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\shaderhelpers.h(116): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\shaderhelpers.h(116): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\particleshader.cpp(68): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\renderer.cpp(103): warning C4244: 'argument': conversion from 'const float' to 'unsigned int', possible loss of data
   Generating Code...
   Engine.vcxproj -> C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\Engine.exe

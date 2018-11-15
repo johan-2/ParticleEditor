@@ -46,8 +46,9 @@ public:
 	// get all textures this mesh uses
 	ID3D11ShaderResourceView** GetTextureArray() { return _textures; }
 
-	// get rendering flags
+	// get/set rendering flags
 	unsigned int GetFlags() { return _FLAGS; }
+	void SetFlags(unsigned int flags) { _FLAGS = flags; }
 
 	// set and get the offset of uv-coordinates for this mesh
 	void SetUvOffset(XMFLOAT2 offset) { _uvOffset = offset; }

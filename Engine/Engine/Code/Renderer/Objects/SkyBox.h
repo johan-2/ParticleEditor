@@ -10,6 +10,9 @@ public:
 	SkyBox(wchar_t* textureFile);
 	~SkyBox();
 	
+	// load cubemap
+	void LoadCubemap(wchar_t* file);
+
 	// upload buffers and render
 	void Render();
 	
@@ -17,9 +20,6 @@ private:
 
 	// create box mesh
 	void CreateBox();
-
-	// load cubemap
-	void LoadCubemap(wchar_t* file);
 
 	// constant buffers
 	ID3D11Buffer* _constantBufferVertex;
