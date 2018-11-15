@@ -4,7 +4,6 @@
 
 class DebugStats;
 class Window;
-class Entity;
 
 class Framework
 {
@@ -26,7 +25,5 @@ private:
 	// window and debug stats
 	Window*     _window;
 	DebugStats* _debugStats;
-
-	Entity* _ent;
 };
 

@@ -118,8 +118,6 @@ void Framework::Start()
 	fire->AddComponent<ParticleSystemComponent>()->Init("Particles/fire.json");
 	fire->AddComponent<LightPointComponent>()->Init(6, 8, XMFLOAT3(0.8f, 0.4f, 0.0f), XMFLOAT3(0.8f, 0.4f, 0.0f), 80.0f, 0.0f, 1.0f, 0.1f);
 
-	_ent = wall;
-
 #ifdef _DEBUG
 	_debugStats = new DebugStats();
 #endif
@@ -127,17 +125,6 @@ void Framework::Start()
 
 void Framework::Update()
 {
-	if (Input::GetInstance().IskeyPressed(DIK_B))
-		_ent->GetComponent<ModelComponent>()->SetRenderFlags(WIREFRAME_COLOR);
-
-	if (Input::GetInstance().IskeyPressed(DIK_N))
-		_ent->GetComponent<ModelComponent>()->SetRenderFlags(DEFERRED | CAST_SHADOW_DIR);
-
-	if (Input::GetInstance().IskeyPressed(DIK_M))
-		_ent->GetComponent<ModelComponent>()->SetRenderFlags(DEFERRED);
-
-
-
 	World::GetInstance().Update();
 
 #ifdef _DEBUG
