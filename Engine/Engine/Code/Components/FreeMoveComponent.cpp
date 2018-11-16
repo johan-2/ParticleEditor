@@ -5,6 +5,7 @@
 #include "TransformComponent.h"
 #include "Gamepad.h"
 #include "SystemDefs.h"
+#include "Systems.h"
 
 FreeMoveComponent::FreeMoveComponent() : IComponent(COMPONENT_TYPE::FREE_MOVE_COMPONENT)
 {
@@ -21,16 +22,15 @@ void FreeMoveComponent::init(float movementSpeed, float rotationSpeed)
 	_transform     = GetComponent<TransformComponent>();
 }
 
-void FreeMoveComponent::Update()
+void FreeMoveComponent::Update(const float& delta)
 {	
-	UpdateMovement();		
+	UpdateMovement(delta);		
 }
 
-void FreeMoveComponent::UpdateMovement()
+void FreeMoveComponent::UpdateMovement(const float& deltaTime)
 {	
-	// get delta and access to input
-	const float& deltaTime = Time::GetInstance().GetDeltaTime();
-	Input& input           = Input::GetInstance();
+	// get access to input
+	Input& input = *Systems::input;
 
 	// get all axises of our transform
 	XMFLOAT3 forward, right, up;

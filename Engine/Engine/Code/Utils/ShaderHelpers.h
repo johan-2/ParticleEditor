@@ -5,13 +5,14 @@
 #include "DXErrorHandler.h"
 #include <vector>
 #include "Mesh.h"
+#include "Systems.h"
 
 namespace SHADER_HELPERS
 {
 	static void UpdateConstantBuffer(void* data, unsigned int size, ID3D11Buffer*& buffer)
 	{
-		ID3D11DeviceContext* devCon = DXManager::GetInstance().GetDeviceCon();
-		ID3D11Device* device        = DXManager::GetInstance().GetDevice();
+		ID3D11DeviceContext* devCon = Systems::dxManager->GetDeviceCon();
+		ID3D11Device* device        = Systems::dxManager->GetDevice();
 
 		//get desc of the current constant buffer in use
 		D3D11_BUFFER_DESC old;
@@ -50,7 +51,7 @@ namespace SHADER_HELPERS
 
 	static void CreateConstantBuffer(ID3D11Buffer*& buffer)
 	{
-		ID3D11Device* device = DXManager::GetInstance().GetDevice();
+		ID3D11Device* device = Systems::dxManager->GetDevice();
 
 		D3D11_BUFFER_DESC constantBufferdesc;
 		constantBufferdesc.Usage = D3D11_USAGE_DYNAMIC;
@@ -69,7 +70,7 @@ namespace SHADER_HELPERS
 
 	static void CreateVertexShader(LPCWSTR filePath, ID3D11VertexShader*& shader, ID3D10Blob*& buffer)
 	{
-		ID3D11Device* device = DXManager::GetInstance().GetDevice();
+		ID3D11Device* device = Systems::dxManager->GetDevice();
 		HRESULT result;
 		ID3D10Blob* errorMessage;
 
@@ -91,7 +92,7 @@ namespace SHADER_HELPERS
 
 	static void CreatePixelShader(LPCWSTR filePath, ID3D11PixelShader*& shader, ID3D10Blob*& buffer)
 	{
-		ID3D11Device* device = DXManager::GetInstance().GetDevice();
+		ID3D11Device* device = Systems::dxManager->GetDevice();
 		HRESULT result;
 		ID3D10Blob* errorMessage;
 

@@ -162,6 +162,9 @@
     <ClCompile Include="Code\Renderer\ShaderPrograms\WireframeShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Code\System\Systems.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\Utils\SystemDefs.h">
@@ -327,6 +330,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Code\Renderer\ShaderPrograms\WireframeShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\System\Systems.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

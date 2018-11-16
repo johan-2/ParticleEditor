@@ -102,5 +102,5 @@ void TransformComponent::GetAllAxis(XMFLOAT3& forward, XMFLOAT3& right, XMFLOAT3
 	XMStoreFloat3(&up,      XMVector3Normalize(XMVector3TransformCoord(XMLoadFloat3(&u), XMLoadFloat4x4(&_rotationMatrix))));
 }
 
-void TransformComponent::Update(){}
+void TransformComponent::Update(const float& delta){}
 

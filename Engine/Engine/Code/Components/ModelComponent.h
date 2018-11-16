@@ -28,7 +28,7 @@ public:
 
 	// creates a model from file
 	void InitModel(char* model, unsigned int flags, wchar_t* diffuseMap = L"", wchar_t* normalMap = L"", wchar_t* specularMap = L"");
-	void Update();
+	void Update(const float& delta);
 
 	// overides and calls base
 	// also removes/adds all meshes to renderer

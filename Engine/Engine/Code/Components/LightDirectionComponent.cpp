@@ -1,5 +1,6 @@
 #include "LightDirectionComponent.h"
 #include "LightManager.h"
+#include "Systems.h"
 
 LightDirectionComponent::LightDirectionComponent() : IComponent(COMPONENT_TYPE::DIR_LIGHT_COMPONENT)
 {
@@ -8,7 +9,7 @@ LightDirectionComponent::LightDirectionComponent() : IComponent(COMPONENT_TYPE::
 // removes this light as the active one when this component is destroyed
 LightDirectionComponent::~LightDirectionComponent()
 {
-	LightManager::GetInstance().RemoveDirectionalLight();
+	Systems::lightManager->RemoveDirectionalLight();
 }
 
 void LightDirectionComponent::Init(XMFLOAT4 lightColor, XMFLOAT4 specularColor, float specularPower)
@@ -22,9 +23,9 @@ void LightDirectionComponent::Init(XMFLOAT4 lightColor, XMFLOAT4 specularColor, 
 	_transform = GetComponent<TransformComponent>();
 
 	// set this light to be used for rendering
-	LightManager::GetInstance().SetDirectionalLight(this);	
+	Systems::lightManager->SetDirectionalLight(this);
 }
 
-void LightDirectionComponent::Update()
+void LightDirectionComponent::Update(const float& delta)
 {
 }

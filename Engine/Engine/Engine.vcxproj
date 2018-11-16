@@ -188,6 +188,7 @@
     <ClCompile Include="Code\System\DXModules\DXRasterizerStates.cpp" />
     <ClCompile Include="Code\System\DXModules\DXSamplerStates.cpp" />
     <ClCompile Include="Code\System\HardwareProperties.cpp" />
+    <ClCompile Include="Code\System\Systems.cpp" />
     <ClCompile Include="Code\Utils\DebugStats.cpp" />
     <ClCompile Include="Code\Utils\TexturePool.cpp" />
     <ClCompile Include="Code\Utils\Time.cpp" />
@@ -243,6 +244,7 @@
     <ClInclude Include="Code\System\DXModules\DXRasterizerStates.h" />
     <ClInclude Include="Code\System\DXModules\DXSamplerStates.h" />
     <ClInclude Include="Code\System\HardwareProperties.h" />
+    <ClInclude Include="Code\System\Systems.h" />
     <ClInclude Include="Code\Utils\DebugStats.h" />
     <ClInclude Include="Code\Utils\ShaderHelpers.h" />
     <ClInclude Include="Code\Utils\SystemDefs.h" />

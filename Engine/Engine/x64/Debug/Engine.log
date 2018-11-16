@@ -1,12 +1,31 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(377,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
-  ModelComponent.cpp
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\objects\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-c:\users\nilss\desktop\enginedx11\engine\engine\code\components\modelcomponent.cpp(14): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\components\modelcomponent.cpp(44): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\components\modelcomponent.cpp(358): warning C4018: '<': signed/unsigned mismatch
-  Renderer.cpp
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\objects\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+  Entity.cpp
   c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\renderer.cpp(103): warning C4244: 'argument': conversion from 'const float' to 'unsigned int', possible loss of data
+  IComponent.cpp
+  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  World.cpp
+  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\world.cpp(23): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\world.cpp(25): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\world.cpp(39): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\world.cpp(48): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\world.cpp(57): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\world.cpp(73): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\world.cpp(79): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\world.cpp(92): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\world.cpp(94): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\world.cpp(101): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\world.cpp(103): warning C4018: '<': signed/unsigned mismatch
+  Framework.cpp
+  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\objects\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+c:\users\nilss\desktop\enginedx11\engine\engine\code\framework.cpp(39): warning C4244: 'argument': conversion from 'const float' to 'int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\framework.cpp(209): warning C4244: 'initializing': conversion from '_Rep' to 'unsigned int', possible loss of data
+          with
+          [
+              _Rep=std::chrono::system_clock::rep
+          ]
+  GuiManager.cpp
+  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
   Generating Code...
   Engine.vcxproj -> C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\Engine.exe

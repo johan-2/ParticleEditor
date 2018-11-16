@@ -36,8 +36,6 @@ public:
 	Renderer();
 	~Renderer();
 
-	static Renderer& GetInstance();
-
 	// add objects to respective renderers
 	void AddMeshToRenderer(Mesh* mesh, SHADER_TYPE type)               { _meshes[type].push_back(mesh); }
 	void AddQuadToRenderer(QuadComponent* quad)                        { _quads.push_back(quad); }
@@ -101,8 +99,5 @@ private:
 	// project the deferred lightningpass
 	GBuffer*    _gBuffer;
 	ScreenQuad* _screenQuad;
-
-	// instance to this class
-	static Renderer* _instance;
 };
 

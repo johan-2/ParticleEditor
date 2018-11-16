@@ -28,7 +28,7 @@ public:
 	void SetSpeculartColor(XMFLOAT4 color) { _specularColor = color; }
 	void SetSpecularPower(float power)     { _specularPower = power; }
 
-	void Update();
+	void Update(const float& delta);
 
 private:
 

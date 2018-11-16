@@ -3,16 +3,7 @@
 #include <iostream>
 #include "Input.h"
 #include "Time.h"
-
-GuiManager* GuiManager::_instance = nullptr;
-
-GuiManager& GuiManager::GetInstance()
-{
-	if (!_instance)
-		_instance = new GuiManager();
-
-	return *_instance;
-}
+#include "Systems.h"
 
 GuiManager::GuiManager()
 {	
@@ -69,7 +60,7 @@ void GuiManager::CreateTexture()
 {
 	// Build texture atlas
 	ImGuiIO& io = ImGui::GetIO();
-	ID3D11Device* device = DXManager::GetInstance().GetDevice();
+	ID3D11Device* device = Systems::dxManager->GetDevice();
 
 	// get texture data from IMGUI
 	unsigned char* pixels;
@@ -118,7 +109,7 @@ void GuiManager::CreateTexture()
 void GuiManager::CreateBuffers()
 {	
 	// get the device
-	ID3D11Device* device = DXManager::GetInstance().GetDevice();
+	ID3D11Device* device = Systems::dxManager->GetDevice();
 		
 	// vertexbuffer desc
 	D3D11_BUFFER_DESC vertexDesc;
@@ -157,7 +148,7 @@ void GuiManager::Update()
 	GetClientRect(_hwnd, &rect);
 	io.DisplaySize = ImVec2((float)(rect.right - rect.left), (float)(rect.bottom - rect.top));
 
-	ImGui::GetIO().DeltaTime = Time::GetInstance().GetDeltaTime();
+	ImGui::GetIO().DeltaTime = Systems::time->GetDeltaTime();
 
 	if (io.WantSetMousePos)
 	{

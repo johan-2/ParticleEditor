@@ -1,11 +1,11 @@
 #include "RenderToTexture.h"
 #include "DXManager.h"
 #include <iostream>
-
+#include "Systems.h"
 
 RenderToTexture::RenderToTexture(unsigned int width, unsigned int height, bool depthOnly) 	
 {
-	ID3D11Device* device = DXManager::GetInstance().GetDevice();
+	ID3D11Device* device = Systems::dxManager->GetDevice();
 	HRESULT result;
 
 	// if we are only interessted in rendering to a new depth stencil view
@@ -173,7 +173,7 @@ RenderToTexture::~RenderToTexture()
 
 void RenderToTexture::SetRendertarget()
 {
-	ID3D11DeviceContext* devCon = DXManager::GetInstance().GetDeviceCon();
+	ID3D11DeviceContext* devCon = Systems::dxManager->GetDeviceCon();
 
 	devCon->OMSetRenderTargets(1, &_renderTargetView, _depthStencilView);
 	devCon->RSSetViewports(1, &_viewport);
@@ -183,7 +183,7 @@ void RenderToTexture::ClearRenderTarget(float r, float g, float b, float a, bool
 {
 	float color[4]{ r,g,b,a };
 
-	ID3D11DeviceContext* devCon = DXManager::GetInstance().GetDeviceCon();
+	ID3D11DeviceContext* devCon = Systems::dxManager->GetDeviceCon();
 
 	if (depthOnly) 
 	{

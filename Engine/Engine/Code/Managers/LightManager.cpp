@@ -1,15 +1,5 @@
 #include "LightManager.h"
 
-LightManager* LightManager::_instance = 0;
-
-LightManager& LightManager::GetInstance()
-{
-	if (_instance == 0)
-		_instance = new LightManager;
-
-	return *_instance;
-}
-
 LightManager::LightManager()
 {	
 }

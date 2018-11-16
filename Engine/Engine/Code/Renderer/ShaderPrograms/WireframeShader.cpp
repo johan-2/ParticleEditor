@@ -5,6 +5,7 @@
 #include "Mesh.h"
 #include "ShaderHelpers.h"
 #include "DXRasterizerStates.h"
+#include "Systems.h"
 
 WireframeShader::WireframeShader()
 {
@@ -33,7 +34,7 @@ void WireframeShader::RenderWireFrame(std::vector<Mesh*>& meshes)
 		return;
 
 	// get dx manager
-	DXManager& DXM = DXManager::GetInstance();
+	DXManager& DXM = *Systems::dxManager;
 
 	// get devicecontext
 	ID3D11DeviceContext* devCon = DXM.GetDeviceCon();
@@ -42,7 +43,7 @@ void WireframeShader::RenderWireFrame(std::vector<Mesh*>& meshes)
 	ConstantVertex vertexData;
 
 	// get the camera that will render the depthmap
-	CameraComponent* camera = CameraManager::GetInstance().GetCurrentCameraGame();
+	CameraComponent* camera = Systems::cameraManager->GetCurrentCameraGame();
 
 	// set our shaders
 	devCon->VSSetShader(_vertexShader, NULL, 0);

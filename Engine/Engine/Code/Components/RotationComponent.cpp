@@ -1,6 +1,6 @@
 #include "RotationComponent.h"
 #include "Time.h"
-
+#include "Systems.h"
 
 RotationComponent::RotationComponent() : IComponent(COMPONENT_TYPE::TRANSFORMATION_COMPONENT)
 {
@@ -20,10 +20,8 @@ void RotationComponent::Init(XMFLOAT3 rotation, float speedRotation)
 	_transform = GetComponent<TransformComponent>();
 }
 
-void RotationComponent::Update() 
+void RotationComponent::Update(const float& delta)
 {	
-	const float& delta = Time::GetInstance().GetDeltaTime();
-
 	XMFLOAT3 zeroVector(0, 0, 0);
 
 	if (!XMVector3Equal(XMLoadFloat3(&_rotation), XMLoadFloat3(&zeroVector)))

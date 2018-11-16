@@ -6,6 +6,7 @@
 #include "TransformComponent.h"
 #include "DXManager.h"
 #include "HardwareProperties.h"
+#include "Systems.h"
 
 DebugStats::DebugStats()
 {
@@ -20,11 +21,14 @@ void DebugStats::Update()
 	bool k = true;
 	ImGuiIO& io = ImGui::GetIO();
 
+	CameraManager& CM = *Systems::cameraManager;
+	DXManager& DXM    = *Systems::dxManager;
+
 	// get camera position
-	const XMFLOAT3& camPos = CameraManager::GetInstance().GetCurrentCameraGame()->GetComponent<TransformComponent>()->GetPositionRef();
+	const XMFLOAT3& camPos = CM.GetCurrentCameraGame()->GetComponent<TransformComponent>()->GetPositionRef();
 
 	// get hardware info
-	const HardwareInfo& info = DXManager::GetInstance().GetHardwareProperties()->GetHardwareInfo();
+	const HardwareInfo& info = DXM.GetHardwareProperties()->GetHardwareInfo();
 
 	// set properties of next window
 	ImGui::SetNextWindowBgAlpha(0.3f);

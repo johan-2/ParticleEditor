@@ -8,8 +8,6 @@ public:
 	GuiManager();
 	~GuiManager();
 
-	static GuiManager& GetInstance();
-
 	void Update();
 	void Initialize(HWND hwnd);
 
@@ -35,7 +33,5 @@ private:
 	HWND _hwnd;
 
 	ImGuiMouseCursor _lastMouseCursor = ImGuiMouseCursor_COUNT;
-
-	static GuiManager* _instance;
 };
 

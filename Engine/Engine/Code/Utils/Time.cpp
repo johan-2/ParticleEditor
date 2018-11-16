@@ -3,23 +3,14 @@
 #include <mmsystem.h>
 #include "SystemDefs.h"
 
-Time* Time::_instance = nullptr;
-
-Time& Time::GetInstance() 
-{
-	if (_instance == nullptr)
-		_instance = new Time();
-
-	return *_instance;
-}
-
 Time::Time() :
 	_ticksPerSecond(0),	
 	_startTimeDelta(0),
 	_delta(0),
 	_startTimeFps(0),
 	_count(0),
-	_fps(0)
+	_fps(0),
+	_lastDelta(0)
 {
 	INT64 frequancy = 0;
 	// returns the number of ticks per second
@@ -66,7 +57,7 @@ void Time::CalculateDelta()
 	// divide elapsed ticks with tickrate per second 
 	_delta = difference / _ticksPerSecond;
 
-	if(_useLastDelta)
+	if (_useLastDelta)
 	{
 		_delta = _lastDelta;
 		_useLastDelta = false;

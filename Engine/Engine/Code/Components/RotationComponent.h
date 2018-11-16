@@ -15,7 +15,7 @@ public:
 	~RotationComponent();
 
 	void Init(XMFLOAT3 rotation, float speedRotation);
-	void Update();
+	void Update(const float& delta);
 
 private:
 

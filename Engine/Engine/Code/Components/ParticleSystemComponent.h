@@ -110,7 +110,7 @@ public:
 	void Init(std::vector<ParticleSettings> settings);
 
 	// updates the simulation
-	void Update();
+	void Update(const float& delta);
 
 	// uploads the buffers to the gpu
 	void UploadBuffers(unsigned int index);

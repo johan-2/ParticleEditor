@@ -2,6 +2,7 @@
 #include "DXManager.h"
 #include "Renderer.h"
 #include "TexturePool.h"
+#include "Systems.h"
 
 
 Mesh::Mesh(Entity* parent, unsigned int FLAGS, wchar_t* diffuseMap, wchar_t* normalMap, wchar_t* specularMap ) :
@@ -14,7 +15,7 @@ Mesh::Mesh(Entity* parent, unsigned int FLAGS, wchar_t* diffuseMap, wchar_t* nor
 	_transform = parent->GetComponent<TransformComponent>();
 
 	// set passed in textures or defualt ones
-	TexturePool& TP = TexturePool::GetInstance();
+	TexturePool& TP = *Systems::texturePool;
 	diffuseMap  != L"" ? _textures[0] = TP.GetTexture(diffuseMap)  : _textures[0] = TP.GetTexture(L"Textures/defaultDiffuse.dds");
 	normalMap   != L"" ? _textures[1] = TP.GetTexture(normalMap)   : _textures[1] = TP.GetTexture(L"Textures/defaultNormal.dds");
 	specularMap != L"" ? _textures[2] = TP.GetTexture(specularMap) : _textures[2] = TP.GetTexture(L"Textures/defaultSpecular.dds");
@@ -39,7 +40,7 @@ void Mesh::CreateBuffers(VertexData* verticesData, unsigned long* indicesData, u
 	_numVertices = numVertices;
 	_numIndices  = numIndices;
 
-	ID3D11Device* device = DXManager::GetInstance().GetDevice();
+	ID3D11Device* device = Systems::dxManager->GetDevice();
 
 	// create the descriptions and rasourcedata to buffers
 	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
@@ -85,7 +86,7 @@ void Mesh::CreateBuffers(VertexData* verticesData, unsigned long* indicesData, u
 
 void Mesh::UploadBuffers() 
 {
-	ID3D11DeviceContext* devCon = DXManager::GetInstance().GetDeviceCon();
+	ID3D11DeviceContext* devCon = Systems::dxManager->GetDeviceCon();
 
 	// set stride and offset of one vertex
 	unsigned int stride = sizeof(VertexData);
@@ -100,7 +101,7 @@ void Mesh::UploadBuffers()
 
 void Mesh::AddRemoveToRenderer(bool add)
 {
-	Renderer& renderer = Renderer::GetInstance();
+	Renderer& renderer = *Systems::renderer;
 
 	// add to depth rendering for shadow casting
 	// at the moment all meshes recive shadows

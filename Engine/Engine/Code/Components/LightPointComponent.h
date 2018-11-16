@@ -13,7 +13,7 @@ public:
 
 	void Init(float radius, float intensity, XMFLOAT3 color, XMFLOAT3 specularColor = XMFLOAT3(1, 1, 1), float specularPower = 80.0f, float attConstant = 0.0f, float attLinear = 1.0f, float attExponential = 0.0f);
 
-	void Update();
+	void Update(const float& delta);
 
 	// get colors
 	const XMFLOAT3& GetLightColor()    { return _color; }

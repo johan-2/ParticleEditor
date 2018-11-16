@@ -6,6 +6,7 @@
 #include "ShaderHelpers.h"
 #include "DXBlendStates.h"
 #include "DXDepthStencilStates.h"
+#include "Systems.h"
 
 QuadShader::QuadShader()
 {
@@ -36,7 +37,7 @@ void QuadShader::RenderQuadUI(const std::vector<QuadComponent*>& quads)
 		return;
 
 	// get DXManager
-	DXManager& DXM = DXManager::GetInstance();
+	DXManager& DXM = *Systems::dxManager;
 
 	// get device context
 	ID3D11DeviceContext* devCon = DXM.GetDeviceCon();
@@ -60,8 +61,8 @@ void QuadShader::RenderQuadUI(const std::vector<QuadComponent*>& quads)
 	ConstantQuadUIPixel  pixelData;
 
 	// fill constant buffer vertex with the camera matrices
-	vertexData.projection = CameraManager::GetInstance().GetCurrentCameraUI()->GetViewMatrix();
-	vertexData.view       = CameraManager::GetInstance().GetCurrentCameraUI()->GetProjectionMatrix();
+	vertexData.projection = Systems::cameraManager->GetCurrentCameraUI()->GetViewMatrix();
+	vertexData.view       = Systems::cameraManager->GetCurrentCameraUI()->GetProjectionMatrix();
 
 	// update vertexconstantbuffers, only needs to be done once for all quads
 	SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(ConstantQuadUIVertex), _constantBufferVertex);

@@ -4,6 +4,7 @@
 #include "CameraManager.h"
 #include "Mesh.h"
 #include "ShaderHelpers.h"
+#include "Systems.h"
 
 DepthShader::DepthShader()
 {
@@ -28,14 +29,18 @@ DepthShader::~DepthShader()
 
 void DepthShader::RenderDepth(std::vector<Mesh*>& meshes)
 {
+	// get dx manager
+	DXManager& DXM   = *Systems::dxManager;
+	CameraManager CM = *Systems::cameraManager;
+
 	// get devicecontext
-	ID3D11DeviceContext* devCon = DXManager::GetInstance().GetDeviceCon();
+	ID3D11DeviceContext* devCon = DXM.GetDeviceCon();
 
 	// constantbuffer structure for vertex data
 	ConstantVertex vertexData;
 
 	// get the camera that will render the depthmap
-	CameraComponent* camera = CameraManager::GetInstance().GetCurrentCameraDepthMap();
+	CameraComponent* camera = CM.GetCurrentCameraDepthMap();
 
 	// set our shaders
 	devCon->VSSetShader(_vertexShader, NULL, 0);

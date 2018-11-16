@@ -1,24 +1,12 @@
 #include "TexturePool.h"
 #include "DXManager.h"
-
 #include "DDSTextureLoader/DDSTextureLoader.h"
 #include <comdef.h>
-
-
-TexturePool* TexturePool::_instance = nullptr;
-
-TexturePool& TexturePool::GetInstance() 
-{
-	if (_instance == nullptr) 	
-		_instance = new TexturePool();
-			
-	return *_instance;
-}
+#include "Systems.h"
 
 TexturePool::TexturePool()
 {
 }
-
 
 TexturePool::~TexturePool()
 {
@@ -46,7 +34,7 @@ ID3D11ShaderResourceView* TexturePool::GetTexture(const wchar_t* name)
 	{
 		ID3D11ShaderResourceView* texture;
 
-		HRESULT result = DirectX::CreateDDSTextureFromFile(DXManager::GetInstance().GetDevice(), name, NULL, &texture);
+		HRESULT result = DirectX::CreateDDSTextureFromFile(Systems::dxManager->GetDevice(), name, NULL, &texture);
 		if (FAILED(result))
 		{
 			_com_error err(result);

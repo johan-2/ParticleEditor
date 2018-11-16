@@ -35,7 +35,7 @@ CameraComponent::~CameraComponent()
 {
 }
 
-void CameraComponent::Update() 
+void CameraComponent::Update(const float& delta)
 {		
 	CalculateViewMatrix();	
 }

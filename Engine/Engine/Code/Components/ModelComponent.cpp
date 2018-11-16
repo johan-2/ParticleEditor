@@ -339,7 +339,7 @@ void ModelComponent::CreatePlane(unsigned int flags, wchar_t* diffuseMap, wchar_
 	_numMeshes = 1;
 }
 
-void ModelComponent::Update() 
+void ModelComponent::Update(const float& delta)
 {	
 }
 
