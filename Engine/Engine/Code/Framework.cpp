@@ -51,10 +51,6 @@ Framework::~Framework()
 {
 	delete _window;
 	Systems::DeleteSystems();
-
-#ifdef _DEBUG
-	delete _debugStats;
-#endif 
 }
 
 void Framework::Start()
