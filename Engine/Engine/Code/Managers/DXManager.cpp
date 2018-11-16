@@ -239,7 +239,7 @@ void DXManager::PresentScene()
 }
 
 // set render target and/or depthstencil
-// NOTE: null can be sent in as render target if we only cares about having a depth stencil view bound
+// NOTE: null can be sent in as render target if we only care about having a depth stencil view bound
 void DXManager::SetRenderTarget(ID3D11RenderTargetView* renderTarget, ID3D11DepthStencilView* depthStencil, bool setDefault, bool setDepthReadOnly)
 {
 	ID3D11DepthStencilView* depthStencilView = setDepthReadOnly ? _depthStencilViewReadOnly : _depthStencilView;

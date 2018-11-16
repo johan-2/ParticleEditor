@@ -11,8 +11,8 @@ WireframeShader::WireframeShader()
 {
 	// create and compile shaders
 	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexWireframe.vs", _vertexShader, _vertexShaderByteCode);
-	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelWireframe.ps", _pixelShader, _pixelShaderByteCode);
-
+	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelWireframe.ps",   _pixelShader,  _pixelShaderByteCode);
+	 
 	// create constant buffer for vertex shader
 	SHADER_HELPERS::CreateConstantBuffer(_constantBufferVertex);
 }
@@ -33,8 +33,9 @@ void WireframeShader::RenderWireFrame(std::vector<Mesh*>& meshes)
 	if (meshes.size() == 0)
 		return;
 
-	// get dx manager
-	DXManager& DXM = *Systems::dxManager;
+	// get dx and camera manager
+	DXManager& DXM    = *Systems::dxManager;
+	CameraManager& CM = *Systems::cameraManager;
 
 	// get devicecontext
 	ID3D11DeviceContext* devCon = DXM.GetDeviceCon();
@@ -43,7 +44,7 @@ void WireframeShader::RenderWireFrame(std::vector<Mesh*>& meshes)
 	ConstantVertex vertexData;
 
 	// get the camera that will render the depthmap
-	CameraComponent* camera = Systems::cameraManager->GetCurrentCameraGame();
+	CameraComponent* camera = CM.GetCurrentCameraGame();
 
 	// set our shaders
 	devCon->VSSetShader(_vertexShader, NULL, 0);

@@ -38,3 +38,16 @@ void Systems::InitSystems(Window* window, float screenWidth, float screenHeight,
 	renderer = new Renderer();
 	renderer->Initailize();
 }
+
+void Systems::DeleteSystems()
+{
+	delete dxManager;
+	delete guiManager;
+	delete input;
+	delete time;
+	delete cameraManager;
+	delete lightManager;
+	delete texturePool;
+	delete renderer;
+	delete world;
+}

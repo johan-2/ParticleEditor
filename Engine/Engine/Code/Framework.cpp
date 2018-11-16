@@ -50,6 +50,11 @@ Framework::Framework()
 Framework::~Framework()
 {
 	delete _window;
+	Systems::DeleteSystems();
+
+#ifdef _DEBUG
+	delete _debugStats;
+#endif 
 }
 
 void Framework::Start()
@@ -162,7 +167,8 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM Lparam)
 		// so we can use it for the first frame when the application starts uppdating again
 		// otherwise we end up with a massive delta during the first frame
 	case WM_WINDOWPOSCHANGING:
-		//Systems::time->OnWindowChange();
+		if (Systems::time != nullptr)
+			Systems::time->OnWindowChange();
 		break;
 	default:
 		return DefWindowProc(hwnd, msg, wParam, Lparam);
