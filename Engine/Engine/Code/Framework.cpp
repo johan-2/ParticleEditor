@@ -58,8 +58,8 @@ Framework::~Framework()
 void Framework::Start()
 {
 	// get systems
-	CameraManager CM = *Systems::cameraManager;
-	LightManager LM  = *Systems::lightManager;
+	CameraManager& CM = *Systems::cameraManager;
+	LightManager& LM  = *Systems::lightManager;
 
 	// create game camera
 	Entity* cameraGame = new Entity();
