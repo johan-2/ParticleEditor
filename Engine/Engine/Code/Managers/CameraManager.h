@@ -4,10 +4,6 @@
 class CameraManager
 {
 public:
-
-	// temporarly singelton for easy access 
-	static CameraManager& GetInstance();
-
 	CameraManager();
 	~CameraManager();
 	
@@ -24,8 +20,6 @@ public:
 	void SetCurrentCameraDepthMap(CameraComponent* camera) { _currentCameraDepthMap = camera; }
 
 private:
-	// static instance
-	static CameraManager* _instance;
 
 	// camera component references
 	CameraComponent* _currentCameraGame;

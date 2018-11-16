@@ -29,6 +29,7 @@
 #include <chrono>
 #include "Color32.h"
 #include "Window.h"
+#include "Systems.h"
 #include "ParticleEditor.h"
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM Lparam);
@@ -38,20 +39,8 @@ Framework::Framework()
 	// create the window for the application
 	_window = new Window("Engine", 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, WndProc);
 	
-	// init all directX stuff
-	DXManager::GetInstance().Initialize(_window->GetHWND(), SCREEN_WIDTH, SCREEN_HEIGHT, V_SYNC, FULLSCREEN);
-
-	// initialize dear im gui
-	GuiManager::GetInstance().Initialize(_window->GetHWND());
-
-	// initialize directinput
-	Input::GetInstance().InitializeInputDevices(_window->GetHINSTANCE(), _window->GetHWND());
-
-	// start timers
-	Time::GetInstance();
-
-	// setup renderer 
-	Renderer::GetInstance().Initailize();
+	// init all systems
+	Systems::InitSystems(_window, SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN, V_SYNC);
 
 	// start and run
 	Start();
@@ -65,21 +54,25 @@ Framework::~Framework()
 
 void Framework::Start()
 {
+	// get systems
+	CameraManager CM = *Systems::cameraManager;
+	LightManager LM  = *Systems::lightManager;
+
 	// create game camera
 	Entity* cameraGame = new Entity();
 	cameraGame->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 5, -12), XMFLOAT3(5,0,0));
 	cameraGame->AddComponent<CameraComponent>()->Init3D(70); 
 	cameraGame->AddComponent<FreeMoveComponent>()->init(20.0f, 0.25f);
-	CameraManager::GetInstance().SetCurrentCameraGame(cameraGame->GetComponent<CameraComponent>());
+	CM.SetCurrentCameraGame(cameraGame->GetComponent<CameraComponent>());
 
 	// create UIcamera
 	Entity* cameraUI = new Entity();
 	cameraUI->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0, -1));
 	cameraUI->AddComponent<CameraComponent>()->Init2D(XMFLOAT2(SCREEN_WIDTH, SCREEN_HEIGHT), XMFLOAT2(0.01f, 10.0f));
-	CameraManager::GetInstance().SetCurrentCameraUI(cameraUI->GetComponent<CameraComponent>());
+	CM.SetCurrentCameraUI(cameraUI->GetComponent<CameraComponent>());
 
 	//set ambient light color	
-	LightManager::GetInstance().SetAmbientColor(XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
+	LM.SetAmbientColor(XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
 
 	// create directional light and give it the same position/rotation as the depth render camera
 	Entity* directionalLight = new Entity;
@@ -87,18 +80,18 @@ void Framework::Start()
 	directionalLight->AddComponent<LightDirectionComponent>()->Init(XMFLOAT4(0.8f, 0.8f, 0.8f, 1), XMFLOAT4(1, 1, 1, 1), 80.0f);
 
 	// create the particle editor and pass in some dependencies
-	_particleEditor = new ParticleEditor(Input::GetInstance(), cameraGame->GetComponent<FreeMoveComponent>());
+	_particleEditor = new ParticleEditor(*Systems::input, cameraGame->GetComponent<FreeMoveComponent>());
 }
 
 void Framework::Update()
 {
-	World::GetInstance().Update();
+	Systems::world->Update();
 	_particleEditor->Update();
 }
 
 void Framework::Render()
 {
-	Renderer::GetInstance().Render();
+	Systems::renderer->Render();
 }
 
 void Framework::Run()
@@ -114,27 +107,27 @@ void Framework::Run()
 			DispatchMessage(&msg);
 		}
 
+		DXManager& DXM = *Systems::dxManager;
+
 		// update imgui
-		GuiManager::GetInstance().Update();
+		Systems::guiManager->Update();
 
 		// update timers
-		Time::GetInstance().Update();
+		Systems::time->Update();
 
 		//uppdate input
-		Input::GetInstance().Update();
+		Systems::input->Update();
 		
 		//destroy window if escape is pressed, will send quit message with windowproc to end loop
-		if (Input::GetInstance().IskeyPressed(DIK_ESCAPE))
+		if (Systems::input->IskeyPressed(DIK_ESCAPE))
 		{
-			DXManager::GetInstance().SetFullscreen(false);
+			DXM.SetFullscreen(false);
 			DestroyWindow(_window->GetHWND());
 		}
 
 		// update everything
 		Update();
 		
-		DXManager& DXM = DXManager::GetInstance();
-
 		// clear rendertarget from last frame
 		DXM.ClearRenderTarget(0, 0, 0, 1);
 
@@ -159,7 +152,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM Lparam)
 		SetFocus(GetConsoleWindow());
 		break;
 	case WM_SETCURSOR:
-		GuiManager::GetInstance().UpdateMouseCursor();
+		Systems::guiManager->UpdateMouseCursor();
 		break;
 		// sent when size,position or Z order is changed
 		// works for everything that is freezing the application
@@ -169,7 +162,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM Lparam)
 		// so we can use it for the first frame when the application starts uppdating again
 		// otherwise we end up with a massive delta during the first frame
 	case WM_WINDOWPOSCHANGING:
-		Time::GetInstance().OnWindowChange();
+		//Systems::time->OnWindowChange();
 		break;
 	default:
 		return DefWindowProc(hwnd, msg, wParam, Lparam);

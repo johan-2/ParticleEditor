@@ -2,6 +2,7 @@
 #include "DXManager.h"
 #include <iostream>
 #include "GuiManager.h"
+#include "Systems.h"
 
 DXInputLayouts::DXInputLayouts()
 {
@@ -13,7 +14,9 @@ DXInputLayouts::~DXInputLayouts()
 
 void DXInputLayouts::CreateInputLayout3D(ID3D10Blob*& vertexShaderByteCode)
 {
-	ID3D11Device* device = DXManager::GetInstance().GetDevice();
+	DXManager& DXM = *Systems::dxManager;
+
+	ID3D11Device* device = DXM.GetDevice();
 
 	D3D11_INPUT_ELEMENT_DESC inputLayout3D[6]
 	{
@@ -33,7 +36,9 @@ void DXInputLayouts::CreateInputLayout3D(ID3D10Blob*& vertexShaderByteCode)
 
 void DXInputLayouts::CreateInputLayout2D(ID3D10Blob*& vertexShaderByteCode)
 {
-	ID3D11Device* device = DXManager::GetInstance().GetDevice();
+	DXManager& DXM = *Systems::dxManager;
+
+	ID3D11Device* device = DXM.GetDevice();
 
 	D3D11_INPUT_ELEMENT_DESC inputLayout2D[2]
 	{
@@ -49,7 +54,9 @@ void DXInputLayouts::CreateInputLayout2D(ID3D10Blob*& vertexShaderByteCode)
 
 void DXInputLayouts::CreateInputLayoutParticle(ID3D10Blob*& vertexShaderByteCode)
 {
-	ID3D11Device* device = DXManager::GetInstance().GetDevice();
+	DXManager& DXM = *Systems::dxManager;
+
+	ID3D11Device* device = DXM.GetDevice();
 
 	D3D11_INPUT_ELEMENT_DESC inputLayoutParticle[8]
 	{
@@ -71,7 +78,9 @@ void DXInputLayouts::CreateInputLayoutParticle(ID3D10Blob*& vertexShaderByteCode
 
 void DXInputLayouts::CreateInputLayoutGUI(ID3D10Blob*& vertexShaderByteCode)
 {
-	ID3D11Device* device = DXManager::GetInstance().GetDevice();
+	DXManager& DXM = *Systems::dxManager;
+
+	ID3D11Device* device = DXM.GetDevice();
 
 	D3D11_INPUT_ELEMENT_DESC inputLayoutGui[3]
 	{
@@ -88,7 +97,9 @@ void DXInputLayouts::CreateInputLayoutGUI(ID3D10Blob*& vertexShaderByteCode)
 
 void DXInputLayouts::SetInputLayout(INPUT_LAYOUT_TYPE type)
 {
-	ID3D11DeviceContext* devCon = DXManager::GetInstance().GetDeviceCon();
+	DXManager& DXM = *Systems::dxManager;
+
+	ID3D11DeviceContext* devCon = DXM.GetDeviceCon();
 	switch (type)
 	{
 	case LAYOUT3D:

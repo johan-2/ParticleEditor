@@ -7,8 +7,6 @@ public:
 	Time();
 	~Time();
 
-	static Time& GetInstance();
-
 	void Update();
 	
 	const float& GetDeltaTime() { return _delta; }
@@ -33,7 +31,5 @@ private:
 	int _fps,_count;
 	unsigned long _startTimeFps;
 
-
-	static Time* _instance;
 };
 

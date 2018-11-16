@@ -14,8 +14,6 @@ public:
 	World();
 	~World();
 
-	static World& GetInstance();
-
 	void Update();
 		
 	// add component/entity
@@ -47,8 +45,5 @@ private:
 	// components/entities flagged for removal
 	std::vector<IComponent*> _componentsToRemove;
 	std::vector<Entity*>     _entitiesToRemove;
-
-	// instance to this class
-	static World* _instance;
 };
 

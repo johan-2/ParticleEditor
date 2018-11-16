@@ -10,8 +10,6 @@ class HardwareProperties;
 class DXManager
 {
 public:
-	static DXManager& GetInstance();
-
 	DXManager();
 	~DXManager();
 
@@ -49,9 +47,6 @@ private:
 	// create swapchain and devices
 	void CreateSwapchainAndRenderTarget(HWND hwnd, bool fullscreen, int screenWidth, int screenHeight);
 	void CreateDepthStencilViews(int screenWidth, int screenHeight);
-
-	//static instance to this class
-	static DXManager* _instance;
 
 	// DX modules
 	DXBlendStates*        _DXBlendStates;

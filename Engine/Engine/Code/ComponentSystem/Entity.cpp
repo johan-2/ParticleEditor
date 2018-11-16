@@ -2,11 +2,12 @@
 #include "IComponent.h"
 #include "World.h"
 #include "vectorHelpers.h"
+#include "Systems.h"
 
 // adds this entity to the world on creation
 Entity::Entity()
 {
-	World::GetInstance().AddEntity(this);
+	Systems::world->AddEntity(this);
 }
 
 Entity::~Entity()
@@ -18,14 +19,14 @@ Entity::~Entity()
 void Entity::RemoveComponent(IComponent* component) 
 {
 	VECTOR_HELPERS::RemoveItemFromVector(_components, component);
-	World::GetInstance().RemoveComponent(component);
+	Systems::world->RemoveComponent(component);
 }
 
 // removes all components owned by this entity from world
 // aswell as removing the entity from entity list in world
 void Entity::RemoveEntity() 
 {
-	World& world = World::GetInstance();
+	World& world = *Systems::world;
 
 	for (int i = 0; i < _components.size(); i++)
 		world.RemoveComponent(_components[i]);

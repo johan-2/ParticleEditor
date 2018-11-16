@@ -8,6 +8,7 @@
 #include "DXBlendstates.h"
 #include "DXRasterizerStates.h"
 #include "DXDepthStencilStates.h"
+#include "Systems.h"
 
 SkyBox::SkyBox(wchar_t* textureFile)
 {
@@ -195,7 +196,7 @@ void SkyBox::CreateBox()
 	vertices[23].tangent  = XMFLOAT3(1, 0, 0);
 	vertices[23].binormal = XMFLOAT3(0, 0, -1);
 
-	ID3D11Device* device = DXManager::GetInstance().GetDevice();
+	ID3D11Device* device = Systems::dxManager->GetDevice();
 
 	// create the descriptions and rasourcedata to buffers
 	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
@@ -246,7 +247,7 @@ void SkyBox::LoadCubemap(wchar_t* file)
 		_texture->Release();
 
 	// create cubemap from file
-	HRESULT result = DirectX::CreateDDSTextureFromFile(DXManager::GetInstance().GetDevice(), file, NULL, &_texture);
+	HRESULT result = DirectX::CreateDDSTextureFromFile(Systems::dxManager->GetDevice(), file, NULL, &_texture);
 
 	// get and print error message if failed
 	if (FAILED(result))						
@@ -256,13 +257,13 @@ void SkyBox::LoadCubemap(wchar_t* file)
 void SkyBox::Render() 
 {
 	// get DX manager
-	DXManager& DXM = DXManager::GetInstance();
+	DXManager& DXM = *Systems::dxManager;
 
 	// get device context
 	ID3D11DeviceContext* devCon = DXM.GetDeviceCon();
 
 	// get game camera
-	CameraComponent* camera = CameraManager::GetInstance().GetCurrentCameraGame();
+	CameraComponent* camera = Systems::cameraManager->GetCurrentCameraGame();
 
 	// Set vertex buffer stride and offset.
 	unsigned int stride = sizeof(VertexData);

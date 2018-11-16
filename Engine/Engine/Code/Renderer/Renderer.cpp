@@ -23,18 +23,9 @@
 #include "DXRasterizerStates.h"
 #include "WireframeShader.h"
 #include "Input.h"
+#include "Systems.h"
 
 using namespace DirectX;
-
-Renderer* Renderer::_instance = nullptr;
-
-Renderer& Renderer::GetInstance() 
-{
-	if (_instance == nullptr)
-		_instance = new Renderer();
-
-	return *_instance;
-}
 
 Renderer::Renderer()
 {
@@ -89,8 +80,6 @@ void Renderer::Initailize()
 
 void Renderer::CreateDepthMap() 
 {
-	CameraManager& CM = CameraManager::GetInstance();
-
 	// depthmap settings
 	const float orthoSize = 80;
 	const float res = 8192.0f;
@@ -110,7 +99,7 @@ void Renderer::CreateDepthMap()
 	depthCamera->SetSRV(_depthMap->GetShaderResource());
 
 	// set this camera to the active depth render camera
-	CM.SetCurrentCameraDepthMap(depthCamera);
+	Systems::cameraManager->SetCurrentCameraDepthMap(depthCamera);
 }
 
 void Renderer::Render() 
@@ -152,7 +141,7 @@ void Renderer::Render()
 
 void Renderer::RenderDeferred()
 {
-	DXManager& dXM = DXManager::GetInstance();
+	DXManager& dXM = *Systems::dxManager;
 		
 	// set the rendertargets of the GBuffer active		
 	_gBuffer->SetRenderTargets();		
@@ -179,7 +168,7 @@ void Renderer::RenderDepth()
 		return;
 
 	// get the DX manager
-	DXManager& dXM = DXManager::GetInstance();
+	DXManager& dXM = *Systems::dxManager;
 
 	// clear the depth map render texture to black
 	_depthMap->ClearRenderTarget(0, 0, 0, 0, true);

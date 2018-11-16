@@ -14,12 +14,12 @@ public:
 	~FreeMoveComponent();
 
 	void init(float movementSpeed, float rotationSpeed);
-	void Update();
+	void Update(const float& delta);
 	
 private:
 	
 	// updates the transform of the entity this component is atached to
-	void UpdateMovement();
+	void UpdateMovement(const float& deltaTime);
 	
 	// cached pointer to our transform component
 	TransformComponent* _transform;	

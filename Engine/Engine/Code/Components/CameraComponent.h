@@ -26,7 +26,7 @@ public:
 	void Init2D(const XMFLOAT2& size, const XMFLOAT2& nearfar);
 	
 	// update from pure virtual in IComponent
-	void Update();
+	void Update(const float& delta);
 	
 private:
 	

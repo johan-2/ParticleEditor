@@ -16,7 +16,7 @@ public:
 
 	void Init(XMFLOAT2 speed);
 
-	void Update();
+	void Update(const float& delta);
 private:
 
 	ModelComponent* _modelComponent;

@@ -2,6 +2,7 @@
 #include "Systemdefs.h"
 #include "DXManager.h"
 #include <iostream>
+#include "Systems.h"
 
 GBuffer::GBuffer()
 {
@@ -15,7 +16,7 @@ GBuffer::~GBuffer()
 void GBuffer::SetRenderTargets()
 {
 	// get devcon and default depth stencil view
-	DXManager& dXM                        = DXManager::GetInstance();
+	DXManager& dXM                        = *Systems::dxManager;
 	ID3D11DeviceContext* devCon           = dXM.GetDeviceCon();
 	ID3D11DepthStencilView*& depthStencil = dXM.GetDefaultDepthStencilView();
 	
@@ -36,7 +37,8 @@ void GBuffer::SetRenderTargets()
 void GBuffer::CreateRenderTargets()
 {
 	// get device
-	ID3D11Device* device = DXManager::GetInstance().GetDevice();
+	DXManager& DXM       = *Systems::dxManager;
+	ID3D11Device* device = DXM.GetDevice();
 
 	// allocate array of pointers
 	_renderTargetArray = new ID3D11RenderTargetView*[4];

@@ -14,7 +14,7 @@ public:
 	virtual ~IComponent();
 
 	// everyone have thier own update defined
-	virtual void Update() = 0;
+	virtual void Update(const float& delta) = 0;
 
 	// inactivate this component meaning update wont be called
 	// can overide this from each component if some more functionality is wanted

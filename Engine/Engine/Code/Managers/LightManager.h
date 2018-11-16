@@ -12,8 +12,6 @@ class LightManager
 public:
 	LightManager();
 	~LightManager();				
-	
-	static LightManager& GetInstance();
 
 	// set the color of our ambient light
 	void SetAmbientColor(XMFLOAT4 color) { _ambientColor = color; } 
@@ -42,7 +40,5 @@ private:
 	
 	// list of all point lights
 	std::vector<LightPointComponent*> _pointLights;
-	
-	static LightManager* _instance;
 };
 

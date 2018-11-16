@@ -2,16 +2,7 @@
 #include "Entity.h"
 #include "IComponent.h"
 #include "VectorHelpers.h"
-
-World* World::_instance = nullptr;
-
-World& World::GetInstance() 
-{
-	if (_instance == nullptr)
-		_instance = new World();
-
-	return *_instance;
-}
+#include "Systems.h"
 
 World::World()
 {
@@ -24,6 +15,8 @@ World::~World()
 
 void World::Update()
 {
+	const float& delta = Systems::time->GetDeltaTime();
+
 	// update all components one type at the time
 	for (int i = 0; i < NUM_COMPONENT_TYPES; i++) 
 	{
@@ -31,7 +24,7 @@ void World::Update()
 
 		for (int y = 0; y < size; y++)
 			if (_components[i][y]->IsActive())
-				_components[i][y]->Update();
+				_components[i][y]->Update(delta);
 	}
 
 	// remove and delete all components/entities that got flagged 

@@ -4,10 +4,10 @@
 #include "ComponentTypes.h"
 #include "Time.h"
 #include "Mesh.h"
+#include "Systems.h"
 
 UVScrollComponent::UVScrollComponent() : IComponent(COMPONENT_TYPE::UVSCROLL_COMPONENT)
 {
-	
 }
 
 UVScrollComponent::~UVScrollComponent()
@@ -23,10 +23,8 @@ void UVScrollComponent::Init(XMFLOAT2 speed)
 
 }
 
-void UVScrollComponent::Update() 
+void UVScrollComponent::Update(const float& delta)
 {
-	const float& delta = Time::GetInstance().GetDeltaTime();
-
 	XMFLOAT2 translation;
 	translation.x = _scrollSpeed.x * delta;
 	translation.y = _scrollSpeed.y * delta;

@@ -1,23 +1,11 @@
 #include "DXManager.h"
 #include <iostream>
-
 #include "SystemDefs.h"
-
 #include "DXBlendStates.h"
 #include "DXRasterizerStates.h"
 #include "DXDepthStencilStates.h"
 #include "DXSamplerStates.h"
 #include "HardwareProperties.h"
-
-DXManager* DXManager::_instance = 0;
-
-DXManager& DXManager::GetInstance()
-{
-	if (_instance == 0)
-		_instance = new DXManager;
-
-	return *_instance;
-}
 
 DXManager::DXManager()
 {

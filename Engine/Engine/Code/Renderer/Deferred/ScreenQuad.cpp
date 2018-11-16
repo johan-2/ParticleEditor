@@ -1,13 +1,12 @@
 #include "ScreenQuad.h"
 #include "DXManager.h"
 #include <iostream>
-
+#include "Systems.h"
 
 ScreenQuad::ScreenQuad()
 {
 	CreateBuffers();
 }
-
 
 ScreenQuad::~ScreenQuad()
 {
@@ -17,7 +16,7 @@ ScreenQuad::~ScreenQuad()
 
 void ScreenQuad::CreateBuffers()
 {
-	ID3D11Device* device = DXManager::GetInstance().GetDevice();
+	ID3D11Device* device = Systems::dxManager->GetDevice();
 	VertexType* vertices;
 	unsigned int* indices;
 	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
@@ -79,7 +78,7 @@ void ScreenQuad::CreateBuffers()
 
 void ScreenQuad::UploadBuffers()
 {
-	ID3D11DeviceContext* devCon = DXManager::GetInstance().GetDeviceCon();
+	ID3D11DeviceContext* devCon = Systems::dxManager->GetDeviceCon();
 
 	unsigned int stride = sizeof(VertexType);
 	unsigned int offset = 0;

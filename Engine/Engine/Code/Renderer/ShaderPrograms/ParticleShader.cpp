@@ -5,6 +5,7 @@
 #include "CameraManager.h"
 #include "ParticleSystemComponent.h"
 #include "ShaderHelpers.h"
+#include "Systems.h"
 
 ParticleShader::ParticleShader()
 {
@@ -33,13 +34,13 @@ void ParticleShader::RenderParticles(const std::vector<ParticleSystemComponent*>
 		return;
 
 	// get DX manager
-	DXManager& DXM = DXManager::GetInstance();
+	DXManager& DXM = *Systems::dxManager;
 
 	// get device context
 	ID3D11DeviceContext* devCon = DXM.GetDeviceCon();
 
 	// get the game camera
-	CameraComponent* camera = CameraManager::GetInstance().GetCurrentCameraGame();
+	CameraComponent* camera = Systems::cameraManager->GetCurrentCameraGame();
 
 	// set shaders			
 	devCon->VSSetShader(_vertexShader, NULL, 0);

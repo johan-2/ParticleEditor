@@ -3,17 +3,6 @@
 #include "DXManager.h"
 #include "imgui.h"
 
-Input* Input::_instance = 0;
-
-Input& Input::GetInstance()
-{
-	if (_instance == 0)
-		_instance = new Input;
-
-	return *_instance;
-
-}
-
 Input::Input() :
 	_directInput(nullptr),
 	_keyboard(nullptr),

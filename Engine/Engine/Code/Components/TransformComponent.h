@@ -47,7 +47,7 @@ public:
 	void UpdateWorldMatrix();
 
 	// pure virtual from IComponent
-	void Update();
+	void Update(const float& delta);
 
 private:
 	

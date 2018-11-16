@@ -6,6 +6,7 @@
 #include "CameraManager.h"
 #include "LightManager.h"
 #include "Mesh.h"
+#include "Systems.h"
 
 ForwardAlphaShader::ForwardAlphaShader()
 {
@@ -37,23 +38,23 @@ void ForwardAlphaShader::RenderForward(std::vector<Mesh*>& meshes)
 	if (meshes.size() == 0)
 		return;
 
-	// get DX manager
-	DXManager& DXM = DXManager::GetInstance();
+	// get systems
+	DXManager& DXM   = *Systems::dxManager;
+	CameraManager CM = *Systems::cameraManager;
+	LightManager LM  = *Systems::lightManager;
 
 	// get device context
 	ID3D11DeviceContext*& devCon = DXM.GetDeviceCon();
 
 	// get game camera and shadow camera
-	CameraComponent* camera      = CameraManager::GetInstance().GetCurrentCameraGame();
-	CameraComponent* cameraLight = CameraManager::GetInstance().GetCurrentCameraDepthMap();
-
-	LightManager& LM = LightManager::GetInstance();
+	CameraComponent* camera      = CM.GetCurrentCameraGame();
+	CameraComponent* cameraLight = CM.GetCurrentCameraDepthMap();
 
 	// get directional light
 	LightDirectionComponent*& directionalLight = LM.GetDirectionalLight();
 
 	// get point lights
-	std::vector<LightPointComponent*>& pointLights = LightManager::GetInstance().GetPointLight();
+	std::vector<LightPointComponent*>& pointLights = LM.GetPointLight();
 
 	// set shaders
 	devCon->VSSetShader(_vertexShader, NULL, 0);

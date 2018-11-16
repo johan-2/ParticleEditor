@@ -4,6 +4,7 @@
 #include "Entity.h"
 #include "Renderer.h"
 #include "SystemDefs.h"
+#include "Systems.h"
 
 QuadComponent::QuadComponent() : IComponent(COMPONENT_TYPE::QUAD_COMPONENT)
 {				
@@ -14,7 +15,7 @@ QuadComponent::~QuadComponent()
 	_indexBuffer->Release();	
 	_vertexBuffer->Release();	
 
-	Renderer::GetInstance().RemoveQuadFromRenderer(this);
+	Systems::renderer->RemoveQuadFromRenderer(this);
 }
 
 void QuadComponent::Init(XMFLOAT2 position, XMFLOAT2 size, wchar_t* texturePath, XMFLOAT4 color)
@@ -26,12 +27,12 @@ void QuadComponent::Init(XMFLOAT2 position, XMFLOAT2 size, wchar_t* texturePath,
 	_PrevPosition = position;
 
 	CreateBuffers();
-	_texture = TexturePool::GetInstance().GetTexture(texturePath);
+	_texture = Systems::texturePool->GetTexture(texturePath);
 
-	Renderer::GetInstance().AddQuadToRenderer(this);
+	Systems::renderer->AddQuadToRenderer(this);
 }
 
-void QuadComponent::Update()
+void QuadComponent::Update(const float& delta)
 {
 	UpdateBuffers();
 }
@@ -39,7 +40,7 @@ void QuadComponent::Update()
 void QuadComponent::CreateBuffers()
 {
 	// get device
-	ID3D11Device* device = DXManager::GetInstance().GetDevice();
+	ID3D11Device* device = Systems::dxManager->GetDevice();
 
 	// create buffer descriptions and sub resource pointers
 	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
@@ -119,7 +120,7 @@ void QuadComponent::UpdateBuffers()
 		_prevSize     = _size;
 		
 		// get device context
-		ID3D11DeviceContext* devCon = DXManager::GetInstance().GetDeviceCon();
+		ID3D11DeviceContext* devCon = Systems::dxManager->GetDeviceCon();
 
 		// create resource pointer and vertex array
 		D3D11_MAPPED_SUBRESOURCE vertexData;
@@ -159,7 +160,7 @@ void QuadComponent::UpdateBuffers()
 
 void QuadComponent::UploadBuffers()
 {
-	ID3D11DeviceContext* devCon = DXManager::GetInstance().GetDeviceCon();
+	ID3D11DeviceContext* devCon = Systems::dxManager->GetDeviceCon();
 
 	unsigned int stride = sizeof(VertexType);
 	unsigned int offset = 0;

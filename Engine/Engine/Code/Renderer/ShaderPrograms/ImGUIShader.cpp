@@ -7,6 +7,7 @@
 #include "GUIManager.h"
 #include "ShaderHelpers.h"
 #include "DXErrorHandler.h"
+#include "Systems.h"
 
 ImGUIShader::ImGUIShader()
 {
@@ -35,10 +36,10 @@ void ImGUIShader::RenderGUI()
 	ImGui::Render();
 
 	// get DX manager
-	DXManager& DXM = DXManager::GetInstance();
+	DXManager& DXM = *Systems::dxManager;
 
 	// get GUI manager
-	GuiManager& GUIM = GuiManager::GetInstance();
+	GuiManager& GUIM = *Systems::guiManager;
 
 	// get device and device context
 	ID3D11DeviceContext* devCon = DXM.GetDeviceCon();

@@ -16,6 +16,7 @@
 #include <fstream>
 #include <string>
 #include "DXErrorHandler.h"
+#include "Systems.h"
 
 ParticleSystemComponent::ParticleSystemComponent() : IComponent(PARTICLE_COMPONENT),
 _hasLifetime(false),
@@ -42,7 +43,7 @@ ParticleSystemComponent::~ParticleSystemComponent()
 	delete[] _indexBuffer;
 	delete[] _instanceBuffer;
 
-	Renderer::GetInstance().RemoveParticleSystemFromRenderer(this);
+	Systems::renderer->RemoveParticleSystemFromRenderer(this);
 }
 
 void ParticleSystemComponent::Init(char* particleFile)
@@ -97,7 +98,7 @@ void ParticleSystemComponent::AllocateMemory()
 void ParticleSystemComponent::SetUp()
 {
 	// add to renderer 
-	Renderer::GetInstance().AddParticleSystemToRenderer(this);
+	Systems::renderer->AddParticleSystemToRenderer(this);
 
 	// get pointer to entity transform
 	_transform = GetComponent<TransformComponent>();
@@ -117,7 +118,7 @@ void ParticleSystemComponent::SetUp()
 		
 		// get texture if string is not empty
 		// else get defualt white texture
-		_texture[i] = _settings[i].texturePath.c_str() != "" ? TexturePool::GetInstance().GetTexture(wtp.c_str()) : TexturePool::GetInstance().GetTexture(L"textures/defaultDiffuse.dds");
+		_texture[i] = _settings[i].texturePath.c_str() != "" ? Systems::texturePool->GetTexture(wtp.c_str()) : Systems::texturePool->GetTexture(L"textures/defaultDiffuse.dds");
 
 		// check if emitter have a limited lifetime or not
 		// if one emitter has lifetime we will destroy the
@@ -153,7 +154,7 @@ void ParticleSystemComponent::SetUp()
 void ParticleSystemComponent::CreateBuffers(XMFLOAT2 size, unsigned int index)
 {	
 	// get device
-    ID3D11Device* device = DXManager::GetInstance().GetDevice();
+    ID3D11Device* device = Systems::dxManager->GetDevice();
 
 	// get half size
 	float halfX = size.x * 0.5f;
@@ -325,10 +326,8 @@ void ParticleSystemComponent::SpawnParticle(ParticleData& particle, unsigned int
 	particle.uvOffsetSpeed           = uvScrollSpeed;	
 }
 
-void ParticleSystemComponent::Update() 
+void ParticleSystemComponent::Update(const float& delta)
 {
-	const float& delta = Time::GetInstance().GetDeltaTime();
-	
 	// update simulation
 	UpdateLifeTime(delta);
 	UpdateVelocity(delta);
@@ -486,7 +485,7 @@ void ParticleSystemComponent::UpdateLifeTime(const float& delta)
 
 void ParticleSystemComponent::SortParticles(unsigned int index)
 {
-	XMFLOAT3 camPos = CameraManager::GetInstance().GetCurrentCameraGame()->GetComponent<TransformComponent>()->GetPositionVal();
+	XMFLOAT3 camPos = Systems::cameraManager->GetCurrentCameraGame()->GetComponent<TransformComponent>()->GetPositionVal();
 	XMFLOAT3 vec;
 
 	// get distance of particle from camera
@@ -528,7 +527,7 @@ XMFLOAT3 ParticleSystemComponent::GetDirectionLocal(XMFLOAT3 direction)
 void ParticleSystemComponent::UpdateRotations(const float& delta)
 {
 	XMFLOAT3 forward, up, right;
-	CameraManager::GetInstance().GetCurrentCameraGame()->GetComponent<TransformComponent>()->GetAllAxis(forward, right, up);
+	Systems::cameraManager->GetCurrentCameraGame()->GetComponent<TransformComponent>()->GetAllAxis(forward, right, up);
 
 	XMFLOAT4X4 rotationMatrix; XMStoreFloat4x4(&rotationMatrix, XMMatrixIdentity());
 
@@ -638,7 +637,7 @@ void ParticleSystemComponent::UpdateBuffer()
 			_particleInstanceData[i][y].uvOffset = _particleData[i][y].uvOffset;
 		}
 
-		ID3D11DeviceContext* devCon = DXManager::GetInstance().GetDeviceCon();
+		ID3D11DeviceContext* devCon = Systems::dxManager->GetDeviceCon();
 		D3D11_MAPPED_SUBRESOURCE data;
 
 		// map instancebuffer
@@ -656,7 +655,7 @@ void ParticleSystemComponent::UpdateBuffer()
 
 void ParticleSystemComponent::UploadBuffers(unsigned int index)
 {
-	ID3D11DeviceContext* devCon = DXManager::GetInstance().GetDeviceCon();
+	ID3D11DeviceContext* devCon = Systems::dxManager->GetDeviceCon();
 
 	unsigned int strides[2];
 	unsigned int offsets[2];

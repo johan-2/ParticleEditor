@@ -1,10 +1,11 @@
 #include "LightPointComponent.h"
 #include "Entity.h"
 #include "LightManager.h"
+#include "Systems.h"
 
 LightPointComponent::LightPointComponent() : IComponent(POINT_LIGHT_COMPONENT)
 {
-	LightManager::GetInstance().AddPointLight(this);
+	Systems::lightManager->AddPointLight(this);
 }
 
 LightPointComponent::~LightPointComponent()
@@ -24,6 +25,6 @@ void LightPointComponent::Init(float radius, float intensity, XMFLOAT3 color, XM
 	_attExponential = attExponential;
 }
 
-void LightPointComponent::Update()
+void LightPointComponent::Update(const float& delta)
 {
 }

@@ -8,6 +8,7 @@
 #include "DXBlendStates.h"
 #include "DXDepthStencilStates.h"
 #include "GBuffer.h"
+#include "Systems.h"
 
 DeferredShader::DeferredShader()
 {
@@ -49,13 +50,13 @@ DeferredShader::~DeferredShader()
 void DeferredShader::RenderGeometry(std::vector<Mesh*>& meshes)
 {
 	// get DXManager
-	DXManager& DXM = DXManager::GetInstance();
+	DXManager& DXM = *Systems::dxManager;
 
 	// get devicecontext
 	ID3D11DeviceContext* devCon = DXM.GetDeviceCon();
 
 	// get the game camera
-	CameraComponent* camera = CameraManager::GetInstance().GetCurrentCameraGame();
+	CameraComponent* camera = Systems::cameraManager->GetCurrentCameraGame();
 
 	// render opaque objects here only	
 	DXM.BlendStates()->SetBlendState(BLEND_STATE::BLEND_OPAQUE);
@@ -104,17 +105,19 @@ void DeferredShader::RenderGeometry(std::vector<Mesh*>& meshes)
 void DeferredShader::RenderLightning(GBuffer*& gBuffer)
 {
 	// get DXManager
-	DXManager& DXM = DXManager::GetInstance();
+	DXManager& DXM   = *Systems::dxManager;
+	LightManager LM  = *Systems::lightManager;
+	CameraManager CM = *Systems::cameraManager;
 
 	// get devicecontext
 	ID3D11DeviceContext* devCon = DXM.GetDeviceCon();
 
 	// get cameras
-	CameraComponent* camera      = CameraManager::GetInstance().GetCurrentCameraGame();
-	CameraComponent* cameraLight = CameraManager::GetInstance().GetCurrentCameraDepthMap();
+	CameraComponent* camera      = CM.GetCurrentCameraGame();
+	CameraComponent* cameraLight = CM.GetCurrentCameraDepthMap();
 
 	// get point lights
-	std::vector<LightPointComponent*>& pointLights = LightManager::GetInstance().GetPointLight();
+	std::vector<LightPointComponent*>& pointLights = LM.GetPointLight();
 
 	// set shaders			
 	devCon->VSSetShader(_vertexLightShader, NULL, 0);
@@ -145,13 +148,13 @@ void DeferredShader::RenderLightning(GBuffer*& gBuffer)
 	}
 
 	// set ambientdata(camerapos is in this buffer aswell)
-	ambientLightData.ambientColor = LightManager::GetInstance().GetAmbientColor();
+	ambientLightData.ambientColor = LM.GetAmbientColor();
 
 	const XMFLOAT3& camPos = camera->GetComponent<TransformComponent>()->GetPositionRef();
 	ambientLightData.cameraPosition = XMFLOAT4(camPos.x, camPos.y, camPos.z, 1.0f);
 
 	// get directional light
-	LightDirectionComponent*& directionalLight = LightManager::GetInstance().GetDirectionalLight();
+	LightDirectionComponent*& directionalLight = LM.GetDirectionalLight();
 
 	// get directionallight matrices for shadow calculations
 	directionalLightData.lightView        =  cameraLight->GetViewMatrix();

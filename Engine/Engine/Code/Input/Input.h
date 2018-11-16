@@ -13,8 +13,6 @@ class Input
 public:
 	Input();
 	~Input();
-	
-	static Input& GetInstance();
 
 	// initialize input
 	void InitializeInputDevices(HINSTANCE hinstance, HWND hwnd);
@@ -62,9 +60,6 @@ private:
 
 	// pointer to window handle
 	HWND _hwnd;
-
-	// instance to this class
-	static Input* _instance;
 };
 
 
