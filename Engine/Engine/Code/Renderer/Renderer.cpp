@@ -44,8 +44,6 @@ Renderer::~Renderer()
 	delete _imGUIShader;
 	delete _forwardAlphaShader;
 	delete _inputLayouts;
-
-	_cameraDepth->RemoveEntity();
 }
 
 void Renderer::Initailize()

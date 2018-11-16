@@ -33,14 +33,15 @@ void ParticleShader::RenderParticles(const std::vector<ParticleSystemComponent*>
 	if (systems.size() == 0)
 		return;
 
-	// get DX manager
-	DXManager& DXM = *Systems::dxManager;
+	// get DX and camera manager
+	DXManager& DXM    = *Systems::dxManager;
+	CameraManager& CM = *Systems::cameraManager;
 
 	// get device context
 	ID3D11DeviceContext* devCon = DXM.GetDeviceCon();
 
 	// get the game camera
-	CameraComponent* camera = Systems::cameraManager->GetCurrentCameraGame();
+	CameraComponent* camera = CM.GetCurrentCameraGame();
 
 	// set shaders			
 	devCon->VSSetShader(_vertexShader, NULL, 0);

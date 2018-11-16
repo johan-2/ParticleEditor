@@ -20,6 +20,7 @@ public:
 	~Systems();
 
 	static void InitSystems(Window* window, float screenWidth, float screenHeight, bool fullscreen, bool vSync);
+	static void DeleteSystems();
 
 	static DXManager*     dxManager;
 	static Input*         input;

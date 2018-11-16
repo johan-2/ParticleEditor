@@ -83,7 +83,7 @@ private:
 	std::vector<Mesh*> _meshes[S_NUM_RENDER_TYPES];	
 
 	// all 2D UI quads
-	std::vector<QuadComponent*>           _quads;
+	std::vector<QuadComponent*> _quads;
 
 	// all particle systems
 	std::vector<ParticleSystemComponent*> _particleSystems;

@@ -10,12 +10,9 @@ TexturePool::TexturePool()
 
 TexturePool::~TexturePool()
 {
-	for (std::map<std::wstring, ID3D11ShaderResourceView*>::iterator it = _textures.begin(); it != _textures.end(); it++)
-	{
-		delete it->second;
-		printf("deleting %s\n", it->first);
-	}
-
+	for (std::map<std::wstring, ID3D11ShaderResourceView*>::iterator it = _textures.begin(); it != _textures.end(); it++)	
+		it->second->Release();
+		
 	_textures.clear();
 }
 
