@@ -93,10 +93,13 @@ void ParticleEditor::UpdateKeyCommands()
 
 void ParticleEditor::UpdateParticleSettingsWindow()
 {
+	// start window open
+	bool open = true;
+
 	// set properties of this GUI window
 	ImGui::SetNextWindowSize(ImVec2(SCREEN_WIDTH * 0.21f, SCREEN_HEIGHT * 0.8f));
 	ImGui::SetNextWindowPos(ImVec2(SCREEN_WIDTH * 0.01f, SCREEN_HEIGHT * 0.01f), 0, ImVec2(0, 0));
-	ImGui::Begin("Particle Settings", nullptr, ImGuiWindowFlags_HorizontalScrollbar);
+	ImGui::Begin("Particle Settings", &open, ImGuiWindowFlags_HorizontalScrollbar);
 
 	// texture
 	if (ImGui::Button("FIND"))
