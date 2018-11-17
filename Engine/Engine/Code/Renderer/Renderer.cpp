@@ -48,6 +48,9 @@ Renderer::~Renderer()
 
 void Renderer::Initailize()
 {
+	// set clear color
+	SetClearColor(0, 0, 0, 1);
+
 	// create and compile shaders
 	_depthShader        = new DepthShader();
 	_deferredShader     = new DeferredShader();
@@ -102,6 +105,12 @@ void Renderer::CreateDepthMap()
 
 void Renderer::Render() 
 {	
+	// get dx manager
+	DXManager& dXM = *Systems::dxManager;
+
+	// clear the main rendertarget
+	dXM.ClearRenderTarget(_clearColor[0], _clearColor[1], _clearColor[2], _clearColor[3]);
+
 	// set input layout for 3dmeshes
 	_inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT3D);
 	

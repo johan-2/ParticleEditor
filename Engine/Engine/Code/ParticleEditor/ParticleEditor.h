@@ -6,6 +6,7 @@
 class Entity;
 class TransformComponent;
 class FreeMoveComponent;
+class ModelComponent;
 
 class ParticleEditor
 {
@@ -16,6 +17,17 @@ public:
 	void Update();
 
 private:
+
+	struct EditorSettings
+	{
+		bool renderSkybox             = true;
+		bool emitterAsWireFrame       = true;
+		int  moveState                = 0;
+		bool showGrid                 = false;
+		XMFLOAT3 systemRotationAmount = XMFLOAT3(0, 0, 0);
+		XMFLOAT3 systemPosition       = XMFLOAT3(0, 0, 0);
+		XMFLOAT3 systemRotation       = XMFLOAT3(0, 0, 0);
+	};
 
 	// window functions
 	void UpdateParticleSettingsWindow();
@@ -39,6 +51,7 @@ private:
 	// cached components
 	ParticleSystemComponent* _systemParticleComponent;
 	TransformComponent*      _systemTransformComponent;
+	ModelComponent*          _systemModelComponent;
 	FreeMoveComponent*       _cameraFreeMoveComponent;
 
 	// stores the settings of each emitter in the current system
@@ -56,8 +69,8 @@ private:
 	bool _cameraMoveToggle;
 	bool _systemUpdateToggle;
 
-	// state for the movement of particlesystem entity
-	int _moveState;
+	// states for certain settings
+	EditorSettings _miscSettings;
 
 	// instance to input system
 	Input& _input;

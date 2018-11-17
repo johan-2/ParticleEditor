@@ -41,6 +41,7 @@ ParticleEditor::ParticleEditor(Input& input, FreeMoveComponent* moveComponent) :
 	// cache components
 	_systemTransformComponent = _particleEntity->GetComponent<TransformComponent>();
 	_systemParticleComponent  = _particleEntity->GetComponent<ParticleSystemComponent>();
+	_systemModelComponent     = _particleEntity->GetComponent<ModelComponent>();
 
 	// get how many emitters exist in the start particle system
 	_numEmitters = _systemParticleComponent->GetNumEmitters();
@@ -511,9 +512,9 @@ void ParticleEditor::UpdateEditorSettingsWindow()
 	ImGui::SetNextWindowPos(ImVec2(SCREEN_WIDTH * 0.99f, SCREEN_HEIGHT * 0.01f), 0, ImVec2(1, 0));
 	ImGui::Begin("Editor Settings", &startOpen, ImGuiWindowFlags_HorizontalScrollbar);
 
-	bool mk;
-	// skybox
-	ImGui::Checkbox("Render Skybox", &mk);
+	// render skybox
+	ImGui::Checkbox("Render Skybox", &_miscSettings.renderSkybox);
+	Systems::renderer->GetSkybox()->setActive(_miscSettings.renderSkybox);
 
 	// load skybox .dds cubemap
 	if (ImGui::Button("Load Skybox"))
@@ -532,37 +533,43 @@ void ParticleEditor::UpdateEditorSettingsWindow()
 		}
 	}
 
-	// clear color
+	// show clear color and open color picker if pressed
 	if (ImGui::ColorButton("color", ImVec4(_clearColor[0], _clearColor[1], _clearColor[2], _clearColor[3])))
 		ImGui::OpenPopup("picker");
 
 	ImGui::SameLine();
 	ImGui::TextColored(ImVec4(0.9, 0.9, 0.9, 1.0), "Clear Color");
 	ShowToolTip("Skybox need to be off to use clear color");
+
+	// open popup
 	if (ImGui::BeginPopup("picker"))
 	{
 		ImGui::ColorPicker4("clearPicker", (float*)&_clearColor);
 		ImGui::EndPopup();
+
+		// set clear color
+		Systems::renderer->SetClearColor(_clearColor[0], _clearColor[1], _clearColor[2], _clearColor[3]);
 	}
 
-	bool ll;
 	// emitter rendermode
-	ImGui::Checkbox("Emitter as wireframe", &ll);
+	ImGui::Checkbox("Emitter as wireframe", &_miscSettings.emitterAsWireFrame);
+	if (_miscSettings.emitterAsWireFrame)
+		_systemModelComponent->SetRenderFlags(WIREFRAME_COLOR);
+	else
+		_systemModelComponent->SetRenderFlags(DEFERRED);
 
-	bool j;
 	// show grid
-	ImGui::Checkbox("ShowGrid", &j);
-
-	XMFLOAT3 h(0, 0, 0);
+	ImGui::Checkbox("ShowGrid", &_miscSettings.showGrid);
+	_grid->GetComponent<ModelComponent>()->SetActive(_miscSettings.showGrid);
 
 	// emitter rotation
 	ImGui::PushItemWidth(SCREEN_WIDTH * 0.09f);
-	ImGui::InputFloat3("Emitter Rotation", (float*)&h, 2);
+	ImGui::InputFloat3("Emitter Rotation", (float*)&_miscSettings.systemRotationAmount, 2);
 	ImGui::PopItemWidth();
 
 	// emitter translation
 	ImGui::PushItemWidth(SCREEN_WIDTH * 0.09f);
-	ImGui::Combo("Emitter Translation", &_moveState, "IDLE\0BACKFORTH");
+	ImGui::Combo("Emitter Translation", &_miscSettings.moveState, "IDLE\0BACKFORTH");
 	ImGui::PopItemWidth();
 
 	// reset emitter transform

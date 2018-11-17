@@ -46,7 +46,10 @@ public:
 	void RemoveQuadFromRenderer(QuadComponent* quad)                        { VECTOR_HELPERS::RemoveItemFromVector(_quads, quad); }
 	void RemoveParticleSystemFromRenderer(ParticleSystemComponent* emitter) { VECTOR_HELPERS::RemoveItemFromVector(_particleSystems, emitter); }
 	
+	// returns skybox
 	SkyBox* GetSkybox() { return _skyBox; }
+
+	void SetClearColor(float r, float g, float b, float a) { _clearColor[0] = r; _clearColor[1] = g; _clearColor[2] = b; _clearColor[3] = a;  }
 
 	// initialize everything
 	void Initailize();
@@ -100,5 +103,7 @@ private:
 	// project the deferred lightningpass
 	GBuffer*    _gBuffer;
 	ScreenQuad* _screenQuad;
+
+	float _clearColor[4];
 };
 
