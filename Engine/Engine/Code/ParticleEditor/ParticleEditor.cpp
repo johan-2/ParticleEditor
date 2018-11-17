@@ -17,6 +17,8 @@
 #include "GuiManager.h"
 #include "SystemDefs.h"
 #include "FreeMoveComponent.h"
+#include <string>
+#include "Systems.h"
 
 ParticleEditor::ParticleEditor(Input& input, FreeMoveComponent* moveComponent) :
 	_input(input),
@@ -68,6 +70,7 @@ void ParticleEditor::Update()
 	UpdateParticleSettingsWindow();
 	UpdateInfoWindow();
 	UpdateKeyCommands();	
+	UpdateEditorSettingsWindow();
 }
 
 void ParticleEditor::UpdateKeyCommands()
@@ -104,37 +107,12 @@ void ParticleEditor::UpdateParticleSettingsWindow()
 	// texture
 	if (ImGui::Button("FIND"))
 	{
-		// create memory for the path to the texture file we select
-		char filename[MAX_PATH];
-		ZeroMemory(&filename, sizeof(filename));
+		// put the file directory in a string
+		std::string name = FindFileFromDirectory(".dds\0*.dds", "Select .dds file");
 
-		// create memory for the path to our solution directory
-		char oldDir[MAX_PATH];
-		ZeroMemory(&oldDir, sizeof(oldDir));
-
-		// create settings for the open file directory window
-		OPENFILENAME ofn;
-		ZeroMemory(&ofn, sizeof(ofn));
-		ofn.lStructSize = sizeof(ofn);
-		ofn.hwndOwner   = NULL;
-		ofn.lpstrFilter = ".dds\0*.dds";
-		ofn.lpstrFile   = filename;
-		ofn.nMaxFile    = MAX_PATH;
-		ofn.lpstrTitle  = "Select dds texture";
-		ofn.Flags = 0;
-
-		// we have to save the current directory before we open the openfile directory so we can set it back efter we have selected a file
-		// it will permanantly change our base directory making searches from $SolutionDir/ not work anymore if we not
-		GetCurrentDirectory(MAX_PATH, oldDir); 
-											   
-		if (GetOpenFileName(&ofn))
+		// if a file was selected change the texture
+		if (name != "")
 		{
-			// set back to old directory
-			SetCurrentDirectory(oldDir); 
-
-			// put the file directory in a string
-			std::string name(filename);
-
 			// get the offset where our last backslash is located
 			// we only want to save the name of the texture and later
 			// use a relative path to find and load it
@@ -146,10 +124,10 @@ void ParticleEditor::UpdateParticleSettingsWindow()
 
 			// set the new texture in our settings of this emitter
 			_particleSettings[_currentEmitterIndex].texturePath = name;
-		}
 
-		// reload the emitter so the texture is changed
-		ReloadSystem();
+			// reload the emitter so the texture is changed
+			ReloadSystem();
+		}		
 	}
 
 	// texture input
@@ -520,4 +498,413 @@ void ParticleEditor::ReloadSystem()
 
 	// get cache to component
 	_systemParticleComponent = _particleEntity->GetComponent<ParticleSystemComponent>();
+}
+
+void ParticleEditor::UpdateEditorSettingsWindow()
+{
+	bool m = true;
+
+	// editor settings window
+	ImGui::SetNextWindowSize(ImVec2(SCREEN_WIDTH * 0.20f, SCREEN_HEIGHT * 0.5f));
+	ImGui::SetNextWindowPos(ImVec2(SCREEN_WIDTH * 0.99f, SCREEN_HEIGHT * 0.01f), 0, ImVec2(1, 0));
+	ImGui::Begin("Editor Settings", &m, ImGuiWindowFlags_HorizontalScrollbar);
+
+	bool mk;
+	// skybox
+	ImGui::Checkbox("Render Skybox", &mk);
+
+	// load skybox .dds cubemap
+	if (ImGui::Button("Load Skybox"))
+	{
+		// put the file directory in a string
+		std::string name = FindFileFromDirectory(".dds\0*.dds", "Select .dds file");
+
+		// if a file was selected change the texture
+		if (name != "")
+		{
+			//Systems::renderer->
+		}
+	}
+
+	// clear color
+	if (ImGui::ColorButton("color", ImVec4(_clearColor[0], _clearColor[0], _clearColor[0], _clearColor[0])))
+		ImGui::OpenPopup("picker");
+
+	ImGui::SameLine();
+	ImGui::TextColored(ImVec4(0.9, 0.9, 0.9, 1.0), "Clear Color");
+	ShowToolTip("Skybox need to be off to use clear color");
+	if (ImGui::BeginPopup("picker"))
+	{
+		ImGui::ColorPicker4("clearPicker", (float*)&_clearColor);
+		ImGui::EndPopup();
+	}
+
+	bool ll;
+	// emitter rendermode
+	ImGui::Checkbox("Emitter as wireframe", &ll);
+
+	bool j;
+	// show grid
+	ImGui::Checkbox("ShowGrid", &j);
+
+	XMFLOAT3 h(0, 0, 0);
+
+	// emitter rotation
+	ImGui::PushItemWidth(SCREEN_WIDTH * 0.09f);
+	ImGui::InputFloat3("Emitter Rotation", (float*)&h, 2);
+	ImGui::PopItemWidth();
+
+	// emitter translation
+	ImGui::PushItemWidth(SCREEN_WIDTH * 0.09f);
+	ImGui::Combo("Emitter Translation", &_moveState, "IDLE\0BACKFORTH");
+	ImGui::PopItemWidth();
+
+	// reset emitter transform
+	if (ImGui::Button("Reset Transform"))
+	{
+			
+	}
+
+	ImGui::Spacing();
+	if (ImGui::Button("Load Particle from file"))
+	{
+		// create memory for file directory path
+		char filename[MAX_PATH];
+		ZeroMemory(&filename, sizeof(filename));
+
+		// create memory for old directory path
+		char oldDir[MAX_PATH];
+		ZeroMemory(&oldDir, sizeof(oldDir));
+
+		OPENFILENAME ofn;
+		ZeroMemory(&ofn, sizeof(ofn));
+		ofn.lStructSize = sizeof(ofn);
+		ofn.hwndOwner = NULL;
+		ofn.lpstrFilter = ".json\0*.json";
+		ofn.lpstrFile = filename;
+		ofn.nMaxFile = MAX_PATH;
+		ofn.lpstrTitle = "Select particle JsonFile";
+		ofn.Flags = 0;
+
+		GetCurrentDirectory(MAX_PATH, oldDir); // we have to save the current directory before we open the openfile directory so we can set it back efter we have selected a file
+											   // it will permanantly change our base directory making searches from $SolutionDir/ not work anymore if we not
+		if (GetOpenFileName(&ofn))
+		{
+			SetCurrentDirectory(oldDir); // set back to old directory
+
+			// remove old particle component and create a new one with the updated settings
+			_particleEntity->RemoveComponent(_systemParticleComponent);
+			_particleEntity->AddComponent<ParticleSystemComponent>()->Init(_particleSettings);
+
+			// get cache to component
+			_systemParticleComponent = _particleEntity->GetComponent<ParticleSystemComponent>();
+
+			_particleSettings.clear();
+			_blendEnum.clear();
+
+			_numEmitters = _systemParticleComponent->GetNumEmitters();
+
+			for (int i = 0; i < _numEmitters; i++)
+			{
+				_particleSettings.emplace_back(_systemParticleComponent->GetSettings(i));
+				_blendEnum.emplace_back(_systemParticleComponent->GetBlendState(i) - 1);
+			}
+			_currentEmitterIndex = 0;
+		}
+		ReloadSystem();
+	}
+
+	if (ImGui::Button("Save To file"))
+	{
+		char filename[MAX_PATH];
+		ZeroMemory(&filename, sizeof(filename));
+		char oldDir[MAX_PATH];
+		ZeroMemory(&oldDir, sizeof(oldDir));
+
+		OPENFILENAME ofn;
+		ZeroMemory(&ofn, sizeof(ofn));
+		ofn.lStructSize = sizeof(ofn);
+		ofn.hwndOwner = NULL;
+		ofn.lpstrFilter = ".json\0*.json";
+		ofn.lpstrFile = filename;
+		ofn.nMaxFile = MAX_PATH;
+		ofn.lpstrTitle = "save particle as .json";
+		ofn.Flags = 0;
+		ofn.lpstrDefExt = ".json";
+
+		GetCurrentDirectory(MAX_PATH, oldDir); // we have to save the current directory before we open the openfile directory so we can set it back efter we have selected a file
+											   // it will permanantly change our base directory making searches from $SolutionDir/ not work anymore if we not		
+		if (GetSaveFileName(&ofn))
+		{
+			SetCurrentDirectory(oldDir); // set back to old directory
+			SaveParticle(filename);
+		}
+		ReloadSystem();
+	}
+
+	ImGui::End();
+}
+
+void ParticleEditor::SaveParticle(char* destination)
+{
+	// CODE FOR OUTPUTING ALL VALUES
+	rapidjson::StringBuffer sb;
+	rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(sb);
+
+	writer.StartObject();
+
+	writer.Key("numEmitters");
+	writer.Int(_numEmitters);
+
+	std::string key = "";
+
+	for (int i = 0; i < _numEmitters; i++)
+	{
+		std::string index = std::to_string(i);
+
+		key = "numParticles";
+		key.append(index.c_str());
+		writer.Key(key.c_str());
+		writer.Int(_particleSettings[i].numParticles);
+
+		key = "texture";
+		key.append(index.c_str());
+		writer.Key(key.c_str());
+		writer.String(_particleSettings[i].texturePath.c_str());
+
+		key = "startSize";
+		key.append(index.c_str());
+		writer.Key(key.c_str());
+		writer.StartArray();
+		writer.Double(_particleSettings[i].startSize.x);
+		writer.Double(_particleSettings[i].startSize.y);
+		writer.EndArray();
+
+		key = "direction";
+		key.append(index.c_str());
+		writer.Key(key.c_str());
+		writer.StartArray();
+		writer.Double(_particleSettings[i].direction.x);
+		writer.Double(_particleSettings[i].direction.y);
+		writer.Double(_particleSettings[i].direction.z);
+		writer.EndArray();
+
+		key = "minMaxSpeed";
+		key.append(index.c_str());
+		writer.Key(key.c_str());
+		writer.StartArray();
+		writer.Double(_particleSettings[i].minMaxSpeed.x);
+		writer.Double(_particleSettings[i].minMaxSpeed.y);
+		writer.EndArray();
+
+		key = "gravity";
+		key.append(index.c_str());
+		writer.Key(key.c_str());
+		writer.StartArray();
+		writer.Double(_particleSettings[i].gravity.x);
+		writer.Double(_particleSettings[i].gravity.y);
+		writer.Double(_particleSettings[i].gravity.z);
+		writer.EndArray();
+
+		key = "drag";
+		key.append(index.c_str());
+		writer.Key(key.c_str());
+		writer.Double(_particleSettings[i].drag);
+
+		key = "velocitySpread";
+		key.append(index.c_str());
+		writer.Key(key.c_str());
+		writer.StartArray();
+		writer.Double(_particleSettings[i].velocitySpread.x);
+		writer.Double(_particleSettings[i].velocitySpread.y);
+		writer.Double(_particleSettings[i].velocitySpread.z);
+		writer.EndArray();
+
+		key = "emitterLifetime";
+		key.append(index.c_str());
+		writer.Key(key.c_str());
+		writer.Double(_particleSettings[i].emitterLifetime);
+
+		key = "particleLifetime";
+		key.append(index.c_str());
+		writer.Key(key.c_str());
+		writer.Double(_particleSettings[i].particleLifetime);
+
+		key = "spawnRadius";
+		key.append(index.c_str());
+		writer.Key(key.c_str());
+		writer.Double(_particleSettings[i].spawnRadius);
+
+		key = "burst";
+		key.append(index.c_str());
+		writer.Key(key.c_str());
+		writer.Bool(_particleSettings[i].burst);
+
+		key = "followEmitter";
+		key.append(index.c_str());
+		writer.Key(key.c_str());
+		writer.Bool(_particleSettings[i].followEmitter);
+
+		key = "startColorMultiplierRGBMin";
+		key.append(index.c_str());
+		writer.Key(key.c_str());
+		writer.StartArray();
+		writer.Double(_particleSettings[i].startColorMultiplierRGBMin.x);
+		writer.Double(_particleSettings[i].startColorMultiplierRGBMin.y);
+		writer.Double(_particleSettings[i].startColorMultiplierRGBMin.z);
+		writer.EndArray();
+
+		key = "startColorMultiplierRGBMax";
+		key.append(index.c_str());
+		writer.Key(key.c_str());
+		writer.StartArray();
+		writer.Double(_particleSettings[i].startColorMultiplierRGBMax.x);
+		writer.Double(_particleSettings[i].startColorMultiplierRGBMax.y);
+		writer.Double(_particleSettings[i].startColorMultiplierRGBMax.z);
+		writer.EndArray();
+
+		key = "endColorMultiplierRGBMin";
+		key.append(index.c_str());
+		writer.Key(key.c_str());
+		writer.StartArray();
+		writer.Double(_particleSettings[i].endColorMultiplierRGBMin.x);
+		writer.Double(_particleSettings[i].endColorMultiplierRGBMin.y);
+		writer.Double(_particleSettings[i].endColorMultiplierRGBMin.z);
+		writer.EndArray();
+
+		key = "endColorMultiplierRGBMax";
+		key.append(index.c_str());
+		writer.Key(key.c_str());
+		writer.StartArray();
+		writer.Double(_particleSettings[i].endColorMultiplierRGBMax.x);
+		writer.Double(_particleSettings[i].endColorMultiplierRGBMax.y);
+		writer.Double(_particleSettings[i].endColorMultiplierRGBMax.z);
+		writer.EndArray();
+
+		key = "startAlpha";
+		key.append(index.c_str());
+		writer.Key(key.c_str());
+		writer.Double(_particleSettings[i].startAlpha);
+
+		key = "endAlpha";
+		key.append(index.c_str());
+		writer.Key(key.c_str());
+		writer.Double(_particleSettings[i].endAlpha);
+
+		key = "BLEND";
+		key.append(index.c_str());
+		writer.Key(key.c_str());
+		writer.Int((int)_particleSettings[i].BLEND);
+
+		key = "spawnOffset";
+		key.append(index.c_str());
+		writer.Key(key.c_str());
+		writer.StartArray();
+		writer.Double(_particleSettings[i].spawnOffset.x);
+		writer.Double(_particleSettings[i].spawnOffset.y);
+		writer.Double(_particleSettings[i].spawnOffset.z);
+		writer.EndArray();
+
+		key = "localSpace";
+		key.append(index.c_str());
+		writer.Key(key.c_str());
+		writer.Bool(_particleSettings[i].LocalSpace);
+
+		key = "startScaleMinMax";
+		key.append(index.c_str());
+		writer.Key(key.c_str());
+		writer.StartArray();
+		writer.Double(_particleSettings[i].startScaleMinMax.x);
+		writer.Double(_particleSettings[i].startScaleMinMax.y);
+		writer.EndArray();
+
+		key = "endScaleMinMax";
+		key.append(index.c_str());
+		writer.Key(key.c_str());
+		writer.StartArray();
+		writer.Double(_particleSettings[i].endScaleMinMax.x);
+		writer.Double(_particleSettings[i].endScaleMinMax.y);
+		writer.EndArray();
+
+		key = "rotationByVelocity";
+		key.append(index.c_str());
+		writer.Key(key.c_str());
+		writer.Bool(_particleSettings[i].rotationByVelocity);
+
+		key = "rotationPerSecMinMax";
+		key.append(index.c_str());
+		writer.Key(key.c_str());
+		writer.StartArray();
+		writer.Double(_particleSettings[i].rotationPerSecMinMax.x);
+		writer.Double(_particleSettings[i].rotationPerSecMinMax.y);
+		writer.EndArray();
+
+		key = "uvScrollXMinMax";
+		key.append(index.c_str());
+		writer.Key(key.c_str());
+		writer.StartArray();
+		writer.Double(_particleSettings[i].uvScrollXMinMax.x);
+		writer.Double(_particleSettings[i].uvScrollXMinMax.y);
+		writer.EndArray();
+
+		key = "uvScrollYMinMax";
+		key.append(index.c_str());
+		writer.Key(key.c_str());
+		writer.StartArray();
+		writer.Double(_particleSettings[i].uvScrollYMinMax.x);
+		writer.Double(_particleSettings[i].uvScrollYMinMax.y);
+		writer.EndArray();
+
+		key = "inheritVelocityScale";
+		key.append(index.c_str());
+		writer.Key(key.c_str());
+		writer.StartArray();
+		writer.Double(_particleSettings[i].inheritVelocityScale.x);
+		writer.Double(_particleSettings[i].inheritVelocityScale.y);
+		writer.Double(_particleSettings[i].inheritVelocityScale.z);
+		writer.EndArray();
+	}
+
+	writer.EndObject();
+
+	std::ofstream of(destination);
+	of << sb.GetString();
+
+	of.close();
+}
+
+std::string ParticleEditor::FindFileFromDirectory(char* filter, char* title)
+{
+	// create memory for the path to the texture file we select
+	char filename[MAX_PATH];
+	ZeroMemory(&filename, sizeof(filename));
+
+	// create memory for the path to our solution directory
+	char oldDir[MAX_PATH];
+	ZeroMemory(&oldDir, sizeof(oldDir));
+
+	// create settings for the open file directory window
+	OPENFILENAME ofn;
+	ZeroMemory(&ofn, sizeof(ofn));
+	ofn.lStructSize = sizeof(ofn);
+	ofn.hwndOwner = NULL;
+	ofn.lpstrFilter = filter;
+	ofn.lpstrFile = filename;
+	ofn.nMaxFile = MAX_PATH;
+	ofn.lpstrTitle = title;
+	ofn.Flags = 0;
+
+	// we have to save the current directory before we open the openfile directory so we can set it back efter we have selected a file
+	// it will permanantly change our base directory making searches from $SolutionDir/ not work anymore if we not
+	GetCurrentDirectory(MAX_PATH, oldDir);
+
+	if (GetOpenFileName(&ofn))
+	{
+		// set back to old directory
+		SetCurrentDirectory(oldDir);
+
+		return filename;		
+	}
+
+	return "";
 }

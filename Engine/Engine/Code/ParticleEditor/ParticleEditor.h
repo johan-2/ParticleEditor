@@ -21,6 +21,10 @@ private:
 	void UpdateParticleSettingsWindow();
 	void UpdateInfoWindow();
 	void UpdateKeyCommands();
+	void UpdateEditorSettingsWindow();
+	void SaveParticle(char* destination);
+
+	std::string FindFileFromDirectory(char* filter, char* title);
 
 	// helper functions
 	void ShowToolTip(const char* tip);
@@ -52,7 +56,13 @@ private:
 	bool _cameraMoveToggle;
 	bool _systemUpdateToggle;
 
+	// state for the movement of particlesystem entity
+	int _moveState;
+
 	// instance to input system
 	Input& _input;
+
+	float _clearColor[4];
+
 };
 
