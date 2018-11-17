@@ -15,6 +15,9 @@ public:
 
 	// upload buffers and render
 	void Render();
+
+	// set the skybox active/inactive
+	void setActive(bool active) { _isActive = active; }
 	
 private:
 
@@ -40,7 +43,11 @@ private:
 	unsigned int _numVertices;
 	unsigned int _numIndices;
 
+	// cubemap texture
 	ID3D11ShaderResourceView* _texture;
+
+	// is skybox active
+	bool _isActive;
 
 	// vertex input data structure
 	struct VertexData

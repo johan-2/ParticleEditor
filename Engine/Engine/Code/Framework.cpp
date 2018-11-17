@@ -165,9 +165,6 @@ void Framework::Run()
 		// update everything
 		Update();
 		
-		// clear rendertarget from last frame
-		DXM.ClearRenderTarget(0, 0, 0, 1);
-
 		// render everything
 		Render();
 

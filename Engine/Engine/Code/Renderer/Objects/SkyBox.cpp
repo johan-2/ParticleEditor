@@ -10,7 +10,8 @@
 #include "DXDepthStencilStates.h"
 #include "Systems.h"
 
-SkyBox::SkyBox(const wchar_t* textureFile)
+SkyBox::SkyBox(const wchar_t* textureFile):
+	_isActive(true)
 {
 	// create mesh and cubemap
 	CreateBox();
@@ -256,6 +257,9 @@ void SkyBox::LoadCubemap(const wchar_t* file)
 
 void SkyBox::Render() 
 {
+	if (!_isActive)
+		return;
+
 	// get DX manager
 	DXManager& DXM = *Systems::dxManager;
 
