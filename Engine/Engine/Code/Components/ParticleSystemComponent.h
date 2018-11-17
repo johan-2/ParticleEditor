@@ -106,7 +106,7 @@ public:
 	~ParticleSystemComponent();
 
 	// will read the particle settings and create memory for all buffers
-	void Init(char* particleFile);
+	void Init(const char* particleFile);
 	void Init(std::vector<ParticleSettings> settings);
 
 	// updates the simulation
@@ -161,7 +161,7 @@ private:
 	void SortParticles(unsigned int index);
 
 	// parse settings from .json file
-	void ParsefromJson(char* file);
+	void ParsefromJson(const char* file);
 
 	// helper functions
 	float    GetRandomFloat(float min, float max);

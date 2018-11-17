@@ -46,7 +46,7 @@ ParticleSystemComponent::~ParticleSystemComponent()
 	Systems::renderer->RemoveParticleSystemFromRenderer(this);
 }
 
-void ParticleSystemComponent::Init(char* particleFile)
+void ParticleSystemComponent::Init(const char* particleFile)
 {
 	// get particle settings
 	ParsefromJson(particleFile);
@@ -678,7 +678,7 @@ void ParticleSystemComponent::UploadBuffers(unsigned int index)
 	devCon->IASetIndexBuffer(_indexBuffer[index], DXGI_FORMAT_R32_UINT, 0);
 }
 
-void ParticleSystemComponent::ParsefromJson(char* file)
+void ParticleSystemComponent::ParsefromJson(const char* file)
 {
 	FILE* fp; fopen_s(&fp, file, "rb");
 	char readBuffer[65536];

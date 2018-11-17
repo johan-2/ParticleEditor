@@ -34,9 +34,10 @@ private:
 	void UpdateInfoWindow();
 	void UpdateKeyCommands();
 	void UpdateEditorSettingsWindow();
-	void SaveParticle(char* destination);
+	void SaveParticle(const char* destination);
 
-	std::string FindFileFromDirectory(char* filter, char* title);
+	// opens the windows file directory and returns the path to the selected file
+	std::string FindFileFromDirectory(const char* filter, const char* title);
 
 	// helper functions
 	void ShowToolTip(const char* tip);

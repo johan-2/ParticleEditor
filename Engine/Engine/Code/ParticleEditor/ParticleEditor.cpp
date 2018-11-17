@@ -475,11 +475,9 @@ char* ParticleEditor::GetNumEmittersAsString()
 		return "Emitter1\0Emitter2\0Emitter3\0Emitter4\0Emitter5\0Emitter6\0Emitter7";
 	case 8:
 		return "Emitter1\0Emitter2\0Emitter3\0Emitter4\0Emitter5\0Emitter6\0Emitter7\0Emitter8";
-
-	default:
-		return "";
-		break;
 	}
+
+	return "";
 }
 
 void ParticleEditor::ReloadSystem()
@@ -593,52 +591,38 @@ void ParticleEditor::UpdateEditorSettingsWindow()
 			// get cache to component
 			_systemParticleComponent = _particleEntity->GetComponent<ParticleSystemComponent>();
 
+			// clear old settings
 			_particleSettings.clear();
 			_blendEnum.clear();
 
+			// get how many emitters the new system have
 			_numEmitters = _systemParticleComponent->GetNumEmitters();
 
+			// add the settings and blendstates for all emitters in this system
 			for (int i = 0; i < _numEmitters; i++)
 			{
 				_particleSettings.emplace_back(_systemParticleComponent->GetSettings(i));
 				_blendEnum.emplace_back(_systemParticleComponent->GetBlendState(i) - 1);
 			}
+
+			// always start with the first emitter in new system
 			_currentEmitterIndex = 0;
 		}		
 	}
 
+	// saves the system to a .json file
 	if (ImGui::Button("Save To file"))
 	{
-		char filename[MAX_PATH];
-		ZeroMemory(&filename, sizeof(filename));
-		char oldDir[MAX_PATH];
-		ZeroMemory(&oldDir, sizeof(oldDir));
-
-		OPENFILENAME ofn;
-		ZeroMemory(&ofn, sizeof(ofn));
-		ofn.lStructSize = sizeof(ofn);
-		ofn.hwndOwner = NULL;
-		ofn.lpstrFilter = ".json\0*.json";
-		ofn.lpstrFile = filename;
-		ofn.nMaxFile = MAX_PATH;
-		ofn.lpstrTitle = "save particle as .json";
-		ofn.Flags = 0;
-		ofn.lpstrDefExt = ".json";
-
-		GetCurrentDirectory(MAX_PATH, oldDir); // we have to save the current directory before we open the openfile directory so we can set it back efter we have selected a file
-											   // it will permanantly change our base directory making searches from $SolutionDir/ not work anymore if we not		
-		if (GetSaveFileName(&ofn))
-		{
-			SetCurrentDirectory(oldDir); // set back to old directory
-			SaveParticle(filename);
-		}
-		ReloadSystem();
+		std::string file = FindFileFromDirectory(".json\0*.json", "save particle as .json");
+		
+		if (file != "")		
+			SaveParticle(file.c_str());		
 	}
 
 	ImGui::End();
 }
 
-void ParticleEditor::SaveParticle(char* destination)
+void ParticleEditor::SaveParticle(const char* destination)
 {
 	// CODE FOR OUTPUTING ALL VALUES
 	rapidjson::StringBuffer sb;
@@ -866,7 +850,7 @@ void ParticleEditor::SaveParticle(char* destination)
 	of.close();
 }
 
-std::string ParticleEditor::FindFileFromDirectory(char* filter, char* title)
+std::string ParticleEditor::FindFileFromDirectory(const char* filter, const char* title)
 {
 	// create memory for the path to the texture file we select
 	char filename[MAX_PATH];
@@ -886,6 +870,7 @@ std::string ParticleEditor::FindFileFromDirectory(char* filter, char* title)
 	ofn.nMaxFile = MAX_PATH;
 	ofn.lpstrTitle = title;
 	ofn.Flags = 0;
+	ofn.lpstrDefExt = ".json";
 
 	// we have to save the current directory before we open the openfile directory so we can set it back efter we have selected a file
 	// it will permanantly change our base directory making searches from $SolutionDir/ not work anymore if we not
