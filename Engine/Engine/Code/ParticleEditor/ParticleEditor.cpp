@@ -582,33 +582,13 @@ void ParticleEditor::UpdateEditorSettingsWindow()
 	ImGui::Spacing();
 	if (ImGui::Button("Load Particle from file"))
 	{
-		// create memory for file directory path
-		char filename[MAX_PATH];
-		ZeroMemory(&filename, sizeof(filename));
+		std::string fileName = FindFileFromDirectory(".json\0*.json", "Select particle .json file");
 
-		// create memory for old directory path
-		char oldDir[MAX_PATH];
-		ZeroMemory(&oldDir, sizeof(oldDir));
-
-		OPENFILENAME ofn;
-		ZeroMemory(&ofn, sizeof(ofn));
-		ofn.lStructSize = sizeof(ofn);
-		ofn.hwndOwner = NULL;
-		ofn.lpstrFilter = ".json\0*.json";
-		ofn.lpstrFile = filename;
-		ofn.nMaxFile = MAX_PATH;
-		ofn.lpstrTitle = "Select particle JsonFile";
-		ofn.Flags = 0;
-
-		GetCurrentDirectory(MAX_PATH, oldDir); // we have to save the current directory before we open the openfile directory so we can set it back efter we have selected a file
-											   // it will permanantly change our base directory making searches from $SolutionDir/ not work anymore if we not
-		if (GetOpenFileName(&ofn))
+		if (fileName != "")
 		{
-			SetCurrentDirectory(oldDir); // set back to old directory
-
 			// remove old particle component and create a new one with the updated settings
 			_particleEntity->RemoveComponent(_systemParticleComponent);
-			_particleEntity->AddComponent<ParticleSystemComponent>()->Init(_particleSettings);
+			_particleEntity->AddComponent<ParticleSystemComponent>()->Init(fileName.c_str());
 
 			// get cache to component
 			_systemParticleComponent = _particleEntity->GetComponent<ParticleSystemComponent>();
@@ -624,8 +604,7 @@ void ParticleEditor::UpdateEditorSettingsWindow()
 				_blendEnum.emplace_back(_systemParticleComponent->GetBlendState(i) - 1);
 			}
 			_currentEmitterIndex = 0;
-		}
-		ReloadSystem();
+		}		
 	}
 
 	if (ImGui::Button("Save To file"))

@@ -23,7 +23,7 @@ private:
 		bool renderSkybox             = true;
 		bool emitterAsWireFrame       = true;
 		int  moveState                = 0;
-		bool showGrid                 = false;
+		bool showGrid                 = true;
 		XMFLOAT3 systemRotationAmount = XMFLOAT3(0, 0, 0);
 		XMFLOAT3 systemPosition       = XMFLOAT3(0, 0, 0);
 		XMFLOAT3 systemRotation       = XMFLOAT3(0, 0, 0);
