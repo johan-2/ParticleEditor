@@ -503,12 +503,13 @@ void ParticleEditor::ReloadSystem()
 
 void ParticleEditor::UpdateEditorSettingsWindow()
 {
-	bool m = true;
+	// start the window open
+	bool startOpen = true;
 
 	// editor settings window
 	ImGui::SetNextWindowSize(ImVec2(SCREEN_WIDTH * 0.20f, SCREEN_HEIGHT * 0.5f));
 	ImGui::SetNextWindowPos(ImVec2(SCREEN_WIDTH * 0.99f, SCREEN_HEIGHT * 0.01f), 0, ImVec2(1, 0));
-	ImGui::Begin("Editor Settings", &m, ImGuiWindowFlags_HorizontalScrollbar);
+	ImGui::Begin("Editor Settings", &startOpen, ImGuiWindowFlags_HorizontalScrollbar);
 
 	bool mk;
 	// skybox
@@ -523,12 +524,16 @@ void ParticleEditor::UpdateEditorSettingsWindow()
 		// if a file was selected change the texture
 		if (name != "")
 		{
-			Systems::renderer->GetSkybox()->LoadCubemap(name);
+			// conert to wide string (only supports asciII characters)
+			std::wstring wName(name.begin(), name.end());
+
+			// set the new cubemap
+			Systems::renderer->GetSkybox()->LoadCubemap(wName.c_str());
 		}
 	}
 
 	// clear color
-	if (ImGui::ColorButton("color", ImVec4(_clearColor[0], _clearColor[0], _clearColor[0], _clearColor[0])))
+	if (ImGui::ColorButton("color", ImVec4(_clearColor[0], _clearColor[1], _clearColor[2], _clearColor[3])))
 		ImGui::OpenPopup("picker");
 
 	ImGui::SameLine();
