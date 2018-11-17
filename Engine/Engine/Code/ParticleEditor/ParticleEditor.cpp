@@ -19,6 +19,7 @@
 #include "FreeMoveComponent.h"
 #include <string>
 #include "Systems.h"
+#include "SkyBox.h"
 
 ParticleEditor::ParticleEditor(Input& input, FreeMoveComponent* moveComponent) :
 	_input(input),
@@ -522,7 +523,7 @@ void ParticleEditor::UpdateEditorSettingsWindow()
 		// if a file was selected change the texture
 		if (name != "")
 		{
-			//Systems::renderer->
+			Systems::renderer->GetSkybox()->LoadCubemap(name);
 		}
 	}
 
@@ -562,7 +563,8 @@ void ParticleEditor::UpdateEditorSettingsWindow()
 	// reset emitter transform
 	if (ImGui::Button("Reset Transform"))
 	{
-			
+		_systemTransformComponent->SetPosition(XMFLOAT3(0, 0, 0));
+		_systemTransformComponent->SetRotation(XMFLOAT3(0, 0, 0));
 	}
 
 	ImGui::Spacing();
