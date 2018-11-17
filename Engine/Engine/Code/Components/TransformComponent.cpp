@@ -21,33 +21,18 @@ void TransformComponent::Init(XMFLOAT3 position, XMFLOAT3 rotation, XMFLOAT3 sca
 // add value to position
 void TransformComponent::AddTranslation(XMFLOAT3& amount)
 {
-	XMFLOAT3 zeroVector(0, 0, 0);
-
-	if (XMVector3Equal(XMLoadFloat3(&amount), XMLoadFloat3(&zeroVector)))
-		return;
-
 	XMStoreFloat3(&_position, XMVectorAdd(XMLoadFloat3(&amount), XMLoadFloat3(&_position)));
 }
 
 // add value to rotation
 void TransformComponent::AddRotation(XMFLOAT3& amount)
 {
-	XMFLOAT3 zeroVector(0, 0, 0);
-
-	if (XMVector3Equal(XMLoadFloat3(&amount), XMLoadFloat3(&zeroVector)))
-		return;
-
 	XMStoreFloat3(&_rotation, XMVectorAdd(XMLoadFloat3(&amount), XMLoadFloat3(&_rotation)));
 }
 
 // add value to scale
 void TransformComponent::AddScale(XMFLOAT3& amount)
 {
-	XMFLOAT3 zeroVector(0, 0, 0);
-
-	if (XMVector3Equal(XMLoadFloat3(&amount), XMLoadFloat3(&zeroVector)))
-		return;
-
 	XMStoreFloat3(&_scale, XMVectorAdd(XMLoadFloat3(&amount), XMLoadFloat3(&_scale)));
 }
 

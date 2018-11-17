@@ -46,6 +46,8 @@ public:
 	void RemoveQuadFromRenderer(QuadComponent* quad)                        { VECTOR_HELPERS::RemoveItemFromVector(_quads, quad); }
 	void RemoveParticleSystemFromRenderer(ParticleSystemComponent* emitter) { VECTOR_HELPERS::RemoveItemFromVector(_particleSystems, emitter); }
 	
+	SkyBox* GetSkybox() { return _skyBox; }
+
 	// initialize everything
 	void Initailize();
 	
