@@ -91,6 +91,12 @@ void ModelComponent::InitGrid(unsigned int size, float cellSize, Color32 gridCol
 	// create mesh and buffers	
 	mesh->CreateBuffers(vertices, indices, 4 * (size * size), 6 * (size * size));
 
+	// add mesh to meshes list of this model
+	_meshes.push_back(mesh);
+
+	// only one mesh in grid
+	_numMeshes = 1;
+
 	// Release the arrays now that the vertex and index buffers have been created and loaded.
 	delete[] vertices;
 	delete[] indices;
@@ -345,6 +351,9 @@ void ModelComponent::Update(const float& delta)
 
 void ModelComponent::SetActive(bool active) 
 {
+	if (active == _isActive)
+		return;
+
 	IComponent::SetActive(active);
 	
 	// remove/add meshes to renderer
