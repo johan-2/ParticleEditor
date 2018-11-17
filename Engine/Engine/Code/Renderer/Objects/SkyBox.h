@@ -7,11 +7,11 @@ using namespace DirectX;
 class SkyBox
 {
 public:
-	SkyBox(wchar_t* textureFile);
+	SkyBox(const wchar_t* textureFile);
 	~SkyBox();
 	
 	// load cubemap
-	void LoadCubemap(wchar_t* file);
+	void LoadCubemap(const wchar_t* file);
 
 	// upload buffers and render
 	void Render();

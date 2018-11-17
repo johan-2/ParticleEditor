@@ -14,7 +14,7 @@ namespace DX_ERROR
 	}
 
 	// convert from wide string to string
-	static std::string ConvertFromWString(wchar_t* wide)
+	static std::string ConvertFromWString(const wchar_t* wide)
 	{
 		_bstr_t conversion (wide);
 		const char * text = conversion;

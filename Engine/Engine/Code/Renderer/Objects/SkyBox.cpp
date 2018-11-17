@@ -10,7 +10,7 @@
 #include "DXDepthStencilStates.h"
 #include "Systems.h"
 
-SkyBox::SkyBox(wchar_t* textureFile)
+SkyBox::SkyBox(const wchar_t* textureFile)
 {
 	// create mesh and cubemap
 	CreateBox();
@@ -240,7 +240,7 @@ void SkyBox::CreateBox()
 		DX_ERROR::PrintError(result,"failed to create index buffer in skybox.cpp");
 }
 
-void SkyBox::LoadCubemap(wchar_t* file) 
+void SkyBox::LoadCubemap(const wchar_t* file) 
 {
 	// remove the old cubemap texture if one exist
 	if (_texture != nullptr)
