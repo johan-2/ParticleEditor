@@ -2,6 +2,8 @@
 #include <vector>
 #include "ParticleSystemComponent.h"
 #include "Input.h"
+#include "Time.h"
+#include "Renderer.h"
 
 class Entity;
 class TransformComponent;
@@ -11,13 +13,14 @@ class ModelComponent;
 class ParticleEditor
 {
 public:
-	ParticleEditor(Input& input, FreeMoveComponent* moveComponent);
+	ParticleEditor(Input& input, FreeMoveComponent* moveComponent, Renderer& renderer, Time& time);
 	~ParticleEditor();
 
 	void Update();
 
 private:
 
+	// store misc editor settings we need to keep track of here
 	struct EditorSettings
 	{
 		bool   renderSkybox           = true;
@@ -78,10 +81,12 @@ private:
 	// states for certain settings
 	EditorSettings _miscSettings;
 
-	// instance to input system
-	Input& _input;
+	// dependencies
+	Input&    _input;
+	Renderer& _renderer;
+	Time&     _time;
 
+	// clear color skybox is disabled
 	float _clearColor[4];
-
 };
 

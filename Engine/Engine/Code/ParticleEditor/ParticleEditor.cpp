@@ -18,15 +18,19 @@
 #include "SystemDefs.h"
 #include "FreeMoveComponent.h"
 #include <string>
-#include "Systems.h"
 #include "SkyBox.h"
 
-ParticleEditor::ParticleEditor(Input& input, FreeMoveComponent* moveComponent) :
+ParticleEditor::ParticleEditor(Input& input, FreeMoveComponent* moveComponent, Renderer& renderer, Time& time) :
 	_input(input),
 	_cameraFreeMoveComponent(moveComponent),
 	_cameraMoveToggle(false),
-	_systemUpdateToggle(true)
+	_systemUpdateToggle(true),
+	_renderer(renderer),
+	_time(time)
 {
+	// set start skybox
+	_renderer.GetSkybox()->LoadCubemap(L"Skyboxes/FullMoon.dds");
+
 	// create a grid
 	_grid = new Entity();
 	_grid->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0, 0));
@@ -103,7 +107,7 @@ void ParticleEditor::UpdateParticleSettingsWindow()
 	bool open = true;
 
 	// set properties of this GUI window
-	ImGui::SetNextWindowSize(ImVec2(SCREEN_WIDTH * 0.21f, SCREEN_HEIGHT * 0.8f));
+	ImGui::SetNextWindowSize(ImVec2(SCREEN_WIDTH * 0.21f, SCREEN_HEIGHT * 0.81f));
 	ImGui::SetNextWindowPos(ImVec2(SCREEN_WIDTH * 0.01f, SCREEN_HEIGHT * 0.01f), 0, ImVec2(0, 0));
 	ImGui::Begin("Particle Settings", &open, ImGuiWindowFlags_HorizontalScrollbar);
 
@@ -513,7 +517,7 @@ void ParticleEditor::UpdateEditorSettingsWindow()
 
 	// render skybox
 	ImGui::Checkbox("Render Skybox", &_miscSettings.renderSkybox);
-	Systems::renderer->GetSkybox()->setActive(_miscSettings.renderSkybox);
+	_renderer.GetSkybox()->setActive(_miscSettings.renderSkybox);
 
 	// load skybox .dds cubemap
 	if (ImGui::Button("Load Skybox"))
@@ -528,7 +532,7 @@ void ParticleEditor::UpdateEditorSettingsWindow()
 			std::wstring wName(name.begin(), name.end());
 
 			// set the new cubemap
-			Systems::renderer->GetSkybox()->LoadCubemap(wName.c_str());
+			_renderer.GetSkybox()->LoadCubemap(wName.c_str());
 		}
 	}
 
@@ -547,7 +551,7 @@ void ParticleEditor::UpdateEditorSettingsWindow()
 		ImGui::EndPopup();
 
 		// set clear color
-		Systems::renderer->SetClearColor(_clearColor[0], _clearColor[1], _clearColor[2], _clearColor[3]);
+		_renderer.SetClearColor(_clearColor[0], _clearColor[1], _clearColor[2], _clearColor[3]);
 	}
 
 	// emitter rendermode
@@ -569,6 +573,11 @@ void ParticleEditor::UpdateEditorSettingsWindow()
 	// emitter translation
 	ImGui::PushItemWidth(SCREEN_WIDTH * 0.09f);
 	ImGui::Combo("Emitter Translation", &_miscSettings.moveState, "IDLE\0BACK_FORTH\0UP_DOWN");
+	ImGui::PopItemWidth();
+
+	// emitter translation speed
+	ImGui::PushItemWidth(SCREEN_WIDTH * 0.09f);
+	ImGui::InputFloat("Emitter Translation Speed", &_miscSettings.moveSpeed, 0, 0, 2);
 	ImGui::PopItemWidth();
 
 	// reset emitter transform
@@ -625,21 +634,26 @@ void ParticleEditor::UpdateEditorSettingsWindow()
 
 void ParticleEditor::SaveParticle(const char* destination)
 {
-	// CODE FOR OUTPUTING ALL VALUES
+	// create string buffer and json writer
 	rapidjson::StringBuffer sb;
 	rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(sb);
 
+	// start the write
 	writer.StartObject();
 
+	// write how many emitters this system have
 	writer.Key("numEmitters");
 	writer.Int(_numEmitters);
 
+	// will put in the key for each particle property and append the emitter index
 	std::string key = "";
 
 	for (int i = 0; i < _numEmitters; i++)
 	{
+		// get emitter index as string
 		std::string index = std::to_string(i);
 
+		// write all values to file
 		key = "numParticles";
 		key.append(index.c_str());
 		writer.Key(key.c_str());
@@ -842,9 +856,12 @@ void ParticleEditor::SaveParticle(const char* destination)
 		writer.Double(_particleSettings[i].inheritVelocityScale.z);
 		writer.EndArray();
 	}
-
+	 
+	// end object
 	writer.EndObject();
 
+	// create output file stream and write
+	// out the json stringBuilder object to the file
 	std::ofstream of(destination);
 	of << sb.GetString();
 
@@ -890,7 +907,7 @@ std::string ParticleEditor::FindFileFromDirectory(const char* filter, const char
 
 void ParticleEditor::UpdateEntityMovement()
 {
-	const float& delta = Systems::time->GetDeltaTime();
+	const float& delta = _time.GetDeltaTime();
 
 	// add to sin wave
 	float sinV = sin(_miscSettings.sinCounter += delta * _miscSettings.moveSpeed);
@@ -919,5 +936,6 @@ void ParticleEditor::UpdateEntityMovement()
 	_systemTransformComponent->SetRotation(_miscSettings.systemRotation);
 	_systemTransformComponent->SetPosition(_miscSettings.systemPosition);
 
+	// build new world matrix
 	_systemTransformComponent->UpdateWorldMatrix();
 }
