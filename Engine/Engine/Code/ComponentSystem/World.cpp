@@ -36,8 +36,6 @@ void World::Update()
 // removes and deletes a component from the active component list
 void World::DeleteComponent(COMPONENT_TYPE type, IComponent* component)
 {
-	unsigned int size = _components[type].size();
-
 	VECTOR_HELPERS::RemoveItemFromVector(_components[type], component);
 	delete component;
 }
@@ -45,8 +43,6 @@ void World::DeleteComponent(COMPONENT_TYPE type, IComponent* component)
 // removes and deletes an entity from the active entity list
 void World::DeleteEntity(Entity* entity)
 {
-	unsigned int size = _entities.size();
-
 	VECTOR_HELPERS::RemoveItemFromVector(_entities, entity);
 	delete entity;	
 }
