@@ -3,6 +3,7 @@
 #include <iostream>
 #include "GuiManager.h"
 #include "Systems.h"
+#include "DXErrorHandler.h"
 
 DXInputLayouts::DXInputLayouts()
 {
@@ -31,7 +32,7 @@ void DXInputLayouts::CreateInputLayout3D(ID3D10Blob*& vertexShaderByteCode)
 	HRESULT result;
 	result = device->CreateInputLayout(inputLayout3D, 6, vertexShaderByteCode->GetBufferPointer(), vertexShaderByteCode->GetBufferSize(), &_inputLayout3D);
 	if (FAILED(result))
-		printf("failed to create Inputlayout\n");
+		DX_ERROR::PrintError(result, "failed to create input layout 3D");
 }
 
 void DXInputLayouts::CreateInputLayout2D(ID3D10Blob*& vertexShaderByteCode)
@@ -49,7 +50,7 @@ void DXInputLayouts::CreateInputLayout2D(ID3D10Blob*& vertexShaderByteCode)
 	HRESULT result;
 	result = device->CreateInputLayout(inputLayout2D, 2, vertexShaderByteCode->GetBufferPointer(), vertexShaderByteCode->GetBufferSize(), &_inputLayout2D);
 	if (FAILED(result))
-		printf("failed to create Inputlayout\n");
+		DX_ERROR::PrintError(result, "failed to create input layout 2D");
 }
 
 void DXInputLayouts::CreateInputLayoutParticle(ID3D10Blob*& vertexShaderByteCode)
@@ -73,7 +74,7 @@ void DXInputLayouts::CreateInputLayoutParticle(ID3D10Blob*& vertexShaderByteCode
 	HRESULT result;
 	result = device->CreateInputLayout(inputLayoutParticle, 8, vertexShaderByteCode->GetBufferPointer(), vertexShaderByteCode->GetBufferSize(), &_inputLayoutParticle);
 	if (FAILED(result))
-		printf("failed to create Inputlayout\n");
+		DX_ERROR::PrintError(result, "failed to create input layout particle");
 }
 
 void DXInputLayouts::CreateInputLayoutGUI(ID3D10Blob*& vertexShaderByteCode)
@@ -92,7 +93,7 @@ void DXInputLayouts::CreateInputLayoutGUI(ID3D10Blob*& vertexShaderByteCode)
 	HRESULT result;
 	result = device->CreateInputLayout(inputLayoutGui, 3, vertexShaderByteCode->GetBufferPointer(), vertexShaderByteCode->GetBufferSize(), &_inputLayoutGUI);
 	if (FAILED(result))
-		printf("failed to create Inputlayout\n");
+		DX_ERROR::PrintError(result, "failed to create input layout GUI");
 }
 
 void DXInputLayouts::SetInputLayout(INPUT_LAYOUT_TYPE type)

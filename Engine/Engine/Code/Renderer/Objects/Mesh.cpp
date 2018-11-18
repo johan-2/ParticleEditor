@@ -3,7 +3,7 @@
 #include "Renderer.h"
 #include "TexturePool.h"
 #include "Systems.h"
-
+#include "DXErrorhandler.h"
 
 Mesh::Mesh(Entity* parent, unsigned int FLAGS, wchar_t* diffuseMap, wchar_t* normalMap, wchar_t* specularMap ) :
 	_uvOffset(XMFLOAT2(0,0))
@@ -77,11 +77,11 @@ void Mesh::CreateBuffers(VertexData* verticesData, unsigned long* indicesData, u
 	// create vertex and index buffers
 	result = device->CreateBuffer(&vertexBufferDesc, &vertexData, &_vertexBuffer);
 	if (FAILED(result))
-		printf("failed to create vertexbuffer for cube\n");
+		DX_ERROR::PrintError(result, "failed to create vertex buffer for mesh");
 
 	result = device->CreateBuffer(&indexBufferDesc, &indexData, &_indexBuffer);
 	if (FAILED(result))
-		printf("failed to create indexbuffer for cube\n");
+		DX_ERROR::PrintError(result, "failed to create index buffer for mesh");
 }
 
 void Mesh::UploadBuffers() 

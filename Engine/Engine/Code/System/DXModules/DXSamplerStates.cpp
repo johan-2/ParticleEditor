@@ -1,5 +1,6 @@
 #include "DXSamplerStates.h"
 #include <iostream>
+#include "DXErrorHandler.h"
 
 DXSamplerStates::DXSamplerStates(ID3D11Device* device, ID3D11DeviceContext* devCon):
 	_device(device),
@@ -36,7 +37,7 @@ void DXSamplerStates::CreateSamplerStates()
 
 	result = _device->CreateSamplerState(&samplerDesc, &_sampleStateWrap);
 	if (FAILED(result))
-		printf("failed to create samplestate wrap");
+		DX_ERROR::PrintError(result, "failed to create sampler state wrap");
 
 	// create sampler state clamp
 	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
@@ -45,7 +46,7 @@ void DXSamplerStates::CreateSamplerStates()
 
 	result = _device->CreateSamplerState(&samplerDesc, &_sampleStateClamp);
 	if (FAILED(result))
-		printf("failed to create samplestate clamp");
+		DX_ERROR::PrintError(result, "failed to create sampler state clamp");
 
 	// set these samplers to be used in the pixelshaders
 	ID3D11SamplerState* samplers[2]{ _sampleStateWrap, _sampleStateClamp };

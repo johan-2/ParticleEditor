@@ -2,6 +2,7 @@
 #include "DXManager.h"
 #include <iostream>
 #include "Systems.h"
+#include "DXErrorHandler.h"
 
 RenderToTexture::RenderToTexture(unsigned int width, unsigned int height, bool depthOnly) 	
 {
@@ -48,16 +49,16 @@ RenderToTexture::RenderToTexture(unsigned int width, unsigned int height, bool d
 		// create the depth texture using the description
 		result = device->CreateTexture2D(&depthStencilTexDesc, NULL, &depthTex2D);
 		if (FAILED(result))
-			printf("Failed to create texture2D in rendertexture\n");
+			DX_ERROR::PrintError(result, "failed to create Texture2D in render texture");
 
 		// create depthstencilview
 		result = device->CreateDepthStencilView(depthTex2D, &depthStencilViewDesc, &_depthStencilView);
 		if (FAILED(result))
-			printf("failed to create depthstencilview in rendertexture\n");
+			DX_ERROR::PrintError(result, "failed to create depth stencil in render texture");
 
 		result = device->CreateShaderResourceView(depthTex2D, &resourceViewDesc, &_shaderResoureView);
 		if (FAILED(result))
-			printf("failed to create shaderResourceView in rendertexture\n");
+			DX_ERROR::PrintError(result, "failed to create SRV in render texture");
 
 		_viewport.Width = (float)width;
 		_viewport.Height = (float)height;
@@ -127,25 +128,25 @@ RenderToTexture::RenderToTexture(unsigned int width, unsigned int height, bool d
 
 		result = device->CreateTexture2D(&RenderTargetTexDesc, NULL, &renderTex2D);
 		if (FAILED(result))
-			printf("failed to create rendertexture2d in render to texture\n");
+			DX_ERROR::PrintError(result, "failed to create Texture2D for depth in render texture");
 
 		// create the depth texture using the description
 		result = device->CreateTexture2D(&depthStencilTexDesc, NULL, &depthTex2D);
 		if (FAILED(result))
-			printf("Failed to create depthtexture2D in rendertexture\n");
+			DX_ERROR::PrintError(result, "failed to create Texture2D for render target in render texture");
 
 		result = device->CreateRenderTargetView(renderTex2D, &renderTargetViewDesc, &_renderTargetView);
 		if (FAILED(result))
-			printf("failed to create rendertargetview in render to texture\n");
+			DX_ERROR::PrintError(result, "failed to create render target in render texture");
 
 		// create depthstencilview
 		result = device->CreateDepthStencilView(depthTex2D, &depthStencilViewDesc, &_depthStencilView);
 		if (FAILED(result))
-			printf("failed to create depthstencilview in rendertexture\n");
+			DX_ERROR::PrintError(result, "failed to create depth stencil in render texture");
 
 		result = device->CreateShaderResourceView(renderTex2D, &resourceViewDesc, &_shaderResoureView);
 		if (FAILED(result))
-			printf("failed to create shaderResourceView in rendertexture\n");
+			DX_ERROR::PrintError(result, "failed to create SRV in render texture");
 
 		_viewport.Width = (float)width;
 		_viewport.Height = (float)height;

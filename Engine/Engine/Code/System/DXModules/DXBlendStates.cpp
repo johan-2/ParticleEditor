@@ -1,5 +1,6 @@
 #include "DXBlendStates.h"
 #include <iostream>
+#include "DXErrorHandler.h"
 
 DXBlendStates::DXBlendStates(ID3D11Device* device, ID3D11DeviceContext* devCon) :
 	_device(device),
@@ -35,13 +36,13 @@ void DXBlendStates::CreateBlendStates()
 	blendStateDesc.RenderTarget[0].RenderTargetWriteMask = 0x0f;
 	result = _device->CreateBlendState(&blendStateDesc, &_blendStateAlpha);
 	if (FAILED(result))
-		printf("Failed to create blend state alpha");
+		DX_ERROR::PrintError(result, "failed to create blend state");
 		
 	// opaque blending
 	blendStateDesc.RenderTarget[0].BlendEnable = false;
 	result = _device->CreateBlendState(&blendStateDesc, &_blendStateOpaque);
 	if (FAILED(result))
-		printf("Failed to create blend state opaque");
+		DX_ERROR::PrintError(result, "failed to create blend state");
 
 	//additive blending
 	blendStateDesc.RenderTarget[0].BlendEnable = true;
@@ -53,7 +54,7 @@ void DXBlendStates::CreateBlendStates()
 	blendStateDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
 	result = _device->CreateBlendState(&blendStateDesc, &_blendStateAdditive);
 	if (FAILED(result))
-		printf("Failed to create blend state additive");
+		DX_ERROR::PrintError(result, "failed to create blend state");
 
 	// subtractive blending
 	blendStateDesc.RenderTarget[0].BlendEnable = true;
@@ -65,7 +66,7 @@ void DXBlendStates::CreateBlendStates()
 	blendStateDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
 	result = _device->CreateBlendState(&blendStateDesc, &_blendStateSubtractive);
 	if (FAILED(result))
-		printf("Failed to create blend state subtractive");
+		DX_ERROR::PrintError(result, "failed to create blend state");
 }
 
 // set blend state

@@ -13,10 +13,10 @@ public:
 	LightDirectionComponent();
 	~LightDirectionComponent();
 
-	void Init(XMFLOAT4 lightColor, XMFLOAT4 specularColor, float specularPower);
+	void Init(XMFLOAT4 lightColor, XMFLOAT4 specularColor, float specularPower, TransformComponent* transformOverride = nullptr);
 	
 	// get the look direction of this light
-	XMFLOAT3 GetLightDirection() { return _transform->GetForward(); }
+	XMFLOAT3 GetLightDirection();
 
 	// get light properties
 	const XMFLOAT4& GetLightColor()    { return _lightColor; }
@@ -34,6 +34,9 @@ private:
 
 	// pointer to transform
 	TransformComponent* _transform;
+
+	// pointer to transform to overide light direction
+	TransformComponent* _overrideTransform;
 
 	// light properties
 	XMFLOAT3 _lightDir;

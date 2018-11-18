@@ -38,10 +38,12 @@ void TransformComponent::AddScale(XMFLOAT3& amount)
 
 // calculate all matrices for position, scale, rotation and mutliply them all together
 void TransformComponent::UpdateWorldMatrix() 
-{		
+{	
+	XMFLOAT3 rotRadian(XMConvertToRadians(_rotation.x), XMConvertToRadians(_rotation.y), XMConvertToRadians(_rotation.z));
+
 	XMStoreFloat4x4(&_positionMatrix, XMMatrixTranslationFromVector(XMLoadFloat3(&_position)));
 	XMStoreFloat4x4(&_scaleMatrix,    XMMatrixScalingFromVector(XMLoadFloat3(&_scale)));
-	XMStoreFloat4x4(&_rotationMatrix, XMMatrixRotationRollPitchYaw(XMConvertToRadians(_rotation.x), XMConvertToRadians(_rotation.y), XMConvertToRadians(_rotation.z)));
+	XMStoreFloat4x4(&_rotationMatrix, XMMatrixRotationRollPitchYaw(rotRadian.x, rotRadian.y, rotRadian.z));
 
 	XMStoreFloat4x4(&_worldMatrix, XMMatrixMultiply(XMLoadFloat4x4(&_scaleMatrix), XMLoadFloat4x4(&_rotationMatrix)));
 	XMStoreFloat4x4(&_worldMatrix, XMMatrixMultiply(XMLoadFloat4x4(&_worldMatrix), XMLoadFloat4x4(&_positionMatrix)));

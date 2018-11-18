@@ -39,7 +39,7 @@ void FreeMoveComponent::UpdateMovement(const float& deltaTime)
 	XMFLOAT3 translation(0, 0, 0);
 
 	// get how much we should move
-	float movement = _moveSpeed * deltaTime;
+	float moveAmount = _moveSpeed * deltaTime;
 
 	// get mouse movement
 	float mouseX = input.GetMouseX();
@@ -53,16 +53,21 @@ void FreeMoveComponent::UpdateMovement(const float& deltaTime)
 	if (input.IsKeyHeld(DIK_S)) keyInput.y -= 1.0f;
 	if (input.IsKeyHeld(DIK_W)) keyInput.y += 1.0f;	
 
-	// get normalized move direction based on orientation of transform and keyboard input
-	XMFLOAT3 direction; 
+	// input input and move values to vectors
+	XMFLOAT3 direction(0,0,0); 
+	XMFLOAT3 xInput(keyInput.x, keyInput.x, keyInput.x);
+	XMFLOAT3 yInput(keyInput.y, keyInput.y, keyInput.y);
+	XMFLOAT3 movement(moveAmount, moveAmount, moveAmount);
+
+	// calculate the move direction from input and facing direction
 	XMStoreFloat3(&direction,
 		XMVector3Normalize(
 		XMVectorAdd(
-			XMVectorMultiply(XMLoadFloat3(&right),   XMLoadFloat3(&XMFLOAT3(keyInput.x, keyInput.x, keyInput.x))),
-			XMVectorMultiply(XMLoadFloat3(&forward), XMLoadFloat3(&XMFLOAT3(keyInput.y, keyInput.y, keyInput.y))))));
+			XMVectorMultiply(XMLoadFloat3(&right),   XMLoadFloat3(&xInput)),
+			XMVectorMultiply(XMLoadFloat3(&forward), XMLoadFloat3(&yInput)))));
 	
 	// get translation amount based on direction and how much we should move
-	XMStoreFloat3(&translation, XMVectorMultiply(XMLoadFloat3(&direction), XMLoadFloat3(&XMFLOAT3(movement, movement, movement))));
+	XMStoreFloat3(&translation, XMVectorMultiply(XMLoadFloat3(&direction), XMLoadFloat3(&movement)));
 	
 	// add rotation and translation to transform
 	_transform->AddRotation(XMFLOAT3(mouseY * _rotationSpeed, mouseX * _rotationSpeed, 0));

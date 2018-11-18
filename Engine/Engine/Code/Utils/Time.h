@@ -1,21 +1,23 @@
 #pragma once
-
 #include <Windows.h>
+
 class Time
 {
 public:
 	Time();
 	~Time();
 
+	// update time and handle when window changes
 	void Update();
-	
-	const float& GetDeltaTime() { return _delta; }
-	const int& GetFps() { return _fps; }
-
 	void OnWindowChange();	
+	
+	// get delta and fps
+	const float& GetDeltaTime() { return _delta; }
+	const int&   GetFps()       { return _fps; }
 
 private:
 
+	// calculate delta and fps
 	void CalculateDelta();
 	void CalculateFPS();
 
@@ -24,7 +26,8 @@ private:
 	INT64 _startTimeDelta;
 	float _delta;
 
-	bool _useLastDelta;
+	// save last frames delta
+	bool  _useLastDelta;
 	float _lastDelta;
 
 	// for fps

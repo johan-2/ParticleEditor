@@ -3,6 +3,7 @@
 #include "DXManager.h"
 #include <iostream>
 #include "Systems.h"
+#include "DXErrorHandler.h"
 
 GBuffer::GBuffer()
 {
@@ -85,15 +86,15 @@ void GBuffer::CreateRenderTargets()
 	// position use 16 byte (optimise so we reconstruct position from depth, this whole buffer can then be removed)
 	result = device->CreateTexture2D(&RenderTargetTexDesc, NULL, &tex2D);
 	if (FAILED(result))
-		printf("failed to create position rendertexture2d in GBUFFER \n");
+		DX_ERROR::PrintError(result, "failed to create texture2D for GBuffer position");
 	
 	result = device->CreateRenderTargetView(tex2D, &renderTargetViewDesc, &_renderTargetArray[0]);
 	if (FAILED(result))
-		printf("failed to create position rendertargetview in GBUFFER\n");
+		DX_ERROR::PrintError(result, "failed to create render target view for GBuffer position");
 
 	result = device->CreateShaderResourceView(tex2D, &resourceViewDesc, &_srvArray[0]);
 	if (FAILED(result))
-		printf("failed to create position shaderResourceView in GBUFFER\n");
+		DX_ERROR::PrintError(result, "failed to create SRV for GBuffer position");
 
 	tex2D->Release();
 	
@@ -106,38 +107,37 @@ void GBuffer::CreateRenderTargets()
 	// create the texture and views for normal buffer
 	result = device->CreateTexture2D(&RenderTargetTexDesc, NULL, &tex2D);
 	if (FAILED(result))
-		printf("failed to create normal rendertexture2d in GBUFFER to texture\n");
+		DX_ERROR::PrintError(result, "failed to create texture2D for GBuffer normal");
 	
 	result = device->CreateRenderTargetView(tex2D, &renderTargetViewDesc, &_renderTargetArray[1]);
 	if (FAILED(result))
-		printf("failed to create normal rendertargetview in GBUFFER\n");
+		DX_ERROR::PrintError(result, "failed to create render target view for GBuffer normal");
 
 	result = device->CreateShaderResourceView(tex2D, &resourceViewDesc, &_srvArray[1]);
 	if (FAILED(result))
-		printf("failed to create normal shaderResourceView in GBUFFER\n");
+		DX_ERROR::PrintError(result, "failed to create SRV for GBuffer normal");
 
 	tex2D->Release();
 
-	// update descriptions for the normal views
 	// 4 byte for both diffuse and specular buffers
 	RenderTargetTexDesc.Format  = DXGI_FORMAT_R8G8B8A8_UNORM;
 	renderTargetViewDesc.Format = RenderTargetTexDesc.Format;
 	resourceViewDesc.Format     = RenderTargetTexDesc.Format;
 
-	// create the texture and views for normal and specular buffers
-	for(int i =2; i< 4; i++)
+	// create the texture and views for diffuse and specular buffers
+	for (int i =2; i< 4; i++)
 	{
 		result = device->CreateTexture2D(&RenderTargetTexDesc, NULL, &tex2D);
 		if (FAILED(result))
-			printf("failed to create diffuse/specular rendertexture2d in GBUFFER to texture\n");
+			DX_ERROR::PrintError(result, "failed to create texture2D for diffuse/specualr GBuffer");
 
 		result = device->CreateRenderTargetView(tex2D, &renderTargetViewDesc, &_renderTargetArray[i]);
 		if (FAILED(result))
-			printf("failed to create diffuse/specular rendertargetview in GBUFFER\n");
+			DX_ERROR::PrintError(result, "failed to create render target view for diffuse/specualr GBuffer");
 
 		result = device->CreateShaderResourceView(tex2D, &resourceViewDesc, &_srvArray[i]);
 		if (FAILED(result))
-			printf("failed to create diffuse/specular shaderResourceView in GBUFFER\n");
+			DX_ERROR::PrintError(result, "failed to create SRV for diffuse/specualr GBuffer");
 
 		tex2D->Release();
 	}	

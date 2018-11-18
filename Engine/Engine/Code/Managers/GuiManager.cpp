@@ -4,6 +4,7 @@
 #include "Input.h"
 #include "Time.h"
 #include "Systems.h"
+#include "DXErrorhandler.h"
 
 GuiManager::GuiManager()
 {	
@@ -132,11 +133,11 @@ void GuiManager::CreateBuffers()
 
 	result = device->CreateBuffer(&vertexDesc, NULL, &_vertexBuffer);
 	if (FAILED(result))
-		printf("failed to create vertexbuffer for GUI\n");
+		DX_ERROR::PrintError(result, "failed to create vertex buffer for GUI");
 
 	result = device->CreateBuffer(&indexDesc, NULL, &_indexBuffer);
 	if (FAILED(result))
-		printf("failed to create indexbuffer for GUI\n");			
+		DX_ERROR::PrintError(result, "failed to create index buffer for GUI");
 }
 
 void GuiManager::Update()

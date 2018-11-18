@@ -4,17 +4,15 @@
 
 RotationComponent::RotationComponent() : IComponent(COMPONENT_TYPE::TRANSFORMATION_COMPONENT)
 {
-	
 }
 
 RotationComponent::~RotationComponent()
 {
-
 }
 
 void RotationComponent::Init(XMFLOAT3 rotation, float speedRotation)
 {
-	_rotation = rotation;
+	_rotation      = rotation;
 	_speedRotation = speedRotation;
 	
 	_transform = GetComponent<TransformComponent>();
@@ -22,16 +20,19 @@ void RotationComponent::Init(XMFLOAT3 rotation, float speedRotation)
 
 void RotationComponent::Update(const float& delta)
 {	
-	XMFLOAT3 zeroVector(0, 0, 0);
+	// get rotation amount
+	float rd = _speedRotation * delta;
 
-	if (!XMVector3Equal(XMLoadFloat3(&_rotation), XMLoadFloat3(&zeroVector)))
-	{
-		float rotationAmount = _speedRotation * delta;
-		XMFLOAT3 newRotation(0, 0, 0);
+	// rotation to add
+	XMFLOAT3 newRotation(0, 0, 0);
+	XMFLOAT3 rotationAmount(rd, rd, rd);
 
-		XMStoreFloat3(&newRotation, XMVectorMultiply(XMLoadFloat3(&_rotation), XMLoadFloat3(&XMFLOAT3(rotationAmount, rotationAmount, rotationAmount))));
+	// get amount to add to rotation
+	XMStoreFloat3(&newRotation, 
+		XMVectorMultiply(XMLoadFloat3(&_rotation), XMLoadFloat3(&rotationAmount)));
 
-		_transform->AddRotation(newRotation);
-		_transform->UpdateWorldMatrix();
-	}
+	// add rotation and build world matrix
+	_transform->AddRotation(newRotation);
+	_transform->UpdateWorldMatrix();
+	
 }
