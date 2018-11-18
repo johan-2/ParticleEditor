@@ -1,0 +1,519 @@
+{
+    "numEmitters": 6,
+    "numParticles0": 1000,
+    "texture0": "fireember.dds",
+    "startSize0": [
+        1.5,
+        1.5
+    ],
+    "direction0": [
+        0.0,
+        1.0,
+        0.0
+    ],
+    "minMaxSpeed0": [
+        9.0,
+        10.0
+    ],
+    "gravity0": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "drag0": 1.4901161193847657e-8,
+    "velocitySpread0": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "emitterLifetime0": 0.0,
+    "particleLifetime0": 10.0,
+    "spawnRadius0": 1.4901161193847657e-8,
+    "burst0": false,
+    "followEmitter0": false,
+    "startColorMultiplierRGBMin0": [
+        1.0,
+        1.0,
+        1.0
+    ],
+    "startColorMultiplierRGBMax0": [
+        1.0,
+        1.0,
+        1.0
+    ],
+    "endColorMultiplierRGBMin0": [
+        0.0,
+        0.0,
+        5.0
+    ],
+    "endColorMultiplierRGBMax0": [
+        0.0,
+        10.0,
+        5.0
+    ],
+    "startAlpha0": 1.0,
+    "endAlpha0": 0.0,
+    "BLEND0": 2,
+    "spawnOffset0": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "localSpace0": true,
+    "startScaleMinMax0": [
+        2.0,
+        2.0
+    ],
+    "endScaleMinMax0": [
+        5.0,
+        5.0
+    ],
+    "rotationByVelocity0": false,
+    "rotationPerSecMinMax0": [
+        -150.0,
+        150.0
+    ],
+    "uvScrollXMinMax0": [
+        0.0,
+        0.0
+    ],
+    "uvScrollYMinMax0": [
+        0.0,
+        0.0
+    ],
+    "inheritVelocityScale0": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "numParticles1": 1000,
+    "texture1": "fireember.dds",
+    "startSize1": [
+        1.5,
+        1.5
+    ],
+    "direction1": [
+        0.0,
+        -1.0,
+        0.0
+    ],
+    "minMaxSpeed1": [
+        9.0,
+        10.0
+    ],
+    "gravity1": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "drag1": 1.4901161193847657e-8,
+    "velocitySpread1": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "emitterLifetime1": 0.0,
+    "particleLifetime1": 10.0,
+    "spawnRadius1": 1.4901161193847657e-8,
+    "burst1": false,
+    "followEmitter1": false,
+    "startColorMultiplierRGBMin1": [
+        1.0,
+        1.0,
+        1.0
+    ],
+    "startColorMultiplierRGBMax1": [
+        1.0,
+        1.0,
+        1.0
+    ],
+    "endColorMultiplierRGBMin1": [
+        0.0,
+        10.0,
+        5.0
+    ],
+    "endColorMultiplierRGBMax1": [
+        0.0,
+        10.0,
+        5.0
+    ],
+    "startAlpha1": 1.0,
+    "endAlpha1": 0.0,
+    "BLEND1": 2,
+    "spawnOffset1": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "localSpace1": true,
+    "startScaleMinMax1": [
+        2.0,
+        2.0
+    ],
+    "endScaleMinMax1": [
+        5.0,
+        5.0
+    ],
+    "rotationByVelocity1": false,
+    "rotationPerSecMinMax1": [
+        -150.0,
+        150.0
+    ],
+    "uvScrollXMinMax1": [
+        0.0,
+        0.0
+    ],
+    "uvScrollYMinMax1": [
+        0.0,
+        0.0
+    ],
+    "inheritVelocityScale1": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "numParticles2": 1000,
+    "texture2": "fireember.dds",
+    "startSize2": [
+        1.5,
+        1.5
+    ],
+    "direction2": [
+        1.0,
+        0.0,
+        0.0
+    ],
+    "minMaxSpeed2": [
+        9.0,
+        10.0
+    ],
+    "gravity2": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "drag2": 1.4901161193847657e-8,
+    "velocitySpread2": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "emitterLifetime2": 0.0,
+    "particleLifetime2": 10.0,
+    "spawnRadius2": 1.4901161193847657e-8,
+    "burst2": false,
+    "followEmitter2": false,
+    "startColorMultiplierRGBMin2": [
+        1.0,
+        1.0,
+        1.0
+    ],
+    "startColorMultiplierRGBMax2": [
+        1.0,
+        1.0,
+        1.0
+    ],
+    "endColorMultiplierRGBMin2": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "endColorMultiplierRGBMax2": [
+        0.0,
+        10.0,
+        5.0
+    ],
+    "startAlpha2": 1.0,
+    "endAlpha2": 0.0,
+    "BLEND2": 2,
+    "spawnOffset2": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "localSpace2": true,
+    "startScaleMinMax2": [
+        2.0,
+        2.0
+    ],
+    "endScaleMinMax2": [
+        5.0,
+        5.0
+    ],
+    "rotationByVelocity2": false,
+    "rotationPerSecMinMax2": [
+        -150.0,
+        150.0
+    ],
+    "uvScrollXMinMax2": [
+        0.0,
+        0.0
+    ],
+    "uvScrollYMinMax2": [
+        0.0,
+        0.0
+    ],
+    "inheritVelocityScale2": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "numParticles3": 1000,
+    "texture3": "fireember.dds",
+    "startSize3": [
+        1.5,
+        1.5
+    ],
+    "direction3": [
+        -1.0,
+        0.0,
+        0.0
+    ],
+    "minMaxSpeed3": [
+        9.0,
+        10.0
+    ],
+    "gravity3": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "drag3": 1.4901161193847657e-8,
+    "velocitySpread3": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "emitterLifetime3": 0.0,
+    "particleLifetime3": 10.0,
+    "spawnRadius3": 1.4901161193847657e-8,
+    "burst3": false,
+    "followEmitter3": false,
+    "startColorMultiplierRGBMin3": [
+        1.0,
+        1.0,
+        1.0
+    ],
+    "startColorMultiplierRGBMax3": [
+        1.0,
+        1.0,
+        1.0
+    ],
+    "endColorMultiplierRGBMin3": [
+        0.0,
+        10.0,
+        5.0
+    ],
+    "endColorMultiplierRGBMax3": [
+        0.0,
+        10.0,
+        5.0
+    ],
+    "startAlpha3": 1.0,
+    "endAlpha3": 0.0,
+    "BLEND3": 2,
+    "spawnOffset3": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "localSpace3": true,
+    "startScaleMinMax3": [
+        2.0,
+        2.0
+    ],
+    "endScaleMinMax3": [
+        5.0,
+        5.0
+    ],
+    "rotationByVelocity3": false,
+    "rotationPerSecMinMax3": [
+        -150.0,
+        150.0
+    ],
+    "uvScrollXMinMax3": [
+        0.0,
+        0.0
+    ],
+    "uvScrollYMinMax3": [
+        0.0,
+        0.0
+    ],
+    "inheritVelocityScale3": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "numParticles4": 1000,
+    "texture4": "fireember.dds",
+    "startSize4": [
+        1.5,
+        1.5
+    ],
+    "direction4": [
+        0.0,
+        0.0,
+        1.0
+    ],
+    "minMaxSpeed4": [
+        9.0,
+        10.0
+    ],
+    "gravity4": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "drag4": 1.4901161193847657e-8,
+    "velocitySpread4": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "emitterLifetime4": 0.0,
+    "particleLifetime4": 10.0,
+    "spawnRadius4": 1.4901161193847657e-8,
+    "burst4": false,
+    "followEmitter4": false,
+    "startColorMultiplierRGBMin4": [
+        1.0,
+        1.0,
+        1.0
+    ],
+    "startColorMultiplierRGBMax4": [
+        1.0,
+        1.0,
+        1.0
+    ],
+    "endColorMultiplierRGBMin4": [
+        0.0,
+        10.0,
+        5.0
+    ],
+    "endColorMultiplierRGBMax4": [
+        0.0,
+        10.0,
+        5.0
+    ],
+    "startAlpha4": 1.0,
+    "endAlpha4": 0.0,
+    "BLEND4": 2,
+    "spawnOffset4": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "localSpace4": true,
+    "startScaleMinMax4": [
+        2.0,
+        2.0
+    ],
+    "endScaleMinMax4": [
+        5.0,
+        5.0
+    ],
+    "rotationByVelocity4": false,
+    "rotationPerSecMinMax4": [
+        -150.0,
+        150.0
+    ],
+    "uvScrollXMinMax4": [
+        0.0,
+        0.0
+    ],
+    "uvScrollYMinMax4": [
+        0.0,
+        0.0
+    ],
+    "inheritVelocityScale4": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "numParticles5": 1000,
+    "texture5": "fireember.dds",
+    "startSize5": [
+        1.5,
+        1.5
+    ],
+    "direction5": [
+        0.0,
+        0.0,
+        -1.0
+    ],
+    "minMaxSpeed5": [
+        9.0,
+        10.0
+    ],
+    "gravity5": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "drag5": 1.4901161193847657e-8,
+    "velocitySpread5": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "emitterLifetime5": 0.0,
+    "particleLifetime5": 10.0,
+    "spawnRadius5": 1.4901161193847657e-8,
+    "burst5": false,
+    "followEmitter5": false,
+    "startColorMultiplierRGBMin5": [
+        1.0,
+        1.0,
+        1.0
+    ],
+    "startColorMultiplierRGBMax5": [
+        1.0,
+        1.0,
+        1.0
+    ],
+    "endColorMultiplierRGBMin5": [
+        0.0,
+        10.0,
+        5.0
+    ],
+    "endColorMultiplierRGBMax5": [
+        0.0,
+        10.0,
+        5.0
+    ],
+    "startAlpha5": 1.0,
+    "endAlpha5": 0.0,
+    "BLEND5": 2,
+    "spawnOffset5": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "localSpace5": true,
+    "startScaleMinMax5": [
+        2.0,
+        2.0
+    ],
+    "endScaleMinMax5": [
+        5.0,
+        5.0
+    ],
+    "rotationByVelocity5": false,
+    "rotationPerSecMinMax5": [
+        -150.0,
+        150.0
+    ],
+    "uvScrollXMinMax5": [
+        0.0,
+        0.0
+    ],
+    "uvScrollYMinMax5": [
+        0.0,
+        0.0
+    ],
+    "inheritVelocityScale5": [
+        0.0,
+        0.0,
+        0.0
+    ]
+}
