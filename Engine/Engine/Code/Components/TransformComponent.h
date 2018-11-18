@@ -32,8 +32,8 @@ public:
 
 	// set porperties
 	void SetPosition(XMFLOAT3 position) { _position = position; }
-	void SetRotation(XMFLOAT3 rotation) { _position = rotation; }
-	void SetScale(XMFLOAT3 scale)       { _position = scale; }
+	void SetRotation(XMFLOAT3 rotation) { _rotation = rotation; }
+	void SetScale(XMFLOAT3 scale)       { _scale    = scale; }
 
 	// get individual directions from transform
 	XMFLOAT3  GetRight();
