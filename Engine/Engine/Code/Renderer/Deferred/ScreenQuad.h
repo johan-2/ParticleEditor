@@ -14,6 +14,7 @@ public:
 
 private:
 
+	// vertex input struct
 	struct VertexType
 	{
 		XMFLOAT3 position;
@@ -22,8 +23,8 @@ private:
 
 	void CreateBuffers();
 
+	// buffers
 	ID3D11Buffer* _vertexBuffer;
 	ID3D11Buffer*_indexBuffer;
-
 };
 

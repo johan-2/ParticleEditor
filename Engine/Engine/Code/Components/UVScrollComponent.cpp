@@ -16,25 +16,23 @@ UVScrollComponent::~UVScrollComponent()
 
 void UVScrollComponent::Init(XMFLOAT2 speed)
 {
-	_uvOffset = XMFLOAT2(0, 0);
+	_uvOffset    = XMFLOAT2(0, 0);
 	_scrollSpeed = speed;
 
 	_modelComponent = GetComponent<ModelComponent>();
-
 }
 
 void UVScrollComponent::Update(const float& delta)
 {
-	XMFLOAT2 translation;
-	translation.x = _scrollSpeed.x * delta;
-	translation.y = _scrollSpeed.y * delta;
+	// add to offset
+	_uvOffset.x += _scrollSpeed.x * delta;
+	_uvOffset.y += _scrollSpeed.y * delta;
 
-	_uvOffset.x += translation.x;
-	_uvOffset.y += translation.y;
-
+	// get all meshes in model
 	const std::vector<Mesh*>& meshes = _modelComponent->GetMeshes(); 
-	unsigned int count = meshes.size();
 
+	// set the offset on all meshes
+	unsigned int count = meshes.size();
 	for (int i = 0; i < count; i++)
 		meshes[i]->SetUvOffset(_uvOffset);
 }

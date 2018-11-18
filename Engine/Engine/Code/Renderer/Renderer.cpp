@@ -24,6 +24,7 @@
 #include "WireframeShader.h"
 #include "Input.h"
 #include "Systems.h"
+#include "FreeMoveComponent.h"
 
 using namespace DirectX;
 
@@ -96,6 +97,10 @@ void Renderer::CreateDepthMap()
 	_cameraDepth = new Entity();
 	_cameraDepth->AddComponent<TransformComponent>()->Init(XMFLOAT3(0.0f, 30.0f, -41.0f), XMFLOAT3(45.0f, 0.0f, 0));
 	_cameraDepth->AddComponent<CameraComponent>()->Init2D(XMFLOAT2(orthoSize, orthoSize), XMFLOAT2(0.01f, 1000.0f));
+	_cameraDepth->AddComponent<FreeMoveComponent>()->init(20, 0.1f);
+
+	// start the free moce component of shadow camera inactive
+	_cameraDepth->GetComponent<FreeMoveComponent>()->SetActive(false);
 
 	// get pointer to camera component
 	CameraComponent* depthCamera = _cameraDepth->GetComponent<CameraComponent>();

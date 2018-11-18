@@ -6,6 +6,7 @@
 #include "DXDepthStencilStates.h"
 #include "DXSamplerStates.h"
 #include "HardwareProperties.h"
+#include "DXErrorHandler.h"
 
 DXManager::DXManager()
 {
@@ -103,30 +104,22 @@ void DXManager::CreateSwapchainAndRenderTarget(HWND hwnd, bool fullscreen, int s
 	featureLevel                              = D3D_FEATURE_LEVEL_11_1;
 	
 	// create the swapchain and d3d interfaces
-	result = D3D11CreateDeviceAndSwapChain(NULL,
-		D3D_DRIVER_TYPE_HARDWARE,
-		NULL,
-		0,
-		&featureLevel,
-		1,
-		D3D11_SDK_VERSION,
-		&swapChainDesc,
-		&_swapChain,
-		&_device,
-		NULL, &_devCon);
+	result = D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL,
+		                                   0, &featureLevel, 1, D3D11_SDK_VERSION,
+		                                   &swapChainDesc, &_swapChain, &_device, NULL, &_devCon);
 
 	if (FAILED(result))
-		printf("Failed to create swapchain and devices");
+		DX_ERROR::PrintError(result, "failed to create swapchain and devices");
 
 	// get pointer to the backbuffer texture so we can create the defualt rendertarget view	
 	result = _swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBufferPtr);
 	if (FAILED(result))
-		printf("Failed to get the backbuffer from swapchian");
+		DX_ERROR::PrintError(result, "failed to get back buffer from swapchain");
 
 	// create the main rendertarget and set it active
 	result = _device->CreateRenderTargetView(backBufferPtr, NULL, &_renderTargetView);
 	if (FAILED(result))
-		printf("Failed to create the rendertarget view");
+		DX_ERROR::PrintError(result, "failed to create Render target from back buffer ptr");
 
 	// delete texture after creation of rendertarget
 	backBufferPtr->Release();
@@ -184,24 +177,24 @@ void DXManager::CreateDepthStencilViews(int screenWidth, int screenHeight)
 	// create the depth texture using the description
 	result = _device->CreateTexture2D(&depthStencilTexDesc, NULL, &depthTex2D);
 	if (FAILED(result))
-		printf("Failed to create texture2D for depthbuffer");
+		DX_ERROR::PrintError(result, "failed to create depth stencil texture");
 
 	// create the default depthstencilview
 	result = _device->CreateDepthStencilView(depthTex2D, &depthStencilViewDesc, &_depthStencilView);
 	if (FAILED(result))
-		printf("failed to create depthstencilview");
+		DX_ERROR::PrintError(result, "failed to create defualt depth stencil view");
 
 	// create a read only depthstencilview
 	// this enables us to have the depthstencil view bound at the 
 	// same time as using the depth texture as a shader resource input
 	result = _device->CreateDepthStencilView(depthTex2D, &depthStencilViewReadDesc, &_depthStencilViewReadOnly);
 	if (FAILED(result))
-		printf("failed to create depthstencilview");
+		DX_ERROR::PrintError(result, "failed to create depth stencil view read only");
 
 	// create the shaderresource view of the depth texture
 	result = _device->CreateShaderResourceView(depthTex2D, &resourceViewDesc, &_depthShaderResourceView);
 	if (FAILED(result))
-		printf("failed to create shaderResourceView for deppthbuffer");
+		DX_ERROR::PrintError(result, "failed to create depth stencil shader resource view");
 
 	depthTex2D->Release();
 }

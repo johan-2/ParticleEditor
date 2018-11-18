@@ -2,6 +2,7 @@
 #include "DXManager.h"
 #include <iostream>
 #include "Systems.h"
+#include "DXErrorHandler.h"
 
 ScreenQuad::ScreenQuad()
 {
@@ -16,31 +17,33 @@ ScreenQuad::~ScreenQuad()
 
 void ScreenQuad::CreateBuffers()
 {
+	// get device
 	ID3D11Device* device = Systems::dxManager->GetDevice();
-	VertexType* vertices;
-	unsigned int* indices;
+
+	// create vertices/indices
+	VertexType  vertices[4];
+	unsigned int indices[6]{ 0,1,2,2,1,3 };
+
+	// description and resource pointers
 	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
 	D3D11_SUBRESOURCE_DATA vertexData, indexData;
 	HRESULT result;
 
-	vertices = new VertexType[4];
-	indices = new unsigned int[6]{ 0,1,2,2,1,3 };
-
 	// set data of vertices
 	vertices[0].position = XMFLOAT3(-1.0f, 1.0f, 0.0f);  // top left.
-	vertices[0].texture = XMFLOAT2(0.0f, 0.0f);
+	vertices[0].texture  = XMFLOAT2(0.0f, 0.0f);
 	vertices[1].position = XMFLOAT3(1.0f, 1.0f, 0.0f);  // top right.
-	vertices[1].texture = XMFLOAT2(1.0f, 0.0f);
+	vertices[1].texture  = XMFLOAT2(1.0f, 0.0f);
 	vertices[2].position = XMFLOAT3(-1.0f, -1.0f, 0.0f);  // bottom left.
-	vertices[2].texture = XMFLOAT2(0.0f, 1.0f);
+	vertices[2].texture  = XMFLOAT2(0.0f, 1.0f);
 	vertices[3].position = XMFLOAT3(1.0f, -1.0f, 0.0f);  // bottom right.
-	vertices[3].texture = XMFLOAT2(1.0f, 1.0f);
+	vertices[3].texture  = XMFLOAT2(1.0f, 1.0f);
 
 	// set vertexbuffer to be dynamic so we can update the data
-	vertexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	vertexBufferDesc.ByteWidth = sizeof(VertexType) * 4;
 	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	vertexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	vertexBufferDesc.CPUAccessFlags = 0;
 	vertexBufferDesc.MiscFlags = 0;
 	vertexBufferDesc.StructureByteStride = 0;
 
@@ -65,15 +68,11 @@ void ScreenQuad::CreateBuffers()
 	// create buffers
 	result = device->CreateBuffer(&vertexBufferDesc, &vertexData, &_vertexBuffer);
 	if (FAILED(result))
-		printf("failed to create vertexbuffer for quad\n");
+		DX_ERROR::PrintError(result, "failed to create vertex buffer for screen quad");
 
 	result = device->CreateBuffer(&indexBufferDesc, &indexData, &_indexBuffer);
 	if (FAILED(result))
-		printf("failed to create vertexbuffer for quad\n");
-
-	// delete data after buffers been created
-	delete[] vertices;
-	delete[] indices;
+		DX_ERROR::PrintError(result, "failed to create index buffer for screen quad");
 }
 
 void ScreenQuad::UploadBuffers()

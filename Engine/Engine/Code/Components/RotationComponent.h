@@ -9,8 +9,7 @@ class Entity;
 
 class RotationComponent : public IComponent
 {
-public:
-	
+public:	
 	RotationComponent();
 	~RotationComponent();
 
@@ -19,10 +18,13 @@ public:
 
 private:
 
+	// pointer to transform component
 	TransformComponent* _transform;
 
+	// rotation
 	XMFLOAT3 _rotation;
-	float _speedRotation;
-	float _speedTranslation;	
+
+	// rotation speed
+	float _speedRotation;	
 };
 

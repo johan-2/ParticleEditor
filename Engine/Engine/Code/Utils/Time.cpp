@@ -35,7 +35,7 @@ Time::~Time()
 void Time::OnWindowChange()
 {
 	_useLastDelta = true;
-	_lastDelta = _delta;
+	_lastDelta    = _delta;
 }
 
 void Time::Update() 
@@ -70,7 +70,7 @@ void Time::CalculateDelta()
 
 void Time::CalculateFPS() 
 {
-	// count the frames and when one second have passed set fps to number of frames and reset count and starttime
+	// count the frames and when one second have passed set fps to number of frames and reset count and start time
 	_count++;
 	if (timeGetTime() >= (_startTimeFps + 1000)) 
 	{
@@ -79,6 +79,4 @@ void Time::CalculateFPS()
 		_startTimeFps = timeGetTime();
 		_count = 0;
 	}
-
-
 }

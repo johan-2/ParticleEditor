@@ -1,5 +1,6 @@
 #include "HardwareProperties.h"
 #include <iostream>
+#include "DXErrorHandler.h"
 
 HardwareProperties::HardwareProperties(int screenWidth, int screenHeight)
 {
@@ -26,22 +27,22 @@ void HardwareProperties::GetHardwareInfo(int screenWidth, int screenHeight)
 	// Create factory
 	result = CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&factory);
 	if (FAILED(result))
-		printf("Failed to create DXGIFactory");
+		DX_ERROR::PrintError(result, "failed to create DXGI factory");
 
 	// use the factory to create a adapter for the primary graphics interface(video card), we can then use the adapter to get info about our monitor/video memory etc
 	result = factory->EnumAdapters(0, &adapter);
 	if (FAILED(result))
-		printf("Failed to create adapter");
+		DX_ERROR::PrintError(result, "failed to create adapter");
 
 	// get the primary adapter output
 	result = adapter->EnumOutputs(0, &adapterOutput);
 	if (FAILED(result))
-		printf("Failed to enumerate the primer adapter output");
+		DX_ERROR::PrintError(result, "failed to create adapter output");
 
 	//get the number of modes that fit the DXGI_FORMATR8G8B8A8_UNORM display format for the adapter output
 	result = adapterOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, NULL);
 	if (FAILED(result))
-		printf("Failed to get display modes");
+		DX_ERROR::PrintError(result, "failed to get display modes");
 
 	// create a list to hold all the possible modes for this monitor/videocard combination
 	displayModeList = new DXGI_MODE_DESC[numModes];
@@ -49,7 +50,7 @@ void HardwareProperties::GetHardwareInfo(int screenWidth, int screenHeight)
 	// get all displaymodes
 	result = adapterOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, displayModeList);
 	if (FAILED(result))
-		printf("Failed to create output mode list");
+		DX_ERROR::PrintError(result, "failed to create output mode list");
 
 	// save the monitors refreshrate to be used if Vsync is enabled	
 	for (int i = 0; i < numModes; i++)
@@ -67,7 +68,7 @@ void HardwareProperties::GetHardwareInfo(int screenWidth, int screenHeight)
 	// Get the adapter description 
 	result = adapter->GetDesc(&adapterDesc);
 	if (FAILED(result))
-		printf("Failed to get adapter discription");
+		DX_ERROR::PrintError(result, "failed to create adapter description");
 
 	// store the videocard memory in mbs
 	_hardwareInfo.videoCardMemory = (unsigned int)(adapterDesc.DedicatedVideoMemory / 1024 / 1024);

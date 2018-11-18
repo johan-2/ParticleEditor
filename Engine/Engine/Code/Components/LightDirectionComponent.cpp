@@ -12,7 +12,7 @@ LightDirectionComponent::~LightDirectionComponent()
 	Systems::lightManager->RemoveDirectionalLight();
 }
 
-void LightDirectionComponent::Init(XMFLOAT4 lightColor, XMFLOAT4 specularColor, float specularPower)
+void LightDirectionComponent::Init(XMFLOAT4 lightColor, XMFLOAT4 specularColor, float specularPower, TransformComponent* transformOverride)
 {
 	// set light properties
 	_lightColor    = lightColor;
@@ -22,8 +22,18 @@ void LightDirectionComponent::Init(XMFLOAT4 lightColor, XMFLOAT4 specularColor, 
 	// get pointer to transform
 	_transform = GetComponent<TransformComponent>();
 
+	_overrideTransform = transformOverride;
+
 	// set this light to be used for rendering
 	Systems::lightManager->SetDirectionalLight(this);
+}
+
+XMFLOAT3 LightDirectionComponent::GetLightDirection()
+{
+	if (_overrideTransform != nullptr)
+		return _overrideTransform->GetForward();
+
+	return _transform->GetForward();
 }
 
 void LightDirectionComponent::Update(const float& delta)
