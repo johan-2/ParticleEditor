@@ -72,7 +72,8 @@ void ParticleEditor::Update()
 	UpdateParticleSettingsWindow();
 	UpdateInfoWindow();
 	UpdateKeyCommands();	
-	UpdateEditorSettingsWindow();
+	UpdateEditorSettingsWindow(); 
+	UpdateEntityMovement();
 }
 
 void ParticleEditor::UpdateKeyCommands()
@@ -567,7 +568,7 @@ void ParticleEditor::UpdateEditorSettingsWindow()
 
 	// emitter translation
 	ImGui::PushItemWidth(SCREEN_WIDTH * 0.09f);
-	ImGui::Combo("Emitter Translation", &_miscSettings.moveState, "IDLE\0BACKFORTH");
+	ImGui::Combo("Emitter Translation", &_miscSettings.moveState, "IDLE\0BACK_FORTH\0UP_DOWN");
 	ImGui::PopItemWidth();
 
 	// reset emitter transform
@@ -885,4 +886,38 @@ std::string ParticleEditor::FindFileFromDirectory(const char* filter, const char
 	}
 
 	return "";
+}
+
+void ParticleEditor::UpdateEntityMovement()
+{
+	const float& delta = Systems::time->GetDeltaTime();
+
+	// add to sin wave
+	float sinV = sin(_miscSettings.sinCounter += delta * _miscSettings.moveSpeed);
+
+	// set start values if no movement
+	XMFLOAT3 offset(sinV, sinV, sinV);
+	XMFLOAT3 origin(0, 0, 0);
+	XMFLOAT3 minMaxOffset(0, 0, 0);
+	XMFLOAT3 deltaAligned(delta, delta, delta);
+	
+	// set offset based on move setting
+	if      (_miscSettings.moveState == 1) minMaxOffset = XMFLOAT3(5, 0, 0);			
+	else if (_miscSettings.moveState == 2) minMaxOffset = XMFLOAT3(0, 5, 0);	
+
+	// add to position from offset and sin value
+	XMStoreFloat3(&_miscSettings.systemPosition,
+		XMVectorAdd(XMLoadFloat3(&origin),
+			XMVectorMultiply(XMLoadFloat3(&minMaxOffset), XMLoadFloat3(&offset))));
+
+	// add to rotation from  rotation amount
+	XMStoreFloat3(&_miscSettings.systemRotation,
+		XMVectorAdd(XMLoadFloat3(&_miscSettings.systemRotation),
+			XMVectorMultiply(XMLoadFloat3(&_miscSettings.systemRotationAmount), XMLoadFloat3(&deltaAligned))));
+
+	// set rotation and position of system entity
+	_systemTransformComponent->SetRotation(_miscSettings.systemRotation);
+	_systemTransformComponent->SetPosition(_miscSettings.systemPosition);
+
+	_systemTransformComponent->UpdateWorldMatrix();
 }

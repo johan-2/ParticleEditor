@@ -20,10 +20,12 @@ private:
 
 	struct EditorSettings
 	{
-		bool renderSkybox             = true;
-		bool emitterAsWireFrame       = true;
-		int  moveState                = 0;
-		bool showGrid                 = true;
+		bool   renderSkybox           = true;
+		bool   emitterAsWireFrame     = true;
+		int    moveState              = 0;
+		bool   showGrid               = true;
+		double sinCounter             = 0;
+		float  moveSpeed              = 3;
 		XMFLOAT3 systemRotationAmount = XMFLOAT3(0, 0, 0);
 		XMFLOAT3 systemPosition       = XMFLOAT3(0, 0, 0);
 		XMFLOAT3 systemRotation       = XMFLOAT3(0, 0, 0);
@@ -38,6 +40,9 @@ private:
 
 	// opens the windows file directory and returns the path to the selected file
 	std::string FindFileFromDirectory(const char* filter, const char* title);
+
+	// update system entity movement
+	void UpdateEntityMovement();
 
 	// helper functions
 	void ShowToolTip(const char* tip);
