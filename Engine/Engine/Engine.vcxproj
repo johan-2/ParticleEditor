@@ -72,18 +72,22 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>$(SolutionDir)Engine/Code;$(SolutionDir)Engine/Code/System;$(SolutionDir)Engine/Code/Utils;$(SolutionDir)Engine/Code/ComponentSystem;$(SolutionDir)Engine/Code/Components;$(SolutionDir)Engine/Code/Managers;$(SolutionDir)Engine/Code/imGUI;$(SolutionDir)Engine/Code/Input;$(SolutionDir)Engine/Code/rapidjson;$(SolutionDir)Engine/Code/Renderer;$(SolutionDir)Engine/Code/DataTypes;$(SolutionDir)Engine/Code/System/DXModules;$(SolutionDir)Engine/Code/Renderer/ShaderPrograms;$(SolutionDir)Engine/Code/Renderer/Deferred;$(SolutionDir)Engine/Code/Renderer/Objects;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)Engine</OutDir>
+    <LibraryPath>$(SolutionDir)Engine/lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>$(SolutionDir)Engine/Code;$(SolutionDir)Engine/Code/System;$(SolutionDir)Engine/Code/Utils;$(SolutionDir)Engine/Code/ComponentSystem;$(SolutionDir)Engine/Code/Components;$(SolutionDir)Engine/Code/Managers;$(SolutionDir)Engine/Code/imGUI;$(SolutionDir)Engine/Code/Input;$(SolutionDir)Engine/Code/rapidjson;$(SolutionDir)Engine/Code/Renderer;$(SolutionDir)Engine/Code/DataTypes;$(SolutionDir)Engine/Code/System/DXModules;$(SolutionDir)Engine/Code/Renderer/ShaderPrograms;$(SolutionDir)Engine/Code/Renderer/Deferred;$(SolutionDir)Engine/Code/Renderer/Objects;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)Engine</OutDir>
+    <LibraryPath>$(SolutionDir)Engine/lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)Engine</OutDir>
     <IncludePath>$(SolutionDir)Engine/Code;$(SolutionDir)Engine/Code/System;$(SolutionDir)Engine/Code/Utils;$(SolutionDir)Engine/Code/ComponentSystem;$(SolutionDir)Engine/Code/Components;$(SolutionDir)Engine/Code/Managers;$(SolutionDir)Engine/Code/imGUI;$(SolutionDir)Engine/Code/Input;$(SolutionDir)Engine/Code/rapidjson;$(SolutionDir)Engine/Code/Renderer;$(SolutionDir)Engine/Code/DataTypes;$(SolutionDir)Engine/Code/System/DXModules;$(SolutionDir)Engine/Code/Renderer/ShaderPrograms;$(SolutionDir)Engine/Code/Renderer/Deferred;$(SolutionDir)Engine/Code/Renderer/Objects;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Engine/lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)Engine</OutDir>
     <IncludePath>$(SolutionDir)Engine/Code;$(SolutionDir)Engine/Code/System;$(SolutionDir)Engine/Code/Utils;$(SolutionDir)Engine/Code/ComponentSystem;$(SolutionDir)Engine/Code/Components;$(SolutionDir)Engine/Code/Managers;$(SolutionDir)Engine/Code/imGUI;$(SolutionDir)Engine/Code/Input;$(SolutionDir)Engine/Code/rapidjson;$(SolutionDir)Engine/Code/Renderer;$(SolutionDir)Engine/Code/DataTypes;$(SolutionDir)Engine/Code/System/DXModules;$(SolutionDir)Engine/Code/Renderer/ShaderPrograms;$(SolutionDir)Engine/Code/Renderer/Deferred;$(SolutionDir)Engine/Code/Renderer/Objects;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Engine/lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -94,7 +98,7 @@
     </ClCompile>
     <Link />
     <Link>
-      <AdditionalDependencies>d3d11.lib;D3DCompiler.lib;dxgi.lib;XInput.lib;dinput8.lib;dxguid.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;D3DCompiler.lib;dxgi.lib;XInput.lib;dinput8.lib;dxguid.lib;winmm.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
@@ -107,7 +111,7 @@
     </ClCompile>
     <Link />
     <Link>
-      <AdditionalDependencies>d3d11.lib;D3DCompiler.lib;dxgi.lib;XInput.lib;dinput8.lib;dxguid.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;D3DCompiler.lib;dxgi.lib;XInput.lib;dinput8.lib;dxguid.lib;winmm.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
@@ -124,7 +128,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>NotSet</SubSystem>
-      <AdditionalDependencies>d3d11.lib;D3DCompiler.lib;dxgi.lib;XInput.lib;dinput8.lib;dxguid.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;D3DCompiler.lib;dxgi.lib;XInput.lib;dinput8.lib;dxguid.lib;winmm.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -140,7 +144,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>NotSet</SubSystem>
-      <AdditionalDependencies>d3d11.lib;D3DCompiler.lib;dxgi.lib;XInput.lib;dinput8.lib;dxguid.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;D3DCompiler.lib;dxgi.lib;XInput.lib;dinput8.lib;dxguid.lib;winmm.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

@@ -19,11 +19,11 @@ TexturePool::~TexturePool()
 
 ID3D11ShaderResourceView* TexturePool::GetTexture(const wchar_t* name)
 {
-	if (name == L"")
-		return nullptr;
-
 	// get wstring
 	std::wstring key(name);
+
+	if (key.empty())
+		return nullptr;
 
 	// see if the texture already exists in map 
 	std::map<std::wstring, ID3D11ShaderResourceView*>::iterator it = _textures.find(key);
@@ -43,7 +43,7 @@ ID3D11ShaderResourceView* TexturePool::GetTexture(const wchar_t* name)
 
 		if (FAILED(result))
 		{
-			DX_ERROR::PrintError(result, "failed to create texture");
+			DX_ERROR::PrintError(result, (std::string("failed to create texture with name : ") + DX_ERROR::ConvertFromWString(name)).c_str());
 			return nullptr;
 		}
 		else

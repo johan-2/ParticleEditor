@@ -14,7 +14,7 @@ using namespace DirectX;
 class Mesh
 {
 public:	
-	Mesh(Entity* parent, unsigned int FLAGS, wchar_t* diffuseMap, wchar_t* normalMap, wchar_t* specularMap);
+	Mesh(Entity* parent, unsigned int FLAGS, const wchar_t* diffuseMap, const wchar_t* normalMap, const wchar_t* specularMap);
 	~Mesh();
 
 	// vertex data structure

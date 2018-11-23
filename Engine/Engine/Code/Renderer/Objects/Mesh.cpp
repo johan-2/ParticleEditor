@@ -5,7 +5,7 @@
 #include "Systems.h"
 #include "DXErrorhandler.h"
 
-Mesh::Mesh(Entity* parent, unsigned int FLAGS, wchar_t* diffuseMap, wchar_t* normalMap, wchar_t* specularMap ) :
+Mesh::Mesh(Entity* parent, unsigned int FLAGS, const wchar_t* diffuseMap, const wchar_t* normalMap, const wchar_t* specularMap ) :
 	_uvOffset(XMFLOAT2(0,0))
 {
 	// set rendering flags
@@ -14,11 +14,16 @@ Mesh::Mesh(Entity* parent, unsigned int FLAGS, wchar_t* diffuseMap, wchar_t* nor
 	// get pointer to transform components
 	_transform = parent->GetComponent<TransformComponent>();
 
+	// load into wstrings so we can check if they are empty
+	std::wstring diffuse(diffuseMap);
+	std::wstring normal(normalMap);
+	std::wstring specular(specularMap);
+
 	// set passed in textures or defualt ones
 	TexturePool& TP = *Systems::texturePool;
-	diffuseMap  != L"" ? _textures[0] = TP.GetTexture(diffuseMap)  : _textures[0] = TP.GetTexture(L"Textures/defaultDiffuse.dds");
-	normalMap   != L"" ? _textures[1] = TP.GetTexture(normalMap)   : _textures[1] = TP.GetTexture(L"Textures/defaultNormal.dds");
-	specularMap != L"" ? _textures[2] = TP.GetTexture(specularMap) : _textures[2] = TP.GetTexture(L"Textures/defaultSpecular.dds");
+	!diffuse.empty()  ? _textures[0] = TP.GetTexture(diffuseMap)  : _textures[0] = TP.GetTexture(L"Textures/defaultDiffuse.dds");
+	!normal.empty()   ? _textures[1] = TP.GetTexture(normalMap)   : _textures[1] = TP.GetTexture(L"Textures/defaultNormal.dds");
+	!specular.empty() ? _textures[2] = TP.GetTexture(specularMap) : _textures[2] = TP.GetTexture(L"Textures/defaultSpecular.dds");
 
 	// add this mesh to the renderer
 	AddRemoveToRenderer(true);

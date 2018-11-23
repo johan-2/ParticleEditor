@@ -102,13 +102,34 @@ void ModelComponent::InitGrid(unsigned int size, float cellSize, Color32 gridCol
 	delete[] indices;
 }
 
-void ModelComponent::InitModel(char* model, unsigned int flags, wchar_t* diffuseMap, wchar_t* normalMap, wchar_t* specularMap)
+void ModelComponent::InitModel(char* model, unsigned int flags, wchar_t* diffuseMap, wchar_t* normalMap, wchar_t* specularMap, bool useMaterial)
 {
-	//TODO : IMPLEMENT MODEL LOADING
+	_diffuseMap   = diffuseMap;
+	_normalMap    = normalMap;
+	_specularMap  = specularMap;
+
+	_FLAGS = flags;
+
+	_useMaterial = useMaterial;
+
+	Assimp::Importer importer;
+
+	const aiScene* scene = importer.ReadFile(model, aiProcess_Triangulate | aiProcess_ConvertToLeftHanded | aiProcess_CalcTangentSpace);
+
+	if (scene == NULL)
+		printf("Failed to load aiScene from file %s", model);
+
+	ProcessNode(scene->mRootNode, scene);
 }
 
 void ModelComponent::CrateCube(unsigned int flags, wchar_t* diffuseMap, wchar_t* normalMap, wchar_t* specularMap)
 {
+	_diffuseMap  = diffuseMap;
+	_normalMap   = normalMap;
+	_specularMap = specularMap;
+
+	_FLAGS = flags;
+
 	// allocate memory for vertex and index buffers
 	Mesh::VertexData vertices[24];
 	unsigned long indices[36]
@@ -302,6 +323,12 @@ void ModelComponent::CrateCube(unsigned int flags, wchar_t* diffuseMap, wchar_t*
 
 void ModelComponent::CreatePlane(unsigned int flags, wchar_t* diffuseMap, wchar_t* normalMap, wchar_t* specularMap)
 {
+	_diffuseMap   = diffuseMap;
+	_normalMap    = normalMap;
+	_specularMap = specularMap;
+
+	_FLAGS = flags;
+
 	Mesh::VertexData vertices[4];
 
 	vertices[0].position = XMFLOAT3(-2.0f, 0.0f, 2.0f);
@@ -372,4 +399,152 @@ void ModelComponent::SetRenderFlags(unsigned int flags)
 	}
 }
 
+void ModelComponent::ProcessNode(aiNode* node, const aiScene* scene)
+{
+	// get and create all meshes in this node
+	for (UINT i = 0; i < node->mNumMeshes; i++)
+	{
+		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
+		_meshes.push_back(ProcessMesh(mesh, scene));
+	}
 
+	// recursivly loop over and process all child nodes
+	for (UINT i = 0; i < node->mNumChildren; i++)	
+		ProcessNode(node->mChildren[i], scene);	
+}
+
+Mesh* ModelComponent::ProcessMesh(aiMesh* mesh, const aiScene* scene)
+{
+	// structures for vertex/index data
+	std::vector<Mesh::VertexData> vertices;
+	std::vector<unsigned long>    indices;
+
+	// set default textures to use to the ones passed in
+	std::wstring diffuse  = _diffuseMap;
+	std::wstring normal   = _normalMap;
+	std::wstring specular = _specularMap;
+
+	// if we want to load the textures from a material file
+	if (_useMaterial)
+	{
+		// do this mesh have a material
+		if (mesh->mMaterialIndex >= 0)
+		{
+			// get the material of this mesh
+			aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+
+			if (material->GetTextureCount(aiTextureType_DIFFUSE) > 0)
+			{
+				aiString stringDiffuse;
+				material->GetTexture(aiTextureType_DIFFUSE, 0, &stringDiffuse);
+
+				diffuse = GetRelativePathAndSetExtension(stringDiffuse.C_Str(), ".dds");
+			}
+
+			if (material->GetTextureCount(aiTextureType_HEIGHT) > 0)
+			{
+				aiString stringNormal;
+				material->GetTexture(aiTextureType_HEIGHT, 0, &stringNormal);
+
+				normal = GetRelativePathAndSetExtension(stringNormal.C_Str(), ".dds");
+			}
+
+			if (material->GetTextureCount(aiTextureType_SPECULAR) > 0)
+			{
+				aiString stringSpecular;
+				material->GetTexture(aiTextureType_SPECULAR, 0, &stringSpecular);
+
+				specular = GetRelativePathAndSetExtension(stringSpecular.C_Str(), ".dds");
+			}
+		}
+	}	
+
+	for (UINT i =0; i < mesh->mNumVertices; i++)
+	{
+		Mesh::VertexData vertex;
+
+		vertex.position.x = mesh->mVertices[i].x;
+		vertex.position.y = mesh->mVertices[i].y;
+		vertex.position.z = mesh->mVertices[i].z;
+
+		if (mesh->mTextureCoords[0])
+		{
+			vertex.texture.x = (float)mesh->mTextureCoords[0][i].x;
+			vertex.texture.y = (float)mesh->mTextureCoords[0][i].y;
+		}
+
+		if (mesh->HasNormals())
+		{
+			vertex.normal.x = mesh->mNormals[i].x;
+			vertex.normal.y = mesh->mNormals[i].y;
+			vertex.normal.z = mesh->mNormals[i].z;
+		}
+
+		if (mesh->HasTangentsAndBitangents())
+		{
+			vertex.tangent.x = mesh->mTangents[i].x;
+			vertex.tangent.y = mesh->mTangents[i].y;
+			vertex.tangent.z = mesh->mTangents[i].z;
+
+			vertex.binormal.x = mesh->mBitangents[i].x;
+			vertex.binormal.y = mesh->mBitangents[i].y;
+			vertex.binormal.z = mesh->mBitangents[i].z;
+		}
+
+		if (mesh->HasVertexColors(0))
+		{
+			vertex.color.r = (char)mesh->mColors[0][i].r;
+			vertex.color.g = (char)mesh->mColors[0][i].g;
+			vertex.color.b = (char)mesh->mColors[0][i].b;
+			vertex.color.a = (char)mesh->mColors[0][i].a;
+		}
+		else
+		{
+			vertex.color.r = 255;
+			vertex.color.g = 255;
+			vertex.color.b = 255;
+			vertex.color.a = 255;
+		}
+
+		vertices.push_back(vertex);
+	}
+
+	for (UINT i =0; i < mesh->mNumFaces; i++)
+	{
+		aiFace face = mesh->mFaces[i];
+
+		for (UINT j = 0; j < face.mNumIndices; j++)
+			indices.push_back(face.mIndices[j]);
+	}
+
+	Mesh* modelMesh = new Mesh(_parent, _FLAGS, diffuse.c_str(), normal.c_str(), specular.c_str());
+	modelMesh->CreateBuffers(&vertices[0], &indices[0], vertices.size(), indices.size());
+
+	return modelMesh;
+}
+
+std::wstring ModelComponent::GetRelativePathAndSetExtension(const char* filePath, const char* extension)
+{
+	std::string filename(filePath);
+
+	// get the offset where our last backslash is located
+	// we only want the name of the texture
+	const size_t lastSlash = filename.find_last_of("\\");
+
+	// erease filepath
+	if (std::string::npos != lastSlash)
+		filename.erase(0, lastSlash + 1);
+
+	// change all texture exstensions to .dds so if the model
+	// material was exported using other filetypes we don't have to change the .mtl file
+	filename = filename.substr(0, filename.find_last_of('.')) + extension;
+
+	// add our relative path to our textures
+	std::string relativeFilePath = "Textures/";
+	relativeFilePath.append(filename.c_str());
+
+	// conert to wide string (only supports asciII characters)
+	std::wstring wtp(relativeFilePath.begin(), relativeFilePath.end());
+
+	return wtp;
+}
