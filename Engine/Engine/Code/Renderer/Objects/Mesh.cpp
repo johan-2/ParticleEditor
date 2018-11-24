@@ -52,29 +52,29 @@ void Mesh::CreateBuffers(VertexData* verticesData, unsigned long* indicesData, u
 	D3D11_SUBRESOURCE_DATA vertexData, indexData;
 
 	// Set up the description of the vertex buffer.
-	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	vertexBufferDesc.ByteWidth = sizeof(VertexData) * numVertices;
-	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	vertexBufferDesc.CPUAccessFlags = 0;
-	vertexBufferDesc.MiscFlags = 0;
+	vertexBufferDesc.Usage               = D3D11_USAGE_DEFAULT;
+	vertexBufferDesc.ByteWidth           = sizeof(VertexData) * numVertices;
+	vertexBufferDesc.BindFlags           = D3D11_BIND_VERTEX_BUFFER;
+	vertexBufferDesc.CPUAccessFlags      = 0;
+	vertexBufferDesc.MiscFlags           = 0;
 	vertexBufferDesc.StructureByteStride = 0;
 
 	// Set up the description of the index buffer.
-	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	indexBufferDesc.ByteWidth = sizeof(unsigned long) * numIndices;
-	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	indexBufferDesc.CPUAccessFlags = 0;
-	indexBufferDesc.MiscFlags = 0;
+	indexBufferDesc.Usage               = D3D11_USAGE_DEFAULT;
+	indexBufferDesc.ByteWidth           = sizeof(unsigned long) * numIndices;
+	indexBufferDesc.BindFlags           = D3D11_BIND_INDEX_BUFFER;
+	indexBufferDesc.CPUAccessFlags      = 0;
+	indexBufferDesc.MiscFlags           = 0;
 	indexBufferDesc.StructureByteStride = 0;
 
 	// Give the subresource structure a pointer to the vertex data.
-	vertexData.pSysMem = verticesData;
-	vertexData.SysMemPitch = 0;
+	vertexData.pSysMem          = verticesData;
+	vertexData.SysMemPitch      = 0;
 	vertexData.SysMemSlicePitch = 0;
 
 	// Give the subresource structure a pointer to the index data.
-	indexData.pSysMem = indicesData;
-	indexData.SysMemPitch = 0;
+	indexData.pSysMem          = indicesData;
+	indexData.SysMemPitch      = 0;
 	indexData.SysMemSlicePitch = 0;
 
 	HRESULT result;

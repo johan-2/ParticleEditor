@@ -42,8 +42,9 @@ void ModelComponent::InitPrimitive(PRIMITIVE_TYPE primitive, unsigned int flags,
 	_numMeshes = 1;
 	_FLAGS     = flags;
 
-	if      (primitive == PRIMITIVE_TYPE::CUBE)  _meshes.push_back(ModelLoader::CreateCube(flags, diffuseMap, normalMap, specularMap, tiling, _parent));
-	else if (primitive == PRIMITIVE_TYPE::PLANE) _meshes.push_back(ModelLoader::CreatePlane(flags, diffuseMap, normalMap, specularMap, tiling, _parent));
+	if      (primitive == PRIMITIVE_TYPE::CUBE)   _meshes.push_back(ModelLoader::CreateCube(flags, diffuseMap, normalMap, specularMap, tiling, _parent));
+	else if (primitive == PRIMITIVE_TYPE::PLANE)  _meshes.push_back(ModelLoader::CreatePlane(flags, diffuseMap, normalMap, specularMap, tiling, _parent));
+	else if (primitive == PRIMITIVE_TYPE::SPHERE) _meshes.push_back(ModelLoader::CreateSphere(flags, diffuseMap, normalMap, specularMap, tiling, _parent));
 }
 
 void ModelComponent::InitGrid(unsigned int size, float cellSize, Color32 gridColor, unsigned int flags, wchar_t* diffuseMap, wchar_t* normalMap, wchar_t* specularMap, float tiling)

@@ -97,6 +97,11 @@ void Framework::Start()
 	rifle->AddComponent<TransformComponent>()->Init(XMFLOAT3(-10, 8, -20), XMFLOAT3(0, 0, 0), XMFLOAT3(0.5, 0.5, 0.5));
 	rifle->AddComponent<RotationComponent>()->Init(XMFLOAT3(GetRandomFloat(-10, 10), GetRandomFloat(-10, 10), GetRandomFloat(-10, 10)), GetRandomFloat(0.1f, 5.0f));
 	rifle->AddComponent<ModelComponent>()->InitModel("Models/M24_R_High_Poly_Version_obj.obj", DEFERRED | CAST_SHADOW_DIR);
+
+	Entity* sphere = new Entity();
+	sphere->AddComponent<TransformComponent>()->Init(XMFLOAT3(15, 4, -7), XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1));
+	sphere->AddComponent<RotationComponent>()->Init(XMFLOAT3(GetRandomFloat(-10, 10), GetRandomFloat(-10, 10), GetRandomFloat(-10, 10)), GetRandomFloat(0.1f, 5.0f));
+	sphere->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::SPHERE, DEFERRED | CAST_SHADOW_DIR, L"Textures/Dirt_21_Diffuse.dds", L"Textures/Dirt_21_Normal.dds", L"Textures/Dirt_21_Specular.dds");
 	
 	Entity* floor = new Entity();
 	floor->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(20, 1, 20));

@@ -27,11 +27,11 @@ namespace SHADER_HELPERS
 			HRESULT result = 0;
 			D3D11_BUFFER_DESC constVertexBufferDesc;
 
-			constVertexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-			constVertexBufferDesc.ByteWidth = size;
-			constVertexBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-			constVertexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-			constVertexBufferDesc.MiscFlags = 0;
+			constVertexBufferDesc.Usage               = D3D11_USAGE_DYNAMIC;
+			constVertexBufferDesc.ByteWidth           = size;
+			constVertexBufferDesc.BindFlags           = D3D11_BIND_CONSTANT_BUFFER;
+			constVertexBufferDesc.CPUAccessFlags      = D3D11_CPU_ACCESS_WRITE;
+			constVertexBufferDesc.MiscFlags           = 0;
 			constVertexBufferDesc.StructureByteStride = 0;
 
 			result = device->CreateBuffer(&constVertexBufferDesc, NULL, &buffer);
@@ -54,11 +54,11 @@ namespace SHADER_HELPERS
 		ID3D11Device* device = Systems::dxManager->GetDevice();
 
 		D3D11_BUFFER_DESC constantBufferdesc;
-		constantBufferdesc.Usage = D3D11_USAGE_DYNAMIC;
-		constantBufferdesc.ByteWidth = 16;
-		constantBufferdesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-		constantBufferdesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-		constantBufferdesc.MiscFlags = 0;
+		constantBufferdesc.Usage               = D3D11_USAGE_DYNAMIC;
+		constantBufferdesc.ByteWidth           = 16;
+		constantBufferdesc.BindFlags           = D3D11_BIND_CONSTANT_BUFFER;
+		constantBufferdesc.CPUAccessFlags      = D3D11_CPU_ACCESS_WRITE;
+		constantBufferdesc.MiscFlags           = 0;
 		constantBufferdesc.StructureByteStride = 0;
 
 		HRESULT result;

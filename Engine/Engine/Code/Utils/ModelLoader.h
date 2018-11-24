@@ -1,6 +1,8 @@
 #pragma once
 #include <vector>
 #include "Mesh.h"
+#include <iostream>
+#include <fstream>
 
 #include "assimp/Importer.hpp"
 #include "assimp/scene.h"
@@ -131,6 +133,38 @@ public:
 		return modelMesh;
 	}
 
+	static std::wstring GetRelativePathAndSetExtension(const char* filePath, const char* extension)
+	{
+		std::string filename(filePath);
+
+		// get the offset where our last backslash is located
+		// we only want the name of the texture
+		const size_t lastSlash = filename.find_last_of("\\");
+
+		// erease filepath
+		if (std::string::npos != lastSlash)
+			filename.erase(0, lastSlash + 1);
+
+		// change all texture exstensions to .dds so if the model
+		// material was exported using other filetypes we don't have to change the .mtl file
+		filename = filename.substr(0, filename.find_last_of('.')) + extension;
+
+		// add our relative path to our textures
+		std::string relativeFilePath = "Textures/";
+		relativeFilePath.append(filename.c_str());
+
+		// conert to wide string (only supports asciII characters)
+		std::wstring wtp(relativeFilePath.begin(), relativeFilePath.end());
+
+		return wtp;
+	}
+
+	static float InverseLerp(float a, float b, float t)
+	{
+		return (t - a) / (b - a);
+	}
+
+	// PRIMITIVES
 	static Mesh* CreateCube(unsigned int flags, wchar_t* diffuseMap, wchar_t* normalMap, wchar_t* specularMap, float tiling, Entity* parent)
 	{
 		// allocate memory for vertex and index buffers
@@ -361,6 +395,20 @@ public:
 		return mesh;
 	}	
 
+	static Mesh* CreateSphere(unsigned int flags, wchar_t* diffuseMap, wchar_t* normalMap, wchar_t* specularMap, float tiling, Entity* parent)
+	{
+		//get assimp imoprter
+		Assimp::Importer importer;
+
+		// get the scene object from the file
+		const aiScene* scene = importer.ReadFile("Models/Sphere.obj", aiProcess_Triangulate | aiProcess_ConvertToLeftHanded | aiProcess_CalcTangentSpace);
+
+		// assert if scene failed to be created
+		assert(scene != nullptr, "Failed to load aiScene for sphere %s", model);
+
+		return CreateMesh(scene->mMeshes[scene->mRootNode->mChildren[0]->mMeshes[0]], scene, flags, diffuseMap, normalMap, specularMap, tiling, false, parent);
+	}
+
 	static Mesh* CreateGrid(unsigned int size, float cellSize, Color32 gridColor, unsigned int flags, wchar_t* diffuseMap, wchar_t* normalMap, wchar_t* specularMap, float tiling, Entity* parent)
 	{
 		Mesh::VertexData* vertices = new Mesh::VertexData[4 * (size * size)];
@@ -432,38 +480,7 @@ public:
 		delete[] indices;
 
 		return mesh;
-	}
-
-	static std::wstring GetRelativePathAndSetExtension(const char* filePath, const char* extension)
-	{
-		std::string filename(filePath);
-
-		// get the offset where our last backslash is located
-		// we only want the name of the texture
-		const size_t lastSlash = filename.find_last_of("\\");
-
-		// erease filepath
-		if (std::string::npos != lastSlash)
-			filename.erase(0, lastSlash + 1);
-
-		// change all texture exstensions to .dds so if the model
-		// material was exported using other filetypes we don't have to change the .mtl file
-		filename = filename.substr(0, filename.find_last_of('.')) + extension;
-
-		// add our relative path to our textures
-		std::string relativeFilePath = "Textures/";
-		relativeFilePath.append(filename.c_str());
-
-		// conert to wide string (only supports asciII characters)
-		std::wstring wtp(relativeFilePath.begin(), relativeFilePath.end());
-
-		return wtp;
-	}
-
-	static float InverseLerp(float a, float b, float t)
-	{
-		return (t - a) / (b - a);
-	}
+	}	
 };
 
 	

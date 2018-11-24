@@ -1,10 +1,32 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(377,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
-  ModelComponent.cpp
+  CameraComponent.cpp
+  FreeMoveComponent.cpp
+  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  QuadComponent.cpp
+  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  Framework.cpp
+  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
 c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\objects\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\modelloader.h(130): warning C4267: 'argument': conversion from 'size_t' to 'unsigned int', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\modelloader.h(376): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\components\modelcomponent.cpp(15): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\components\modelcomponent.cpp(27): warning C4002: too many arguments for function-like macro invocation 'assert'
-c:\users\nilss\desktop\enginedx11\engine\engine\code\components\modelcomponent.cpp(31): warning C4267: '=': conversion from 'size_t' to 'unsigned int', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\components\modelcomponent.cpp(70): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\enginedx11\engine\engine\code\framework.cpp(39): warning C4244: 'argument': conversion from 'const float' to 'int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\framework.cpp(93): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\framework.cpp(219): warning C4244: 'initializing': conversion from '_Rep' to 'unsigned int', possible loss of data
+          with
+          [
+              _Rep=std::chrono::system_clock::rep
+          ]
+  DXManager.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\code\managers\dxmanager.cpp(222): warning C4244: 'argument': conversion from 'float' to 'UINT8', possible loss of data
+  GBuffer.cpp
+  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\systemdefs.h(3): warning C4244: '=': conversion from 'float' to 'UINT', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\systemdefs.h(4): warning C4244: '=': conversion from 'float' to 'UINT', possible loss of data
+  Renderer.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\objects\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\renderer.cpp(94): warning C4244: 'argument': conversion from 'const float' to 'unsigned int', possible loss of data
+  DebugStats.cpp
+  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  Time.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\time.cpp(55): warning C4244: 'initializing': conversion from 'INT64' to 'int', possible loss of data
+  Generating Code...
   Engine.vcxproj -> C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\Engine.exe
