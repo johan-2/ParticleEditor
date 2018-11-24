@@ -250,6 +250,7 @@
     <ClInclude Include="Code\System\HardwareProperties.h" />
     <ClInclude Include="Code\System\Systems.h" />
     <ClInclude Include="Code\Utils\DebugStats.h" />
+    <ClInclude Include="Code\Utils\ModelLoader.h" />
     <ClInclude Include="Code\Utils\ShaderHelpers.h" />
     <ClInclude Include="Code\Utils\SystemDefs.h" />
     <ClInclude Include="Code\Utils\TexturePool.h" />

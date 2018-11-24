@@ -4,15 +4,16 @@
 #include <vector>
 #include "Color32.h"
 
-#include "..//assimp/Importer.hpp"
-#include "..//assimp/scene.h"
-#include "..//assimp/postprocess.h"
+#include "assimp/Importer.hpp"
+#include "assimp/scene.h"
+#include "assimp/postprocess.h"
 
 // hardcoded primitive types
 enum PRIMITIVE_TYPE
 {
 	CUBE,
-	PLANE
+	PLANE,
+	SPHERE,
 };
 
 class Entity;
@@ -25,13 +26,13 @@ public:
 	~ModelComponent();
 
 	// creates a primitive model
-	void InitPrimitive(PRIMITIVE_TYPE primitive, unsigned int flags, wchar_t* diffuseMap = L"", wchar_t* normalMap = L"", wchar_t* specularMap = L"");
+	void InitPrimitive(PRIMITIVE_TYPE primitive, unsigned int flags, wchar_t* diffuseMap = L"", wchar_t* normalMap = L"", wchar_t* specularMap = L"", float tiling = 1.0f);
 
 	// creates a 2D grid along x and y axis
-	void InitGrid(unsigned int size, float cellSize, Color32 gridColor);
+	void InitGrid(unsigned int size, float cellSize, Color32 gridColor, unsigned int flags, wchar_t* diffuseMap = L"", wchar_t* normalMap = L"", wchar_t* specularMap = L"", float tiling = 1.0f);
 
 	// creates a model from file
-	void InitModel(char* model, unsigned int flags, wchar_t* diffuseMap = L"", wchar_t* normalMap = L"", wchar_t* specularMap = L"", bool useMaterial = true);
+	void InitModel(char* model, unsigned int flags, wchar_t* diffuseMap = L"", wchar_t* normalMap = L"", wchar_t* specularMap = L"", bool useMaterial = true, float tiling = 1.0f);
 	void Update(const float& delta);
 
 	// overides and calls base
@@ -47,28 +48,13 @@ public:
 
 private:
 
-	// create primitives
-	void CrateCube(unsigned int flags, wchar_t* diffuseMap, wchar_t* normalMap, wchar_t* specularMap);
-	void CreatePlane(unsigned int flags, wchar_t* diffuseMap, wchar_t* normalMap, wchar_t* specularMap);
-
-	void ProcessNode(aiNode* node, const aiScene* scene);
-	Mesh* ProcessMesh(aiMesh* mesh, const aiScene* scene);
-	std::wstring GetRelativePathAndSetExtension(const char* filePath, const char* extension);
+	void ProcessNode(aiNode* node, const aiScene* scene, wchar_t* diffuseMap, wchar_t* normalMap, wchar_t* specularMap, bool useMaterial, float tiling);
 	
 	// meshes list and num meshes count
 	std::vector<Mesh*> _meshes;
-	unsigned int      _numMeshes;
-
-	// texture maps if we are not loading them from a .mtl file
-	wchar_t* _diffuseMap;
-	wchar_t* _normalMap;
-	wchar_t* _specularMap;
+	unsigned int       _numMeshes;
 	
 	// render flags
 	unsigned int _FLAGS;
-
-	// if this model should load textures from .mtl file or load the filepaths passed in
-	bool _useMaterial;
-
 };
 
