@@ -73,7 +73,7 @@ void Framework::Start()
 	CM.SetCurrentCameraUI(cameraUI->GetComponent<CameraComponent>());
 
 	//set ambient light color	
-	LM.SetAmbientColor(XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
+	LM.SetAmbientColor(XMFLOAT4(0.3f, 0.3f, 0.3f, 1.0f));
 
 	Entity* directionalLight = new Entity;
 	directionalLight->AddComponent<TransformComponent>()->Init(XMFLOAT3(0,0,0), XMFLOAT3(45, 200, 0));

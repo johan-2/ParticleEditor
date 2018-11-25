@@ -83,7 +83,7 @@ void Renderer::Initailize()
 void Renderer::CreateDepthMap() 
 {
 	// depthmap settings
-	const float orthoSize = 120;
+	const float orthoSize = 70;
 	const float res = 8192.0f;
 
 	// create depthmap render texture

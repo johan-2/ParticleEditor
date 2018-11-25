@@ -34,6 +34,7 @@ private:
 		XMFLOAT3 systemRotationAmount = XMFLOAT3(0, 0, 0);
 		XMFLOAT3 systemPosition       = XMFLOAT3(0, 0, 0);
 		XMFLOAT3 systemRotation       = XMFLOAT3(0, 0, 0);
+		XMFLOAT3 systemScale          = XMFLOAT3(1, 1, 1);
 		XMFLOAT3 systemOrigin         = XMFLOAT3(0, 0.5f, 0);
 	};
 

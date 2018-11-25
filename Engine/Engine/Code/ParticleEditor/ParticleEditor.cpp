@@ -31,10 +31,16 @@ ParticleEditor::ParticleEditor(Input& input, FreeMoveComponent* moveComponent, R
 	// set start skybox
 	_renderer.GetSkybox()->LoadCubemap(L"Skyboxes/FullMoon.dds");
 
+	// set clear color to grey
+	_clearColor[0] = 0.5f;
+	_clearColor[1] = 0.5f;
+	_clearColor[2] = 0.5f;
+	_clearColor[3] = 1.0f;
+
 	// create a grid
 	_grid = new Entity();
 	_grid->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0, 0), XMFLOAT3(180,0,0));
-	_grid->AddComponent<ModelComponent>()->InitGrid(40, 1, Color32(100, 100, 100, 255), DEFERRED | CAST_SHADOW_DIR, L"Textures/bricks.dds", L"Textures/bricksNormal.dds", L"Textures/bricksSpecular.dds", 5.0f);
+	_grid->AddComponent<ModelComponent>()->InitGrid(40, 1, Color32(255, 255, 255, 255), DEFERRED | CAST_SHADOW_DIR, L"Textures/bricks.dds", L"Textures/bricksNormal.dds", L"Textures/bricksSpecular.dds", 5.0f);
 
 	// create particle system entity
 	_particleEntity = new Entity();
@@ -519,6 +525,14 @@ void ParticleEditor::UpdateEditorSettingsWindow()
 	ImGui::Checkbox("Render Skybox", &_miscSettings.renderSkybox);
 	_renderer.GetSkybox()->setActive(_miscSettings.renderSkybox);
 
+	// show clear color and open color picker if pressed
+	if (ImGui::ColorButton("color", ImVec4(_clearColor[0], _clearColor[1], _clearColor[2], _clearColor[3])))
+		ImGui::OpenPopup("picker");
+
+	ImGui::SameLine();
+	ImGui::TextColored(ImVec4(0.9, 0.9, 0.9, 1.0), "Clear Color");
+	ShowToolTip("Skybox need to be off to use clear color");
+
 	// load skybox .dds cubemap
 	if (ImGui::Button("Load Skybox"))
 	{
@@ -536,13 +550,23 @@ void ParticleEditor::UpdateEditorSettingsWindow()
 		}
 	}
 
-	// show clear color and open color picker if pressed
-	if (ImGui::ColorButton("color", ImVec4(_clearColor[0], _clearColor[1], _clearColor[2], _clearColor[3])))
-		ImGui::OpenPopup("picker");
+	// load .obj model
+	if (ImGui::Button("Load Entity Model"))
+	{
+		// put the file directory in a string
+		std::string name = FindFileFromDirectory(".obj\0*.obj", "Select .obj file");
 
-	ImGui::SameLine();
-	ImGui::TextColored(ImVec4(0.9, 0.9, 0.9, 1.0), "Clear Color");
-	ShowToolTip("Skybox need to be off to use clear color");
+		// if a model was selected change the model component
+		if (name != "")
+		{
+			// remove and add new model component
+			_particleEntity->RemoveComponent(_systemModelComponent);
+			_particleEntity->AddComponent<ModelComponent>()->InitModel((char*)name.c_str(), DEFERRED);
+
+			// get pointer to model component
+			_systemModelComponent = _particleEntity->GetComponent<ModelComponent>();
+		}
+	}
 
 	// open popup
 	if (ImGui::BeginPopup("picker"))
@@ -584,6 +608,11 @@ void ParticleEditor::UpdateEditorSettingsWindow()
 	// emitter rotation
 	ImGui::PushItemWidth(SCREEN_WIDTH * 0.09f);
 	ImGui::InputFloat3("Entity Rotation", (float*)&_miscSettings.systemRotationAmount, 2);
+	ImGui::PopItemWidth();
+
+	// emitter scale
+	ImGui::PushItemWidth(SCREEN_WIDTH * 0.09f);
+	ImGui::InputFloat3("Entity Scale", (float*)&_miscSettings.systemScale, 2);
 	ImGui::PopItemWidth();
 
 	// emitter translation
@@ -947,9 +976,10 @@ void ParticleEditor::UpdateEntityMovement()
 		XMVectorAdd(XMLoadFloat3(&_miscSettings.systemRotation),
 			XMVectorMultiply(XMLoadFloat3(&_miscSettings.systemRotationAmount), XMLoadFloat3(&deltaAligned))));
 
-	// set rotation and position of system entity
+	// set rotation, position and scale of system entity
 	_systemTransformComponent->SetRotation(_miscSettings.systemRotation);
 	_systemTransformComponent->SetPosition(_miscSettings.systemPosition);
+	_systemTransformComponent->SetScale(_miscSettings.systemScale);
 
 	// build new world matrix
 	_systemTransformComponent->UpdateWorldMatrix();
