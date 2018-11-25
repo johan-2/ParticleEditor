@@ -78,6 +78,13 @@ void ModelComponent::SetActive(bool active)
 // set the flag on all meshes in this model
 void ModelComponent::SetRenderFlags(unsigned int flags)
 { 
+	// do nothing if the component is inactive or if we are trying to set the same flags we already have
+	if (!_isActive || (_FLAGS & flags) == _FLAGS)
+		return;
+
+	// set the new flags
+	_FLAGS = flags;
+
 	// remove our meshes from the renderer
 	// set new render flags and re add them to the renderer
 	for (int i = 0; i < _numMeshes; i++)
