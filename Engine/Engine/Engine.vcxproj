@@ -100,6 +100,7 @@
     <Link>
       <AdditionalDependencies>d3d11.lib;D3DCompiler.lib;dxgi.lib;XInput.lib;dinput8.lib;dxguid.lib;winmm.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -113,6 +114,7 @@
     <Link>
       <AdditionalDependencies>d3d11.lib;D3DCompiler.lib;dxgi.lib;XInput.lib;dinput8.lib;dxguid.lib;winmm.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -129,6 +131,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>NotSet</SubSystem>
       <AdditionalDependencies>d3d11.lib;D3DCompiler.lib;dxgi.lib;XInput.lib;dinput8.lib;dxguid.lib;winmm.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -145,6 +148,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>NotSet</SubSystem>
       <AdditionalDependencies>d3d11.lib;D3DCompiler.lib;dxgi.lib;XInput.lib;dinput8.lib;dxguid.lib;winmm.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

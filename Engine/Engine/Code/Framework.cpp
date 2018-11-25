@@ -37,7 +37,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM Lparam);
 Framework::Framework()
 {
 	// create the window for the application
-	_window = new Window("Engine", 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, WndProc);
+	_window = new Window("Particle Editor", 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, WndProc);
 	
 	// init all systems
 	Systems::InitSystems(_window, SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN, V_SYNC);
