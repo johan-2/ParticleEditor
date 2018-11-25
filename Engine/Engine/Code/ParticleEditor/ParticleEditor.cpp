@@ -33,13 +33,13 @@ ParticleEditor::ParticleEditor(Input& input, FreeMoveComponent* moveComponent, R
 
 	// create a grid
 	_grid = new Entity();
-	_grid->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0, 0));
-	_grid->AddComponent<ModelComponent>()->InitGrid(50, 1, Color32(100, 100, 100, 1), WIREFRAME_COLOR);
+	_grid->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0, 0), XMFLOAT3(180,0,0));
+	_grid->AddComponent<ModelComponent>()->InitGrid(40, 1, Color32(100, 100, 100, 255), DEFERRED | CAST_SHADOW_DIR, L"Textures/bricks.dds", L"Textures/bricksNormal.dds", L"Textures/bricksSpecular.dds", 5.0f);
 
 	// create particle system entity
 	_particleEntity = new Entity();
-	_particleEntity->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0.5f, 0));
-	_particleEntity->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::SPHERE, WIREFRAME_COLOR);
+	_particleEntity->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0.5f, 0), XMFLOAT3(0,0,0), XMFLOAT3(0.5f,0.5f,0.5f));
+	_particleEntity->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::SPHERE, WIREFRAME_COLOR | CAST_SHADOW_DIR, L"Textures/Dirt_21_Diffuse.dds", L"Textures/Dirt_21_Normal.dds", L"Textures/Dirt_21_Specular.dds");
 	_particleEntity->AddComponent<ParticleSystemComponent>()->Init("Particles/fire.json");
 
 	// cache components
@@ -557,13 +557,24 @@ void ParticleEditor::UpdateEditorSettingsWindow()
 	// emitter rendermode
 	ImGui::Checkbox("Emitter as wireframe", &_miscSettings.emitterAsWireFrame);
 	if (_miscSettings.emitterAsWireFrame)
-		_systemModelComponent->SetRenderFlags(WIREFRAME_COLOR);
+		_systemModelComponent->SetRenderFlags(WIREFRAME_COLOR | CAST_SHADOW_DIR);
 	else
-		_systemModelComponent->SetRenderFlags(DEFERRED);
+		_systemModelComponent->SetRenderFlags(DEFERRED | CAST_SHADOW_DIR);
+
+	// grid rendermode
+	ImGui::Checkbox("Grid as wireframe", &_miscSettings.gridAsWireFrame);
+	if (_miscSettings.gridAsWireFrame)
+		_grid->GetComponent<ModelComponent>()->SetRenderFlags(WIREFRAME_COLOR | CAST_SHADOW_DIR);
+	else
+		_grid->GetComponent<ModelComponent>()->SetRenderFlags(DEFERRED | CAST_SHADOW_DIR);
 
 	// show grid
-	ImGui::Checkbox("ShowGrid", &_miscSettings.showGrid);
+	ImGui::Checkbox("Show Grid", &_miscSettings.showGrid);
 	_grid->GetComponent<ModelComponent>()->SetActive(_miscSettings.showGrid);
+
+	// show particle model
+	ImGui::Checkbox("Show Particle Model", &_miscSettings.showParticleModel);
+	_systemModelComponent->SetActive(_miscSettings.showParticleModel);
 
 	// emitter rotation
 	ImGui::PushItemWidth(SCREEN_WIDTH * 0.09f);
@@ -914,7 +925,7 @@ void ParticleEditor::UpdateEntityMovement()
 
 	// set start values if no movement
 	XMFLOAT3 offset(sinV, sinV, sinV);
-	XMFLOAT3 origin(0, 0, 0);
+	XMFLOAT3 origin(0, 0.5f, 0);
 	XMFLOAT3 minMaxOffset(0, 0, 0);
 	XMFLOAT3 deltaAligned(delta, delta, delta);
 	

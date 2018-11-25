@@ -75,13 +75,12 @@ void Framework::Start()
 	//set ambient light color	
 	LM.SetAmbientColor(XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
 
-	// create directional light and give it the same position/rotation as the depth render camera
 	Entity* directionalLight = new Entity;
-	directionalLight->AddComponent<TransformComponent>()->Init(XMFLOAT3(0,0,0), XMFLOAT3(60, 30, 0));
-	directionalLight->AddComponent<LightDirectionComponent>()->Init(XMFLOAT4(0.8f, 0.8f, 0.8f, 1), XMFLOAT4(1, 1, 1, 1), 80.0f);
+	directionalLight->AddComponent<TransformComponent>()->Init(XMFLOAT3(0,0,0), XMFLOAT3(45, 200, 0));
+	directionalLight->AddComponent<LightDirectionComponent>()->Init(XMFLOAT4(1.0f, 0.9f, 0.8f, 1), XMFLOAT4(1, 1, 1, 1), 120.0f);
 
 	// create the particle editor and pass in some dependencies
-	_particleEditor = new ParticleEditor(*Systems::input, cameraGame->GetComponent<FreeMoveComponent>(), *Systems::renderer, *Systems::time);
+	_particleEditor = new ParticleEditor(*Systems::input, cameraGame->GetComponent<FreeMoveComponent>(), *Systems::renderer, *Systems::time);	
 }
 
 void Framework::Update()

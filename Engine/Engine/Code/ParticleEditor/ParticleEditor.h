@@ -25,8 +25,10 @@ private:
 	{
 		bool   renderSkybox           = true;
 		bool   emitterAsWireFrame     = true;
+		bool   gridAsWireFrame        = true;
 		int    moveState              = 0;
 		bool   showGrid               = true;
+		bool   showParticleModel      = true;
 		double sinCounter             = 0;
 		float  moveSpeed              = 3;
 		XMFLOAT3 systemRotationAmount = XMFLOAT3(0, 0, 0);

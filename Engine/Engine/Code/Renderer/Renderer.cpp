@@ -91,7 +91,7 @@ void Renderer::CreateDepthMap()
 
 	// create camera entity with orthographic view for shadowmap rendering
 	_cameraDepth = new Entity();
-	_cameraDepth->AddComponent<TransformComponent>()->Init(XMFLOAT3(25.0f, 30.0f, -40.0f), XMFLOAT3(40.0f, -30.0f, 0));
+	_cameraDepth->AddComponent<TransformComponent>()->Init(XMFLOAT3(25.0f, 30.0f, 40.0f), XMFLOAT3(45, 200, 0));
 	_cameraDepth->AddComponent<CameraComponent>()->Init2D(XMFLOAT2(orthoSize, orthoSize), XMFLOAT2(0.01f, 1000.0f));
 	_cameraDepth->AddComponent<FreeMoveComponent>()->init(20, 0.1f);
 
