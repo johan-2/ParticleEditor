@@ -14,7 +14,7 @@ public:
 	QuadComponent();
 	~QuadComponent();
 
-	void Init(XMFLOAT2 position, XMFLOAT2 size, wchar_t* texturePath, XMFLOAT4 color = XMFLOAT4(1, 1, 1, 1));
+	void Init(XMFLOAT2 position, XMFLOAT2 size, wchar_t* texturePath = L"", XMFLOAT4 color = XMFLOAT4(1, 1, 1, 1));
 	void Update(const float& delta);
 
 	// set quad properties

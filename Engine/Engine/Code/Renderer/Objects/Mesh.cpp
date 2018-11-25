@@ -5,7 +5,7 @@
 #include "Systems.h"
 #include "DXErrorhandler.h"
 
-Mesh::Mesh(Entity* parent, unsigned int FLAGS, wchar_t* diffuseMap, wchar_t* normalMap, wchar_t* specularMap ) :
+Mesh::Mesh(Entity* parent, unsigned int FLAGS, const wchar_t* diffuseMap, const wchar_t* normalMap, const wchar_t* specularMap ) :
 	_uvOffset(XMFLOAT2(0,0))
 {
 	// set rendering flags
@@ -14,11 +14,16 @@ Mesh::Mesh(Entity* parent, unsigned int FLAGS, wchar_t* diffuseMap, wchar_t* nor
 	// get pointer to transform components
 	_transform = parent->GetComponent<TransformComponent>();
 
+	// load into wstrings so we can check if they are empty
+	std::wstring diffuse(diffuseMap);
+	std::wstring normal(normalMap);
+	std::wstring specular(specularMap);
+
 	// set passed in textures or defualt ones
 	TexturePool& TP = *Systems::texturePool;
-	diffuseMap  != L"" ? _textures[0] = TP.GetTexture(diffuseMap)  : _textures[0] = TP.GetTexture(L"Textures/defaultDiffuse.dds");
-	normalMap   != L"" ? _textures[1] = TP.GetTexture(normalMap)   : _textures[1] = TP.GetTexture(L"Textures/defaultNormal.dds");
-	specularMap != L"" ? _textures[2] = TP.GetTexture(specularMap) : _textures[2] = TP.GetTexture(L"Textures/defaultSpecular.dds");
+	!diffuse.empty()  ? _textures[0] = TP.GetTexture(diffuseMap)  : _textures[0] = TP.GetTexture(L"Textures/defaultDiffuse.dds");
+	!normal.empty()   ? _textures[1] = TP.GetTexture(normalMap)   : _textures[1] = TP.GetTexture(L"Textures/defaultNormal.dds");
+	!specular.empty() ? _textures[2] = TP.GetTexture(specularMap) : _textures[2] = TP.GetTexture(L"Textures/defaultSpecular.dds");
 
 	// add this mesh to the renderer
 	AddRemoveToRenderer(true);
@@ -47,29 +52,29 @@ void Mesh::CreateBuffers(VertexData* verticesData, unsigned long* indicesData, u
 	D3D11_SUBRESOURCE_DATA vertexData, indexData;
 
 	// Set up the description of the vertex buffer.
-	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	vertexBufferDesc.ByteWidth = sizeof(VertexData) * numVertices;
-	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	vertexBufferDesc.CPUAccessFlags = 0;
-	vertexBufferDesc.MiscFlags = 0;
+	vertexBufferDesc.Usage               = D3D11_USAGE_DEFAULT;
+	vertexBufferDesc.ByteWidth           = sizeof(VertexData) * numVertices;
+	vertexBufferDesc.BindFlags           = D3D11_BIND_VERTEX_BUFFER;
+	vertexBufferDesc.CPUAccessFlags      = 0;
+	vertexBufferDesc.MiscFlags           = 0;
 	vertexBufferDesc.StructureByteStride = 0;
 
 	// Set up the description of the index buffer.
-	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	indexBufferDesc.ByteWidth = sizeof(unsigned long) * numIndices;
-	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	indexBufferDesc.CPUAccessFlags = 0;
-	indexBufferDesc.MiscFlags = 0;
+	indexBufferDesc.Usage               = D3D11_USAGE_DEFAULT;
+	indexBufferDesc.ByteWidth           = sizeof(unsigned long) * numIndices;
+	indexBufferDesc.BindFlags           = D3D11_BIND_INDEX_BUFFER;
+	indexBufferDesc.CPUAccessFlags      = 0;
+	indexBufferDesc.MiscFlags           = 0;
 	indexBufferDesc.StructureByteStride = 0;
 
 	// Give the subresource structure a pointer to the vertex data.
-	vertexData.pSysMem = verticesData;
-	vertexData.SysMemPitch = 0;
+	vertexData.pSysMem          = verticesData;
+	vertexData.SysMemPitch      = 0;
 	vertexData.SysMemSlicePitch = 0;
 
 	// Give the subresource structure a pointer to the index data.
-	indexData.pSysMem = indicesData;
-	indexData.SysMemPitch = 0;
+	indexData.pSysMem          = indicesData;
+	indexData.SysMemPitch      = 0;
 	indexData.SysMemSlicePitch = 0;
 
 	HRESULT result;

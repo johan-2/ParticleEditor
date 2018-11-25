@@ -34,12 +34,12 @@ ParticleEditor::ParticleEditor(Input& input, FreeMoveComponent* moveComponent, R
 	// create a grid
 	_grid = new Entity();
 	_grid->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0, 0));
-	_grid->AddComponent<ModelComponent>()->InitGrid(50, 1, Color32(100, 100, 100, 1));
+	_grid->AddComponent<ModelComponent>()->InitGrid(50, 1, Color32(100, 100, 100, 1), WIREFRAME_COLOR);
 
 	// create particle system entity
 	_particleEntity = new Entity();
 	_particleEntity->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0.5f, 0));
-	_particleEntity->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::CUBE, WIREFRAME_COLOR);
+	_particleEntity->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::SPHERE, WIREFRAME_COLOR);
 	_particleEntity->AddComponent<ParticleSystemComponent>()->Init("Particles/fire.json");
 
 	// cache components
