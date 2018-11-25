@@ -25,7 +25,7 @@ private:
 	{
 		bool   renderSkybox           = true;
 		bool   emitterAsWireFrame     = true;
-		bool   gridAsWireFrame        = true;
+		bool   gridAsWireFrame        = false;
 		int    moveState              = 0;
 		bool   showGrid               = true;
 		bool   showParticleModel      = true;
@@ -34,6 +34,7 @@ private:
 		XMFLOAT3 systemRotationAmount = XMFLOAT3(0, 0, 0);
 		XMFLOAT3 systemPosition       = XMFLOAT3(0, 0, 0);
 		XMFLOAT3 systemRotation       = XMFLOAT3(0, 0, 0);
+		XMFLOAT3 systemOrigin         = XMFLOAT3(0, 0.5f, 0);
 	};
 
 	// window functions

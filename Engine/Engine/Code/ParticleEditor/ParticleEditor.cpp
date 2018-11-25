@@ -555,7 +555,7 @@ void ParticleEditor::UpdateEditorSettingsWindow()
 	}
 
 	// emitter rendermode
-	ImGui::Checkbox("Emitter as wireframe", &_miscSettings.emitterAsWireFrame);
+	ImGui::Checkbox("Entity as wireframe", &_miscSettings.emitterAsWireFrame);
 	if (_miscSettings.emitterAsWireFrame)
 		_systemModelComponent->SetRenderFlags(WIREFRAME_COLOR | CAST_SHADOW_DIR);
 	else
@@ -573,22 +573,27 @@ void ParticleEditor::UpdateEditorSettingsWindow()
 	_grid->GetComponent<ModelComponent>()->SetActive(_miscSettings.showGrid);
 
 	// show particle model
-	ImGui::Checkbox("Show Particle Model", &_miscSettings.showParticleModel);
+	ImGui::Checkbox("Show Entity Model", &_miscSettings.showParticleModel);
 	_systemModelComponent->SetActive(_miscSettings.showParticleModel);
+
+	// emitter origin position
+	ImGui::PushItemWidth(SCREEN_WIDTH * 0.09f);
+	ImGui::InputFloat3("Entity Position", (float*)&_miscSettings.systemOrigin, 2);
+	ImGui::PopItemWidth();
 
 	// emitter rotation
 	ImGui::PushItemWidth(SCREEN_WIDTH * 0.09f);
-	ImGui::InputFloat3("Emitter Rotation", (float*)&_miscSettings.systemRotationAmount, 2);
+	ImGui::InputFloat3("Entity Rotation", (float*)&_miscSettings.systemRotationAmount, 2);
 	ImGui::PopItemWidth();
 
 	// emitter translation
 	ImGui::PushItemWidth(SCREEN_WIDTH * 0.09f);
-	ImGui::Combo("Emitter Translation", &_miscSettings.moveState, "IDLE\0BACK_FORTH\0UP_DOWN");
+	ImGui::Combo("Entity Translation", &_miscSettings.moveState, "IDLE\0BACK_FORTH\0UP_DOWN");
 	ImGui::PopItemWidth();
 
 	// emitter translation speed
 	ImGui::PushItemWidth(SCREEN_WIDTH * 0.09f);
-	ImGui::InputFloat("Emitter Translation Speed", &_miscSettings.moveSpeed, 0, 0, 2);
+	ImGui::InputFloat("Entity Translation Speed", &_miscSettings.moveSpeed, 0, 0, 2);
 	ImGui::PopItemWidth();
 
 	// reset emitter transform
@@ -893,12 +898,12 @@ std::string ParticleEditor::FindFileFromDirectory(const char* filter, const char
 	OPENFILENAME ofn;
 	ZeroMemory(&ofn, sizeof(ofn));
 	ofn.lStructSize = sizeof(ofn);
-	ofn.hwndOwner = NULL;
+	ofn.hwndOwner   = NULL;
 	ofn.lpstrFilter = filter;
-	ofn.lpstrFile = filename;
-	ofn.nMaxFile = MAX_PATH;
-	ofn.lpstrTitle = title;
-	ofn.Flags = 0;
+	ofn.lpstrFile   = filename;
+	ofn.nMaxFile    = MAX_PATH;
+	ofn.lpstrTitle  = title;
+	ofn.Flags       = 0;
 	ofn.lpstrDefExt = ".json";
 
 	// we have to save the current directory before we open the openfile directory so we can set it back efter we have selected a file
@@ -925,7 +930,6 @@ void ParticleEditor::UpdateEntityMovement()
 
 	// set start values if no movement
 	XMFLOAT3 offset(sinV, sinV, sinV);
-	XMFLOAT3 origin(0, 0.5f, 0);
 	XMFLOAT3 minMaxOffset(0, 0, 0);
 	XMFLOAT3 deltaAligned(delta, delta, delta);
 	
@@ -935,7 +939,7 @@ void ParticleEditor::UpdateEntityMovement()
 
 	// add to position from offset and sin value
 	XMStoreFloat3(&_miscSettings.systemPosition,
-		XMVectorAdd(XMLoadFloat3(&origin),
+		XMVectorAdd(XMLoadFloat3(&_miscSettings.systemOrigin),
 			XMVectorMultiply(XMLoadFloat3(&minMaxOffset), XMLoadFloat3(&offset))));
 
 	// add to rotation from  rotation amount

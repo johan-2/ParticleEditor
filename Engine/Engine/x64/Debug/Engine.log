@@ -1,11 +1,57 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(377,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
-  ModelComponent.cpp
+  Framework.cpp
+  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
 c:\users\nilss\desktop\particleeditor\engine\engine\code\renderer\objects\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-c:\users\nilss\desktop\particleeditor\engine\engine\code\utils\modelloader.h(407): warning C4002: too many arguments for function-like macro invocation 'assert'
-c:\users\nilss\desktop\particleeditor\engine\engine\code\utils\modelloader.h(131): warning C4267: 'argument': conversion from 'size_t' to 'unsigned int', possible loss of data
-c:\users\nilss\desktop\particleeditor\engine\engine\code\utils\modelloader.h(423): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\particleeditor\engine\engine\code\components\modelcomponent.cpp(15): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\particleeditor\engine\engine\code\components\modelcomponent.cpp(30): warning C4002: too many arguments for function-like macro invocation 'assert'
-c:\users\nilss\desktop\particleeditor\engine\engine\code\components\modelcomponent.cpp(36): warning C4267: '=': conversion from 'size_t' to 'unsigned int', possible loss of data
-c:\users\nilss\desktop\particleeditor\engine\engine\code\components\modelcomponent.cpp(88): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\particleeditor\engine\engine\code\framework.cpp(40): warning C4244: 'argument': conversion from 'const float' to 'int', possible loss of data
+c:\users\nilss\desktop\particleeditor\engine\engine\code\framework.cpp(175): warning C4244: 'initializing': conversion from '_Rep' to 'unsigned int', possible loss of data
+          with
+          [
+              _Rep=std::chrono::system_clock::rep
+          ]
+  ParticleEditor.cpp
+  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+c:\users\nilss\desktop\particleeditor\engine\engine\code\renderer\objects\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(57): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(145): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(153): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(161): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(169): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(177): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(185): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(193): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(201): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(209): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(217): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(225): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(233): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(241): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(249): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(257): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(265): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(273): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(281): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(289): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(297): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(305): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(313): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(321): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(329): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(336): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(342): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(348): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(354): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(361): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(423): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(425): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(429): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(431): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(435): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(437): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(441): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(490): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(544): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(628): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(667): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(929): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  Generating Code...
   Engine.vcxproj -> C:\Users\nilss\Desktop\ParticleEditor\Engine\Engine\Engine.exe
