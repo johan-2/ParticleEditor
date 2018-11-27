@@ -401,7 +401,7 @@ public:
 		Assimp::Importer importer;
 
 		// get the scene object from the file
-		const aiScene* scene = importer.ReadFile("Models/Sphere.obj", aiProcess_Triangulate | aiProcess_ConvertToLeftHanded | aiProcess_CalcTangentSpace);
+		const aiScene* scene = importer.ReadFile("Models/sphere.obj", aiProcess_Triangulate | aiProcess_ConvertToLeftHanded | aiProcess_CalcTangentSpace);
 
 		// assert if scene failed to be created
 		assert(scene != nullptr, "Failed to load aiScene for sphere %s", model);
