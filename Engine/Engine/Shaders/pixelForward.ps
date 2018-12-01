@@ -6,9 +6,7 @@ struct PointLight
 	float3 position;
 	float radius;
 	float3 color;
-	float intensity;
-	float3 specularColor;
-	float specularPower;
+	float intensity;	
 	float attConstant;
 	float attLinear;
 	float attExponential;
@@ -19,9 +17,7 @@ cbuffer AmbientDirectionalBuffer : register(b0)
 {
 	float4 ambientColor;
 	float4 dirDiffuseColor;
-	float4 dirSpecularColor;
 	float3 dirLightDirection;
-	float  dirSpecularPower;
 }
 
 cbuffer PointLightBuffer : register(b1)
@@ -114,8 +110,8 @@ float4 GetDirectionalColor(PixelInputType input)
 		
 		// phong
 		float3 reflection = normalize(2 * lightIntensity * bumpNormal - dirLightDirection);		
-		float specularIntensity = pow(saturate(dot(reflection, vtc)), dirSpecularPower);
-		specular = (dirSpecularColor * specularIntensity) * specularMap;	
+		float specularIntensity = pow(saturate(dot(reflection, vtc)), specularMap.a * 255.0);
+		specular = (dirDiffuseColor * specularIntensity) * float4(specularMap.rgb, 1.0);	
 	} 
 			
 	return color + specular; 
@@ -161,16 +157,15 @@ float4 GetPointColor(PixelInputType input)
 			if (lightIntensity > 0 && dst < pointLights[i].radius)
 			{		
 				// sample the specualr map
-				float4 specularValue = Texture[2].Sample(SampleType[0],input.texCoord);
+				float4 specularMap = Texture[2].Sample(SampleType[0],input.texCoord);
 				
 				// normalize vertex to camera direction vector
 				float3 vtc = normalize(input.vertexToCamera);
 							
 				// phong
-				float3 reflection       = normalize(2 * lightIntensity * bumpNormal - lightDir);		
-				float specularIntensity = pow(saturate(dot(reflection, vtc)), pointLights[i].specularPower);
-				specular.xyz            = (pointLights[i].specularColor * specularIntensity);
-				specular                = specular * specularValue * lightIntensity;
+				float3 reflection = normalize(2 * lightIntensity * bumpNormal - lightDir);		
+				float specularIntensity = pow(saturate(dot(reflection, vtc)), specularMap.a * 255.0);
+				specular.rgb = (pointLights[i].color * specularIntensity) * specularMap.rgb;	
 			} 
 						
 			color      += specular;	

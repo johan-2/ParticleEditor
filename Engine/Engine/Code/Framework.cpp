@@ -83,7 +83,7 @@ void Framework::Start()
 
 	// create directional light and give it the same position/rotation as the depth render camera
 	Entity* directionalLight = new Entity;
-	directionalLight->AddComponent<LightDirectionComponent>()->Init(XMFLOAT4(0.8f, 0.8f, 0.8f, 1), XMFLOAT4(1, 1, 1, 1), 80.0f, dt);
+	directionalLight->AddComponent<LightDirectionComponent>()->Init(XMFLOAT4(0.8f, 0.8f, 0.8f, 1), dt);
 
 	Entity* ship = new Entity();
 	ship->AddComponent<TransformComponent>()->Init(XMFLOAT3(-25, 0, 10), XMFLOAT3(0, 0, 0), XMFLOAT3(2.5, 2.5, 2.5));
@@ -110,13 +110,13 @@ void Framework::Start()
 	Entity* fire = new Entity();
 	fire->AddComponent<TransformComponent>()->Init(XMFLOAT3(12.0f, 0.0f, -6.0f), XMFLOAT3(0, 0, 0), XMFLOAT3(0.25, 0.25, 0.25));
 	fire->AddComponent<ParticleSystemComponent>()->Init("Particles/fire.json");
-	fire->AddComponent<LightPointComponent>()->Init(9, 8, XMFLOAT3(0.8f, 0.4f, 0.0f), XMFLOAT3(0.8f, 0.4f, 0.0f), 80.0f, 0.0f, 1.0f, 0.1f);
+	fire->AddComponent<LightPointComponent>()->Init(9, 8, XMFLOAT3(0.8f, 0.4f, 0.0f), 0.0f, 1.0f, 0.1f);
 	fire->AddComponent<ModelComponent>()->InitModel("Models/fogata1.obj", DEFERRED | CAST_SHADOW_DIR);
 
 	Entity* fire2 = new Entity();
 	fire2->AddComponent<TransformComponent>()->Init(XMFLOAT3(11.0f, 0.0f, 12.0f), XMFLOAT3(0, 0, 0), XMFLOAT3(0.25, 0.25, 0.25));
 	fire2->AddComponent<ParticleSystemComponent>()->Init("Particles/fire.json");
-	fire2->AddComponent<LightPointComponent>()->Init(9, 10, XMFLOAT3(0.8f, 0.4f, 0.0f), XMFLOAT3(0.8f, 0.4f, 0.0f), 80.0f, 0.0f, 1.0f, 0.0f);
+	fire2->AddComponent<LightPointComponent>()->Init(9, 10, XMFLOAT3(0.8f, 0.4f, 0.0f), 0.0f, 1.0f, 0.0f);
 	fire2->AddComponent<ModelComponent>()->InitModel("Models/fogata1.obj", DEFERRED | CAST_SHADOW_DIR);
 
 #ifdef _DEBUG

@@ -48,9 +48,8 @@ private:
 	{
 		XMFLOAT4 ambientColor;
 		XMFLOAT4 dirDiffuseColor;
-		XMFLOAT4 dirSpecularColor;
 		XMFLOAT3 lightDir;
-		float    specularPower;
+		float    padding;
 	};
 
 	struct ConstantPointPixel
@@ -59,8 +58,6 @@ private:
 		float    radius;
 		XMFLOAT3 color;
 		float    intensity;
-		XMFLOAT3 specularColor;
-		float    specularPower;
 
 		float attConstant;
 		float attLinear;
