@@ -139,9 +139,7 @@ void DeferredShader::RenderLightning(GBuffer*& gBuffer)
 		pointLightData[i].color          = pointLights[i]->GetLightColor();
 		pointLightData[i].intensity      = pointLights[i]->GetIntensity();
 		pointLightData[i].radius         = pointLights[i]->GetRadius();
-		pointLightData[i].lightPosition  = pointLights[i]->GetComponent<TransformComponent>()->GetPositionRef();
-		pointLightData[i].specularColor  = pointLights[i]->GetSpecularColor();
-		pointLightData[i].specularPower  = pointLights[i]->GetSpecularPower();
+		pointLightData[i].lightPosition  = pointLights[i]->GetComponent<TransformComponent>()->GetPositionRef();		
 		pointLightData[i].attConstant    = pointLights[i]->GetAttConstant();
 		pointLightData[i].attLinear      = pointLights[i]->GetAttLinear();
 		pointLightData[i].attExponential = pointLights[i]->GetAttExponential();
@@ -166,10 +164,8 @@ void DeferredShader::RenderLightning(GBuffer*& gBuffer)
 		XMVectorNegate(XMLoadFloat3(&directionalLight->GetLightDirection())));
 
 	// set the light properties of directional light
-	directionalLightData.lightColor         = directionalLight->GetLightColor();
-	directionalLightData.lightSpecularColor = directionalLight->GetSpecularColor();
-	directionalLightData.lightSpecularpower = directionalLight->GetSpecularPower();
-
+	directionalLightData.lightColor = directionalLight->GetLightColor();
+	
 	// update constantbuffers		
 	SHADER_HELPERS::UpdateConstantBuffer((void*)&ambientLightData,     sizeof(ConstantDeferredAmbient),                    _constantBufferDefAmbient);
 	SHADER_HELPERS::UpdateConstantBuffer((void*)&directionalLightData, sizeof(ConstantDeferredDirectional),                _constantBufferDefDirectional);

@@ -7,9 +7,7 @@ SamplerState SampleType[2]; // wrap,clamp
 	float3 position;
 	float radius;
 	float3 color;
-	float intensity;
-	float3 specularColor;
-	float specularPower;
+	float intensity;	
 	float attConstant;
 	float attLinear;
 	float attExponential;
@@ -26,10 +24,8 @@ cbuffer DirectionalBuffer : register(b1)
 {
 	float4x4 lightView;
 	float4x4 lightProj;
-	float4 lightColorDir;	
-	float4 specularColorDir;	
-	float3 lightDirectionDir;
-	float  specularPowerDir;	
+	float4 lightColorDir;		
+	float3 lightDirectionDir;		
 };
 
 cbuffer PointLightBuffer : register(b2)
@@ -111,9 +107,8 @@ float4 GetDirectionalColor(float4 position, float4 diffuse, float4 normal, float
 		
 		//phong
 		float3 reflection = normalize(2 * lightIntensity * normal - lightDirectionDir);		
-		float specularIntensity = pow(saturate(dot(reflection, vertexToCamera)), specularPowerDir);
-		specular = specularColorDir * specularIntensity;
-		specular = specular	* lightColorDir * specularMap;		
+		float specularIntensity = pow(saturate(dot(reflection, vertexToCamera)), 100.0);
+		specular = (lightColorDir * specularIntensity) * specularMap;		
 	} 
 			
 	return (color += specular); 
@@ -150,9 +145,8 @@ float4 GetPointColor(float4 position, float4 diffuse, float4 normal, float4 spec
 							
 				//phong
 				float3 reflection = normalize(2 * lightIntensity * normal - lightDir);		
-				float specularIntensity = pow(saturate(dot(reflection, vertexToCamera)), pointLights[i].specularPower);
-				specular.xyz = (pointLights[i].specularColor * specularIntensity);
-				specular = specular	* specularMap * lightIntensity;
+				float specularIntensity = pow(saturate(dot(reflection, vertexToCamera)), specularMap.a * 255.0);
+				specular.rgb = (pointLights[i].color * specularIntensity) * specularMap.rgb;
 			} 
 						
 			color += specular;	

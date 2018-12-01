@@ -76,8 +76,6 @@ void ForwardAlphaShader::RenderForward(std::vector<Mesh*>& meshes)
 	// set ambient and directional light properties for pixel shader
 	constantAmbDirPixel.ambientColor     = LM.GetAmbientColor();
 	constantAmbDirPixel.dirDiffuseColor  = directionalLight->GetLightColor();
-	constantAmbDirPixel.dirSpecularColor = directionalLight->GetSpecularColor();
-	constantAmbDirPixel.specularPower    = directionalLight->GetSpecularPower();
 	XMStoreFloat3(&constantAmbDirPixel.lightDir, XMVectorNegate(XMLoadFloat3(&directionalLight->GetLightDirection())));
 
 	// set point light properties for pixel shader
@@ -88,8 +86,6 @@ void ForwardAlphaShader::RenderForward(std::vector<Mesh*>& meshes)
 		constantPointPixel[i].intensity      = pointLights[i]->GetIntensity();
 		constantPointPixel[i].radius         = pointLights[i]->GetRadius();
 		constantPointPixel[i].lightPosition  = pointLights[i]->GetComponent<TransformComponent>()->GetPositionRef();
-		constantPointPixel[i].specularColor  = pointLights[i]->GetSpecularColor();
-		constantPointPixel[i].specularPower  = pointLights[i]->GetSpecularPower();
 		constantPointPixel[i].attConstant    = pointLights[i]->GetAttConstant();
 		constantPointPixel[i].attLinear      = pointLights[i]->GetAttLinear();
 		constantPointPixel[i].attExponential = pointLights[i]->GetAttExponential();

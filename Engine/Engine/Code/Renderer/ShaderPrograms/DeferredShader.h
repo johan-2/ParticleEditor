@@ -70,10 +70,10 @@ private:
 	{
 		XMFLOAT4X4 lightView;
 		XMFLOAT4X4 lightProjection;
-		XMFLOAT4   lightColor;
-		XMFLOAT4   lightSpecularColor;
+		XMFLOAT4   lightColor;		
+
 		XMFLOAT3   lightDirection;
-		float      lightSpecularpower;
+		float      padding;
 	};
 
 	// constant data for point lightning in the lightning pass
@@ -81,10 +81,9 @@ private:
 	{
 		XMFLOAT3 lightPosition;
 		float    radius;
+
 		XMFLOAT3 color;
-		float    intensity;
-		XMFLOAT3 specularColor;
-		float    specularPower;
+		float    intensity;		
 
 		float attConstant;
 		float attLinear;

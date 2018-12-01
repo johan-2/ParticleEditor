@@ -8,4 +8,133 @@ c:\users\nilss\desktop\particleeditor\engine\engine\code\components\modelcompone
 c:\users\nilss\desktop\particleeditor\engine\engine\code\components\modelcomponent.cpp(30): warning C4002: too many arguments for function-like macro invocation 'assert'
 c:\users\nilss\desktop\particleeditor\engine\engine\code\components\modelcomponent.cpp(36): warning C4267: '=': conversion from 'size_t' to 'unsigned int', possible loss of data
 c:\users\nilss\desktop\particleeditor\engine\engine\code\components\modelcomponent.cpp(90): warning C4018: '<': signed/unsigned mismatch
+  UVScrollComponent.cpp
+c:\users\nilss\desktop\particleeditor\engine\engine\code\renderer\objects\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+c:\users\nilss\desktop\particleeditor\engine\engine\code\components\uvscrollcomponent.cpp(35): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
+c:\users\nilss\desktop\particleeditor\engine\engine\code\components\uvscrollcomponent.cpp(36): warning C4018: '<': signed/unsigned mismatch
+  Framework.cpp
+  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+c:\users\nilss\desktop\particleeditor\engine\engine\code\renderer\objects\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+c:\users\nilss\desktop\particleeditor\engine\engine\code\framework.cpp(40): warning C4244: 'argument': conversion from 'const float' to 'int', possible loss of data
+c:\users\nilss\desktop\particleeditor\engine\engine\code\framework.cpp(176): warning C4244: 'initializing': conversion from '_Rep' to 'unsigned int', possible loss of data
+          with
+          [
+              _Rep=std::chrono::system_clock::rep
+          ]
+  ParticleEditor.cpp
+  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+c:\users\nilss\desktop\particleeditor\engine\engine\code\renderer\objects\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(63): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(151): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(159): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(167): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(175): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(183): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(191): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(199): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(207): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(215): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(223): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(231): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(239): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(247): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(255): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(263): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(271): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(279): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(287): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(295): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(303): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(311): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(319): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(327): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(335): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(342): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(348): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(354): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(360): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(367): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(429): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(431): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(435): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(437): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(441): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(443): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(447): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(496): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(533): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(657): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(696): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(958): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  Mesh.cpp
+c:\users\nilss\desktop\particleeditor\engine\engine\code\renderer\objects\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  SkyBox.cpp
+c:\users\nilss\desktop\particleeditor\engine\engine\code\renderer\objects\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+c:\users\nilss\desktop\particleeditor\engine\engine\code\utils\shaderhelpers.h(43): warning C4101: 'destination': unreferenced local variable
+c:\users\nilss\desktop\particleeditor\engine\engine\code\utils\shaderhelpers.h(117): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\nilss\desktop\particleeditor\engine\engine\code\utils\shaderhelpers.h(117): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
+  Renderer.cpp
+c:\users\nilss\desktop\particleeditor\engine\engine\code\renderer\objects\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+c:\users\nilss\desktop\particleeditor\engine\engine\code\renderer\renderer.cpp(90): warning C4244: 'argument': conversion from 'const float' to 'unsigned int', possible loss of data
+  DeferredShader.cpp
+c:\users\nilss\desktop\particleeditor\engine\engine\code\renderer\objects\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+c:\users\nilss\desktop\particleeditor\engine\engine\code\utils\shaderhelpers.h(43): warning C4101: 'destination': unreferenced local variable
+c:\users\nilss\desktop\particleeditor\engine\engine\code\utils\shaderhelpers.h(117): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\nilss\desktop\particleeditor\engine\engine\code\utils\shaderhelpers.h(117): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
+c:\users\nilss\desktop\particleeditor\engine\engine\code\renderer\shaderprograms\deferredshader.cpp(80): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
+c:\users\nilss\desktop\particleeditor\engine\engine\code\renderer\shaderprograms\deferredshader.cpp(81): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\particleeditor\engine\engine\code\renderer\shaderprograms\deferredshader.cpp(136): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\nilss\desktop\particleeditor\engine\engine\code\renderer\shaderprograms\deferredshader.cpp(136): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
+c:\users\nilss\desktop\particleeditor\engine\engine\code\renderer\shaderprograms\deferredshader.cpp(172): warning C4267: 'argument': conversion from 'size_t' to 'unsigned int', possible loss of data
+  DepthShader.cpp
+c:\users\nilss\desktop\particleeditor\engine\engine\code\renderer\objects\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+c:\users\nilss\desktop\particleeditor\engine\engine\code\utils\shaderhelpers.h(43): warning C4101: 'destination': unreferenced local variable
+c:\users\nilss\desktop\particleeditor\engine\engine\code\utils\shaderhelpers.h(117): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\nilss\desktop\particleeditor\engine\engine\code\utils\shaderhelpers.h(117): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
+c:\users\nilss\desktop\particleeditor\engine\engine\code\renderer\shaderprograms\depthshader.cpp(56): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
+c:\users\nilss\desktop\particleeditor\engine\engine\code\renderer\shaderprograms\depthshader.cpp(57): warning C4018: '<': signed/unsigned mismatch
+  ForwardAlphaShader.cpp
+c:\users\nilss\desktop\particleeditor\engine\engine\code\renderer\objects\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+c:\users\nilss\desktop\particleeditor\engine\engine\code\utils\shaderhelpers.h(43): warning C4101: 'destination': unreferenced local variable
+c:\users\nilss\desktop\particleeditor\engine\engine\code\utils\shaderhelpers.h(117): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\nilss\desktop\particleeditor\engine\engine\code\utils\shaderhelpers.h(117): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
+c:\users\nilss\desktop\particleeditor\engine\engine\code\renderer\shaderprograms\forwardalphashader.cpp(82): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\nilss\desktop\particleeditor\engine\engine\code\renderer\shaderprograms\forwardalphashader.cpp(82): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
+c:\users\nilss\desktop\particleeditor\engine\engine\code\renderer\shaderprograms\forwardalphashader.cpp(116): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\nilss\desktop\particleeditor\engine\engine\code\renderer\shaderprograms\forwardalphashader.cpp(116): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
+  ImGUIShader.cpp
+c:\users\nilss\desktop\particleeditor\engine\engine\code\renderer\objects\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+c:\users\nilss\desktop\particleeditor\engine\engine\code\utils\shaderhelpers.h(43): warning C4101: 'destination': unreferenced local variable
+c:\users\nilss\desktop\particleeditor\engine\engine\code\utils\shaderhelpers.h(117): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\nilss\desktop\particleeditor\engine\engine\code\utils\shaderhelpers.h(117): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
+  ParticleShader.cpp
+c:\users\nilss\desktop\particleeditor\engine\engine\code\renderer\objects\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+c:\users\nilss\desktop\particleeditor\engine\engine\code\utils\shaderhelpers.h(43): warning C4101: 'destination': unreferenced local variable
+c:\users\nilss\desktop\particleeditor\engine\engine\code\utils\shaderhelpers.h(117): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\nilss\desktop\particleeditor\engine\engine\code\utils\shaderhelpers.h(117): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
+c:\users\nilss\desktop\particleeditor\engine\engine\code\renderer\shaderprograms\particleshader.cpp(70): warning C4018: '<': signed/unsigned mismatch
+  QuadShader.cpp
+c:\users\nilss\desktop\particleeditor\engine\engine\code\renderer\objects\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+c:\users\nilss\desktop\particleeditor\engine\engine\code\utils\shaderhelpers.h(43): warning C4101: 'destination': unreferenced local variable
+c:\users\nilss\desktop\particleeditor\engine\engine\code\utils\shaderhelpers.h(117): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\nilss\desktop\particleeditor\engine\engine\code\utils\shaderhelpers.h(117): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
+  WireframeShader.cpp
+c:\users\nilss\desktop\particleeditor\engine\engine\code\renderer\objects\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+c:\users\nilss\desktop\particleeditor\engine\engine\code\utils\shaderhelpers.h(43): warning C4101: 'destination': unreferenced local variable
+c:\users\nilss\desktop\particleeditor\engine\engine\code\utils\shaderhelpers.h(117): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\nilss\desktop\particleeditor\engine\engine\code\utils\shaderhelpers.h(117): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
+c:\users\nilss\desktop\particleeditor\engine\engine\code\renderer\shaderprograms\wireframeshader.cpp(62): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
+c:\users\nilss\desktop\particleeditor\engine\engine\code\renderer\shaderprograms\wireframeshader.cpp(63): warning C4018: '<': signed/unsigned mismatch
+  Generating Code...
   Engine.vcxproj -> C:\Users\nilss\Desktop\ParticleEditor\Engine\Engine\Engine.exe

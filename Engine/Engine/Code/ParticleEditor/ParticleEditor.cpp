@@ -39,7 +39,7 @@ ParticleEditor::ParticleEditor(Input& input, FreeMoveComponent* moveComponent, R
 
 	// create a grid
 	_grid = new Entity();
-	_grid->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0, 0), XMFLOAT3(180,0,0));
+	_grid->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0, 0), XMFLOAT3(180,180,0));
 	_grid->AddComponent<ModelComponent>()->InitGrid(40, 1, Color32(255, 255, 255, 255), DEFERRED | CAST_SHADOW_DIR, L"Textures/bricks.dds", L"Textures/bricksNormal.dds", L"Textures/bricksSpecular.dds", 5.0f);
 
 	// create particle system entity
@@ -561,7 +561,7 @@ void ParticleEditor::UpdateEditorSettingsWindow()
 		{
 			// remove and add new model component
 			_particleEntity->RemoveComponent(_systemModelComponent);
-			_particleEntity->AddComponent<ModelComponent>()->InitModel((char*)name.c_str(), DEFERRED);
+			_particleEntity->AddComponent<ModelComponent>()->InitModel((char*)name.c_str(), DEFERRED | CAST_SHADOW_DIR);
 
 			// get pointer to model component
 			_systemModelComponent = _particleEntity->GetComponent<ModelComponent>();
