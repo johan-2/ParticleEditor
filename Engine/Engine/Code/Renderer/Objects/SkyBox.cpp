@@ -255,7 +255,7 @@ void SkyBox::LoadCubemap(const wchar_t* file)
 		DX_ERROR::PrintError(result, (std::string("failed to create cubemap with filename ") + DX_ERROR::ConvertFromWString(file)).c_str());
 }
 
-void SkyBox::Render() 
+void SkyBox::Render(bool useReflectViewMatrix)
 {
 	if (!_isActive)
 		return;
@@ -309,6 +309,12 @@ void SkyBox::Render()
 	vertexData.world      = matrixPosition;
 	vertexData.view       = camera->GetViewMatrix();
 	vertexData.projection = camera->GetProjectionMatrix();
+
+	if (useReflectViewMatrix)
+	{
+		vertexData.view = camera->GetReflectionViewMatrix(camera->GetComponent<TransformComponent>()->GetPositionVal().y);
+		DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::DISABLED);
+	}
 
 	// update constant buffer
 	SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(ConstantVertex), _constantBufferVertex);

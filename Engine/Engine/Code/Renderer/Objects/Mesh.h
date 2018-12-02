@@ -4,10 +4,12 @@
 #include "TransformComponent.h"
 #include "Color32.h";
 
-#define DEFERRED        1 << 0
-#define ALPHA_FORWARD   1 << 1
-#define CAST_SHADOW_DIR 1 << 2
-#define WIREFRAME_COLOR 1 << 3
+#define DEFERRED         1 << 0
+#define ALPHA_FORWARD    1 << 1
+#define CAST_SHADOW_DIR  1 << 2
+#define WIREFRAME_COLOR  1 << 3
+#define CAST_REFLECTION  1 << 4
+#define ALPHA_REFLECTION 1 << 5
 
 using namespace DirectX;
 
@@ -26,6 +28,15 @@ public:
 		XMFLOAT3 tangent;
 		XMFLOAT3 binormal;
 		Color32  color;
+	};
+
+	// structure that holds information about reflections
+	// if this mesh is being rendered with the ALPHA_REFLECTION flag
+	struct ReflectiveData
+	{
+		float reflectiveFraction = 0.2f;
+		bool  reflectSkybox      = false;
+		bool  reflectParticles   = true;
 	};
 
 	// create vertex and index buffers
@@ -61,8 +72,12 @@ public:
 	// adds and removes this mesh to/from the renderer
 	void AddRemoveToRenderer(bool add);
 
+	// set the reflection data if this mesh is rendered using the planear reflection shader
+	ReflectiveData GetReflectiveData()          { return _reflectData; }
+	void SetReflectionData(ReflectiveData data) { _reflectData = data; }
+
 private:
-	
+
 	// pointers to the vertex/index buffers
 	ID3D11Buffer* _vertexBuffer;
 	ID3D11Buffer*_indexBuffer;
@@ -85,5 +100,8 @@ private:
 
 	// pointer to transform component
 	TransformComponent* _transform;
+
+	// structure to store data of reflection if this mesh is projecting that
+	ReflectiveData _reflectData;
 };
 

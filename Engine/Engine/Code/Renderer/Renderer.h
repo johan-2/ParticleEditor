@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include "VectorHelpers.h"
+#include "DXInputLayouts.h"
 
 // forward declare types
 class Mesh;
@@ -15,10 +16,10 @@ class DepthShader;
 class DeferredShader;
 class QuadShader;
 class ParticleShader;
-class DXInputLayouts;
 class ImGUIShader;
 class ForwardAlphaShader;
 class WireframeShader;
+class PlanarReflectionShader;
 
 // the different render lists we have
 enum SHADER_TYPE
@@ -27,6 +28,8 @@ enum SHADER_TYPE
 	S_DEPTH,
 	S_FORWARD_ALPHA,
 	S_WIREFRAME,
+	S_CAST_REFLECTION,
+	S_ALPHA_REFLECTION,
 	S_NUM_RENDER_TYPES,
 };
 
@@ -56,6 +59,9 @@ public:
 	
 	// will render everything
 	void Render();
+
+	// set a input layout
+	void SetInputLayout(INPUT_LAYOUT_TYPE type) { _inputLayouts->SetInputLayout(type); }
 	
 private:
 
@@ -69,13 +75,14 @@ private:
 
 	// shader "programs" that will handle all preperations
 	// for rendering with a specific shader
-	DepthShader*        _depthShader;
-	DeferredShader*     _deferredShader;
-	QuadShader*         _quadShader;
-	ParticleShader*     _particleShader;
-	ImGUIShader*        _imGUIShader;
-	ForwardAlphaShader* _forwardAlphaShader;
-	WireframeShader*    _wireframeShader;
+	DepthShader*            _depthShader;
+	DeferredShader*         _deferredShader;
+	QuadShader*             _quadShader;
+	ParticleShader*         _particleShader;
+	ImGUIShader*            _imGUIShader;
+	ForwardAlphaShader*     _forwardAlphaShader;
+	WireframeShader*        _wireframeShader;
+	PlanarReflectionShader* _planarReflectionShader;
 
 	// skybox class with all rendering built in
 	SkyBox* _skyBox;

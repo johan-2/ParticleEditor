@@ -121,6 +121,14 @@ void Mesh::AddRemoveToRenderer(bool add)
 	if ((_FLAGS & ALPHA_FORWARD) == ALPHA_FORWARD) 	
 		add ? renderer.AddMeshToRenderer(this, SHADER_TYPE::S_FORWARD_ALPHA) : renderer.RemoveMeshFromRenderer(this, SHADER_TYPE::S_FORWARD_ALPHA);
 
+	// meshes that will be rendered to reflection maps
+	if ((_FLAGS & CAST_REFLECTION) == CAST_REFLECTION)
+		add ? renderer.AddMeshToRenderer(this, SHADER_TYPE::S_CAST_REFLECTION) : renderer.RemoveMeshFromRenderer(this, SHADER_TYPE::S_CAST_REFLECTION);
+
+	// forward rendered alpha meshes with planear reflections
+	if ((_FLAGS & ALPHA_REFLECTION) == ALPHA_REFLECTION)
+		add ? renderer.AddMeshToRenderer(this, SHADER_TYPE::S_ALPHA_REFLECTION) : renderer.RemoveMeshFromRenderer(this, SHADER_TYPE::S_ALPHA_REFLECTION);
+
 	// debug meshes that only renders a wireframe
 	if ((_FLAGS & WIREFRAME_COLOR) == WIREFRAME_COLOR)
 		add ? renderer.AddMeshToRenderer(this, SHADER_TYPE::S_WIREFRAME) : renderer.RemoveMeshFromRenderer(this, SHADER_TYPE::S_WIREFRAME);

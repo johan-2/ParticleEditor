@@ -57,7 +57,7 @@ float4 GetDirectionalColor(float4 position, float4 diffuse, float4 normal, float
 	
 	// get the projected texture coordinates based on the position in eye of the light
 	float2 smTexCoord;
-	smTexCoord.x = ((positionLightSpace.x / positionLightSpace.w) / 2.0) + 0.5;
+	smTexCoord.x = ((positionLightSpace.x  / positionLightSpace.w) / 2.0) + 0.5;
 	smTexCoord.y = ((-positionLightSpace.y / positionLightSpace.w) / 2.0) + 0.5;
 	
 	if((saturate(smTexCoord.x) == smTexCoord.x) && (saturate(smTexCoord.y) == smTexCoord.y))
@@ -128,7 +128,7 @@ float4 GetPointColor(float4 position, float4 diffuse, float4 normal, float4 spec
 		float attuniation = 1 / (pointLights[i].attConstant + pointLights[i].attLinear * dst + pointLights[i].attExponential * dst * dst);
 		attuniation = (attuniation * pointLights[i].intensity) * fallOff;
 		
-		if(fallOff >= 0)
+		if (fallOff >= 0)
 		{	
 				
 			// get intensity from the normal from normalmap and lightdirection

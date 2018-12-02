@@ -3,11 +3,11 @@
 #include "IComponent.h"
 #include "DXManager.h"
 #include "DXBlendStates.h"
+#include "TransformComponent.h"
 
 using namespace DirectX;
 
 class Entity;
-class TransformComponent;
 
 // structure for the per particle instance buffer
 struct ParticleInstanceType
@@ -132,6 +132,9 @@ public:
 
 	// get all textures in this system
 	ID3D11ShaderResourceView** GetTextureArray() { return _texture; }
+
+	// get the position of the system transform
+	XMFLOAT3 GetSystemPosition() { return _transform->GetPositionVal(); }
 
 private:
 

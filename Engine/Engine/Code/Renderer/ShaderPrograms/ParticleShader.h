@@ -14,7 +14,7 @@ public:
 	~ParticleShader();
 
 	// render all particle systems
-	void RenderParticles(const std::vector<ParticleSystemComponent*>& systems);
+	void RenderParticles(const std::vector<ParticleSystemComponent*>& systems, bool useReflectViewMatrix = false);
 
 	// get byte code from shaders
 	ID3D10Blob*& GetVertexShaderByteCode() { return _vertexShaderByteCode; }

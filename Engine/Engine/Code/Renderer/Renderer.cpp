@@ -14,7 +14,6 @@
 #include "GBuffer.h"
 #include "ScreenQuad.h"
 #include "DepthShader.h"
-#include "DXInputLayouts.h"
 #include "DeferredShader.h"
 #include "QuadShader.h"
 #include "ParticleShader.h"
@@ -25,6 +24,7 @@
 #include "Input.h"
 #include "Systems.h"
 #include "FreeMoveComponent.h"
+#include "PlanarReflectionShader.h"
 
 using namespace DirectX;
 
@@ -45,6 +45,7 @@ Renderer::~Renderer()
 	delete _imGUIShader;
 	delete _forwardAlphaShader;
 	delete _inputLayouts;
+	delete _planarReflectionShader;
 }
 
 void Renderer::Initailize()
@@ -53,13 +54,14 @@ void Renderer::Initailize()
 	SetClearColor(0, 0, 0, 1);
 
 	// create and compile shaders
-	_depthShader        = new DepthShader();
-	_deferredShader     = new DeferredShader();
-	_quadShader         = new QuadShader();
-	_particleShader     = new ParticleShader();
-	_imGUIShader        = new ImGUIShader();
-	_forwardAlphaShader = new ForwardAlphaShader();
-	_wireframeShader    = new WireframeShader();
+	_depthShader             = new DepthShader();
+	_deferredShader          = new DeferredShader();
+	_quadShader              = new QuadShader();
+	_particleShader          = new ParticleShader();
+	_imGUIShader             = new ImGUIShader();
+	_forwardAlphaShader      = new ForwardAlphaShader();
+	_wireframeShader         = new WireframeShader();
+	_planarReflectionShader = new PlanarReflectionShader();
 
 	// create skybox
 	_skyBox = new SkyBox(L"Skyboxes/ThickCloudsWater.dds");
@@ -162,11 +164,18 @@ void Renderer::Render()
 	// render debug wireframe meshes, these are forward rendered
 	_wireframeShader->RenderWireFrame(_meshes[S_WIREFRAME]);
 
+	// render planear reflections forward
+	_planarReflectionShader->Render(_meshes[S_ALPHA_REFLECTION], _meshes[S_CAST_REFLECTION], _particleSystems, _particleShader, _inputLayouts);
+
+	// TODO: alpha meshes and particles is not sorted against each other
+	// either sort them and send one object at a time to the shaders or
+	// research to see if there are a more elegant solution to this problem
+
 	// render particles
 	_inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUTPARTICLE);
 	_particleShader->RenderParticles(_particleSystems);
 		
-	// set to 3D layout and render alpha meshes
+	// set to 3D layout and render alpha meshes forward
 	_inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT3D);
 	_forwardAlphaShader->RenderForward(_meshes[S_FORWARD_ALPHA]);
 
@@ -222,9 +231,3 @@ void Renderer::RenderDepth()
 	// render all meshes 
 	_depthShader->RenderDepth(_meshes[S_DEPTH]);
 }
-
-
-
-
-
-

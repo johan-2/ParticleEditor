@@ -28,7 +28,7 @@ ParticleShader::~ParticleShader()
 	_constantBufferVertex->Release();
 }
 
-void ParticleShader::RenderParticles(const std::vector<ParticleSystemComponent*>& systems)
+void ParticleShader::RenderParticles(const std::vector<ParticleSystemComponent*>& systems, bool useReflectViewMatrix)
 {
 	if (systems.size() == 0)
 		return;
@@ -66,6 +66,12 @@ void ParticleShader::RenderParticles(const std::vector<ParticleSystemComponent*>
 	// loop over all particle systems
 	for (int i = 0; i < systems.size(); i++)
 	{
+		if (useReflectViewMatrix)
+		{
+			vertexData.view = camera->GetReflectionViewMatrix(systems[i]->GetSystemPosition().y);
+			SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(ConstantVertex), _constantBufferVertex);
+		}
+
 		// loop over all emitters in each system
 		for (int y = 0; y < systems[i]->GetNumEmitters(); y++)
 		{

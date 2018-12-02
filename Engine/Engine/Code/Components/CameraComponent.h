@@ -16,6 +16,7 @@ public:
 	// get camera matrices
 	const XMFLOAT4X4& GetViewMatrix()       { return _viewMatrix; }
 	const XMFLOAT4X4& GetProjectionMatrix() { return _projectionMatrix; }
+	XMFLOAT4X4 GetReflectionViewMatrix(float yPosition);
 
 	// get and set an associated render texture with the camera
 	ID3D11ShaderResourceView* GetSRV()         { return _renderTexture;}

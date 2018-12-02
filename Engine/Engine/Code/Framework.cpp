@@ -87,37 +87,37 @@ void Framework::Start()
 
 	Entity* ship = new Entity();
 	ship->AddComponent<TransformComponent>()->Init(XMFLOAT3(-25, 0, 10), XMFLOAT3(0, 0, 0), XMFLOAT3(2.5, 2.5, 2.5));
-	ship->AddComponent<ModelComponent>()->InitModel("Models/Freigther_BI_Export.OBJ", DEFERRED | CAST_SHADOW_DIR);
+	ship->AddComponent<ModelComponent>()->InitModel("Models/Freigther_BI_Export.OBJ", DEFERRED | CAST_SHADOW_DIR | CAST_REFLECTION);
 	
 	Entity* grave = new Entity();
 	grave->AddComponent<TransformComponent>()->Init(XMFLOAT3(5, 0, 0), XMFLOAT3(0, 30, 0), XMFLOAT3(0.1, 0.1, 0.1));
-	grave->AddComponent<ModelComponent>()->InitModel("Models/grave_18_.fbx", DEFERRED | CAST_SHADOW_DIR, L"Textures/grave_18_D.dds", L"Textures/grave_18_N.dds", L"Textures/grave_18_S.dds");
+	grave->AddComponent<ModelComponent>()->InitModel("Models/grave_18_.fbx", DEFERRED | CAST_SHADOW_DIR | CAST_REFLECTION, L"Textures/grave_18_D.dds", L"Textures/grave_18_N.dds", L"Textures/grave_18_S.dds");
 
 	Entity* rifle = new Entity();
 	rifle->AddComponent<TransformComponent>()->Init(XMFLOAT3(-10, 8, -20), XMFLOAT3(0, 0, 0), XMFLOAT3(0.5, 0.5, 0.5));
 	rifle->AddComponent<RotationComponent>()->Init(XMFLOAT3(GetRandomFloat(-10, 10), GetRandomFloat(-10, 10), GetRandomFloat(-10, 10)), GetRandomFloat(0.1f, 5.0f));
-	rifle->AddComponent<ModelComponent>()->InitModel("Models/M24_R_High_Poly_Version_obj.obj", DEFERRED | CAST_SHADOW_DIR);
+	rifle->AddComponent<ModelComponent>()->InitModel("Models/M24_R_High_Poly_Version_obj.obj", DEFERRED | CAST_SHADOW_DIR | CAST_REFLECTION);
 
 	Entity* sphere = new Entity();
 	sphere->AddComponent<TransformComponent>()->Init(XMFLOAT3(15, 4, -7), XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1));
 	sphere->AddComponent<RotationComponent>()->Init(XMFLOAT3(GetRandomFloat(-10, 10), GetRandomFloat(-10, 10), GetRandomFloat(-10, 10)), GetRandomFloat(0.1f, 5.0f));
-	sphere->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::SPHERE, DEFERRED | CAST_SHADOW_DIR, L"Textures/Dirt_21_Diffuse.dds", L"Textures/Dirt_21_Normal.dds", L"Textures/Dirt_21_Specular.dds");
+	sphere->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::SPHERE, DEFERRED | CAST_SHADOW_DIR | CAST_REFLECTION, L"Textures/Dirt_21_Diffuse.dds", L"Textures/Dirt_21_Normal.dds", L"Textures/Dirt_21_Specular.dds");
 	
 	Entity* floor = new Entity();
 	floor->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(20, 1, 20));
-	floor->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::PLANE, DEFERRED | CAST_SHADOW_DIR, L"Textures/bricks.dds", L"Textures/bricksNormal.dds", L"Textures/bricksSpecular.dds", 5.0f);
+	floor->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::PLANE, ALPHA_REFLECTION, L"Textures/marble.dds", L"Textures/marbleNormal.dds", L"Textures/FlatHighSpecular.dds", 5.0f);
 
 	Entity* fire = new Entity();
 	fire->AddComponent<TransformComponent>()->Init(XMFLOAT3(12.0f, 0.0f, -6.0f), XMFLOAT3(0, 0, 0), XMFLOAT3(0.25, 0.25, 0.25));
 	fire->AddComponent<ParticleSystemComponent>()->Init("Particles/fire.json");
 	fire->AddComponent<LightPointComponent>()->Init(9, 8, XMFLOAT3(0.8f, 0.4f, 0.0f), 0.0f, 1.0f, 0.1f);
-	fire->AddComponent<ModelComponent>()->InitModel("Models/fogata1.obj", DEFERRED | CAST_SHADOW_DIR);
+	fire->AddComponent<ModelComponent>()->InitModel("Models/fogata1.obj", DEFERRED | CAST_SHADOW_DIR | CAST_REFLECTION);
 
 	Entity* fire2 = new Entity();
 	fire2->AddComponent<TransformComponent>()->Init(XMFLOAT3(11.0f, 0.0f, 12.0f), XMFLOAT3(0, 0, 0), XMFLOAT3(0.25, 0.25, 0.25));
 	fire2->AddComponent<ParticleSystemComponent>()->Init("Particles/fire.json");
 	fire2->AddComponent<LightPointComponent>()->Init(9, 10, XMFLOAT3(0.8f, 0.4f, 0.0f), 0.0f, 1.0f, 0.0f);
-	fire2->AddComponent<ModelComponent>()->InitModel("Models/fogata1.obj", DEFERRED | CAST_SHADOW_DIR);
+	fire2->AddComponent<ModelComponent>()->InitModel("Models/fogata1.obj", DEFERRED | CAST_SHADOW_DIR | CAST_REFLECTION);
 
 #ifdef _DEBUG
 	_debugStats = new DebugStats();

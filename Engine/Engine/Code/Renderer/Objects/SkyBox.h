@@ -14,7 +14,7 @@ public:
 	void LoadCubemap(const wchar_t* file);
 
 	// upload buffers and render
-	void Render();
+	void Render(bool useReflectViewMatrix = false);
 
 	// set the skybox active/inactive
 	void setActive(bool active) { _isActive = active; }
