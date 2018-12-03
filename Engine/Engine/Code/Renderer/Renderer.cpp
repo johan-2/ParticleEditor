@@ -164,7 +164,7 @@ void Renderer::Render()
 	// render debug wireframe meshes, these are forward rendered
 	_wireframeShader->RenderWireFrame(_meshes[S_WIREFRAME]);
 
-	// render planear reflections forward
+	// render planar reflections forward
 	_planarReflectionShader->Render(_meshes[S_ALPHA_REFLECTION], _meshes[S_CAST_REFLECTION], _particleSystems, _particleShader, _inputLayouts);
 
 	// TODO: alpha meshes and particles is not sorted against each other

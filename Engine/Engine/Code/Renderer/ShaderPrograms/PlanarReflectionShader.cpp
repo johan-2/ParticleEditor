@@ -172,7 +172,7 @@ void PlanarReflectionShader::Render(std::vector<Mesh*> reflectionMeshes,
 
 			// the shader that renders to the reflection map is super simplified and only renders a sample from the diffusemap
 			// more detail then this is a bit overkill but depending on if we want to render mirror clear reflections we might want 
-			// to add a optional shader that maybe calculates lightning aswell
+			// to add an optional shader that calculates lightning aswell
 			devCon->PSSetShaderResources(0, 1, &meshTextures[0]);
 
 			// upload and draw the mesh
@@ -185,7 +185,7 @@ void PlanarReflectionShader::Render(std::vector<Mesh*> reflectionMeshes,
 		if (reflectData.reflectParticles)
 		{
 			inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUTPARTICLE);
-			particleShader->RenderParticles(reflectiveParticles, true);
+			particleShader->RenderParticles(reflectiveParticles, true, mesh->GetPosition().y);
 			inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT3D);
 		}
 		

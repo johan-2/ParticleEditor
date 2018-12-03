@@ -37,6 +37,13 @@ public:
 		float reflectiveFraction = 0.2f;
 		bool  reflectSkybox      = false;
 		bool  reflectParticles   = true;
+
+		ReflectiveData(){}
+
+		ReflectiveData(float fraction, bool refSkybox, bool refParticles) :
+			reflectiveFraction(fraction),
+			reflectSkybox(refSkybox),
+			reflectParticles(refParticles){}
 	};
 
 	// create vertex and index buffers
