@@ -16,7 +16,7 @@ using namespace DirectX;
 class Mesh
 {
 public:	
-	Mesh(Entity* parent, unsigned int FLAGS, const wchar_t* diffuseMap, const wchar_t* normalMap, const wchar_t* specularMap);
+	Mesh(Entity* parent, unsigned int FLAGS, const wchar_t* diffuseMap, const wchar_t* normalMap, const wchar_t* specularMap, const wchar_t* emissiveMap);
 	~Mesh();
 
 	// vertex data structure
@@ -94,7 +94,7 @@ private:
 	unsigned int _numIndices;
 
 	// texture array
-	ID3D11ShaderResourceView* _textures[3];
+	ID3D11ShaderResourceView* _textures[4];
 
 	// uv offset
 	XMFLOAT2 _uvOffset;

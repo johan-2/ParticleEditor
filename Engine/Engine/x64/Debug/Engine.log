@@ -1,12 +1,13 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(377,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
-  Framework.cpp
-  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  PlanarReflectionShader.cpp
 c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\objects\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-c:\users\nilss\desktop\enginedx11\engine\engine\code\framework.cpp(39): warning C4244: 'argument': conversion from 'const float' to 'int', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\framework.cpp(93): warning C4305: 'argument': truncation from 'double' to 'float'
-c:\users\nilss\desktop\enginedx11\engine\engine\code\framework.cpp(220): warning C4244: 'initializing': conversion from '_Rep' to 'unsigned int', possible loss of data
-          with
-          [
-              _Rep=std::chrono::system_clock::rep
-          ]
+  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\shaderhelpers.h(43): warning C4101: 'destination': unreferenced local variable
+c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\shaderhelpers.h(117): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\shaderhelpers.h(117): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\planarreflectionshader.cpp(33): warning C4244: 'argument': conversion from 'const float' to 'unsigned int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\planarreflectionshader.cpp(96): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\planarreflectionshader.cpp(96): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\planarreflectionshader.cpp(128): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\planarreflectionshader.cpp(128): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
   Engine.vcxproj -> C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\Engine.exe

@@ -54,13 +54,13 @@ void Renderer::Initailize()
 	SetClearColor(0, 0, 0, 1);
 
 	// create and compile shaders
-	_depthShader             = new DepthShader();
-	_deferredShader          = new DeferredShader();
-	_quadShader              = new QuadShader();
-	_particleShader          = new ParticleShader();
-	_imGUIShader             = new ImGUIShader();
-	_forwardAlphaShader      = new ForwardAlphaShader();
-	_wireframeShader         = new WireframeShader();
+	_depthShader            = new DepthShader();
+	_deferredShader         = new DeferredShader();
+	_quadShader             = new QuadShader();
+	_particleShader         = new ParticleShader();
+	_imGUIShader            = new ImGUIShader();
+	_forwardAlphaShader     = new ForwardAlphaShader();
+	_wireframeShader        = new WireframeShader();
 	_planarReflectionShader = new PlanarReflectionShader();
 
 	// create skybox

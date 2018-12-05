@@ -1,4 +1,4 @@
-Texture2D Texture[4];	    // diffuse, normal, specular, shadowmap
+Texture2D Texture[5];	    // diffuse, normal, specular, emissive, shadowmap
 SamplerState SampleType[2]; // wrap,clamp 	
 
 struct PointLight
@@ -18,6 +18,7 @@ cbuffer AmbientDirectionalBuffer : register(b0)
 	float4 ambientColor;
 	float4 dirDiffuseColor;
 	float3 dirLightDirection;
+	float  reflectiveFraction;
 }
 
 cbuffer PointLightBuffer : register(b1)
@@ -177,10 +178,16 @@ float4 GetPointColor(PixelInputType input)
 }
 
 float4 Main(PixelInputType input) : SV_TARGET
-{					
+{								
 	float4 baseColor        = GetBaseColor(input);
 	float4 directionalColor = GetDirectionalColor(input);
 	float4 pointColor       = GetPointColor(input);
+	float4 emissiveMap      = Texture[3].Sample(SampleType[0],input.texCoord);
+	
+	// if the alpha channel of the emissivemap is zero it means that this is 
+	// an emissive pixel and should not recive lightning
+	if (emissiveMap.a > 0)	
+		return float4(Texture[0].Sample(SampleType[0],input.texCoord).rgb * emissiveMap.rgb, 0);
 	
 	float4 finalColor = baseColor + directionalColor + pointColor; 
 	finalColor.a      = baseColor.a;

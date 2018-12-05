@@ -96,7 +96,7 @@ void DeferredShader::RenderGeometry(std::vector<Mesh*>& meshes)
 		SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(ConstantGeometryVertex), _constantBufferGeometry);
 
 		// set textures
-		devCon->PSSetShaderResources(0, 3, meshes[i]->GetTextureArray());
+		devCon->PSSetShaderResources(0, 4, meshes[i]->GetTextureArray());
 
 		// draw
 		devCon->DrawIndexed(meshes[i]->GetNumIndices(), 0, 0);

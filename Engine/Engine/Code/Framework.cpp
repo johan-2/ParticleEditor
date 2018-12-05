@@ -76,14 +76,14 @@ void Framework::Start()
 	CM.SetCurrentCameraUI(cameraUI->GetComponent<CameraComponent>());
 
 	//set ambient light color	
-	LM.SetAmbientColor(XMFLOAT4(0.3f, 0.3f, 0.3f, 1.0f));
+	LM.SetAmbientColor(XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f));
 
 	// get transform of the camera that renders the depthmap
 	TransformComponent* dt = CM.GetCurrentCameraDepthMap()->GetComponent<TransformComponent>();
 
 	// create directional light and give it the same position/rotation as the depth render camera
 	Entity* directionalLight = new Entity;
-	directionalLight->AddComponent<LightDirectionComponent>()->Init(XMFLOAT4(0.8f, 0.8f, 0.8f, 1), dt);
+	directionalLight->AddComponent<LightDirectionComponent>()->Init(XMFLOAT4(0.9f, 0.9f, 0.9f, 1), dt);
 
 	Entity* ship = new Entity();
 	ship->AddComponent<TransformComponent>()->Init(XMFLOAT3(-25, 0, 10), XMFLOAT3(0, 0, 0), XMFLOAT3(2.5, 2.5, 2.5));
@@ -99,13 +99,14 @@ void Framework::Start()
 	rifle->AddComponent<ModelComponent>()->InitModel("Models/M24_R_High_Poly_Version_obj.obj", DEFERRED | CAST_SHADOW_DIR | CAST_REFLECTION);
 
 	Entity* sphere = new Entity();
-	sphere->AddComponent<TransformComponent>()->Init(XMFLOAT3(15, 4, -7), XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1));
+	sphere->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 2, -7), XMFLOAT3(0, 0, 0), XMFLOAT3(2, 2, 2));
 	sphere->AddComponent<RotationComponent>()->Init(XMFLOAT3(GetRandomFloat(-10, 10), GetRandomFloat(-10, 10), GetRandomFloat(-10, 10)), GetRandomFloat(0.1f, 5.0f));
-	sphere->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::SPHERE, DEFERRED | CAST_SHADOW_DIR | CAST_REFLECTION, L"Textures/Dirt_21_Diffuse.dds", L"Textures/Dirt_21_Normal.dds", L"Textures/Dirt_21_Specular.dds");
+	sphere->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::SPHERE, DEFERRED | CAST_SHADOW_DIR | CAST_REFLECTION, L"", L"Textures/Dirt_21_Normal.dds", L"Textures/Dirt_21_Specular.dds", L"Textures/emissiveTest.dds");
+	sphere->AddComponent<LightPointComponent>()->Init(9, 20, XMFLOAT3(0.0f, 1.0f, 0.0f), 0.0f, 1.0f, 0.5f);
 	
 	Entity* floor = new Entity();
 	floor->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(20, 1, 20));
-	floor->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::PLANE, ALPHA_REFLECTION, L"Textures/marble.dds", L"Textures/marbleNormal.dds", L"Textures/FlatHighSpecular.dds", 5.0f);
+	floor->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::PLANE, ALPHA_REFLECTION, L"Textures/marble.dds", L"Textures/marbleNormal.dds", L"Textures/FlatHighSpecular.dds", L"", 5.0f);
 	floor->GetComponent<ModelComponent>()->GetMeshes()[0]->SetReflectionData(Mesh::ReflectiveData(0.2f, false, true));
 
 	Entity* fire = new Entity();

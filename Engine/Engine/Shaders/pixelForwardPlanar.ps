@@ -1,4 +1,4 @@
-Texture2D Texture[5];	    // diffuse, normal, specular, shadowMap, reflectionMap
+Texture2D Texture[6];	    // diffuse, normal, specular, emissive, shadowMap, reflectionMap
 SamplerState SampleType[2]; // wrap,clamp 	
 
 struct PointLight
@@ -62,15 +62,15 @@ float4 GetDirectionalColor(PixelInputType input)
 		float neighbour = 1 / 8192.0; // hardcoded for now, dont forget to change if depthmap res change	
 		float depthMapValues[9];
 		
-		depthMapValues[0] = Texture[3].Sample(SampleType[1], float2(smTexCoord.x, smTexCoord.y)).r; // middle
-		depthMapValues[1] = Texture[3].Sample(SampleType[1], float2(smTexCoord.x - neighbour, smTexCoord.y)).r; // left
-		depthMapValues[2] = Texture[3].Sample(SampleType[1], float2(smTexCoord.x - neighbour, smTexCoord.y - neighbour)).r; // top left
-		depthMapValues[3] = Texture[3].Sample(SampleType[1], float2(smTexCoord.x, smTexCoord.y - neighbour)).r; // top
-		depthMapValues[4] = Texture[3].Sample(SampleType[1], float2(smTexCoord.x + neighbour, smTexCoord.y - neighbour)).r; // top right
-		depthMapValues[5] = Texture[3].Sample(SampleType[1], float2(smTexCoord.x + neighbour, smTexCoord.y)).r; // right
-		depthMapValues[6] = Texture[3].Sample(SampleType[1], float2(smTexCoord.x + neighbour, smTexCoord.y + neighbour)).r; // bottom right
-		depthMapValues[7] = Texture[3].Sample(SampleType[1], float2(smTexCoord.x, smTexCoord.y + neighbour)).r; // bottom 
-		depthMapValues[8] = Texture[3].Sample(SampleType[1], float2(smTexCoord.x - neighbour, smTexCoord.y + neighbour)).r; // bottom left
+		depthMapValues[0] = Texture[4].Sample(SampleType[1], float2(smTexCoord.x, smTexCoord.y)).r; // middle
+		depthMapValues[1] = Texture[4].Sample(SampleType[1], float2(smTexCoord.x - neighbour, smTexCoord.y)).r; // left
+		depthMapValues[2] = Texture[4].Sample(SampleType[1], float2(smTexCoord.x - neighbour, smTexCoord.y - neighbour)).r; // top left
+		depthMapValues[3] = Texture[4].Sample(SampleType[1], float2(smTexCoord.x, smTexCoord.y - neighbour)).r; // top
+		depthMapValues[4] = Texture[4].Sample(SampleType[1], float2(smTexCoord.x + neighbour, smTexCoord.y - neighbour)).r; // top right
+		depthMapValues[5] = Texture[4].Sample(SampleType[1], float2(smTexCoord.x + neighbour, smTexCoord.y)).r; // right
+		depthMapValues[6] = Texture[4].Sample(SampleType[1], float2(smTexCoord.x + neighbour, smTexCoord.y + neighbour)).r; // bottom right
+		depthMapValues[7] = Texture[4].Sample(SampleType[1], float2(smTexCoord.x, smTexCoord.y + neighbour)).r; // bottom 
+		depthMapValues[8] = Texture[4].Sample(SampleType[1], float2(smTexCoord.x - neighbour, smTexCoord.y + neighbour)).r; // bottom left
 		
 		float lightDepthValue = (input.positionLightSpace.z / input.positionLightSpace.w) - bias;
 		
@@ -187,18 +187,25 @@ float4 GetReflectionColor(PixelInputType input)
 	reflectionTexCoords.x =  input.reflectionPosition.x / input.reflectionPosition.w / 2.0f + 0.5f;
     reflectionTexCoords.y = -input.reflectionPosition.y / input.reflectionPosition.w / 2.0f + 0.5f;
 	
-	return Texture[4].Sample(SampleType[0], reflectionTexCoords);
+	return Texture[5].Sample(SampleType[0], reflectionTexCoords);
 }
 
 float4 Main(PixelInputType input) : SV_TARGET
-{					
+{
+	float4 reflectionColor  = GetReflectionColor(input);
 	float4 baseColor        = GetBaseColor(input);
 	float4 directionalColor = GetDirectionalColor(input);
 	float4 pointColor       = GetPointColor(input);
-	float4 reflectionColor  = GetReflectionColor(input);
+	
+	float reflectFraction = reflectiveFraction;
+		
+	// if the pixel got flagged as emissive(-1) do a higher reflectFraction
+	// this should be exposed somewhere but this is fine for now
+	if (reflectionColor.a == -1)
+		reflectFraction = 0.7;
 	
 	float4 finalColor = baseColor + directionalColor + pointColor; 
-	finalColor = lerp(finalColor, reflectionColor, reflectiveFraction);
+	finalColor = lerp(finalColor, reflectionColor, reflectFraction);
 	finalColor.a      = baseColor.a;
 	
 	return finalColor; 		                            		   

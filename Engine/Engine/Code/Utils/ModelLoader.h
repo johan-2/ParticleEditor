@@ -11,7 +11,7 @@
 class ModelLoader
 {
 public:
-	static Mesh* CreateMesh(aiMesh* mesh, const aiScene* scene, unsigned int flags, wchar_t* diffuseMap, wchar_t* normalMap, wchar_t* specularMap, float tiling, bool useMaterial, Entity* parent)
+	static Mesh* CreateMesh(aiMesh* mesh, const aiScene* scene, unsigned int flags, wchar_t* diffuseMap, wchar_t* normalMap, wchar_t* specularMap, wchar_t* emissiveMap, float tiling, bool useMaterial, Entity* parent)
 	{
 		// structures for vertex/index data
 		std::vector<Mesh::VertexData> vertices;
@@ -21,6 +21,7 @@ public:
 		std::wstring diffuse  = diffuseMap;
 		std::wstring normal   = normalMap;
 		std::wstring specular = specularMap;
+		std::wstring emissive = emissiveMap;
 
 		// if we want to load the textures from a material file
 		if (useMaterial)
@@ -56,6 +57,15 @@ public:
 					material->GetTexture(aiTextureType_SPECULAR, 0, &stringSpecular);
 
 					specular = GetRelativePathAndSetExtension(stringSpecular.C_Str(), ".dds");
+				}
+
+				// specular map
+				if (material->GetTextureCount(aiTextureType_EMISSIVE) > 0)
+				{
+					aiString emissiveSpecular;
+					material->GetTexture(aiTextureType_EMISSIVE, 0, &emissiveSpecular);
+
+					emissive = GetRelativePathAndSetExtension(emissiveSpecular.C_Str(), ".dds");
 				}
 			}
 		}
@@ -127,7 +137,7 @@ public:
 		}
 
 		// create mesh and buffers
-		Mesh* modelMesh = new Mesh(parent, flags, diffuse.c_str(), normal.c_str(), specular.c_str());
+		Mesh* modelMesh = new Mesh(parent, flags, diffuse.c_str(), normal.c_str(), specular.c_str(), emissive.c_str());
 		modelMesh->CreateBuffers(&vertices[0], &indices[0], vertices.size(), indices.size());
 
 		return modelMesh;
@@ -165,7 +175,7 @@ public:
 	}
 
 	// PRIMITIVES
-	static Mesh* CreateCube(unsigned int flags, wchar_t* diffuseMap, wchar_t* normalMap, wchar_t* specularMap, float tiling, Entity* parent)
+	static Mesh* CreateCube(unsigned int flags, wchar_t* diffuseMap, wchar_t* normalMap, wchar_t* specularMap, wchar_t* emissiveMap, float tiling, Entity* parent)
 	{
 		// allocate memory for vertex and index buffers
 		Mesh::VertexData vertices[24];
@@ -348,13 +358,13 @@ public:
 		vertices[23].color    = Color32(255, 255, 255, 255);
 
 		// create mesh and buffers	
-		Mesh* mesh = new Mesh(parent, flags, diffuseMap, normalMap, specularMap);
+		Mesh* mesh = new Mesh(parent, flags, diffuseMap, normalMap, specularMap, emissiveMap);
 		mesh->CreateBuffers(vertices, indices, 24, 36);
 
 		return mesh;
 	}
 
-	static Mesh* CreatePlane(unsigned int flags, wchar_t* diffuseMap, wchar_t* normalMap, wchar_t* specularMap, float tiling, Entity* parent)
+	static Mesh* CreatePlane(unsigned int flags, wchar_t* diffuseMap, wchar_t* normalMap, wchar_t* specularMap, wchar_t* emissiveMap, float tiling, Entity* parent)
 	{
 		Mesh::VertexData vertices[4];
 
@@ -389,13 +399,13 @@ public:
 		unsigned long indices[6]{ 0,1,2,2,1,3 };
 
 		// create mesh and buffers	
-		Mesh* mesh = new Mesh(parent, flags, diffuseMap, normalMap, specularMap);
+		Mesh* mesh = new Mesh(parent, flags, diffuseMap, normalMap, specularMap, emissiveMap);
 		mesh->CreateBuffers(vertices, indices, 24, 36);
 
 		return mesh;
 	}	
 
-	static Mesh* CreateSphere(unsigned int flags, wchar_t* diffuseMap, wchar_t* normalMap, wchar_t* specularMap, float tiling, Entity* parent)
+	static Mesh* CreateSphere(unsigned int flags, wchar_t* diffuseMap, wchar_t* normalMap, wchar_t* specularMap, wchar_t* emissiveMap, float tiling, Entity* parent)
 	{
 		//get assimp imoprter
 		Assimp::Importer importer;
@@ -406,10 +416,10 @@ public:
 		// assert if scene failed to be created
 		assert(scene != nullptr, "Failed to load aiScene for sphere %s", model);
 
-		return CreateMesh(scene->mMeshes[scene->mRootNode->mChildren[0]->mMeshes[0]], scene, flags, diffuseMap, normalMap, specularMap, tiling, false, parent);
+		return CreateMesh(scene->mMeshes[scene->mRootNode->mChildren[0]->mMeshes[0]], scene, flags, diffuseMap, normalMap, specularMap, emissiveMap, tiling, false, parent);
 	}
 
-	static Mesh* CreateGrid(unsigned int size, float cellSize, Color32 gridColor, unsigned int flags, wchar_t* diffuseMap, wchar_t* normalMap, wchar_t* specularMap, float tiling, Entity* parent)
+	static Mesh* CreateGrid(unsigned int size, float cellSize, Color32 gridColor, unsigned int flags, wchar_t* diffuseMap, wchar_t* normalMap, wchar_t* specularMap, wchar_t* emissiveMap, float tiling, Entity* parent)
 	{
 		Mesh::VertexData* vertices = new Mesh::VertexData[4 * (size * size)];
 		unsigned long*    indices  = new unsigned long[6 * (size * size)];
@@ -473,7 +483,7 @@ public:
 		}
 
 		// create mesh and buffers	
-		Mesh* mesh = new Mesh(parent, flags, diffuseMap, normalMap, specularMap);
+		Mesh* mesh = new Mesh(parent, flags, diffuseMap, normalMap, specularMap, emissiveMap);
 		mesh->CreateBuffers(vertices, indices, 4 * (size * size), 6 * (size * size));
 
 		delete[] vertices;

@@ -163,7 +163,13 @@ float4 Main(PixelInputType input) : SV_TARGET
 	float4 normal   = Texture[2].Load(int3(input.position.xy,0));
 	float4 diffuse  = Texture[3].Load(int3(input.position.xy,0));
 	float4 specular = Texture[4].Load(int3(input.position.xy,0));
-	
+
+	// alpha channel is flagged as 0 if this is a emissive pixel
+	// dont do any lightning calculations and only return the emissive
+	// color that is stored in the diffuse map
+	if (diffuse.a == 0)	
+		return float4(diffuse.rgb, 1);		
+		
 	float4 finalColor = float4(0,0,0,1);
 
 	float4 ambientColor     = GetAmbientColor(diffuse);

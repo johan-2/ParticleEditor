@@ -135,10 +135,10 @@ void ForwardAlphaShader::RenderForward(std::vector<Mesh*>& meshes)
 		ID3D11ShaderResourceView** meshTextures = mesh->GetTextureArray();
 
 		// fill texture array with all textures including the shadow map
-		ID3D11ShaderResourceView* t[4] = { meshTextures[0], meshTextures[1], meshTextures[2], shadowMap };
+		ID3D11ShaderResourceView* t[5] = { meshTextures[0], meshTextures[1], meshTextures[2], meshTextures[3], shadowMap };
 
 		// set SRV's
-		devCon->PSSetShaderResources(0, 4, t);
+		devCon->PSSetShaderResources(0, 5, t);
 
 		mesh->UploadBuffers();
 
