@@ -1,4 +1,17 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(377,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
+  SkyBox.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\objects\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\shaderhelpers.h(43): warning C4101: 'destination': unreferenced local variable
+c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\shaderhelpers.h(117): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\shaderhelpers.h(117): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\modelloader.h(417): warning C4002: too many arguments for function-like macro invocation 'assert'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\modelloader.h(141): warning C4267: 'argument': conversion from 'size_t' to 'unsigned int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\modelloader.h(433): warning C4018: '<': signed/unsigned mismatch
+  Renderer.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\objects\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\renderer.cpp(98): warning C4244: 'argument': conversion from 'const float' to 'unsigned int', possible loss of data
   PlanarReflectionShader.cpp
 c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\objects\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
   c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
@@ -10,4 +23,5 @@ c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\pla
 c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\planarreflectionshader.cpp(96): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
 c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\planarreflectionshader.cpp(128): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
 c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\planarreflectionshader.cpp(128): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
+  Generating Code...
   Engine.vcxproj -> C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\Engine.exe

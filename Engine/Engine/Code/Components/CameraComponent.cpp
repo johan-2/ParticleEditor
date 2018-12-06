@@ -13,7 +13,7 @@ void CameraComponent::Init3D(const float& fov)
 	_transform = GetComponent<TransformComponent>();
 
 	// Create the projection matrix for 3D rendering.	
-	XMStoreFloat4x4(&_projectionMatrix, XMMatrixPerspectiveFovLH(XMConvertToRadians(fov), SCREEN_WIDTH / SCREEN_HEIGHT, 0.1f, 500.0f));
+	XMStoreFloat4x4(&_projectionMatrix, XMMatrixPerspectiveFovLH(XMConvertToRadians(fov), SCREEN_WIDTH / SCREEN_HEIGHT, 0.1f, 50000.0f));
 	XMStoreFloat4x4(&_projectionMatrix, XMMatrixTranspose(XMLoadFloat4x4(&_projectionMatrix)));
 
 	CalculateViewMatrix();

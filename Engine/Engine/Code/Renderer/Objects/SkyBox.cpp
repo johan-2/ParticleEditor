@@ -9,6 +9,8 @@
 #include "DXRasterizerStates.h"
 #include "DXDepthStencilStates.h"
 #include "Systems.h"
+#include "ModelLoader.h"
+#include "Mesh.h"
 
 SkyBox::SkyBox(const wchar_t* textureFile):
 	_isActive(true)
@@ -18,237 +20,51 @@ SkyBox::SkyBox(const wchar_t* textureFile):
 	LoadCubemap(textureFile);
 
 	// create shaders
-	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexSkyBox.vs", _vertexShader, _vertexShaderByteCode);
-	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelSkyBox.ps", _pixelShader, _pixelShaderByteCode);
+	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexSkyBox.vs",    _vertexDomeShader, _vertexDomeShaderByteCode);
+	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelSkyBox.ps",      _pixelDomeShader,  _pixelDomeShaderByteCode);
+	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexSkyBoxSun.vs", _vertexSunShader,  _vertexSunShaderByteCode);
+	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelSkyBoxSun.ps",   _pixelSunShader,   _pixelSunShaderByteCode);
 
 	// create constant buffer
 	SHADER_HELPERS::CreateConstantBuffer(_constantBufferVertex);
+
+	_sun.position     = XMFLOAT3(0, 0, 0);
+	_sun.rotation     = XMFLOAT3(0, 0, 0);
+	_sun.scale        = XMFLOAT3(1, 1, 1);
+	_sun.direction    = XMFLOAT3(1, 0, 0);
+	_sun.distance     = XMFLOAT3(20, 20, 20);
+	_sun.directionPtr = nullptr;
+
+	// calculate the matrices that wont ever change
+	XMStoreFloat4x4(&_sun.rotationMatrix, XMMatrixIdentity());
+	XMStoreFloat4x4(&_sun.scaleMatrix,    XMMatrixScalingFromVector(XMLoadFloat3(&_sun.scale)));
 }
 
 SkyBox::~SkyBox()
 {
-	_vertexShaderByteCode->Release();
-	_pixelShaderByteCode->Release();
+	_vertexDomeShaderByteCode->Release();
+	_pixelDomeShaderByteCode->Release();
 
-	_vertexShader->Release();
-	_pixelShader->Release();
-
-	_vertexBuffer->Release();
-	_indexBuffer->Release();
+	_vertexDomeShader->Release();
+	_pixelDomeShader->Release();
 
 	_constantBufferVertex->Release();
 }
 
 void SkyBox::CreateBox() 
 {
-	// create vertex and index buffers
-	VertexData    vertices[24];
-	unsigned long indices[36]
-	{
-		0,1,2,2,1,3,
-		4,5,6,6,5,7,
-		8,9,10,10,9,11,
-		12,13,14,14,13,15,
-		16,17,18,18,17,19,
-		20,21,22,22,21,23
-	};
-
-	vertices[0].position = XMFLOAT3(-0.5, 0.5, -0.5);
-	vertices[0].texture  = XMFLOAT2(0, 0);
-	vertices[0].normal   = XMFLOAT3(0, 0, -1);
-	vertices[0].tangent  = XMFLOAT3(1, 0, 0);
-	vertices[0].binormal = XMFLOAT3(-0, 1, 0);
-
-	vertices[1].position = XMFLOAT3(0.5, 0.5, -0.5);
-	vertices[1].texture  = XMFLOAT2(1, 0);
-	vertices[1].normal   = XMFLOAT3(0, 0, -1);
-	vertices[1].tangent  = XMFLOAT3(1, 0, 0);
-	vertices[1].binormal = XMFLOAT3(-0, 1, 0);
-
-	vertices[2].position = XMFLOAT3(-0.5, -0.5, -0.5);
-	vertices[2].texture  = XMFLOAT2(0, 1);
-	vertices[2].normal   = XMFLOAT3(0, 0, -1);
-	vertices[2].tangent  = XMFLOAT3(1, 0, 0);
-	vertices[2].binormal = XMFLOAT3(-0, 1, 0);
-
-	vertices[3].position = XMFLOAT3(0.5, -0.5, -0.5);
-	vertices[3].texture  = XMFLOAT2(1, 1);
-	vertices[3].normal   = XMFLOAT3(0, 0, -1);
-	vertices[3].tangent  = XMFLOAT3(1, 0, 0);
-	vertices[3].binormal = XMFLOAT3(-0, 1, 0);
-
-	vertices[4].position = XMFLOAT3(0.5, 0.5, -0.5);
-	vertices[4].texture  = XMFLOAT2(0, 0);
-	vertices[4].normal   = XMFLOAT3(1, 0, 0);
-	vertices[4].tangent  = XMFLOAT3(0, 0, 1);
-	vertices[4].binormal = XMFLOAT3(0, 1, 0);
-
-	vertices[5].position = XMFLOAT3(0.5, 0.5, 0.5);
-	vertices[5].texture  = XMFLOAT2(1, 0);
-	vertices[5].normal   = XMFLOAT3(1, 0, 0);
-	vertices[5].tangent  = XMFLOAT3(0, 0, 1);
-	vertices[5].binormal = XMFLOAT3(0, 1, 0);
-
-	vertices[6].position = XMFLOAT3(0.5, -0.5, -0.5);
-	vertices[6].texture  = XMFLOAT2(0, 1);
-	vertices[6].normal   = XMFLOAT3(1, 0, 0);
-	vertices[6].tangent  = XMFLOAT3(0, 0, 1);
-	vertices[6].binormal = XMFLOAT3(0, 1, 0);
-
-	vertices[7].position = XMFLOAT3(0.5, -0.5, 0.5);
-	vertices[7].texture  = XMFLOAT2(1, 1);
-	vertices[7].normal   = XMFLOAT3(1, 0, 0);
-	vertices[7].tangent  = XMFLOAT3(0, 0, 1);
-	vertices[7].binormal = XMFLOAT3(0, 1, 0);
-
-	vertices[8].position = XMFLOAT3(0.5, 0.5, 0.5);
-	vertices[8].texture  = XMFLOAT2(0, 0);
-	vertices[8].normal   = XMFLOAT3(0, 0, 1);
-	vertices[8].tangent  = XMFLOAT3(-1, 0, 0);
-	vertices[8].binormal = XMFLOAT3(0, 1, -0);
-
-	vertices[9].position = XMFLOAT3(-0.5, 0.5, 0.5);
-	vertices[9].texture  = XMFLOAT2(1, 0);
-	vertices[9].normal   = XMFLOAT3(0, 0, 1);
-	vertices[9].tangent  = XMFLOAT3(-1, 0, 0);
-	vertices[9].binormal = XMFLOAT3(0, 1, -0);
-
-	vertices[10].position = XMFLOAT3(0.5, -0.5, 0.5);
-	vertices[10].texture  = XMFLOAT2(0, 1);
-	vertices[10].normal   = XMFLOAT3(0, 0, 1);
-	vertices[10].tangent  = XMFLOAT3(-1, 0, 0);
-	vertices[10].binormal = XMFLOAT3(0, 1, -0);
-
-	vertices[11].position = XMFLOAT3(-0.5, -0.5, 0.5);
-	vertices[11].texture  = XMFLOAT2(1, 1);
-	vertices[11].normal   = XMFLOAT3(0, 0, 1);
-	vertices[11].tangent  = XMFLOAT3(-1, 0, 0);
-	vertices[11].binormal = XMFLOAT3(0, 1, -0);
-
-	vertices[12].position = XMFLOAT3(-0.5, 0.5, 0.5);
-	vertices[12].texture  = XMFLOAT2(0, 0);
-	vertices[12].normal   = XMFLOAT3(-1, 0, 0);
-	vertices[12].tangent  = XMFLOAT3(0, 0, -1);
-	vertices[12].binormal = XMFLOAT3(0, 1, 0);
-
-	vertices[13].position = XMFLOAT3(-0.5, 0.5, -0.5);
-	vertices[13].texture  = XMFLOAT2(1, 0);
-	vertices[13].normal   = XMFLOAT3(-1, 0, 0);
-	vertices[13].tangent  = XMFLOAT3(0, 0, -1);
-	vertices[13].binormal = XMFLOAT3(0, 1, 0);
-
-	vertices[14].position = XMFLOAT3(-0.5, -0.5, 0.5);
-	vertices[14].texture  = XMFLOAT2(0, 1);
-	vertices[14].normal   = XMFLOAT3(-1, 0, 0);
-	vertices[14].tangent  = XMFLOAT3(0, 0, -1);
-	vertices[14].binormal = XMFLOAT3(0, 1, 0);
-
-	vertices[15].position = XMFLOAT3(-0.5, -0.5, -0.5);
-	vertices[15].texture  = XMFLOAT2(1, 1);
-	vertices[15].normal   = XMFLOAT3(-1, 0, 0);
-	vertices[15].tangent  = XMFLOAT3(0, 0, -1);
-	vertices[15].binormal = XMFLOAT3(0, 1, 0);
-
-	vertices[16].position = XMFLOAT3(-0.5, 0.5, 0.5);
-	vertices[16].texture  = XMFLOAT2(0, 0);
-	vertices[16].normal   = XMFLOAT3(0, 1, 0);
-	vertices[16].tangent  = XMFLOAT3(1, 0, 0);
-	vertices[16].binormal = XMFLOAT3(0, 0, 1);
-
-	vertices[17].position = XMFLOAT3(0.5, 0.5, 0.5);
-	vertices[17].texture  = XMFLOAT2(1, 0);
-	vertices[17].normal   = XMFLOAT3(0, 1, 0);
-	vertices[17].tangent  = XMFLOAT3(1, 0, 0);
-	vertices[17].binormal = XMFLOAT3(0, 0, 1);
-
-	vertices[18].position = XMFLOAT3(-0.5, 0.5, -0.5);
-	vertices[18].texture  = XMFLOAT2(0, 1);
-	vertices[18].normal   = XMFLOAT3(0, 1, 0);
-	vertices[18].tangent  = XMFLOAT3(1, 0, 0);
-	vertices[18].binormal = XMFLOAT3(0, 0, 1);
-
-	vertices[19].position = XMFLOAT3(0.5, 0.5, -0.5);
-	vertices[19].texture  = XMFLOAT2(1, 1);
-	vertices[19].normal   = XMFLOAT3(0, 1, 0);
-	vertices[19].tangent  = XMFLOAT3(1, 0, 0);
-	vertices[19].binormal = XMFLOAT3(0, 0, 1);
-
-	vertices[20].position = XMFLOAT3(-0.5, -0.5, -0.5);
-	vertices[20].texture  = XMFLOAT2(0, 0);
-	vertices[20].normal   = XMFLOAT3(0, -1, 0);
-	vertices[20].tangent  = XMFLOAT3(1, 0, 0);
-	vertices[20].binormal = XMFLOAT3(0, 0, -1);
-
-	vertices[21].position = XMFLOAT3(0.5, -0.5, -0.5);
-	vertices[21].texture  = XMFLOAT2(1, 0);
-	vertices[21].normal   = XMFLOAT3(0, -1, 0);
-	vertices[21].tangent  = XMFLOAT3(1, 0, 0);
-	vertices[21].binormal = XMFLOAT3(0, 0, -1);
-
-	vertices[22].position = XMFLOAT3(-0.5, -0.5, 0.5);
-	vertices[22].texture  = XMFLOAT2(0, 1);
-	vertices[22].normal   = XMFLOAT3(0, -1, 0);
-	vertices[22].tangent  = XMFLOAT3(1, 0, 0);
-	vertices[22].binormal = XMFLOAT3(0, 0, -1);
-
-	vertices[23].position = XMFLOAT3(0.5, -0.5, 0.5);
-	vertices[23].texture  = XMFLOAT2(1, 1);
-	vertices[23].normal   = XMFLOAT3(0, -1, 0);
-	vertices[23].tangent  = XMFLOAT3(1, 0, 0);
-	vertices[23].binormal = XMFLOAT3(0, 0, -1);
-
-	ID3D11Device* device = Systems::dxManager->GetDevice();
-
-	// create the descriptions and rasourcedata to buffers
-	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
-	D3D11_SUBRESOURCE_DATA vertexData, indexData;
-
-	// Set up the description of the vertex buffer.
-	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	vertexBufferDesc.ByteWidth = sizeof(VertexData) * 24;
-	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	vertexBufferDesc.CPUAccessFlags = 0;
-	vertexBufferDesc.MiscFlags = 0;
-	vertexBufferDesc.StructureByteStride = 0;
-
-	// Set up the description of the index buffer.
-	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	indexBufferDesc.ByteWidth = sizeof(unsigned long) * 36;
-	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	indexBufferDesc.CPUAccessFlags = 0;
-	indexBufferDesc.MiscFlags = 0;
-	indexBufferDesc.StructureByteStride = 0;
-
-	// Give the subresource structure a pointer to the vertex data.
-	vertexData.pSysMem = vertices;
-	vertexData.SysMemPitch = 0;
-	vertexData.SysMemSlicePitch = 0;
-
-	// Give the subresource structure a pointer to the index data.
-	indexData.pSysMem = indices;
-	indexData.SysMemPitch = 0;
-	indexData.SysMemSlicePitch = 0;
-
-	HRESULT result;
-
-	// create vertex and index buffers
-	result = device->CreateBuffer(&vertexBufferDesc, &vertexData, &_vertexBuffer);
-	if (FAILED(result))
-		DX_ERROR::PrintError(result, "failed to create vertex buffer in skybox.cpp");
-
-	result = device->CreateBuffer(&indexBufferDesc, &indexData, &_indexBuffer);
-	if (FAILED(result))
-		DX_ERROR::PrintError(result,"failed to create index buffer in skybox.cpp");
+	_domeMesh = ModelLoader::CreateSphere(0, L"", L"", L"", L"", 1.0f, nullptr);
+	_sun.mesh = ModelLoader::CreateSphere(0, L"Textures/SunTest.dds", L"", L"", L"", 1.0f, nullptr);
 }
 
 void SkyBox::LoadCubemap(const wchar_t* file) 
 {
 	// remove the old cubemap texture if one exist
-	if (_texture != nullptr)
-		_texture->Release();
+	if (_cubeMap != nullptr)
+		_cubeMap->Release();
 
 	// create cubemap from file
-	HRESULT result = DirectX::CreateDDSTextureFromFile(Systems::dxManager->GetDevice(), file, NULL, &_texture);
+	HRESULT result = DirectX::CreateDDSTextureFromFile(Systems::dxManager->GetDevice(), file, NULL, &_cubeMap);
 
 	// get and print error message if failed
 	if (FAILED(result))						
@@ -260,6 +76,7 @@ void SkyBox::Render(bool useReflectViewMatrix)
 	if (!_isActive)
 		return;
 
+	// RENDER SKYDOME SPHERE
 	// get DX manager
 	DXManager& DXM = *Systems::dxManager;
 
@@ -269,25 +86,15 @@ void SkyBox::Render(bool useReflectViewMatrix)
 	// get game camera
 	CameraComponent* camera = Systems::cameraManager->GetCurrentCameraGame();
 
-	// Set vertex buffer stride and offset.
-	unsigned int stride = sizeof(VertexData);
-	unsigned int offset = 0;
-
-	// Set the vertex buffer 
-	devCon->IASetVertexBuffers(0, 1, &_vertexBuffer, &stride, &offset);
-
-	// Set the index buffer 
-	devCon->IASetIndexBuffer(_indexBuffer, DXGI_FORMAT_R32_UINT, 0);
-
 	// set shaders			
-	devCon->VSSetShader(_vertexShader, NULL, 0);
-	devCon->PSSetShader(_pixelShader, NULL, 0);
+	devCon->VSSetShader(_vertexDomeShader, NULL, 0);
+	devCon->PSSetShader(_pixelDomeShader, NULL, 0);
 
 	// set constant buffer
 	devCon->VSSetConstantBuffers(0, 1, &_constantBufferVertex);
 
 	// set texture
-	devCon->PSSetShaderResources(0, 1, &_texture);
+	devCon->PSSetShaderResources(0, 1, &_cubeMap);
 
 	// render with opaque blend
 	DXM.BlendStates()->SetBlendState(BLEND_STATE::BLEND_OPAQUE);
@@ -310,6 +117,7 @@ void SkyBox::Render(bool useReflectViewMatrix)
 	vertexData.view       = camera->GetViewMatrix();
 	vertexData.projection = camera->GetProjectionMatrix();
 
+	// if the skybox is being rendered to a reflection map
 	if (useReflectViewMatrix)
 	{
 		vertexData.view = camera->GetReflectionViewMatrix(camera->GetComponent<TransformComponent>()->GetPositionVal().y);
@@ -319,12 +127,52 @@ void SkyBox::Render(bool useReflectViewMatrix)
 	// update constant buffer
 	SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(ConstantVertex), _constantBufferVertex);
 
-	// draw
-	devCon->DrawIndexed(36, 0, 0);
+	// upload and draw dome mesh
+	_domeMesh->UploadBuffers();	
+	devCon->DrawIndexed(_domeMesh->GetNumIndices(), 0, 0);
+
+	// RENDER SUN
+	XMFLOAT3 cameraPos = camera->GetComponent<TransformComponent>()->GetPositionVal();
+
+	CaluclateSunMatrix(cameraPos);
+
+	// set world matrix
+	vertexData.world = _sun.worldMatrix;
+
+	// update constant buffer
+	SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(ConstantVertex), _constantBufferVertex);
+
+	// set shaders			
+	devCon->VSSetShader(_vertexSunShader, NULL, 0);
+	devCon->PSSetShader(_pixelSunShader, NULL, 0);
+
+	// set texture
+	devCon->PSSetShaderResources(0, 1, &_sun.mesh->GetTextureArray()[0]);
+
+	// upload and draw sun
+	_sun.mesh->UploadBuffers();
+	devCon->DrawIndexed(_sun.mesh->GetNumIndices(), 0, 0);
 
 	// enable rendering of all pixels
 	DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::ENABLED);
 
 	// set back to backcull
 	DXM.RasterizerStates()->SetRasterizerState(RASTERIZER_STATE::BACKCULL);
+}
+
+void SkyBox::CaluclateSunMatrix(XMFLOAT3 cameraPosition)
+{
+	XMFLOAT3 offset;
+	XMFLOAT3 sunDirection = _sun.directionPtr != nullptr ? _sun.directionPtr->GetForward() : _sun.direction;
+	
+	XMStoreFloat3(&offset,        XMVectorMultiply(XMLoadFloat3(&sunDirection),   XMLoadFloat3(&_sun.distance)));
+	XMStoreFloat3(&_sun.position, XMVectorSubtract(XMLoadFloat3(&cameraPosition), XMLoadFloat3(&offset)));
+
+	// create new position matrix from the new sun position
+	XMStoreFloat4x4(&_sun.positionMatrix, XMMatrixTranslationFromVector(XMLoadFloat3(&_sun.position)));
+	
+	// multiply matrices for the final world matrix
+	XMStoreFloat4x4(&_sun.worldMatrix, XMMatrixMultiply(XMLoadFloat4x4(&_sun.scaleMatrix), XMLoadFloat4x4(&_sun.rotationMatrix)));
+	XMStoreFloat4x4(&_sun.worldMatrix, XMMatrixMultiply(XMLoadFloat4x4(&_sun.worldMatrix), XMLoadFloat4x4(&_sun.positionMatrix)));
+	XMStoreFloat4x4(&_sun.worldMatrix, XMMatrixTranspose(XMLoadFloat4x4(&_sun.worldMatrix)));
 }

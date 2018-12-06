@@ -81,7 +81,8 @@ void Framework::Start()
 	// get transform of the camera that renders the depthmap
 	TransformComponent* dt = CM.GetCurrentCameraDepthMap()->GetComponent<TransformComponent>();
 
-	// create directional light and give it the same position/rotation as the depth render camera
+	// create directional light and give it pointer to the depth render camera transform
+	// it will use the forward of this camera as the light direction
 	Entity* directionalLight = new Entity;
 	directionalLight->AddComponent<LightDirectionComponent>()->Init(XMFLOAT4(0.9f, 0.9f, 0.9f, 1), dt);
 
@@ -105,7 +106,7 @@ void Framework::Start()
 	sphere->AddComponent<LightPointComponent>()->Init(9, 20, XMFLOAT3(0.0f, 1.0f, 0.0f), 0.0f, 1.0f, 0.5f);
 	
 	Entity* floor = new Entity();
-	floor->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(20, 1, 20));
+	floor->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(30, 1, 30));
 	floor->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::PLANE, ALPHA_REFLECTION, L"Textures/marble.dds", L"Textures/marbleNormal.dds", L"Textures/FlatHighSpecular.dds", L"", 5.0f);
 	floor->GetComponent<ModelComponent>()->GetMeshes()[0]->SetReflectionData(Mesh::ReflectiveData(0.2f, false, true));
 

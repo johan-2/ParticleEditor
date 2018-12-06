@@ -12,7 +12,8 @@ Mesh::Mesh(Entity* parent, unsigned int FLAGS, const wchar_t* diffuseMap, const 
 	_FLAGS = FLAGS;
 
 	// get pointer to transform components
-	_transform = parent->GetComponent<TransformComponent>();
+	if (parent != nullptr)
+		_transform = parent->GetComponent<TransformComponent>();
 
 	// load into wstrings so we can check if they are empty
 	std::wstring diffuse(diffuseMap);

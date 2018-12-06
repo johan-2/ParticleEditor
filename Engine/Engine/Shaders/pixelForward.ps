@@ -48,7 +48,7 @@ float4 GetDirectionalColor(PixelInputType input)
 {
 	// do all shadow calculations first to decide if the pixel should be lit or not
 	float bias         = 0.00001;
-	float numInLight   = 0;
+	float numInLight   = 9;
 	float lightPercent = 0;
 	
 	// get the projected texture coordinates based on the position in eye of the light
@@ -56,8 +56,10 @@ float4 GetDirectionalColor(PixelInputType input)
 	smTexCoord.x = ((input.positionLightSpace.x / input.positionLightSpace.w) / 2.0) + 0.5;
 	smTexCoord.y = ((-input.positionLightSpace.y / input.positionLightSpace.w) / 2.0) + 0.5;
 	
-	if((saturate(smTexCoord.x) == smTexCoord.x) && (saturate(smTexCoord.y) == smTexCoord.y))
+	if ((saturate(smTexCoord.x) == smTexCoord.x) && (saturate(smTexCoord.y) == smTexCoord.y))
 	{
+		numInLight = 0;
+		
 		float neighbour = 1 / 8192.0; // hardcoded for now, dont forget to change if depthmap res change	
 		float depthMapValues[9];
 		
@@ -79,7 +81,7 @@ float4 GetDirectionalColor(PixelInputType input)
 				numInLight++;
 		}
 		
-		if(numInLight == 0)
+		if (numInLight == 0)
 			return float4(0,0,0,0);	
 	}
 	

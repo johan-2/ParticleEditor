@@ -81,6 +81,8 @@ void Renderer::Initailize()
 
 	CreateDepthMap();
 
+	_skyBox->SetSunDirectionTransformPtr(_cameraDepth->GetComponent<TransformComponent>());
+
 #ifdef _DEBUG
 	CreateDebugImages();
 #endif
