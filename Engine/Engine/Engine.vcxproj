@@ -182,6 +182,7 @@
     <ClCompile Include="Code\Renderer\ShaderPrograms\DeferredShader.cpp" />
     <ClCompile Include="Code\Renderer\ShaderPrograms\DepthShader.cpp" />
     <ClCompile Include="Code\Renderer\ShaderPrograms\ForwardAlphaShader.cpp" />
+    <ClCompile Include="Code\Renderer\ShaderPrograms\PostProcessingShader.cpp" />
     <ClCompile Include="Code\Renderer\ShaderPrograms\ImGUIShader.cpp" />
     <ClCompile Include="Code\Renderer\ShaderPrograms\ParticleShader.cpp" />
     <ClCompile Include="Code\Renderer\ShaderPrograms\PlanarReflectionShader.cpp" />
@@ -239,6 +240,7 @@
     <ClInclude Include="Code\Renderer\ShaderPrograms\DeferredShader.h" />
     <ClInclude Include="Code\Renderer\ShaderPrograms\DepthShader.h" />
     <ClInclude Include="Code\Renderer\ShaderPrograms\ForwardAlphaShader.h" />
+    <ClInclude Include="Code\Renderer\ShaderPrograms\PostProcessingShader.h" />
     <ClInclude Include="Code\Renderer\ShaderPrograms\ImGUIShader.h" />
     <ClInclude Include="Code\Renderer\ShaderPrograms\ParticleShader.h" />
     <ClInclude Include="Code\Renderer\ShaderPrograms\PlanarReflectionShader.h" />

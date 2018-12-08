@@ -25,6 +25,7 @@
 #include "Systems.h"
 #include "FreeMoveComponent.h"
 #include "PlanarReflectionShader.h"
+#include "PostProcessingShader.h"
 
 using namespace DirectX;
 
@@ -36,7 +37,7 @@ Renderer::~Renderer()
 {
 	delete _depthMap;
 	delete _gBuffer;
-	delete _screenQuad;
+	delete _fullScreenQuad;
 	delete _skyBox;
 	delete _depthShader;
 	delete _deferredShader;
@@ -62,9 +63,10 @@ void Renderer::Initailize()
 	_forwardAlphaShader     = new ForwardAlphaShader();
 	_wireframeShader        = new WireframeShader();
 	_planarReflectionShader = new PlanarReflectionShader();
+	_PostProcessingShader            = new PostProcessingShader();
 
 	// create skybox
-	_skyBox = new SkyBox(L"Skyboxes/ThickCloudsWater.dds");
+	_skyBox = new SkyBox(L"Skyboxes/ThickCloudsWater.dds", SKY_DOME_RENDER_MODE::CUBEMAP_COLOR_BLEND);
 
 	// create input layouts
 	_inputLayouts = new DXInputLayouts();
@@ -76,14 +78,20 @@ void Renderer::Initailize()
 	// create gbuffer for deffered rendering
 	_gBuffer = new GBuffer();
 
-	// create fullscreenquad for deferred rendering
-	_screenQuad = new ScreenQuad();
+	// create fullscreenquad for deferred rendering 
+	// and to project the final scene image after post processing
+	_fullScreenQuad = new ScreenQuad();
+
+	_mainRendertarget = new RenderToTexture(SCREEN_WIDTH, SCREEN_HEIGHT, false);
 
 	CreateDepthMap();
 
 	_skyBox->SetSunDirectionTransformPtr(_cameraDepth->GetComponent<TransformComponent>());
+	_skyBox->SetSunDistance(5.0f);
+	_skyBox->SetThreeLayerColorBlendSettings(XMFLOAT4(10,  10,  10,  30), XMFLOAT4(238, 105, 49,  40), XMFLOAT4(21,  90,  251, 50));
+	_skyBox->SetCubeMapColorBlendSettings(XMFLOAT4(21, 90, 251, 255), XMFLOAT4(199, 176, 135, 255), 40, 55, 80, false);
 
-#ifdef _DEBUG
+#ifdef _DEBUG				   
 	CreateDebugImages();
 #endif
 }
@@ -91,17 +99,17 @@ void Renderer::Initailize()
 void Renderer::CreateDepthMap() 
 {
 	// depthmap settings
-	const float orthoSize = 120;
-	const float res = 8192.0f;
+	const float orthoSize = 250;
+	const float res       = 8192.0f;
 
 	// create depthmap render texture
 	_depthMap = new RenderToTexture(res, res, true);
 
 	// create camera entity with orthographic view for shadowmap rendering
 	_cameraDepth = new Entity();
-	_cameraDepth->AddComponent<TransformComponent>()->Init(XMFLOAT3(25.0f, 30.0f, -40.0f), XMFLOAT3(40.0f, -30.0f, 0));
-	_cameraDepth->AddComponent<CameraComponent>()->Init2D(XMFLOAT2(orthoSize, orthoSize), XMFLOAT2(0.01f, 1000.0f));
-	_cameraDepth->AddComponent<FreeMoveComponent>()->init(20, 0.1f);
+	_cameraDepth->AddComponent<TransformComponent>()->Init(XMFLOAT3(-6, 325, 9), XMFLOAT3(85.0f, -90.0f, 0));
+	_cameraDepth->AddComponent<CameraComponent>()->Init2D(XMFLOAT2(orthoSize, orthoSize), XMFLOAT2(0.01f, 5000.0f));
+	_cameraDepth->AddComponent<FreeMoveComponent>()->init(80, 0.1f);
 
 	// start the free moce component of shadow camera inactive
 	_cameraDepth->GetComponent<FreeMoveComponent>()->SetActive(false);
@@ -110,7 +118,7 @@ void Renderer::CreateDepthMap()
 	CameraComponent* depthCamera = _cameraDepth->GetComponent<CameraComponent>();
 
 	// give camera a reference to the SRV in depthMap render texture
-	depthCamera->SetSRV(_depthMap->GetShaderResource());
+	depthCamera->SetSRV(_depthMap->GetDepthStencilSRV());
 
 	// set this camera to the active depth render camera
 	Systems::cameraManager->SetCurrentCameraDepthMap(depthCamera);
@@ -121,7 +129,7 @@ void Renderer::CreateDebugImages()
 	// create debug images to show each texture in the G buffer and the depth map
 	Entity* shadowMapQuad = new Entity();
 	shadowMapQuad->AddComponent<QuadComponent>()->Init(XMFLOAT2(SCREEN_WIDTH * 0.06f, SCREEN_HEIGHT * 0.1f), XMFLOAT2(SCREEN_WIDTH * 0.08f, SCREEN_WIDTH * 0.08f), L"");
-	shadowMapQuad->GetComponent<QuadComponent>()->SetTexture(_depthMap->GetShaderResource());
+	shadowMapQuad->GetComponent<QuadComponent>()->SetTexture(_depthMap->GetDepthStencilSRV());
 
 	Entity* positionQuad = new Entity();
 	positionQuad->AddComponent<QuadComponent>()->Init(XMFLOAT2(SCREEN_WIDTH * 0.18f, SCREEN_HEIGHT * 0.1f), XMFLOAT2(SCREEN_WIDTH * 0.1f, SCREEN_HEIGHT * 0.1f), L"");
@@ -145,8 +153,9 @@ void Renderer::Render()
 	// get dx manager
 	DXManager& dXM = *Systems::dxManager;
 
-	// clear the main rendertarget
+	// clear the backbuffer rendertarget
 	dXM.ClearRenderTarget(_clearColor[0], _clearColor[1], _clearColor[2], _clearColor[3]);
+	_mainRendertarget->ClearRenderTarget(_clearColor[0], _clearColor[1], _clearColor[2], _clearColor[3], false);
 
 	// set input layout for 3dmeshes
 	_inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT3D);
@@ -181,8 +190,13 @@ void Renderer::Render()
 	_inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT3D);
 	_forwardAlphaShader->RenderForward(_meshes[S_FORWARD_ALPHA]);
 
-	// render UI quads
+	// render the final 2d stuff 
 	_inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT2D);
+
+	// Render post processing 
+	_PostProcessingShader->Render(_fullScreenQuad, _mainRendertarget->GetRenderTargetSRV());
+
+	// render UI
 	_quadShader->RenderQuadUI(_quads);
 	
 	// render IM GUI
@@ -195,7 +209,7 @@ void Renderer::RenderDeferred()
 	DXManager& dXM = *Systems::dxManager;
 		
 	// set the rendertargets of the GBuffer active		
-	_gBuffer->SetRenderTargets();		
+	_gBuffer->SetRenderTargets(_mainRendertarget->GetDepthStencil());		
 
 	// render all geometry info to the render targets
 	_deferredShader->RenderGeometry(_meshes[S_DEFERRED]);
@@ -204,10 +218,10 @@ void Renderer::RenderDeferred()
 	_inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT2D);
 
 	// set to defualt rendertarget 
-	dXM.SetRenderTarget(nullptr, nullptr, true, false);
+	_mainRendertarget->SetRendertarget(false, false);
 
 	// upload the vertices of the screensized quad
-	_screenQuad->UploadBuffers();
+	_fullScreenQuad->UploadBuffers();
 
 	// render lights as 2d post processing
 	_deferredShader->RenderLightning(_gBuffer);
@@ -224,12 +238,16 @@ void Renderer::RenderDepth()
 	// clear the depth map render texture to black
 	_depthMap->ClearRenderTarget(0, 0, 0, 0, true);
 
-	// set the depth stencil view active
-	dXM.SetRenderTarget(nullptr, _depthMap->GetDepthStencil());
+	_depthMap->SetRendertarget(true, false);
 
 	// set the viewport of the camera that renders the depth
 	dXM.SetViewport(_depthMap->GetViewport(), false);
 
 	// render all meshes 
 	_depthShader->RenderDepth(_meshes[S_DEPTH]);
+}
+
+void Renderer::SetMainRenderTarget()
+{
+	_mainRendertarget->SetRendertarget(false, false); 
 }

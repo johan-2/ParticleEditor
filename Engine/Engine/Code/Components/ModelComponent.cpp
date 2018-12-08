@@ -19,6 +19,7 @@ ModelComponent::~ModelComponent()
 void ModelComponent::InitModel(char* model, unsigned int flags, wchar_t* diffuseMap, wchar_t* normalMap, wchar_t* specularMap, wchar_t* emissiveMap, bool useMaterial, float tiling)
 {
 	_FLAGS = flags;
+	_useMaterial = useMaterial;
 
 	//get assimp imoprter
 	Assimp::Importer importer;
@@ -101,7 +102,7 @@ void ModelComponent::ProcessNode(aiNode* node, const aiScene* scene, wchar_t* di
 	for (UINT i = 0; i < node->mNumMeshes; i++)
 	{
 		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-		_meshes.push_back(ModelLoader::CreateMesh(mesh, scene, _FLAGS, diffuseMap, normalMap, specularMap, emissiveMap, useMaterial, tiling, _parent));
+		_meshes.push_back(ModelLoader::CreateMesh(mesh, scene, _FLAGS, diffuseMap, normalMap, specularMap, emissiveMap, _useMaterial, tiling, _parent));
 	}
 
 	// recursivly loop over and process all child nodes

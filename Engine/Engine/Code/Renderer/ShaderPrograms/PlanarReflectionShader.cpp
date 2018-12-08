@@ -34,7 +34,7 @@ PlanarReflectionShader::PlanarReflectionShader()
 
 	Entity* reflectionQuad = new Entity();
 	reflectionQuad->AddComponent<QuadComponent>()->Init(XMFLOAT2(SCREEN_WIDTH * 0.66f, SCREEN_HEIGHT * 0.1f), XMFLOAT2(SCREEN_WIDTH * 0.1f, SCREEN_HEIGHT * 0.1f), L"");
-	reflectionQuad->GetComponent<QuadComponent>()->SetTexture(_reflectionMap->GetShaderResource());
+	reflectionQuad->GetComponent<QuadComponent>()->SetTexture(_reflectionMap->GetRenderTargetSRV());
 }
 
 PlanarReflectionShader::~PlanarReflectionShader()
@@ -136,10 +136,10 @@ void PlanarReflectionShader::Render(std::vector<Mesh*> reflectionMeshes,
 
 		// clear our reflection map render texture and set i to active
 		_reflectionMap->ClearRenderTarget(0,0,0,1, false);
-		_reflectionMap->SetRendertarget();
+		_reflectionMap->SetRendertarget(false, false);
 
 		// get the clip plane of the reflection mesh so we dont render anything below this plane
-		XMFLOAT4 clipPlane(0, 1, 0, mesh->GetPosition().y);
+		XMFLOAT4 clipPlane(0, 1, 0, -mesh->GetPosition().y);
 
 		// get the reflection view matrix based on moving the camera under the mesh by the distance between mesh and camera y position
 		// this also inverts the x rotation so we will look up instead of down
@@ -194,8 +194,8 @@ void PlanarReflectionShader::Render(std::vector<Mesh*> reflectionMeshes,
 		}
 		
 		// set back to defualt render target and render the reflection mesh
-		DXM.SetRenderTarget(nullptr, nullptr, true, false);
-
+		Systems::renderer->SetMainRenderTarget();
+		
 		// set shaders
 		devCon->VSSetShader(_planarVertexShader, NULL, 0);
 		devCon->PSSetShader(_planarPixelShader, NULL, 0);
@@ -227,7 +227,7 @@ void PlanarReflectionShader::Render(std::vector<Mesh*> reflectionMeshes,
 		ID3D11ShaderResourceView** meshTextures = mesh->GetTextureArray();
 
 		// fill texture array with all textures including the shadow map and reflection map
-		ID3D11ShaderResourceView* t[6] = { meshTextures[0], meshTextures[1], meshTextures[2], meshTextures[3], shadowMap, _reflectionMap->GetShaderResource() };
+		ID3D11ShaderResourceView* t[6] = { meshTextures[0], meshTextures[1], meshTextures[2], meshTextures[3], shadowMap, _reflectionMap->GetRenderTargetSRV() };
 
 		// set SRV's
 		devCon->PSSetShaderResources(0, 6, t);

@@ -84,6 +84,6 @@ void ScreenQuad::UploadBuffers()
 
 	devCon->IASetVertexBuffers(0, 1, &_vertexBuffer, &stride, &offset);
 	devCon->IASetIndexBuffer(_indexBuffer, DXGI_FORMAT_R32_UINT, 0);
-
 }
+
 

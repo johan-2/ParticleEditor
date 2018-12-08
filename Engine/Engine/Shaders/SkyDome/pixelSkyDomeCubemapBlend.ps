@@ -1,0 +1,44 @@
+TextureCube  Texture;
+SamplerState SampleType[2]; // wrap,clamp 	
+
+uniform float4 u_topBottomColor;
+uniform float4 u_middleColor;
+uniform float  u_bottomBlend;
+uniform float  u_midBlend;
+uniform float  u_topBlend;
+uniform int    u_cubeMapIsTop;
+ 
+struct PixelInputType
+{
+    float4 position : SV_POSITION;
+    float3 tex      : TEXCOORD0;	
+    float  height   : TEXCOORD1;	
+};
+
+float GetColorFraction(float a, float b, float t)
+{
+	return saturate((t - a) / (b - a));
+}
+
+float4 Main(PixelInputType input) : SV_TARGET
+{   
+	// get cubemap color and height in range 0 - 100
+	float4 cubeMapColor = Texture.Sample(SampleType[1], input.tex);	
+	float heightPercent = (input.height + 0.5) * 100;
+			
+	float4 bottomMid; 
+	float4 midTop;    
+		
+	if (u_cubeMapIsTop == 1)
+	{
+		bottomMid = lerp(float4(u_topBottomColor.rgb, 1.0), float4(u_middleColor.rgb, 1.0), GetColorFraction(u_bottomBlend, u_midBlend, heightPercent));
+		midTop    = lerp(float4(u_middleColor.rgb,    1.0), float4(cubeMapColor.rgb,  1.0), GetColorFraction(u_midBlend,    u_topBlend, heightPercent));
+	}   
+	else
+	{
+		bottomMid = lerp(float4(cubeMapColor.rgb,  1.0), float4(u_middleColor.rgb,    1.0), GetColorFraction(u_bottomBlend, u_midBlend, heightPercent));
+		midTop    = lerp(float4(u_middleColor.rgb, 1.0), float4(u_topBottomColor.rgb, 1.0), GetColorFraction(u_midBlend,    u_topBlend, heightPercent));
+	}   
+	
+	return lerp(float4(bottomMid.rgb, 1.0), float4(midTop.rgb, 1.0), GetColorFraction(0, 100, heightPercent));
+}

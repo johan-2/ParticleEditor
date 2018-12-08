@@ -1,0 +1,24 @@
+Texture2D    Texture;
+SamplerState SampleType[2]; // wrap,clamp 	
+
+uniform float u_sunDot;
+ 
+struct PixelInputType
+{
+    float4 position : SV_POSITION;
+    float2 texCoord : TEXCOORD0;		
+};
+
+float GetSunStrenghtFraction(float a, float b, float t)
+{
+	return saturate((t - a) / (b - a));
+}
+
+float4 Main(PixelInputType input) : SV_TARGET
+{     	           	 		
+	 float4 color = Texture.Sample(SampleType[0], input.texCoord);
+	 	 
+	 color = color * GetSunStrenghtFraction(-0.05, 0.15, u_sunDot);
+	 
+	 return color;
+}

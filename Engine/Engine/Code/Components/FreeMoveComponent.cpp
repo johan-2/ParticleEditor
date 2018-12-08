@@ -38,8 +38,13 @@ void FreeMoveComponent::UpdateMovement(const float& deltaTime)
 	
 	XMFLOAT3 translation(0, 0, 0);
 
+	float speedMultiplier = 1.0f;
+
+	if (input.IsKeyHeld(DIK_LSHIFT))
+		speedMultiplier = 2.0f;
+
 	// get how much we should move
-	float moveAmount = _moveSpeed * deltaTime;
+	float moveAmount = _moveSpeed * speedMultiplier * deltaTime;
 
 	// get mouse movement
 	float mouseX = input.GetMouseX();

@@ -20,6 +20,7 @@ class ImGUIShader;
 class ForwardAlphaShader;
 class WireframeShader;
 class PlanarReflectionShader;
+class PostProcessingShader;
 
 // the different render lists we have
 enum SHADER_TYPE
@@ -54,6 +55,8 @@ public:
 
 	void SetClearColor(float r, float g, float b, float a) { _clearColor[0] = r; _clearColor[1] = g; _clearColor[2] = b; _clearColor[3] = a;  }
 
+	void SetMainRenderTarget(); 
+
 	// initialize everything
 	void Initailize();
 	
@@ -83,6 +86,7 @@ private:
 	ForwardAlphaShader*     _forwardAlphaShader;
 	WireframeShader*        _wireframeShader;
 	PlanarReflectionShader* _planarReflectionShader;
+	PostProcessingShader*   _PostProcessingShader;
 
 	// skybox class with all rendering built in
 	SkyBox* _skyBox;
@@ -105,12 +109,13 @@ private:
 
 	// the render texure that the depth camera renders to
 	RenderToTexture* _depthMap;
+	RenderToTexture* _mainRendertarget;
 
 	// the Gbuffer for deferred rendering
 	// and the fullscreen quad where we will 
 	// project the deferred lightningpass
 	GBuffer*    _gBuffer;
-	ScreenQuad* _screenQuad;
+	ScreenQuad* _fullScreenQuad;
 
 	float _clearColor[4];
 };

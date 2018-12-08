@@ -18,7 +18,7 @@ public:
 	void PresentScene();	
 
 	void SetViewport(D3D11_VIEWPORT* viewport, bool setDefault = false);
-	void SetRenderTarget(ID3D11RenderTargetView* renderTarget, ID3D11DepthStencilView* depthStencil, bool setDefault = false, bool setDepthReadOnly = false);
+	void SetBackBuffer();
 
 	void SetFullscreen(bool fullscreen, bool toggle = false);
 
@@ -38,9 +38,6 @@ public:
 	// get default render/depth views
 	ID3D11DepthStencilView*&   GetDefaultDepthStencilView() { return _depthStencilView; }
 	ID3D11RenderTargetView*&   GetDefaultRenderTargetView() { return _renderTargetView; }
-
-	// get srv from depth stencil texture
-	ID3D11ShaderResourceView*& GetDepthSRV()                { return _depthShaderResourceView; }
 
 private:
 
@@ -70,8 +67,6 @@ private:
 	// Render and depth stencil views
 	ID3D11RenderTargetView*   _renderTargetView;
 	ID3D11DepthStencilView*   _depthStencilView;
-	ID3D11DepthStencilView*   _depthStencilViewReadOnly;
-	ID3D11ShaderResourceView* _depthShaderResourceView;
 
 	// default viewport
 	D3D11_VIEWPORT _viewport;

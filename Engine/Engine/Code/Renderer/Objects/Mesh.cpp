@@ -11,7 +11,7 @@ Mesh::Mesh(Entity* parent, unsigned int FLAGS, const wchar_t* diffuseMap, const 
 	// set rendering flags
 	_FLAGS = FLAGS;
 
-	// get pointer to transform components
+	// get pointer to transform component
 	if (parent != nullptr)
 		_transform = parent->GetComponent<TransformComponent>();
 

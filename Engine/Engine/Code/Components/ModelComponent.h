@@ -53,6 +53,8 @@ private:
 	// meshes list and num meshes count
 	std::vector<Mesh*> _meshes;
 	unsigned int       _numMeshes;
+
+	bool _useMaterial;
 	
 	// render flags
 	unsigned int _FLAGS;

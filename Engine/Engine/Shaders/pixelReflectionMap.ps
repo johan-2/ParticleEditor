@@ -115,7 +115,8 @@ float4 Main(PixelInputType input) : SV_TARGET
 	float4 pointColor       = GetPointColor(input);
 	
 	// flag the alpha channel of diffuse map so the planar reflection shader knows that this is a emissive pixel
-	// and should reflect stronger the other pixels
+	// and should reflect stronger the other pixels, Note this makes us not being able to render alpha meshes to 
+	// the reflectionmap at the moment
 	if (emissiveColor.a > 0)
 		return float4(Texture[0].Sample(SampleType[0], input.texCoord) * emissiveColor.rgb, -1);
 			
