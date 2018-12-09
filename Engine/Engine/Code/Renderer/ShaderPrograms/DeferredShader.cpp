@@ -53,14 +53,14 @@ void DeferredShader::RenderGeometry(std::vector<Mesh*>& meshes)
 	DXManager& DXM    = *Systems::dxManager;
 	CameraManager& CM = *Systems::cameraManager;
 
+	// render opaque objects here only	
+	DXM.BlendStates()->SetBlendState(BLEND_STATE::BLEND_OPAQUE);
+
 	// get devicecontext
 	ID3D11DeviceContext* devCon = DXM.GetDeviceCon();
 
 	// get the game camera
 	CameraComponent* camera = CM.GetCurrentCameraGame();
-
-	// render opaque objects here only	
-	DXM.BlendStates()->SetBlendState(BLEND_STATE::BLEND_OPAQUE);
 
 	// set shaders			
 	devCon->VSSetShader(_vertexGeometryShader, NULL, 0);

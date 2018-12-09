@@ -5,6 +5,7 @@
 #include "Mesh.h"
 #include "ShaderHelpers.h"
 #include "Systems.h"
+#include "DXBlendStates.h"
 
 DepthShader::DepthShader()
 {
@@ -32,6 +33,8 @@ void DepthShader::RenderDepth(std::vector<Mesh*>& meshes)
 	// get dx manager
 	DXManager& DXM   = *Systems::dxManager;
 	CameraManager CM = *Systems::cameraManager;
+
+	DXM.BlendStates()->SetBlendState(BLEND_STATE::BLEND_ALPHA);
 
 	// get devicecontext
 	ID3D11DeviceContext* devCon = DXM.GetDeviceCon();

@@ -165,6 +165,8 @@ void PlanarReflectionShader::Render(std::vector<Mesh*> reflectionMeshes,
 		devCon->PSSetConstantBuffers(0, 1, &_constantBufferPlanarPixelAmbDir);
 		devCon->PSSetConstantBuffers(1, 1, &_constantBufferPlanarPixelPoint);
 
+		DXM.BlendStates()->SetBlendState(BLEND_STATE::BLEND_OPAQUE);
+
 		// loop over all meshes that is set to cast reflections
 		for (int y = 0; y < reflectiveMeshes.size(); y++)
 		{

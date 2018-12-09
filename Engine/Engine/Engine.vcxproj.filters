@@ -171,6 +171,9 @@
     <ClCompile Include="Code\Renderer\ShaderPrograms\PostProcessingShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Code\TestScenes\SponzaTestScene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\Utils\SystemDefs.h">
@@ -348,6 +351,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Code\Renderer\ShaderPrograms\PostProcessingShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\TestScenes\SponzaTestScene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -563,8 +563,7 @@ void ParticleSystemComponent::UpdateRotations(const float& delta)
 				 rotationMatrix._23 = forward.y;
 				 rotationMatrix._33 = forward.z;
 
-				 XMStoreFloat4x4(&rotationMatrix, XMMatrixTranspose(XMLoadFloat4x4(&rotationMatrix)));
-				 _particleData[i][y].rotationMatrix = rotationMatrix;
+				 XMStoreFloat4x4(&_particleData[i][y].rotationMatrix, XMMatrixTranspose(XMLoadFloat4x4(&rotationMatrix)));
 			 }
 		 }
 		 else // billboarding with z rotation by speed
@@ -582,7 +581,6 @@ void ParticleSystemComponent::UpdateRotations(const float& delta)
 			 rotationMatrix._33 = forward.z;
 
 			 XMFLOAT4X4 zRotationMatrix;  XMStoreFloat4x4(&zRotationMatrix, XMMatrixIdentity());
-			 XMFLOAT4X4 result; XMStoreFloat4x4(&result, XMMatrixIdentity());
 
 			 for (int y = 0; y < _settings[i].numParticles; y++)
 			 {
@@ -590,9 +588,7 @@ void ParticleSystemComponent::UpdateRotations(const float& delta)
 				 _particleData[i][y].zRotation += _particleData[i][y].zRotationSpeed * delta;
 
 				 XMStoreFloat4x4(&zRotationMatrix, XMMatrixRotationZ(XMConvertToRadians(_particleData[i][y].zRotation)));
-				 XMStoreFloat4x4(&result, XMMatrixMultiplyTranspose(XMLoadFloat4x4(&rotationMatrix), XMLoadFloat4x4(&zRotationMatrix)));
-	
-				 _particleData[i][y].rotationMatrix = result;
+				 XMStoreFloat4x4(&_particleData[i][y].rotationMatrix, XMMatrixMultiplyTranspose(XMLoadFloat4x4(&rotationMatrix), XMLoadFloat4x4(&zRotationMatrix)));
 			 }
 		 }
 	 }					
@@ -602,8 +598,6 @@ void ParticleSystemComponent::UpdateBuffer()
 {
 	XMFLOAT4X4 matrixPosition; XMStoreFloat4x4(&matrixPosition, XMMatrixIdentity());
 	XMFLOAT4X4 matrixScale;    XMStoreFloat4x4(&matrixScale,    XMMatrixIdentity());
-	XMFLOAT4X4 matrixRotation; XMStoreFloat4x4(&matrixRotation, XMMatrixIdentity());
-	XMFLOAT4X4 matrixWorld;    XMStoreFloat4x4(&matrixWorld,    XMMatrixIdentity());
 	
 	XMFLOAT3 color;
 	float alpha;
@@ -612,17 +606,14 @@ void ParticleSystemComponent::UpdateBuffer()
 	{
 		for (int y = 0; y < _settings[i].numParticles; y++)
 		{
-
 			// calculate all matrices from the sorted particle values
 			XMStoreFloat4x4(&matrixPosition, XMMatrixTranslationFromVector(XMLoadFloat3(&_particleData[i][y].position)));
 			XMStoreFloat4x4(&matrixScale, XMMatrixScalingFromVector(XMLoadFloat3(&_particleData[i][y].scale)));
-			matrixRotation = _particleData[i][y].rotationMatrix;
 
 			// calculate worldmatrix
-			XMStoreFloat4x4(&matrixWorld, XMMatrixMultiply(XMLoadFloat4x4(&matrixScale), XMLoadFloat4x4(&matrixRotation)));
-			XMStoreFloat4x4(&matrixWorld, XMMatrixMultiply(XMLoadFloat4x4(&matrixWorld), XMLoadFloat4x4(&matrixPosition)));
+			XMStoreFloat4x4(&_particleInstanceData[i][y].worldMatrix, XMMatrixMultiply(XMLoadFloat4x4(&matrixScale), XMLoadFloat4x4(&_particleData[i][y].rotationMatrix)));
+			XMStoreFloat4x4(&_particleInstanceData[i][y].worldMatrix, XMMatrixMultiply(XMLoadFloat4x4(&_particleInstanceData[i][y].worldMatrix), XMLoadFloat4x4(&matrixPosition)));
 
-			_particleInstanceData[i][y].worldMatrix = matrixWorld;
 			color = _particleData[i][y].currentColorMultiplier;
 			alpha = _particleData[i][y].currentAlpha;
 

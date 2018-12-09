@@ -31,6 +31,8 @@ void PostProcessingShader::Render(ScreenQuad* quad, ID3D11ShaderResourceView* SR
 	// set to defult backbuffer and render our final scene image
 	DXM.SetBackBuffer();
 
+	DXM.BlendStates()->SetBlendState(BLEND_STATE::BLEND_OPAQUE);
+
 	// get devicecontext
 	ID3D11DeviceContext* devCon = DXM.GetDeviceCon();
 

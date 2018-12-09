@@ -10,7 +10,6 @@
 #include "Mesh.h"
 #include "SystemDefs.h"
 #include <algorithm>
-#include <DirectXMath.h>
 #include "GBuffer.h"
 #include "ScreenQuad.h"
 #include "DepthShader.h"
@@ -49,7 +48,7 @@ Renderer::~Renderer()
 	delete _planarReflectionShader;
 }
 
-void Renderer::Initailize()
+void Renderer::Initialize()
 {
 	// set clear color
 	SetClearColor(0, 0, 0, 1);
@@ -63,10 +62,7 @@ void Renderer::Initailize()
 	_forwardAlphaShader     = new ForwardAlphaShader();
 	_wireframeShader        = new WireframeShader();
 	_planarReflectionShader = new PlanarReflectionShader();
-	_PostProcessingShader            = new PostProcessingShader();
-
-	// create skybox
-	_skyBox = new SkyBox(L"Skyboxes/ThickCloudsWater.dds", SKY_DOME_RENDER_MODE::CUBEMAP_COLOR_BLEND);
+	_PostProcessingShader   = new PostProcessingShader();
 
 	// create input layouts
 	_inputLayouts = new DXInputLayouts();
@@ -82,32 +78,20 @@ void Renderer::Initailize()
 	// and to project the final scene image after post processing
 	_fullScreenQuad = new ScreenQuad();
 
+	// create the main rendertarget we will use
+	// this will hold our final scene up till we apply post processing
+	// and render to the backbuffer
 	_mainRendertarget = new RenderToTexture(SCREEN_WIDTH, SCREEN_HEIGHT, false);
-
-	CreateDepthMap();
-
-	_skyBox->SetSunDirectionTransformPtr(_cameraDepth->GetComponent<TransformComponent>());
-	_skyBox->SetSunDistance(5.0f);
-	_skyBox->SetThreeLayerColorBlendSettings(XMFLOAT4(10,  10,  10,  30), XMFLOAT4(238, 105, 49,  40), XMFLOAT4(21,  90,  251, 50));
-	_skyBox->SetCubeMapColorBlendSettings(XMFLOAT4(21, 90, 251, 255), XMFLOAT4(199, 176, 135, 255), 40, 55, 80, false);
-
-#ifdef _DEBUG				   
-	CreateDebugImages();
-#endif
 }
 
-void Renderer::CreateDepthMap() 
+Entity* Renderer::CreateShadowMap(float orthoSize, float resolution, XMFLOAT3 position, XMFLOAT3 rotation)
 {
-	// depthmap settings
-	const float orthoSize = 250;
-	const float res       = 8192.0f;
-
 	// create depthmap render texture
-	_depthMap = new RenderToTexture(res, res, true);
+	_depthMap = new RenderToTexture(resolution, resolution, true);
 
 	// create camera entity with orthographic view for shadowmap rendering
 	_cameraDepth = new Entity();
-	_cameraDepth->AddComponent<TransformComponent>()->Init(XMFLOAT3(-6, 325, 9), XMFLOAT3(85.0f, -90.0f, 0));
+	_cameraDepth->AddComponent<TransformComponent>()->Init(position, rotation);
 	_cameraDepth->AddComponent<CameraComponent>()->Init2D(XMFLOAT2(orthoSize, orthoSize), XMFLOAT2(0.01f, 5000.0f));
 	_cameraDepth->AddComponent<FreeMoveComponent>()->init(80, 0.1f);
 
@@ -122,6 +106,16 @@ void Renderer::CreateDepthMap()
 
 	// set this camera to the active depth render camera
 	Systems::cameraManager->SetCurrentCameraDepthMap(depthCamera);
+
+	return _cameraDepth;
+}
+
+SkyBox* Renderer::CreateSkyBox(const wchar_t* cubeMap, SKY_DOME_RENDER_MODE mode)
+{
+	// create skybox
+	_skyBox = new SkyBox(cubeMap, mode);
+
+	return _skyBox;
 }
 
 void Renderer::CreateDebugImages()

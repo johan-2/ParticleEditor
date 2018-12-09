@@ -70,23 +70,23 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SolutionDir)Engine/Code;$(SolutionDir)Engine/Code/System;$(SolutionDir)Engine/Code/Utils;$(SolutionDir)Engine/Code/ComponentSystem;$(SolutionDir)Engine/Code/Components;$(SolutionDir)Engine/Code/Managers;$(SolutionDir)Engine/Code/imGUI;$(SolutionDir)Engine/Code/Input;$(SolutionDir)Engine/Code/rapidjson;$(SolutionDir)Engine/Code/Renderer;$(SolutionDir)Engine/Code/DataTypes;$(SolutionDir)Engine/Code/System/DXModules;$(SolutionDir)Engine/Code/Renderer/ShaderPrograms;$(SolutionDir)Engine/Code/Renderer/Deferred;$(SolutionDir)Engine/Code/Renderer/Objects;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Engine/Code;$(SolutionDir)Engine/Code/System;$(SolutionDir)Engine/Code/Utils;$(SolutionDir)Engine/Code/ComponentSystem;$(SolutionDir)Engine/Code/Components;$(SolutionDir)Engine/Code/Managers;$(SolutionDir)Engine/Code/imGUI;$(SolutionDir)Engine/Code/Input;$(SolutionDir)Engine/Code/rapidjson;$(SolutionDir)Engine/Code/Renderer;$(SolutionDir)Engine/Code/DataTypes;$(SolutionDir)Engine/Code/System/DXModules;$(SolutionDir)Engine/Code/Renderer/ShaderPrograms;$(SolutionDir)Engine/Code/Renderer/Deferred;$(SolutionDir)Engine/Code/Renderer/Objects;$(SolutionDir)Engine/Code/TestScenes;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)Engine</OutDir>
     <LibraryPath>$(SolutionDir)Engine/lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)Engine/Code;$(SolutionDir)Engine/Code/System;$(SolutionDir)Engine/Code/Utils;$(SolutionDir)Engine/Code/ComponentSystem;$(SolutionDir)Engine/Code/Components;$(SolutionDir)Engine/Code/Managers;$(SolutionDir)Engine/Code/imGUI;$(SolutionDir)Engine/Code/Input;$(SolutionDir)Engine/Code/rapidjson;$(SolutionDir)Engine/Code/Renderer;$(SolutionDir)Engine/Code/DataTypes;$(SolutionDir)Engine/Code/System/DXModules;$(SolutionDir)Engine/Code/Renderer/ShaderPrograms;$(SolutionDir)Engine/Code/Renderer/Deferred;$(SolutionDir)Engine/Code/Renderer/Objects;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Engine/Code;$(SolutionDir)Engine/Code/System;$(SolutionDir)Engine/Code/Utils;$(SolutionDir)Engine/Code/ComponentSystem;$(SolutionDir)Engine/Code/Components;$(SolutionDir)Engine/Code/Managers;$(SolutionDir)Engine/Code/imGUI;$(SolutionDir)Engine/Code/Input;$(SolutionDir)Engine/Code/rapidjson;$(SolutionDir)Engine/Code/Renderer;$(SolutionDir)Engine/Code/DataTypes;$(SolutionDir)Engine/Code/System/DXModules;$(SolutionDir)Engine/Code/Renderer/ShaderPrograms;$(SolutionDir)Engine/Code/Renderer/Deferred;$(SolutionDir)Engine/Code/Renderer/Objects;$(SolutionDir)Engine/Code/TestScenes;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)Engine</OutDir>
     <LibraryPath>$(SolutionDir)Engine/lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)Engine</OutDir>
-    <IncludePath>$(SolutionDir)Engine/Code;$(SolutionDir)Engine/Code/System;$(SolutionDir)Engine/Code/Utils;$(SolutionDir)Engine/Code/ComponentSystem;$(SolutionDir)Engine/Code/Components;$(SolutionDir)Engine/Code/Managers;$(SolutionDir)Engine/Code/imGUI;$(SolutionDir)Engine/Code/Input;$(SolutionDir)Engine/Code/rapidjson;$(SolutionDir)Engine/Code/Renderer;$(SolutionDir)Engine/Code/DataTypes;$(SolutionDir)Engine/Code/System/DXModules;$(SolutionDir)Engine/Code/Renderer/ShaderPrograms;$(SolutionDir)Engine/Code/Renderer/Deferred;$(SolutionDir)Engine/Code/Renderer/Objects;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Engine/Code;$(SolutionDir)Engine/Code/System;$(SolutionDir)Engine/Code/Utils;$(SolutionDir)Engine/Code/ComponentSystem;$(SolutionDir)Engine/Code/Components;$(SolutionDir)Engine/Code/Managers;$(SolutionDir)Engine/Code/imGUI;$(SolutionDir)Engine/Code/Input;$(SolutionDir)Engine/Code/rapidjson;$(SolutionDir)Engine/Code/Renderer;$(SolutionDir)Engine/Code/DataTypes;$(SolutionDir)Engine/Code/System/DXModules;$(SolutionDir)Engine/Code/Renderer/ShaderPrograms;$(SolutionDir)Engine/Code/Renderer/Deferred;$(SolutionDir)Engine/Code/Renderer/Objects;$(SolutionDir)Engine/Code/TestScenes;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Engine/lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)Engine</OutDir>
-    <IncludePath>$(SolutionDir)Engine/Code;$(SolutionDir)Engine/Code/System;$(SolutionDir)Engine/Code/Utils;$(SolutionDir)Engine/Code/ComponentSystem;$(SolutionDir)Engine/Code/Components;$(SolutionDir)Engine/Code/Managers;$(SolutionDir)Engine/Code/imGUI;$(SolutionDir)Engine/Code/Input;$(SolutionDir)Engine/Code/rapidjson;$(SolutionDir)Engine/Code/Renderer;$(SolutionDir)Engine/Code/DataTypes;$(SolutionDir)Engine/Code/System/DXModules;$(SolutionDir)Engine/Code/Renderer/ShaderPrograms;$(SolutionDir)Engine/Code/Renderer/Deferred;$(SolutionDir)Engine/Code/Renderer/Objects;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Engine/Code;$(SolutionDir)Engine/Code/System;$(SolutionDir)Engine/Code/Utils;$(SolutionDir)Engine/Code/ComponentSystem;$(SolutionDir)Engine/Code/Components;$(SolutionDir)Engine/Code/Managers;$(SolutionDir)Engine/Code/imGUI;$(SolutionDir)Engine/Code/Input;$(SolutionDir)Engine/Code/rapidjson;$(SolutionDir)Engine/Code/Renderer;$(SolutionDir)Engine/Code/DataTypes;$(SolutionDir)Engine/Code/System/DXModules;$(SolutionDir)Engine/Code/Renderer/ShaderPrograms;$(SolutionDir)Engine/Code/Renderer/Deferred;$(SolutionDir)Engine/Code/Renderer/Objects;$(SolutionDir)Engine/Code/TestScenes;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Engine/lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -195,6 +195,7 @@
     <ClCompile Include="Code\System\DXModules\DXSamplerStates.cpp" />
     <ClCompile Include="Code\System\HardwareProperties.cpp" />
     <ClCompile Include="Code\System\Systems.cpp" />
+    <ClCompile Include="Code\TestScenes\SponzaTestScene.cpp" />
     <ClCompile Include="Code\Utils\DebugStats.cpp" />
     <ClCompile Include="Code\Utils\TexturePool.cpp" />
     <ClCompile Include="Code\Utils\Time.cpp" />
@@ -253,6 +254,7 @@
     <ClInclude Include="Code\System\DXModules\DXSamplerStates.h" />
     <ClInclude Include="Code\System\HardwareProperties.h" />
     <ClInclude Include="Code\System\Systems.h" />
+    <ClInclude Include="Code\TestScenes\SponzaTestScene.h" />
     <ClInclude Include="Code\Utils\DebugStats.h" />
     <ClInclude Include="Code\Utils\ModelLoader.h" />
     <ClInclude Include="Code\Utils\ShaderHelpers.h" />

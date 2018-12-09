@@ -119,9 +119,6 @@ void SkyBox::RenderCubeMapSimple(bool useReflectViewMatrix)
 	// set texture
 	devCon->PSSetShaderResources(0, 1, &_cubeMap);
 
-	// render with opaque blend
-	DXM.BlendStates()->SetBlendState(BLEND_STATE::BLEND_OPAQUE);
-
 	// use no culling
 	DXM.RasterizerStates()->SetRasterizerState(RASTERIZER_STATE::NOCULL);
 
@@ -174,9 +171,6 @@ void SkyBox::RenderBlendedColors(bool useReflectViewMatrix)
 	// set constant buffer
 	devCon->VSSetConstantBuffers(0, 1, &_constantBufferVertex);
 	devCon->PSSetConstantBuffers(0, 1, &_constantBufferColorBlendPixel);
-
-	// render with opaque blend
-	DXM.BlendStates()->SetBlendState(BLEND_STATE::BLEND_OPAQUE);
 
 	// use no culling
 	DXM.RasterizerStates()->SetRasterizerState(RASTERIZER_STATE::NOCULL);
@@ -242,9 +236,6 @@ void SkyBox::RenderCubeMapColorBlend(bool useReflectViewMatrix)
 
 	// set texture
 	devCon->PSSetShaderResources(0, 1, &_cubeMap);
-
-	// render with opaque blend
-	DXM.BlendStates()->SetBlendState(BLEND_STATE::BLEND_OPAQUE);
 
 	// use no culling
 	DXM.RasterizerStates()->SetRasterizerState(RASTERIZER_STATE::NOCULL);
@@ -347,8 +338,6 @@ void SkyBox::RenderSun(bool reflect)
 
 	// set back to backcull
 	DXM.RasterizerStates()->SetRasterizerState(RASTERIZER_STATE::BACKCULL);
-
-	DXM.BlendStates()->SetBlendState(BLEND_OPAQUE);
 }
 
 void SkyBox::CaluclateSunMatrix(XMFLOAT3 cameraPosition)

@@ -17,7 +17,7 @@ void LightManager::SetDirectionalLight(LightDirectionComponent* light)
 // add a new point light
 void LightManager::AddPointLight(LightPointComponent* light)
 {
-	if(_pointLights.size() < MAX_POINT_LIGHTS)
+	if (_pointLights.size() < MAX_POINT_LIGHTS)
 	{
 		_pointLights.push_back(light);
 		return;

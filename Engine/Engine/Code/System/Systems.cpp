@@ -36,7 +36,7 @@ void Systems::InitSystems(Window* window, float screenWidth, float screenHeight,
 
 	// Create the renderer
 	renderer = new Renderer();
-	renderer->Initailize();
+	renderer->Initialize();
 }
 
 void Systems::DeleteSystems()

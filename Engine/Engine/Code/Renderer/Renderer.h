@@ -2,6 +2,8 @@
 #include <vector>
 #include "VectorHelpers.h"
 #include "DXInputLayouts.h"
+#include <DirectXMath.h>
+#include "SkyBox.h"
 
 // forward declare types
 class Mesh;
@@ -40,6 +42,8 @@ public:
 	Renderer();
 	~Renderer();
 
+	void Initialize();
+
 	// add objects to respective renderers
 	void AddMeshToRenderer(Mesh* mesh, SHADER_TYPE type)               { _meshes[type].push_back(mesh); }
 	void AddQuadToRenderer(QuadComponent* quad)                        { _quads.push_back(quad); }
@@ -50,15 +54,21 @@ public:
 	void RemoveQuadFromRenderer(QuadComponent* quad)                        { VECTOR_HELPERS::RemoveItemFromVector(_quads, quad); }
 	void RemoveParticleSystemFromRenderer(ParticleSystemComponent* emitter) { VECTOR_HELPERS::RemoveItemFromVector(_particleSystems, emitter); }
 	
-	// returns skybox
+	// create/ get skydome
 	SkyBox* GetSkybox() { return _skyBox; }
+	SkyBox* CreateSkyBox(const wchar_t* cubeMap, SKY_DOME_RENDER_MODE mode);
 
+	// create the shadowmap
+	Entity* CreateShadowMap(float orthoSize, float resolution, XMFLOAT3 position, XMFLOAT3 rotation);
+
+	// create debug images that show each component of the G-Buffer
+	void CreateDebugImages();
+
+	// set the clear color
 	void SetClearColor(float r, float g, float b, float a) { _clearColor[0] = r; _clearColor[1] = g; _clearColor[2] = b; _clearColor[3] = a;  }
 
+	// set the main render target active
 	void SetMainRenderTarget(); 
-
-	// initialize everything
-	void Initailize();
 	
 	// will render everything
 	void Render();
@@ -67,10 +77,6 @@ public:
 	void SetInputLayout(INPUT_LAYOUT_TYPE type) { _inputLayouts->SetInputLayout(type); }
 	
 private:
-
-	// setupFunctions
-	void CreateDepthMap();
-	void CreateDebugImages();
 
 	// render functions
 	void RenderDeferred();

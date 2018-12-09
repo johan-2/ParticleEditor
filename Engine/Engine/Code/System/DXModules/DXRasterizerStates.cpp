@@ -23,15 +23,15 @@ void DXRasterizerStates::CreateRasterizerStates()
 	D3D11_RASTERIZER_DESC rasterDesc;
 
 	rasterDesc.AntialiasedLineEnable = true;
-	rasterDesc.CullMode = D3D11_CULL_BACK;
-	rasterDesc.DepthBias = 0;
-	rasterDesc.DepthBiasClamp = 0.0f;
-	rasterDesc.DepthClipEnable = true;
-	rasterDesc.FillMode = D3D11_FILL_SOLID;
+	rasterDesc.CullMode              = D3D11_CULL_BACK;
+	rasterDesc.DepthBias             = 0;
+	rasterDesc.DepthBiasClamp        = 0.0f;
+	rasterDesc.DepthClipEnable       = true;
+	rasterDesc.FillMode              = D3D11_FILL_SOLID;
 	rasterDesc.FrontCounterClockwise = false;
-	rasterDesc.MultisampleEnable = true;
-	rasterDesc.ScissorEnable = false;
-	rasterDesc.SlopeScaledDepthBias = 0.0f;
+	rasterDesc.MultisampleEnable     = true;
+	rasterDesc.ScissorEnable         = false;
+	rasterDesc.SlopeScaledDepthBias  = 0.0f;
 
 	// with backface culling
 	result = _device->CreateRasterizerState(&rasterDesc, &_rasterizerBackCull);
