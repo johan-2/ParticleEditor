@@ -210,6 +210,7 @@ void DXManager::PresentScene()
 // NOTE: null can be sent in as render target if we only care about having a depth stencil view bound
 void DXManager::SetBackBuffer()
 {
+	_devCon->RSSetViewports(1, &_viewport);
 	_devCon->OMSetRenderTargets(1, &_renderTargetView, _depthStencilView);
 }
 
