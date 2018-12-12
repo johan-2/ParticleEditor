@@ -42,12 +42,12 @@ PixelInputType Main(VertexInputType input)
 	output.tex3  = input.tex + (offset * - 3);
 	output.tex4  = input.tex + (offset * - 2);
 	output.tex5  = input.tex + (offset * - 1);
-	output.tex6  = input.tex + (offset * - 0);
-	output.tex7  = input.tex + (offset * - 1);
-	output.tex8  = input.tex + (offset * - 2);
-	output.tex9  = input.tex + (offset * - 3);
-	output.tex10 = input.tex + (offset * - 4);
-	output.tex11 = input.tex + (offset * - 5);
+	output.tex6  = input.tex + (offset *   0);
+	output.tex7  = input.tex + (offset *   1);
+	output.tex8  = input.tex + (offset *   2);
+	output.tex9  = input.tex + (offset *   3);
+	output.tex10 = input.tex + (offset *   4);
+	output.tex11 = input.tex + (offset *   5);
 		   
     return output;
 }

@@ -40,6 +40,7 @@ private:
 
 	// constant buffers
 	ID3D11Buffer* _blurVertexConstant;
+	ID3D11Buffer* _finalPixelConstant;
 
 	// render textures 
 	RenderToTexture* _horizontalBlurPass1;
@@ -50,12 +51,18 @@ private:
 	// final input maps to post processing shader
 	ID3D11ShaderResourceView* _bloomMap;
 
-	struct constantBlurPixel
+	struct ConstantBlurVertex
 	{
 		float screenWidth;
 		float screenHeight;
 		int horizontalPass;
 		int pad; 
+	};
+
+	struct ConstantFinalPixel
+	{
+		int applyBloom;
+		XMFLOAT3 pad;
 	};
 };
 

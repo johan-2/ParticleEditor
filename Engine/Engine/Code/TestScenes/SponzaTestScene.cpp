@@ -51,7 +51,7 @@ SponzaTestScene::SponzaTestScene()
 	// create directional light and give it pointer to the depth render camera transform
 	// it will use the forward of this camera as the light direction
 	Entity* directionalLight = new Entity;
-	directionalLight->AddComponent<LightDirectionComponent>()->Init(XMFLOAT4(0.9f, 0.9f, 0.9f, 1), shadowMapRenderer->GetComponent<TransformComponent>());
+	directionalLight->AddComponent<LightDirectionComponent>()->Init(XMFLOAT4(0.8f, 0.8f, 0.8f, 1), shadowMapRenderer->GetComponent<TransformComponent>());
 
 	Entity* sponza = new Entity();
 	sponza->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(0.05f, 0.05f, 0.05f));

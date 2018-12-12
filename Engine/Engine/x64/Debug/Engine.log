@@ -39,8 +39,8 @@ c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\pla
 c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\objects\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
 c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\shaderhelpers.h(116): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
 c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\shaderhelpers.h(116): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\postprocessingshader.cpp(23): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
 c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\postprocessingshader.cpp(24): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\postprocessingshader.cpp(25): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
 c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\postprocessingshader.cpp(26): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
 c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\postprocessingshader.cpp(27): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
   SponzaTestScene.cpp

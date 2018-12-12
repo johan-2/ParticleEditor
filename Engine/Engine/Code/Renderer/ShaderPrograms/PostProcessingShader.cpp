@@ -18,6 +18,7 @@ PostProcessingShader::PostProcessingShader()
 
 	// create constant buffers
 	SHADER_HELPERS::CreateConstantBuffer(_blurVertexConstant);
+	SHADER_HELPERS::CreateConstantBuffer(_finalPixelConstant);
 
 	// create render textures
 	_horizontalBlurPass1 = new RenderToTexture(SCREEN_WIDTH / BLOOM_BLUR_SCALE_DOWN_PASS_1, SCREEN_HEIGHT / BLOOM_BLUR_SCALE_DOWN_PASS_1, false);
@@ -40,7 +41,7 @@ void PostProcessingShader::Render(ScreenQuad* quad, ID3D11ShaderResourceView* Sc
 	Systems::dxManager->BlendStates()->SetBlendState(BLEND_STATE::BLEND_OPAQUE);
 	quad->UploadBuffers();
 
-	if (USE_BLOOM)
+	if (APPLY_BLOOM)
 	{
 		// GET BRIGHTNESS MAP HERE
 		//
@@ -74,16 +75,16 @@ ID3D11ShaderResourceView* PostProcessingShader::RenderBlurMaps(ID3D11ShaderResou
 	ID3D11ShaderResourceView* vBlur1SRV = _verticalBlurPass1->GetRenderTargetSRV();
 	
 	// constantbuffer for vertex shader
-	constantBlurPixel constantPixel;
+	ConstantBlurVertex constantVertex;
 	devCon->VSSetConstantBuffers(0, 1, &_blurVertexConstant);
 
 	////////////////////////////////////////////////////////// HORIZONTAL PASS 1
 
-	constantPixel.screenWidth    = SCREEN_WIDTH  / scaleDown1;
-	constantPixel.screenHeight   = SCREEN_HEIGHT / scaleDown1;
-	constantPixel.horizontalPass = 1;
+	constantVertex.screenWidth    = SCREEN_WIDTH  / scaleDown1;
+	constantVertex.screenHeight   = SCREEN_HEIGHT / scaleDown1;
+	constantVertex.horizontalPass = 1;
 
-	SHADER_HELPERS::UpdateConstantBuffer((void*)&constantPixel, sizeof(constantBlurPixel), _blurVertexConstant);
+	SHADER_HELPERS::UpdateConstantBuffer((void*)&constantVertex, sizeof(ConstantBlurVertex), _blurVertexConstant);
 
 	// set image to blur
 	devCon->PSSetShaderResources(0, 1, &imageToBlur);
@@ -97,8 +98,8 @@ ID3D11ShaderResourceView* PostProcessingShader::RenderBlurMaps(ID3D11ShaderResou
 	_verticalBlurPass1->SetRendertarget(false, false);
 
 	// change constant input
-	constantPixel.horizontalPass = 0;
-	SHADER_HELPERS::UpdateConstantBuffer((void*)&constantPixel, sizeof(constantBlurPixel), _blurVertexConstant);
+	constantVertex.horizontalPass = 0;
+	SHADER_HELPERS::UpdateConstantBuffer((void*)&constantVertex, sizeof(ConstantBlurVertex), _blurVertexConstant);
 
 	// set horizontal blur texture
 	devCon->PSSetShaderResources(0, 1, &hBlur1SRV);
@@ -116,10 +117,10 @@ ID3D11ShaderResourceView* PostProcessingShader::RenderBlurMaps(ID3D11ShaderResou
 	_horizontalBlurPass2->SetRendertarget(false, false);
 
 	// change constants for pass 2
-	constantPixel.horizontalPass = 1;
-	constantPixel.screenWidth    = SCREEN_WIDTH / scaleDown2;
-	constantPixel.screenHeight   = SCREEN_HEIGHT / scaleDown2;
-	SHADER_HELPERS::UpdateConstantBuffer((void*)&constantPixel, sizeof(constantBlurPixel), _blurVertexConstant);
+	constantVertex.horizontalPass = 1;
+	constantVertex.screenWidth    = SCREEN_WIDTH  / scaleDown2;
+	constantVertex.screenHeight   = SCREEN_HEIGHT / scaleDown2;
+	SHADER_HELPERS::UpdateConstantBuffer((void*)&constantVertex, sizeof(ConstantBlurVertex), _blurVertexConstant);
 
 	// get the horizontal blured texture from pass 1
 	devCon->PSSetShaderResources(0, 1, &vBlur1SRV);
@@ -133,8 +134,8 @@ ID3D11ShaderResourceView* PostProcessingShader::RenderBlurMaps(ID3D11ShaderResou
 	_verticalBlurPass2->SetRendertarget(false, false);
 
 	// change constants for vertical pass 2
-	constantPixel.horizontalPass = 0;
-	SHADER_HELPERS::UpdateConstantBuffer((void*)&constantPixel, sizeof(constantBlurPixel), _blurVertexConstant);
+	constantVertex.horizontalPass = 0;
+	SHADER_HELPERS::UpdateConstantBuffer((void*)&constantVertex, sizeof(ConstantBlurVertex), _blurVertexConstant);
 
 	// set horizontal blur texture
 	devCon->PSSetShaderResources(0, 1, &hBlur2SRV);
@@ -160,6 +161,14 @@ void PostProcessingShader::RenderFinal(ID3D11ShaderResourceView* SceneImage)
 	// set our shaders
 	devCon->VSSetShader(_vertexPostProcessingShader, NULL, 0);
 	devCon->PSSetShader(_pixelPostProcessingShader, NULL, 0);
+
+	devCon->PSSetConstantBuffers(0, 1, &_finalPixelConstant);
+
+	// set pixel constants
+	ConstantFinalPixel pixelConstant;
+	pixelConstant.applyBloom = APPLY_BLOOM;
+
+	SHADER_HELPERS::UpdateConstantBuffer((void*)&pixelConstant, sizeof(ConstantFinalPixel), _finalPixelConstant);
 
 	// set textures
 	ID3D11ShaderResourceView* texArray[2] = { SceneImage, _bloomMap };
