@@ -31,6 +31,7 @@
 #include "Window.h"
 #include "Systems.h"
 #include "SponzaTestScene.h"
+#include "IslandTestScene.h"
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM Lparam);
 

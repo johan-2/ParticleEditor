@@ -26,25 +26,25 @@ void DXDepthStencilStates::CreateDepthStencilStates()
 	ZeroMemory(&depthStencilDesc, sizeof(depthStencilDesc));
 
 	// Set up the description of the stencil state.
-	depthStencilDesc.DepthEnable = true;
-	depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-	depthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
-	depthStencilDesc.StencilEnable = true;
-	depthStencilDesc.StencilReadMask = 255;
-	depthStencilDesc.StencilWriteMask = 255;
+	depthStencilDesc.DepthEnable      = true;
+	depthStencilDesc.DepthWriteMask   = D3D11_DEPTH_WRITE_MASK_ALL;
+	depthStencilDesc.DepthFunc        = D3D11_COMPARISON_LESS_EQUAL;
+	depthStencilDesc.StencilEnable    = true;
+	depthStencilDesc.StencilReadMask  = 0xFFFFFFFF;
+	depthStencilDesc.StencilWriteMask = 0xFFFFFFFF;
 
 	// Stencil operations
 	// replace the stencil value with the reference value on the rendered pixel
 	// the skybox will later mask the pixels that has the reference value set in the stencil
-	depthStencilDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+	depthStencilDesc.FrontFace.StencilFailOp      = D3D11_STENCIL_OP_KEEP;
 	depthStencilDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
-	depthStencilDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_REPLACE;
-	depthStencilDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+	depthStencilDesc.FrontFace.StencilPassOp      = D3D11_STENCIL_OP_REPLACE;
+	depthStencilDesc.FrontFace.StencilFunc        = D3D11_COMPARISON_ALWAYS;
 
-	depthStencilDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+	depthStencilDesc.BackFace.StencilFailOp      = D3D11_STENCIL_OP_KEEP;
 	depthStencilDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
-	depthStencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_REPLACE;
-	depthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+	depthStencilDesc.BackFace.StencilPassOp      = D3D11_STENCIL_OP_REPLACE;
+	depthStencilDesc.BackFace.StencilFunc        = D3D11_COMPARISON_ALWAYS;
 
 	// depth enabled
 	result = _device->CreateDepthStencilState(&depthStencilDesc, &_depthStencilEnabled);
@@ -53,15 +53,16 @@ void DXDepthStencilStates::CreateDepthStencilStates()
 
 	// will only read the depthbuffer, the depthstencil is ignored here aswell
 	depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
-	depthStencilDesc.StencilEnable = false;
+	depthStencilDesc.StencilEnable  = true;
+	depthStencilDesc.DepthEnable    = true;	
 	result = _device->CreateDepthStencilState(&depthStencilDesc, &_depthStencilReadOnly);
 	if (FAILED(result))
 		DX_ERROR::PrintError(result, "failed to create depth stencil state");
 
 	// will not read or write the deptbuffer and stencilbuffer
 	depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
-	depthStencilDesc.DepthEnable = false;
-	depthStencilDesc.StencilEnable = false;
+	depthStencilDesc.DepthEnable    = false;
+	depthStencilDesc.StencilEnable  = false;
 	result = _device->CreateDepthStencilState(&depthStencilDesc, &_depthStencilDisabled);
 	if (FAILED(result))
 		DX_ERROR::PrintError(result, "failed to create depth stencil state");
@@ -69,18 +70,18 @@ void DXDepthStencilStates::CreateDepthStencilStates()
 	// masked depthstencil with reference set to the same as the regular depthEnabled depthstencil that is used while rendering geometry
 	// comparison set to not equal meaning that the pixels that got flagged during the geometry pass will fail and skybox wont render over them
 	depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
-	depthStencilDesc.DepthEnable = false;
-	depthStencilDesc.StencilEnable = true;
+	depthStencilDesc.DepthEnable    = false;
+	depthStencilDesc.StencilEnable  = true;
 
-	depthStencilDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+	depthStencilDesc.FrontFace.StencilFailOp      = D3D11_STENCIL_OP_KEEP;
 	depthStencilDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
-	depthStencilDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
-	depthStencilDesc.FrontFace.StencilFunc = D3D11_COMPARISON_NOT_EQUAL;
+	depthStencilDesc.FrontFace.StencilPassOp      = D3D11_STENCIL_OP_KEEP;
+	depthStencilDesc.FrontFace.StencilFunc        = D3D11_COMPARISON_NOT_EQUAL;
 
-	depthStencilDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+	depthStencilDesc.BackFace.StencilFailOp      = D3D11_STENCIL_OP_KEEP;
 	depthStencilDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
-	depthStencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
-	depthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_NOT_EQUAL;
+	depthStencilDesc.BackFace.StencilPassOp      = D3D11_STENCIL_OP_KEEP;
+	depthStencilDesc.BackFace.StencilFunc        = D3D11_COMPARISON_NOT_EQUAL;
 
 	result = _device->CreateDepthStencilState(&depthStencilDesc, &_depthStencilMaskedSkybox);
 	if (FAILED(result))
@@ -89,7 +90,7 @@ void DXDepthStencilStates::CreateDepthStencilStates()
 	// wont render non geometry pixels for the fullscreen light pass
 	// only renders the pixels that got flagged during the geometrypass (opposite of skybox)
 	depthStencilDesc.FrontFace.StencilFunc = D3D11_COMPARISON_EQUAL;
-	depthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_EQUAL;
+	depthStencilDesc.BackFace.StencilFunc  = D3D11_COMPARISON_EQUAL;
 
 	result = _device->CreateDepthStencilState(&depthStencilDesc, &_depthStencilMaskedLightning);
 	if (FAILED(result))

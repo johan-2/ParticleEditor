@@ -175,14 +175,12 @@ void Renderer::Render()
 	// TODO: alpha meshes and particles is not sorted against each other
 	// either sort them and send one object at a time to the shaders or
 	// research to see if there are a more elegant solution to this problem
+	// right now particles is not visable throught alpha meshes
+	_forwardAlphaShader->RenderForward(_meshes[S_FORWARD_ALPHA]);
 
 	// render particles
 	_inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUTPARTICLE);
 	_particleShader->RenderParticles(_particleSystems);
-		
-	// set to 3D layout and render alpha meshes forward
-	_inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT3D);
-	_forwardAlphaShader->RenderForward(_meshes[S_FORWARD_ALPHA]);
 
 	// render the final 2d stuff 
 	_inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT2D);

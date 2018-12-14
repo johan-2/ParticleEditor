@@ -24,11 +24,14 @@ public:
 private:
 
 	ID3D11ShaderResourceView* RenderBlurMaps(ID3D11ShaderResourceView* imageToBlur, bool twoPass, float scaleDown1, float scaleDown2);
+	void RenderBrightnessMap(ID3D11ShaderResourceView* originalImage);
 	void RenderFinal(ID3D11ShaderResourceView* SceneImage);
 
 	// compiled shaders
 	ID3D11VertexShader* _vertexBlurShader;
 	ID3D11PixelShader*  _pixelBlurShader;
+	ID3D11VertexShader* _vertexBrightnessShader;
+	ID3D11PixelShader*  _pixelBrightnessShader;
 	ID3D11VertexShader* _vertexPostProcessingShader;
 	ID3D11PixelShader*  _pixelPostProcessingShader;
 	
@@ -37,6 +40,8 @@ private:
 	ID3D10Blob* _pixelPostProcessingShaderByteCode;
 	ID3D10Blob* _vertexBlurShaderByteCode;
 	ID3D10Blob* _pixelBlurShaderByteCode;
+	ID3D10Blob* _vertexBrightnessShaderByteCode;
+	ID3D10Blob* _pixelBrightnessShaderByteCode;
 
 	// constant buffers
 	ID3D11Buffer* _blurVertexConstant;
@@ -47,6 +52,7 @@ private:
 	RenderToTexture* _verticalBlurPass1;
 	RenderToTexture* _horizontalBlurPass2;
 	RenderToTexture* _verticalBlurPass2;
+	RenderToTexture* _brightnessMap;
 
 	// final input maps to post processing shader
 	ID3D11ShaderResourceView* _bloomMap;
@@ -55,14 +61,15 @@ private:
 	{
 		float screenWidth;
 		float screenHeight;
-		int horizontalPass;
-		int pad; 
+		int   horizontalPass;
+		int   pad; 
 	};
 
 	struct ConstantFinalPixel
 	{
-		int applyBloom;
-		XMFLOAT3 pad;
+		int      applyBloom;
+		float    bloomIntensity;
+		XMFLOAT2 pad;
 	};
 };
 

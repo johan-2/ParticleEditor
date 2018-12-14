@@ -1,7 +1,8 @@
 Texture2D    Texture[2]; // Scenemap, bloomMap 
 SamplerState SampleType[2]; // wrap,clamp 	
 
-uniform int u_applyBloom;
+uniform int   u_applyBloom;
+uniform float u_bloomIntensity;
 
 struct PixelInputType
 {
@@ -23,7 +24,7 @@ float4 Main(PixelInputType input) : SV_TARGET
 	if (u_applyBloom == 1)
 		bloomColor = CalculateBloomColor(input.texCoord);
 	
-	return baseColor + bloomColor;
+	return baseColor + (bloomColor * u_bloomIntensity);
 }
 
 
