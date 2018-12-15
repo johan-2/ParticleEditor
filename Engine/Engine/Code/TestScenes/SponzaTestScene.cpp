@@ -23,12 +23,12 @@ SponzaTestScene::SponzaTestScene()
 	Entity* shadowMapRenderer = renderer.CreateShadowMap(250.0f, 8192.0f, XMFLOAT3(-6, 325, 9), XMFLOAT3(85.0f, -90.0f, 0));
 
 	// create skybox
-	SkyBox* skyBox = renderer.CreateSkyBox(L"SkyBoxes/ThickCloudsWater.dds", SKY_DOME_RENDER_MODE::CUBEMAP_COLOR_BLEND);
+	_skyDome = renderer.CreateSkyBox(L"SkyBoxes/ThickCloudsWater.dds", SKY_DOME_RENDER_MODE::CUBEMAP_COLOR_BLEND);
 
 	// set skybox properties
-	skyBox->SetSunDirectionTransformPtr(shadowMapRenderer->GetComponent<TransformComponent>());
-	skyBox->SetSunDistance(5.0f);
-	skyBox->SetCubeMapColorBlendSettings(XMFLOAT4(21, 90, 251, 255), XMFLOAT4(199, 176, 135, 255), 40, 55, 80, false);
+	_skyDome->SetSunDirectionTransformPtr(shadowMapRenderer->GetComponent<TransformComponent>());
+	_skyDome->SetSunDistance(5.0f);
+	_skyDome->SetSkyColorLayers(XMFLOAT4(0, 0, 0, 0), XMFLOAT4(0.45f, 0.40f, 0.2f, 40), XMFLOAT4(0.082f, 0.352f, 0.984f, 65));
 
 	renderer.CreateDebugImages();
 
@@ -46,7 +46,7 @@ SponzaTestScene::SponzaTestScene()
 	CM.SetCurrentCameraUI(cameraUI->GetComponent<CameraComponent>());
 
 	//set ambient light color	
-	LM.SetAmbientColor(XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f));
+	LM.SetAmbientColor(XMFLOAT4(0.15f, 0.15f, 0.15f, 1.0f));
 
 	// create directional light and give it pointer to the depth render camera transform
 	// it will use the forward of this camera as the light direction
@@ -83,8 +83,8 @@ SponzaTestScene::SponzaTestScene()
 	sphere5->AddComponent<LightPointComponent>()->Init(20, 20, XMFLOAT3(1.0f, 0.5f, 0.85f), 0.0f, 1.0f, 0.2f);
 
 	Entity* floor = new Entity();
-	floor->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0.05f, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(50, 1, 50));
-	floor->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::PLANE, ALPHA_REFLECTION, L"Textures/sponza_floor_a_diff.dds", L"Textures/sponza_floor_a_ddn.dds", L"Textures/FlatHighSpecular.dds", L"", 20.0f);
+	floor->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0.05f, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(800, 1, 800));
+	floor->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::PLANE, ALPHA_REFLECTION, L"Textures/sponza_floor_a_diff.dds", L"Textures/sponza_floor_a_ddn.dds", L"Textures/FlatHighSpecular.dds", L"", 170.0f);
 	floor->GetComponent<ModelComponent>()->GetMeshes()[0]->SetReflectionData(Mesh::ReflectiveData(0.2f, true, true));
 
 	Entity* fire = new Entity();
@@ -134,4 +134,9 @@ SponzaTestScene::SponzaTestScene()
 
 SponzaTestScene::~SponzaTestScene()
 {
+}
+
+void SponzaTestScene::Update()
+{
+	_skyDome->Update(Systems::time->GetDeltaTime());
 }

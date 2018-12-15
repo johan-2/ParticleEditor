@@ -60,7 +60,7 @@ Framework::~Framework()
 
 void Framework::Start()
 {
-	new SponzaTestScene();
+	_testScene = new SponzaTestScene();
 
 #ifdef _DEBUG
 	_debugStats = new DebugStats();
@@ -70,6 +70,7 @@ void Framework::Start()
 void Framework::Update()
 {
 	Systems::world->Update();
+	_testScene->Update();
 
 #ifdef _DEBUG
 	_debugStats->Update();

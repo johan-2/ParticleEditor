@@ -1,4 +1,4 @@
-#include "SkyBox.h"
+#include "SkyDome.h"
 #include "CameraManager.h"
 #include "DXManager.h"
 #include "TransformComponent.h"
@@ -11,8 +11,9 @@
 #include "Systems.h"
 #include "ModelLoader.h"
 #include "Mesh.h"
+#include <algorithm>
 
-SkyBox::SkyBox(const wchar_t* textureFile, SKY_DOME_RENDER_MODE mode):
+SkyDome::SkyDome(const wchar_t* textureFile, SKY_DOME_RENDER_MODE mode):
 	_isActive(true),
 	_RENDER_MODE(mode)
 {
@@ -43,7 +44,7 @@ SkyBox::SkyBox(const wchar_t* textureFile, SKY_DOME_RENDER_MODE mode):
 	_sun.directionPtr = nullptr;
 }
 
-SkyBox::~SkyBox()
+SkyDome::~SkyDome()
 {
 	_vertexDomeCubeMapShaderByteCode->Release();
 	_pixelDomeCubeMapShaderByteCode->Release();
@@ -65,13 +66,13 @@ SkyBox::~SkyBox()
 	_constantBufferCubeMapBlendPixel->Release();
 }
 
-void SkyBox::CreateMeshes() 
+void SkyDome::CreateMeshes() 
 {
 	_domeMesh = ModelLoader::CreateSphere(0, L"", L"", L"", L"", 1.0f, nullptr);
 	_sun.mesh = ModelLoader::CreateWorldSprite(0, L"Textures/sun.dds", nullptr);
 }
 
-void SkyBox::LoadCubemap(const wchar_t* file) 
+void SkyDome::LoadCubemap(const wchar_t* file) 
 {
 	// remove the old cubemap texture if one exist
 	if (_cubeMap != nullptr)
@@ -85,7 +86,7 @@ void SkyBox::LoadCubemap(const wchar_t* file)
 		DX_ERROR::PrintError(result, (std::string("failed to create cubemap with filename ") + DX_ERROR::ConvertFromWString(file)).c_str());
 }
 
-void SkyBox::Render(bool useReflectViewMatrix)
+void SkyDome::Render(bool useReflectViewMatrix)
 {
 	if (!_isActive)
 		return;
@@ -97,7 +98,7 @@ void SkyBox::Render(bool useReflectViewMatrix)
 	RenderSun(useReflectViewMatrix);	
 }
 
-void SkyBox::RenderCubeMapSimple(bool useReflectViewMatrix)
+void SkyDome::RenderCubeMapSimple(bool useReflectViewMatrix)
 {
 	// RENDER SKYDOME SPHERE
 	// get DX manager
@@ -152,7 +153,7 @@ void SkyBox::RenderCubeMapSimple(bool useReflectViewMatrix)
 	devCon->DrawIndexed(_domeMesh->GetNumIndices(), 0, 0);
 }
 
-void SkyBox::RenderBlendedColors(bool useReflectViewMatrix)
+void SkyDome::RenderBlendedColors(bool useReflectViewMatrix)
 {
 	// RENDER SKYDOME SPHERE
 	// get DX manager
@@ -191,13 +192,10 @@ void SkyBox::RenderBlendedColors(bool useReflectViewMatrix)
 	// set the colors, the percent fraction is stored in the w channel that specifies how
 	// low to high a color will be used on the skydome 
 	ConstantColorBlendPixel pixeldata;
-	XMStoreFloat4(&pixeldata.bottom, XMVector4Normalize(XMLoadFloat4(&_skyColorLayers.bottomColor)));
-	XMStoreFloat4(&pixeldata.mid,    XMVector4Normalize(XMLoadFloat4(&_skyColorLayers.midColor)));
-	XMStoreFloat4(&pixeldata.top,    XMVector4Normalize(XMLoadFloat4(&_skyColorLayers.topColor)));
-	pixeldata.bottom.w = _skyColorLayers.bottomColor.w;
-	pixeldata.mid.w    = _skyColorLayers.midColor.w;
-	pixeldata.top.w    = _skyColorLayers.topColor.w;
-
+	pixeldata.bottom   = _skyColorLayers.bottomColor;
+	pixeldata.mid      = _skyColorLayers.midColor;
+	pixeldata.top      = _skyColorLayers.topColor;
+	
 	// if the skybox is being rendered to a reflection map
 	if (useReflectViewMatrix)
 	{
@@ -214,7 +212,7 @@ void SkyBox::RenderBlendedColors(bool useReflectViewMatrix)
 	devCon->DrawIndexed(_domeMesh->GetNumIndices(), 0, 0);
 }
 
-void SkyBox::RenderCubeMapColorBlend(bool useReflectViewMatrix) 
+void SkyDome::RenderCubeMapColorBlend(bool useReflectViewMatrix) 
 {
 	// RENDER SKYDOME SPHERE
 	// get DX manager
@@ -256,12 +254,12 @@ void SkyBox::RenderCubeMapColorBlend(bool useReflectViewMatrix)
 	// set the colors, the percent fraction is stored in the w channel that specifies how
 	// low to high a color will be used on the skydome 
 	ConstantCubeMapColorBlendPixel pixelData;
-	pixelData.bottomBlend  = _cubeMapColorBlend.bottomBlend;
-	pixelData.midBlend     = _cubeMapColorBlend.midBlend;
-	pixelData.topBlend     = _cubeMapColorBlend.topBlend;
-	pixelData.cubeMapIsTop = _cubeMapColorBlend.topIsCubeMap;
-	XMStoreFloat4(&pixelData.topBottomColor, XMVector4Normalize(XMLoadFloat4(&_cubeMapColorBlend.bottomTopColor)));
-	XMStoreFloat4(&pixelData.midColor,    XMVector4Normalize(XMLoadFloat4(&_cubeMapColorBlend.midColor)));
+	pixelData.bottomBlend    = _skyColorLayers.bottomColor.w;
+	pixelData.midBlend       = _skyColorLayers.midColor.w;
+	pixelData.topBlend       = _skyColorLayers.topColor.w;
+	pixelData.cubeMapIsTop   = _cubeMapColorBlend.topIsCubeMap;
+	pixelData.topBottomColor = _cubeMapColorBlend.topIsCubeMap ? _skyColorLayers.bottomColor : _skyColorLayers.topColor;
+	pixelData.midColor       = _skyColorLayers.midColor;
 
 	// if the skybox is being rendered to a reflection map
 	if (useReflectViewMatrix)
@@ -279,7 +277,7 @@ void SkyBox::RenderCubeMapColorBlend(bool useReflectViewMatrix)
 	devCon->DrawIndexed(_domeMesh->GetNumIndices(), 0, 0);
 }
 
-void SkyBox::RenderSun(bool reflect)
+void SkyDome::RenderSun(bool reflect)
 {
 	// get DX manager
 	DXManager& DXM = *Systems::dxManager;
@@ -307,7 +305,8 @@ void SkyBox::RenderSun(bool reflect)
 
 	// constantbuffer pixel structure
 	ConstantSunPixel pixeldata;
-	pixeldata.sunDot = _sun.relativeHeight;
+	pixeldata.sunDot    = _sun.relativeHeight;
+	pixeldata.colorTint = _sun.colorTint;
 
 	devCon->PSSetConstantBuffers(0, 1, &_constantSunPixel);
 
@@ -340,7 +339,7 @@ void SkyBox::RenderSun(bool reflect)
 	DXM.RasterizerStates()->SetRasterizerState(RASTERIZER_STATE::BACKCULL);
 }
 
-void SkyBox::CaluclateSunMatrix(XMFLOAT3 cameraPosition)
+void SkyDome::CaluclateSunMatrix(XMFLOAT3 cameraPosition)
 {
 	XMFLOAT3 offset;
 	XMFLOAT3 sunDirection = _sun.directionPtr != nullptr ? _sun.directionPtr->GetForward() : _sun.direction;
@@ -360,4 +359,118 @@ void SkyBox::CaluclateSunMatrix(XMFLOAT3 cameraPosition)
 
 	XMStoreFloat(&_sun.relativeHeight,
 		XMVector3Dot(XMLoadFloat3(&vec1), XMLoadFloat3(&vec2)));
+}
+
+void SkyDome::Update(const float& delta)
+{
+	if (_dynamicSky.isEnabled)
+		UpdateDynamicSky(delta);
+}
+
+void SkyDome::UpdateDynamicSky(const float& delta)
+{
+	// get the transform that controls the light direction and the lightdirection itself
+	TransformComponent*      lightTransform = Systems::cameraManager->GetCurrentCameraDepthMap()->GetComponent<TransformComponent>();
+	LightDirectionComponent* directionLight = Systems::lightManager->GetDirectionalLight();
+
+	// add to cycle timer and reset if we have passed one complete cycle
+	_dynamicSky.cycleTimer += delta * _dynamicSky.speedMultiplier;
+	if (_dynamicSky.cycleTimer > _dynamicSky.cycleInSec)
+		_dynamicSky.cycleTimer = 0.0f;
+
+	// get the current rotation of light depending on fraction of cycle passed
+	XMStoreFloat3(&_dynamicSky.rotation,
+		XMVectorLerp(XMLoadFloat3(&_dynamicSky.startRotation),
+			XMLoadFloat3(&_dynamicSky.endRotation),
+			_dynamicSky.cycleTimer / _dynamicSky.cycleInSec));
+
+	// set new light rotation and update the world matrix
+	lightTransform->SetRotation(_dynamicSky.rotation);
+	lightTransform->UpdateWorldMatrix();
+
+	// get the inverse look at of light so we can translate back from origin
+	XMFLOAT3 invertedForward = lightTransform->GetForward();
+	XMStoreFloat3(&invertedForward, XMVectorNegate(XMLoadFloat3(&invertedForward)));
+
+	// get and set the final position of light source
+	XMFLOAT3 finalPosition;
+	XMStoreFloat3(&finalPosition, XMVectorMultiply(XMLoadFloat3(&invertedForward), XMLoadFloat3(&_dynamicSky.shadowMapDistance)));
+	lightTransform->SetPosition(finalPosition);
+	lightTransform->UpdateWorldMatrix();
+
+	// get the dot product that will represent the sun at its highest point
+	// 1.0 = top, 0.0 = at horizon, -1 = at lowest point under the world
+	XMFLOAT3 up(0, 1, 0);
+	float highestPoint;
+	XMStoreFloat(&highestPoint,
+		XMVector3Dot(XMLoadFloat3(&invertedForward), XMLoadFloat3(&up)));
+
+	// make sun distance smaller the closer to the horizon it gets
+	// this will make it appear bigger
+	float dst = lerpF(_dynamicSky.sunMinMaxDst.y, _dynamicSky.sunMinMaxDst.x,
+		inverseLerp(_dynamicSky.sunBeginEndDstLerp.x, _dynamicSky.sunBeginEndDstLerp.y, highestPoint));
+	_sun.distance = XMFLOAT3(dst, dst, dst);
+
+	// set color tint on sun depending on sundown
+	LerpColorRGB(_sun.colorTint, _dynamicSky.sunDayColorTint, _dynamicSky.sunSunsetColorTint,
+		_dynamicSky.sunBeginEndColorBlend.x, _dynamicSky.sunBeginEndColorBlend.y, highestPoint);
+
+	// final directional light color depending on the dot product
+	XMFLOAT4 blendedLightColor;
+	LerpColorRGB(blendedLightColor, _dynamicSky.normalDirLightColor, _dynamicSky.sunsetDirLightColor,
+		_dynamicSky.sunsetLightColorStartEndBlend.x, _dynamicSky.sunsetLightColorStartEndBlend.y, highestPoint);
+
+	// set the strength of directional light based on sun height
+	float ls = inverseLerp(_dynamicSky.sunLightBeginEndFade.y, _dynamicSky.sunLightBeginEndFade.x, highestPoint);
+	XMFLOAT4 lightStrength(ls, ls, ls, 1.0f);
+	XMStoreFloat4(&blendedLightColor, XMVectorMultiply(XMLoadFloat4(&blendedLightColor), XMLoadFloat4(&lightStrength)));
+	directionLight->SetLightColor(blendedLightColor);
+
+	// set the color of the top part of sky
+	// blend between day color to sunsetcolor and then to nightcolor
+	XMFLOAT4 topSkyColor;
+	LerpColorRGB(topSkyColor, _dynamicSky.topSkyColorDay, _dynamicSky.topSkyColorSunSet,
+		_dynamicSky.sunsetTopSkyColorStartEndBlend.x, _dynamicSky.sunsetTopSkyColorStartEndBlend.y, highestPoint);
+
+	LerpColorRGB(_skyColorLayers.topColor, topSkyColor, _dynamicSky.topSkyColorNight,
+		_dynamicSky.nightTopSkyColorStartEndBlend.x, _dynamicSky.nightTopSkyColorStartEndBlend.y, highestPoint);
+
+	// set the color of the mid part of sky
+	// blend between day color to sunsetcolor and then to nightcolor
+	XMFLOAT4 midSkyColor;
+	LerpColorRGB(midSkyColor, _dynamicSky.midSkyColorDay, _dynamicSky.midSkyColorSunSet,
+		_dynamicSky.sunsetMidSkyColorStartEndBlend.x, _dynamicSky.sunsetMidSkyColorStartEndBlend.y, highestPoint);
+
+	LerpColorRGB(_skyColorLayers.midColor, midSkyColor, _dynamicSky.midSkyColorNight,
+		_dynamicSky.nightMidSkyColorStartEndBlend.x, _dynamicSky.nightMidSkyColorStartEndBlend.y, highestPoint);
+}
+
+float SkyDome::inverseLerp(float a, float b, float t)
+{
+	float result = ((t - a) / (b - a));
+
+	return result < 0.0f ? 0.0f : result > 1.0f ? 1.0f : result;	
+}
+
+float SkyDome::lerpF(float a, float b, float f)
+{
+	return (a * (1.0 - f)) + (b * f);
+}
+
+void SkyDome::LerpColorRGB(XMFLOAT4& result, XMFLOAT4 colorA, XMFLOAT4 colorB, float startBlend, float endBlend, float fraction)
+{
+	XMFLOAT4 color;
+
+	XMStoreFloat4(&color,
+		XMVectorLerp(XMLoadFloat4(&colorA), XMLoadFloat4(&colorB), inverseLerp(startBlend, endBlend, fraction)));
+
+	result.x = color.x;
+	result.y = color.y;
+	result.z = color.z;
+}
+
+void SkyDome::LerpColorRGB(XMFLOAT3& result, XMFLOAT3 colorA, XMFLOAT3 colorB, float startBlend, float endBlend, float fraction)
+{
+	XMStoreFloat3(&result,
+		XMVectorLerp(XMLoadFloat3(&colorA), XMLoadFloat3(&colorB), inverseLerp(startBlend, endBlend, fraction)));
 }

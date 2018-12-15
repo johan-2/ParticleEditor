@@ -1,6 +1,7 @@
 #pragma once
 #include <Windows.h>
 #include <string>
+#include "SponzaTestScene.h"
 
 class DebugStats;
 class Window;
@@ -25,5 +26,6 @@ private:
 	// window and debug stats
 	Window*     _window;
 	DebugStats* _debugStats;
+	SponzaTestScene* _testScene;
 };
 

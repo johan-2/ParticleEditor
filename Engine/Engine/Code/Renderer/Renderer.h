@@ -3,14 +3,14 @@
 #include "VectorHelpers.h"
 #include "DXInputLayouts.h"
 #include <DirectXMath.h>
-#include "SkyBox.h"
+#include "SkyDome.h"
 
 // forward declare types
 class Mesh;
 class QuadComponent;
 class RenderToTexture;
 class Entity;
-class SkyBox;
+class SkyDome;
 class ParticleSystemComponent;
 class GBuffer;
 class ScreenQuad;
@@ -55,8 +55,8 @@ public:
 	void RemoveParticleSystemFromRenderer(ParticleSystemComponent* emitter) { VECTOR_HELPERS::RemoveItemFromVector(_particleSystems, emitter); }
 	
 	// create/ get skydome
-	SkyBox* GetSkybox() { return _skyBox; }
-	SkyBox* CreateSkyBox(const wchar_t* cubeMap, SKY_DOME_RENDER_MODE mode);
+	SkyDome* GetSkybox() { return _skyBox; }
+	SkyDome* CreateSkyBox(const wchar_t* cubeMap, SKY_DOME_RENDER_MODE mode);
 
 	// create the shadowmap
 	Entity* CreateShadowMap(float orthoSize, float resolution, XMFLOAT3 position, XMFLOAT3 rotation);
@@ -95,7 +95,7 @@ private:
 	PostProcessingShader*   _PostProcessingShader;
 
 	// skybox class with all rendering built in
-	SkyBox* _skyBox;
+	SkyDome* _skyBox;
 
 	// contains all input layouts
 	DXInputLayouts* _inputLayouts;

@@ -23,12 +23,11 @@ IslandTestScene::IslandTestScene()
 	Entity* shadowMapRenderer = renderer.CreateShadowMap(250.0f, 8192.0f, XMFLOAT3(-6, 325, 9), XMFLOAT3(85.0f, -90.0f, 0));
 
 	// create skybox
-	SkyBox* skyBox = renderer.CreateSkyBox(L"SkyBoxes/ThickCloudsWater.dds", SKY_DOME_RENDER_MODE::CUBEMAP_COLOR_BLEND);
+	SkyDome* skyBox = renderer.CreateSkyBox(L"SkyBoxes/ThickCloudsWater.dds", SKY_DOME_RENDER_MODE::CUBEMAP_COLOR_BLEND);
 
 	// set skybox properties
 	skyBox->SetSunDirectionTransformPtr(shadowMapRenderer->GetComponent<TransformComponent>());
 	skyBox->SetSunDistance(5.0f);
-	skyBox->SetCubeMapColorBlendSettings(XMFLOAT4(21, 90, 251, 255), XMFLOAT4(199, 176, 135, 255), 40, 55, 80, false);
 
 	renderer.CreateDebugImages();
 

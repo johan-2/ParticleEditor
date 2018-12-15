@@ -12,7 +12,7 @@
 #include "Entity.h"
 #include "QuadComponent.h"
 #include "ParticleShader.h"
-#include "SkyBox.h"
+#include "SkyDome.h"
 
 PlanarReflectionShader::PlanarReflectionShader()
 {

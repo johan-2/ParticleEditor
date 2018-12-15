@@ -6,7 +6,7 @@
 #include "Entity.h"
 #include "RenderToTexture.h"
 #include "QuadComponent.h"
-#include "SkyBox.h"
+#include "SkyDome.h"
 #include "Mesh.h"
 #include "SystemDefs.h"
 #include <algorithm>
@@ -110,10 +110,10 @@ Entity* Renderer::CreateShadowMap(float orthoSize, float resolution, XMFLOAT3 po
 	return _cameraDepth;
 }
 
-SkyBox* Renderer::CreateSkyBox(const wchar_t* cubeMap, SKY_DOME_RENDER_MODE mode)
+SkyDome* Renderer::CreateSkyBox(const wchar_t* cubeMap, SKY_DOME_RENDER_MODE mode)
 {
 	// create skybox
-	_skyBox = new SkyBox(cubeMap, mode);
+	_skyBox = new SkyDome(cubeMap, mode);
 
 	return _skyBox;
 }
