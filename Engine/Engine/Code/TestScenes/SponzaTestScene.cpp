@@ -45,7 +45,7 @@ SponzaTestScene::SponzaTestScene()
 	cameraUI->AddComponent<CameraComponent>()->Init2D(XMFLOAT2(SCREEN_WIDTH, SCREEN_HEIGHT), XMFLOAT2(0.01f, 10.0f));
 	CM.SetCurrentCameraUI(cameraUI->GetComponent<CameraComponent>());
 
-	//set ambient light color	
+	// set ambient light color	
 	LM.SetAmbientColor(XMFLOAT4(0.15f, 0.15f, 0.15f, 1.0f));
 
 	// create directional light and give it pointer to the depth render camera transform

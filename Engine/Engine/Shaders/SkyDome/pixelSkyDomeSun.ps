@@ -3,6 +3,7 @@ SamplerState SampleType[2]; // wrap,clamp
 
 uniform float  u_sunDot;
 uniform float3 u_sunTint;
+uniform float2 u_beginEndFade;
  
 struct PixelInputType
 {
@@ -19,7 +20,7 @@ float4 Main(PixelInputType input) : SV_TARGET
 {     	           	 		
 	 float4 color = Texture.Sample(SampleType[0], input.texCoord);
 	 	 
-	 color = (color * float4(u_sunTint.rgb, 1.0)) * GetSunStrenghtFraction(-0.25, -0.1, u_sunDot);
+	 color = (color * float4(u_sunTint.rgb, 1.0)) * GetSunStrenghtFraction(u_beginEndFade.y, u_beginEndFade.x, u_sunDot);
 	 
 	 return color;
 }

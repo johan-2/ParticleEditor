@@ -34,10 +34,10 @@ public:
 	// change the render mode
 	void SetRenderMode(SKY_DOME_RENDER_MODE mode) { _RENDER_MODE = mode; }
 
-	// set sun properties
-	void SetSunDirectionTransformPtr(TransformComponent* direction) { _sun.directionPtr = direction; }
-	void SetSunDirection(XMFLOAT3 direction)                        { _sun.direction = direction; }
-	void SetSunDistance(float distance)                             { _sun.distance = XMFLOAT3(distance, distance, distance); }
+	// set sun/moon properties
+	void SetSunDirectionTransformPtr(TransformComponent* direction) { _sunMoon.directionPtr  = direction; }
+	void SetSunDistance(float distance)                             { _sunMoon.sun.distance  = XMFLOAT3(distance, distance, distance); }
+	void SetMoonDistance(float distance)                            { _sunMoon.moon.distance = XMFLOAT3(distance, distance, distance); }
 
 	// set skyColorProperties
 	// colors is declared in 0 - 255 range
@@ -56,20 +56,26 @@ public:
 
 private:
 
-	// hold all sun data
-	struct Sun
+	// hold all sun/moon specific settings
+	struct SkyObject
 	{
 		// billboarded 2D bitmap
 		Mesh* mesh;
 
-		XMFLOAT4X4 positionMatrix;
-		XMFLOAT3   position;
-		XMFLOAT3   direction;
+		XMFLOAT4X4 positionMatrix;		
 		XMFLOAT3   distance;
 		XMFLOAT3   colorTint = XMFLOAT3(1, 1, 1);
 		float      relativeHeight;
+		XMFLOAT2   beginEndFade;
+	};
+
+	struct SunMoon
+	{
+		SkyObject sun;
+		SkyObject moon;
 
 		// will use the forward direction of transform as sun direction
+		// and the invert of this as moon direction
 		TransformComponent* directionPtr;
 	};
 
@@ -82,8 +88,8 @@ private:
 		float speedMultiplier = 1.0f;
 
 		// cycle values
-		float cycleInSec = 180.0f;
-		float cycleTimer = 60;
+		float cycleInSec = 30.0f;
+		float cycleTimer = 0;
 
 		// start/end blend values
 		XMFLOAT2 sunLightBeginEndFade           = XMFLOAT2(0.0f, -0.1f);	
@@ -133,13 +139,13 @@ private:
 	void CreateMeshes();
 
 	// get the sunmatrix
-	void CaluclateSunMatrix(XMFLOAT3 cameraPosition);
+	void CaluclateSunMoonMatrix(XMFLOAT3 cameraPosition);
 
 	// render functions
 	void RenderCubeMapSimple(bool useReflectMatrix);
 	void RenderCubeMapColorBlend(bool useReflectMatrix);
 	void RenderBlendedColors(bool useReflectMatrix);
-	void RenderSun(bool useReflectMatrix);
+	void RenderSunMoon(bool useReflectMatrix);
 
 	void UpdateDynamicSky(const float& delta);
 
@@ -189,7 +195,7 @@ private:
 	CubeMapColorBlend _cubeMapColorBlend;
 
 	// sun data
-	Sun _sun;
+	SunMoon _sunMoon;
 
 	DynamicDomeSettings _dynamicSky;
 
@@ -214,6 +220,8 @@ private:
 	{
 		float    sunDot;
 		XMFLOAT3 colorTint;
+		XMFLOAT2 beginEndFade;
+		XMFLOAT2 pad;
 	};
 
 	struct ConstantCubeMapColorBlendPixel

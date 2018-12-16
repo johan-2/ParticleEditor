@@ -37,11 +37,13 @@ SkyDome::SkyDome(const wchar_t* textureFile, SKY_DOME_RENDER_MODE mode):
 	SHADER_HELPERS::CreateConstantBuffer(_constantBufferCubeMapBlendPixel);
 	SHADER_HELPERS::CreateConstantBuffer(_constantSunPixel);
 
-	// initialize sun values
-	_sun.position     = XMFLOAT3(0, 0, 0);
-	_sun.direction    = XMFLOAT3(0, -1, 0);
-	_sun.distance     = XMFLOAT3(5, 5, 5);
-	_sun.directionPtr = nullptr;
+	// initialize sun/moon values
+	_sunMoon.sun.distance      = XMFLOAT3(5, 5, 5);
+	_sunMoon.sun.beginEndFade  = XMFLOAT2(-0.1f, -0.25f);
+	_sunMoon.moon.distance     = XMFLOAT3(5, 5, 5);
+	_sunMoon.moon.beginEndFade = XMFLOAT2(0.3f, 0.05f);
+	_sunMoon.moon.colorTint    = XMFLOAT3(0.4, 0.4f, 0.4f);
+	_sunMoon.directionPtr      = nullptr;
 }
 
 SkyDome::~SkyDome()
@@ -68,8 +70,9 @@ SkyDome::~SkyDome()
 
 void SkyDome::CreateMeshes() 
 {
-	_domeMesh = ModelLoader::CreateSphere(0, L"", L"", L"", L"", 1.0f, nullptr);
-	_sun.mesh = ModelLoader::CreateWorldSprite(0, L"Textures/sun.dds", nullptr);
+	_domeMesh          = ModelLoader::CreateSphere(0, L"", L"", L"", L"", 1.0f, nullptr);
+	_sunMoon.sun.mesh  = ModelLoader::CreateWorldSprite(0, L"Textures/sun.dds", nullptr);
+	_sunMoon.moon.mesh = ModelLoader::CreateWorldSprite(0, L"Textures/moon.dds", nullptr);
 }
 
 void SkyDome::LoadCubemap(const wchar_t* file) 
@@ -95,7 +98,7 @@ void SkyDome::Render(bool useReflectViewMatrix)
 	else if (_RENDER_MODE == SKY_DOME_RENDER_MODE::THREE_LAYER_COLOR_BLEND) RenderBlendedColors(useReflectViewMatrix);
 	else if (_RENDER_MODE == SKY_DOME_RENDER_MODE::CUBEMAP_COLOR_BLEND)     RenderCubeMapColorBlend(useReflectViewMatrix);
 	
-	RenderSun(useReflectViewMatrix);	
+	RenderSunMoon(useReflectViewMatrix);	
 }
 
 void SkyDome::RenderCubeMapSimple(bool useReflectViewMatrix)
@@ -277,7 +280,7 @@ void SkyDome::RenderCubeMapColorBlend(bool useReflectViewMatrix)
 	devCon->DrawIndexed(_domeMesh->GetNumIndices(), 0, 0);
 }
 
-void SkyDome::RenderSun(bool reflect)
+void SkyDome::RenderSunMoon(bool reflect)
 {
 	// get DX manager
 	DXManager& DXM = *Systems::dxManager;
@@ -293,22 +296,27 @@ void SkyDome::RenderSun(bool reflect)
 	// render sun with alpha blend
 	DXM.BlendStates()->SetBlendState(BLEND_ALPHA);
 
+	// set shaders			
+	devCon->VSSetShader(_vertexSunShader, NULL, 0);
+	devCon->PSSetShader(_pixelSunShader, NULL, 0);
+
+	devCon->PSSetConstantBuffers(0, 1, &_constantSunPixel);
+
 	// get camera properties
 	XMFLOAT3 cameraPos = cameraTransform->GetPositionVal();
 
-	CaluclateSunMatrix(cameraPos);
+	CaluclateSunMoonMatrix(cameraPos);
 
 	// constantbuffer vertex structure
-	vertexData.world      = _sun.positionMatrix;
+	vertexData.world      = _sunMoon.sun.positionMatrix;
 	vertexData.view       = camera->GetViewMatrix();
 	vertexData.projection = camera->GetProjectionMatrix();
 
 	// constantbuffer pixel structure
 	ConstantSunPixel pixeldata;
-	pixeldata.sunDot    = _sun.relativeHeight;
-	pixeldata.colorTint = _sun.colorTint;
-
-	devCon->PSSetConstantBuffers(0, 1, &_constantSunPixel);
+	pixeldata.sunDot       = _sunMoon.sun.relativeHeight;
+	pixeldata.colorTint    = _sunMoon.sun.colorTint;
+	pixeldata.beginEndFade = _sunMoon.sun.beginEndFade;
 
 	// if the skybox is being rendered to a reflection map
 	if (reflect)
@@ -321,16 +329,33 @@ void SkyDome::RenderSun(bool reflect)
 	SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(ConstantVertex),   _constantBufferVertex);
 	SHADER_HELPERS::UpdateConstantBuffer((void*)&pixeldata,  sizeof(ConstantSunPixel), _constantSunPixel);
 
-	// set shaders			
-	devCon->VSSetShader(_vertexSunShader, NULL, 0);
-	devCon->PSSetShader(_pixelSunShader,  NULL, 0);
+	// upload mesh
+	_sunMoon.sun.mesh->UploadBuffers();
 
 	// set texture
-	devCon->PSSetShaderResources(0, 1, &_sun.mesh->GetTextureArray()[0]);
+	devCon->PSSetShaderResources(0, 1, &_sunMoon.sun.mesh->GetTextureArray()[0]);
 
 	// upload and draw sun
-	_sun.mesh->UploadBuffers();
-	devCon->DrawIndexed(_sun.mesh->GetNumIndices(), 0, 0);
+	devCon->DrawIndexed(_sunMoon.sun.mesh->GetNumIndices(), 0, 0);
+
+	// change properties for moon
+	vertexData.world       = _sunMoon.moon.positionMatrix;
+	pixeldata.sunDot       = _sunMoon.moon.relativeHeight;
+	pixeldata.colorTint    = _sunMoon.moon.colorTint;
+	pixeldata.beginEndFade = _sunMoon.moon.beginEndFade;
+
+	// update constant buffer
+	SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(ConstantVertex), _constantBufferVertex);
+	SHADER_HELPERS::UpdateConstantBuffer((void*)&pixeldata, sizeof(ConstantSunPixel), _constantSunPixel);
+
+	// upload mesh
+	_sunMoon.moon.mesh->UploadBuffers();
+
+	// set texture
+	devCon->PSSetShaderResources(0, 1, &_sunMoon.moon.mesh->GetTextureArray()[0]);
+
+	// upload and draw moon
+	devCon->DrawIndexed(_sunMoon.moon.mesh->GetNumIndices(), 0, 0);
 
 	// enable rendering of all pixels
 	DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::ENABLED);
@@ -339,26 +364,36 @@ void SkyDome::RenderSun(bool reflect)
 	DXM.RasterizerStates()->SetRasterizerState(RASTERIZER_STATE::BACKCULL);
 }
 
-void SkyDome::CaluclateSunMatrix(XMFLOAT3 cameraPosition)
+void SkyDome::CaluclateSunMoonMatrix(XMFLOAT3 cameraPosition)
 {
-	XMFLOAT3 offset;
-	XMFLOAT3 sunDirection = _sun.directionPtr != nullptr ? _sun.directionPtr->GetForward() : _sun.direction;
+	XMFLOAT3 offsetSun;
+	XMFLOAT3 offsetMoon;
+	XMFLOAT3 sunDirection = _sunMoon.directionPtr->GetForward();
 	
-	XMStoreFloat3(&offset,        XMVectorMultiply(XMLoadFloat3(&sunDirection),   XMLoadFloat3(&_sun.distance)));
-	XMStoreFloat3(&_sun.position, XMVectorSubtract(XMLoadFloat3(&cameraPosition), XMLoadFloat3(&offset)));
+	// calculate translation for sun and moon
+	XMStoreFloat3(&offsetSun,  XMVectorMultiply(XMLoadFloat3(&sunDirection), XMLoadFloat3(&_sunMoon.sun.distance)));
+	XMStoreFloat3(&offsetMoon, XMVectorMultiply(XMLoadFloat3(&sunDirection), XMLoadFloat3(&_sunMoon.moon.distance)));
 
-	// calculate position matrix
-	XMStoreFloat4x4(&_sun.positionMatrix, XMMatrixTranslationFromVector(XMLoadFloat3(&_sun.position)));
-	XMStoreFloat4x4(&_sun.positionMatrix, XMMatrixTranspose(XMLoadFloat4x4(&_sun.positionMatrix)));
+	XMStoreFloat3(&offsetSun, XMVectorSubtract(XMLoadFloat3(&cameraPosition), XMLoadFloat3(&offsetSun)));
+	XMStoreFloat3(&offsetMoon, XMVectorAdd(XMLoadFloat3(&cameraPosition), XMLoadFloat3(&offsetMoon)));
+
+	// calculate position matrix for sun and moon
+	XMStoreFloat4x4(&_sunMoon.sun.positionMatrix,  XMMatrixTranslationFromVector(XMLoadFloat3(&offsetSun)));
+	XMStoreFloat4x4(&_sunMoon.sun.positionMatrix,  XMMatrixTranspose(XMLoadFloat4x4(&_sunMoon.sun.positionMatrix)));
+
+	XMStoreFloat4x4(&_sunMoon.moon.positionMatrix, XMMatrixTranslationFromVector(XMLoadFloat3(&offsetMoon)));
+	XMStoreFloat4x4(&_sunMoon.moon.positionMatrix, XMMatrixTranspose(XMLoadFloat4x4(&_sunMoon.moon.positionMatrix)));
 
 	// get the dot product of sun from world up vector and inversed sun direction
 	// 1 = sun at its highest point, -1 sun at its lowest point
 	XMFLOAT3 vec1;
 	XMFLOAT3 vec2(0, 1, 0);
 	XMStoreFloat3(&vec1, XMVectorNegate(XMLoadFloat3(&sunDirection)));
-
-	XMStoreFloat(&_sun.relativeHeight,
+	XMStoreFloat(&_sunMoon.sun.relativeHeight,
 		XMVector3Dot(XMLoadFloat3(&vec1), XMLoadFloat3(&vec2)));
+
+	// the moon is just the opposite dot of sun
+	_sunMoon.moon.relativeHeight = -_sunMoon.sun.relativeHeight;
 }
 
 void SkyDome::Update(const float& delta)
@@ -409,10 +444,10 @@ void SkyDome::UpdateDynamicSky(const float& delta)
 	// this will make it appear bigger
 	float dst = lerpF(_dynamicSky.sunMinMaxDst.y, _dynamicSky.sunMinMaxDst.x,
 		inverseLerp(_dynamicSky.sunBeginEndDstLerp.x, _dynamicSky.sunBeginEndDstLerp.y, highestPoint));
-	_sun.distance = XMFLOAT3(dst, dst, dst);
+	_sunMoon.sun.distance = XMFLOAT3(dst, dst, dst);
 
 	// set color tint on sun depending on sundown
-	LerpColorRGB(_sun.colorTint, _dynamicSky.sunDayColorTint, _dynamicSky.sunSunsetColorTint,
+	LerpColorRGB(_sunMoon.sun.colorTint, _dynamicSky.sunDayColorTint, _dynamicSky.sunSunsetColorTint,
 		_dynamicSky.sunBeginEndColorBlend.x, _dynamicSky.sunBeginEndColorBlend.y, highestPoint);
 
 	// final directional light color depending on the dot product
