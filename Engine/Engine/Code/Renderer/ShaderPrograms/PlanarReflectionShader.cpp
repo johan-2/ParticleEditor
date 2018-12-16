@@ -13,6 +13,7 @@
 #include "QuadComponent.h"
 #include "ParticleShader.h"
 #include "SkyDome.h"
+#include "ReflectionMapShader.h"
 
 PlanarReflectionShader::PlanarReflectionShader()
 {
@@ -20,46 +21,32 @@ PlanarReflectionShader::PlanarReflectionShader()
 	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexForwardPlanar.vs", _planarVertexShader, _planarVertexShaderByteCode);
 	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelForwardPlanar.ps",   _planarPixelShader, _planarPixelShaderByteCode);
 
-	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexReflectionMap.vs", _reflectionMapVertexShader, _reflectionMapVertexShaderByteCode);
-	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelReflectionMap.ps",   _reflectionMapPixelShader,  _reflectionMapPixelShaderByteCode);
-
 	// create constant buffers
 	SHADER_HELPERS::CreateConstantBuffer(_constantBufferPlanarVertex);
 	SHADER_HELPERS::CreateConstantBuffer(_constantBufferPlanarPixelAmbDir);
-	SHADER_HELPERS::CreateConstantBuffer(_constantBufferPlanarPixelPoint);
-
-	SHADER_HELPERS::CreateConstantBuffer(_constantBufferReflectionMapVertex);
-
-	_reflectionMap = new RenderToTexture(SCREEN_WIDTH, SCREEN_HEIGHT, false);
-
-	Entity* reflectionQuad = new Entity();
-	reflectionQuad->AddComponent<QuadComponent>()->Init(XMFLOAT2(SCREEN_WIDTH * 0.66f, SCREEN_HEIGHT * 0.1f), XMFLOAT2(SCREEN_WIDTH * 0.1f, SCREEN_HEIGHT * 0.1f), L"");
-	reflectionQuad->GetComponent<QuadComponent>()->SetTexture(_reflectionMap->GetRenderTargetSRV());
+	SHADER_HELPERS::CreateConstantBuffer(_constantBufferPlanarPixelPoint);		
 }
 
 PlanarReflectionShader::~PlanarReflectionShader()
 {
 	_planarVertexShader->Release();
-	_planarPixelShader->Release();
-	_reflectionMapVertexShader->Release();
-	_reflectionMapPixelShader->Release();
+	_planarPixelShader->Release();	
 
 	_planarVertexShaderByteCode->Release();
 	_planarPixelShaderByteCode->Release();
-	_reflectionMapVertexShaderByteCode->Release();
-	_reflectionMapPixelShaderByteCode->Release();
-
+	
 	_constantBufferPlanarPixelAmbDir->Release();
 	_constantBufferPlanarPixelPoint->Release();
-	_constantBufferPlanarVertex->Release();
-	_constantBufferReflectionMapVertex->Release();
+	_constantBufferPlanarVertex->Release();	
 }
 
-void PlanarReflectionShader::Render(std::vector<Mesh*> reflectionMeshes,
-	                                 std::vector<Mesh*> reflectiveMeshes, 
-	                                 std::vector<ParticleSystemComponent*> reflectiveParticles,
-	                                 ParticleShader* particleShader, 
-	                                 DXInputLayouts* inputLayouts)
+void PlanarReflectionShader::Render(std::vector<Mesh*>& reflectionMeshes,
+    std::vector<Mesh*>& reflectiveOpaqueMeshes, 
+    std::vector<Mesh*>& reflectiveAlphaMeshes,
+    std::vector<ParticleSystemComponent*>& reflectiveParticles,
+    ParticleShader*& particleShader, 
+    DXInputLayouts*& inputLayouts, 
+	ReflectionMapShader*& reflectionMapShader)
 {
 	if (reflectionMeshes.size() == 0)
 		return;
@@ -131,82 +118,26 @@ void PlanarReflectionShader::Render(std::vector<Mesh*> reflectionMeshes,
 		// get the mesh that will project the reflections
 		Mesh* mesh = reflectionMeshes[i];
 
-		// get reflect data of this mesh
-		Mesh::ReflectiveData reflectData = mesh->GetReflectiveData();
-
-		// clear our reflection map render texture and set i to active
-		_reflectionMap->ClearRenderTarget(0,0,0,1, false);
-		_reflectionMap->SetRendertarget(false, false);
-
 		// get the clip plane of the reflection mesh so we dont render anything below this plane
 		XMFLOAT4 clipPlane(0, 1, 0, -mesh->GetPosition().y);
 
-		// get the reflection view matrix based on moving the camera under the mesh by the distance between mesh and camera y position
-		// this also inverts the x rotation so we will look up instead of down
-		XMFLOAT4X4 reflectionViewMatrix = camera->GetReflectionViewMatrix(mesh->GetPosition().y);
+		// render the reflectionmap
+		reflectionMapShader->GenerateReflectionMap(reflectiveOpaqueMeshes, reflectiveAlphaMeshes, reflectiveParticles, particleShader, inputLayouts, mesh, clipPlane);
 
-		// fill the constant buffer for the meshes that will be projected to this meshs surface
-		ConstantVertexReflectionMap constantVertexReflection;
-		constantVertexReflection.clipingPlane = clipPlane;
-		constantVertexReflection.view         = reflectionViewMatrix;
-		constantVertexReflection.projection   = projectionMatrix;
-
-		// render skybox first to the textures if it is set to reflect
-		if (reflectData.reflectSkybox)
-			Systems::renderer->GetSkybox()->Render(true);
-
-		// set shaders that will render the reflection map 
-		devCon->VSSetShader(_reflectionMapVertexShader, NULL, 0);
-		devCon->PSSetShader(_reflectionMapPixelShader, NULL, 0);
-
-		// set constant buffer for the vertex and pixel shader
-		// uses the same buffers for lights that the planar reflection shader use
-		devCon->VSSetConstantBuffers(0, 1, &_constantBufferReflectionMapVertex);
-		devCon->PSSetConstantBuffers(0, 1, &_constantBufferPlanarPixelAmbDir);
-		devCon->PSSetConstantBuffers(1, 1, &_constantBufferPlanarPixelPoint);
-
-		DXM.BlendStates()->SetBlendState(BLEND_STATE::BLEND_OPAQUE);
-
-		// loop over all meshes that is set to cast reflections
-		for (int y = 0; y < reflectiveMeshes.size(); y++)
-		{
-			// get world matrix of mesh and update the buffer
-			constantVertexReflection.world = reflectiveMeshes[y]->GetWorldMatrix();
-			SHADER_HELPERS::UpdateConstantBuffer((void*)&constantVertexReflection, sizeof(ConstantVertexReflectionMap), _constantBufferReflectionMapVertex);
-
-			// get the texture array of mesh
-			ID3D11ShaderResourceView** meshTextures = reflectiveMeshes[y]->GetTextureArray();
-
-			// specular map is not sent to this shader tho this is not calculated
-			ID3D11ShaderResourceView* texArray[3] = { meshTextures[0], meshTextures[1], meshTextures[3] };
-			devCon->PSSetShaderResources(0, 3, texArray);
-
-			// upload and draw the mesh
-			reflectiveMeshes[y]->UploadBuffers();
-
-			devCon->DrawIndexed(reflectiveMeshes[y]->GetNumIndices(), 0, 0);
-		}
-
-		// render all particles to the texture if set to recive particle reflections
-		if (reflectData.reflectParticles)
-		{
-			inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUTPARTICLE);
-			particleShader->RenderParticles(reflectiveParticles, true, mesh->GetPosition().y);
-			inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT3D);
-		}
-		
 		// set back to defualt render target and render the reflection mesh
 		Systems::renderer->SetMainRenderTarget();
-		
+
 		// set shaders
 		devCon->VSSetShader(_planarVertexShader, NULL, 0);
 		devCon->PSSetShader(_planarPixelShader, NULL, 0);
 
 		// set the vertex constant buffer, the pixel ones is already set
 		devCon->VSSetConstantBuffers(0, 1, &_constantBufferPlanarVertex);
+		devCon->PSSetConstantBuffers(0, 1, &_constantBufferPlanarPixelAmbDir);
+		devCon->PSSetConstantBuffers(1, 1, &_constantBufferPlanarPixelPoint);
 
 		// set to alpha blending
-		DXM.BlendStates()->SetBlendState(BLEND_STATE::BLEND_ALPHA);
+		DXM.BlendStates()->SetBlendState(BLEND_STATE::BLEND_ALPHA);			
 
 		// set vertex constant values
 		constantVertex.world           = mesh->GetWorldMatrix();
@@ -216,20 +147,20 @@ void PlanarReflectionShader::Render(std::vector<Mesh*> reflectionMeshes,
 		constantVertex.lightProjection = lightProjectionMatrix;
 		constantVertex.camPos          = cameraPos;
 		constantVertex.uvOffset        = mesh->GetUvOffset();
-		constantVertex.reflectionView  = reflectionViewMatrix;
+		constantVertex.reflectionView  = camera->GetReflectionViewMatrix(mesh->GetPosition().y);
 
 		// set the fraction of the reflection blending with the texture color
-		constantAmbDirPixel.reflectiveFraction = reflectData.reflectiveFraction;
+		constantAmbDirPixel.reflectiveFraction = mesh->GetReflectiveData().reflectiveFraction;
 
 		// update vertex constant buffer
-		SHADER_HELPERS::UpdateConstantBuffer((void*)&constantVertex, sizeof(ConstantVertexPlanar), _constantBufferPlanarVertex);
+		SHADER_HELPERS::UpdateConstantBuffer((void*)&constantVertex,      sizeof(ConstantVertexPlanar),                  _constantBufferPlanarVertex);
 		SHADER_HELPERS::UpdateConstantBuffer((void*)&constantAmbDirPixel, sizeof(ConstantAmbientDirectionalPixelPlanar), _constantBufferPlanarPixelAmbDir);
 
 		// get the texture array of mesh
 		ID3D11ShaderResourceView** meshTextures = mesh->GetTextureArray();
 
 		// fill texture array with all textures including the shadow map and reflection map
-		ID3D11ShaderResourceView* t[6] = { meshTextures[0], meshTextures[1], meshTextures[2], meshTextures[3], shadowMap, _reflectionMap->GetRenderTargetSRV() };
+		ID3D11ShaderResourceView* t[6] = { meshTextures[0], meshTextures[1], meshTextures[2], meshTextures[3], shadowMap, reflectionMapShader->GetReflectionMap() };
 
 		// set SRV's
 		devCon->PSSetShaderResources(0, 6, t);

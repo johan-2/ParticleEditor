@@ -88,7 +88,7 @@ private:
 		float speedMultiplier = 1.0f;
 
 		// cycle values
-		float cycleInSec = 30.0f;
+		float cycleInSec = 60.0f;
 		float cycleTimer = 0;
 
 		// start/end blend values
@@ -107,7 +107,7 @@ private:
 		XMFLOAT3 sunSunsetColorTint    = XMFLOAT3(0.95f, 0.65f, 0.1f);
 
 		// translation values for shadow rendering camera
-		XMFLOAT3 shadowMapDistance = XMFLOAT3(100, 100, 100);
+		XMFLOAT3 shadowMapDistance = XMFLOAT3(300, 300, 300);
 		XMFLOAT3 rotation          = XMFLOAT3(0, 0, 0);
 		XMFLOAT3 startRotation     = XMFLOAT3(0, 100.0f, 0);
 		XMFLOAT3 endRotation       = XMFLOAT3(360.0f, 100.0f, 0.0f);

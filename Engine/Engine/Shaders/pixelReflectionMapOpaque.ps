@@ -1,0 +1,114 @@
+Texture2D    Texture[3];      // diffuse, normal, emissive
+SamplerState SampleType[2]; // wrap,clamp 	
+ 
+struct PointLight
+{
+	float3 position;
+	float radius;
+	float3 color;
+	float intensity;	
+	float attConstant;
+	float attLinear;
+	float attExponential;
+	int numLights;
+};
+
+cbuffer AmbientDirectionalBuffer : register(b0)
+{
+	float4 ambientColor;
+	float4 dirDiffuseColor;
+	float3 dirLightDirection;
+}
+
+cbuffer PointLightBuffer : register(b1)
+{
+	PointLight pointLights[1024];
+};
+ 
+struct PixelInputType
+{
+    float4 position    : SV_POSITION;
+    float2 texCoord    : TEXCOORD0;
+	float3 normal      : NORMAL;
+	float3 tangent     : TANGENT;
+	float3 binormal    : BINORMAL;
+	float4 vertexColor : COLOR;
+	float3 worldPos    : TEXCOORD1;
+	float clip         : SV_ClipDistance0;	
+};
+
+float3 GetBaseColor(PixelInputType input, float3 textureColor)
+{
+	return (textureColor * input.vertexColor.rgb) * ambientColor.rgb;
+}
+
+float3 GetDirectionalColor(PixelInputType input,float3 textureColor, float3 normalMap)
+{										  						
+	float3x3 tangentSpaceMatrix = float3x3(input.tangent, input.binormal, input.normal);
+	float3 bumpNormal           = normalize(mul(normalMap, tangentSpaceMatrix));   	
+			    		  					   		
+    float lightIntensity = saturate(dot(bumpNormal, dirLightDirection)); 
+	
+	// get color based on texture, intensity and color of light
+    float3 color = textureColor * input.vertexColor.rgb * lightIntensity * dirDiffuseColor.rgb; 
+	saturate(color);
+				
+	return color; 
+}
+
+float3 GetPointColor(PixelInputType input, float3 textureColor, float3 bumpValues)
+{   
+	float3 finalColor = float3(0,0,0);
+	int numLights     = pointLights[0].numLights;
+	
+	for (int i =0; i < numLights; i++)
+	{	
+		// get light direction and distance from light	
+		float3 lightDir = -normalize(input.worldPos - pointLights[i].position);	
+		float dst       = length(input.worldPos - pointLights[i].position);
+		
+		// calculate attuniation	
+		float fallOff     = 1 - ((dst / pointLights[i].radius) * 0.5);	// make the falloff 50% slower then the radius to give more control of result depending of attuniation settings
+		float attuniation = 1 / (pointLights[i].attConstant + pointLights[i].attLinear * dst + pointLights[i].attExponential * dst * dst);
+		attuniation       = (attuniation * pointLights[i].intensity) * fallOff;
+		
+		if (fallOff >= 0)
+		{					
+			// get tangentSpaceMatrix for normalmapping and multiply with normalmapsample to get the bumpnormal
+			float3x3 tangentSpaceMatrix = float3x3(input.tangent,input.binormal,input.normal);	
+			float3 bumpNormal           = normalize(mul(bumpValues, tangentSpaceMatrix));   
+				
+			// get intensity from the normal from normalmap and lightdirection
+			float lightIntensity = saturate(dot(bumpNormal, lightDir)); 
+			
+			// get color based on texture, intensity and color of light
+			float3 color = textureColor * input.vertexColor.rgb * lightIntensity * pointLights[i].color; 
+							
+			finalColor += (color * attuniation);
+		}
+	}
+     
+    return finalColor;
+}
+
+float4 Main(PixelInputType input) : SV_TARGET
+{     	           	 
+	float4 textureColor   = Texture[0].Sample(SampleType[0], input.texCoord);		
+	float4 normalMap      = Texture[1].Sample(SampleType[0], input.texCoord);
+	float4 emissiveColor  = Texture[2].Sample(SampleType[0], input.texCoord);
+	
+	// convert normalmap sample to range -1 to 1
+	normalMap = (normalMap * 2.0) -1.0;
+	
+	float3 baseColor        = GetBaseColor(input, textureColor);		
+	float3 directionalColor = GetDirectionalColor(input, textureColor, normalMap);
+	float3 pointColor       = GetPointColor(input, textureColor, normalMap);
+	
+	// flag the alpha channel of diffuse map so the planar reflection shader knows that this is a emissive pixel
+	// and should reflect stronger the other pixels, Note this makes us not being able to render alpha meshes to 
+	// the reflectionmap at the moment
+	if (emissiveColor.a > 0)
+		return float4(textureColor * emissiveColor.rgb, -1);
+			
+	return float4(baseColor + directionalColor + pointColor, 1);
+}

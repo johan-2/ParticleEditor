@@ -10,6 +10,7 @@ class ParticleSystemComponent;
 class RenderToTexture;
 class ParticleShader;
 class DXInputLayouts;
+class ReflectionMapShader;
 
 class PlanarReflectionShader
 {
@@ -17,34 +18,28 @@ public:
 	PlanarReflectionShader();
 	~PlanarReflectionShader();
 
-	void Render(std::vector<Mesh*> reflectionMeshes, 
-		        std::vector<Mesh*> reflectiveMeshes,
-		        std::vector<ParticleSystemComponent*> reflectiveParticles, 
-		        ParticleShader* particleShader, 
-		        DXInputLayouts* inputLayouts);
+	void Render(std::vector<Mesh*>& reflectionMeshes, 
+		        std::vector<Mesh*>& reflectiveOpaqueMeshes,
+				std::vector<Mesh*>& reflectiveAlphaMeshes,
+		        std::vector<ParticleSystemComponent*>& reflectiveParticles, 
+		        ParticleShader*& particleShader, 
+		        DXInputLayouts*& inputLayouts,
+		        ReflectionMapShader*& reflectionMapShader);
 
 private:
-
-	RenderToTexture* _reflectionMap;
-
+	
 	// compiled shaders
 	ID3D11VertexShader* _planarVertexShader;
 	ID3D11PixelShader*  _planarPixelShader;
-	ID3D11VertexShader* _reflectionMapVertexShader;
-	ID3D11PixelShader*  _reflectionMapPixelShader;
-
+	
 	// constant buffers
 	ID3D11Buffer* _constantBufferPlanarVertex;
 	ID3D11Buffer* _constantBufferPlanarPixelAmbDir;
-	ID3D11Buffer* _constantBufferPlanarPixelPoint;
-	ID3D11Buffer* _constantBufferReflectionMapVertex;
+	ID3D11Buffer* _constantBufferPlanarPixelPoint;	
 
 	// the shader bytecode
 	ID3D10Blob* _planarVertexShaderByteCode;
 	ID3D10Blob* _planarPixelShaderByteCode;
-
-	ID3D10Blob* _reflectionMapVertexShaderByteCode;
-	ID3D10Blob* _reflectionMapPixelShaderByteCode;
 
 	struct ConstantVertexPlanar
 	{
@@ -80,14 +75,6 @@ private:
 		float attLinear;
 		float attExponential;
 		int   numLights;
-	};
-
-	struct ConstantVertexReflectionMap
-	{
-		XMFLOAT4X4 world;
-		XMFLOAT4X4 view;
-		XMFLOAT4X4 projection;
-		XMFLOAT4   clipingPlane;
 	};
 };
 

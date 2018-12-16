@@ -25,6 +25,7 @@
 #include "FreeMoveComponent.h"
 #include "PlanarReflectionShader.h"
 #include "PostProcessingShader.h"
+#include "ReflectionMapShader.h"
 
 using namespace DirectX;
 
@@ -46,6 +47,8 @@ Renderer::~Renderer()
 	delete _forwardAlphaShader;
 	delete _inputLayouts;
 	delete _planarReflectionShader;
+	delete _PostProcessingShader;
+	delete _reflectionMapShader;
 }
 
 void Renderer::Initialize()
@@ -63,6 +66,7 @@ void Renderer::Initialize()
 	_wireframeShader        = new WireframeShader();
 	_planarReflectionShader = new PlanarReflectionShader();
 	_PostProcessingShader   = new PostProcessingShader();
+	_reflectionMapShader    = new ReflectionMapShader();
 
 	// create input layouts
 	_inputLayouts = new DXInputLayouts();
@@ -170,7 +174,8 @@ void Renderer::Render()
 	_wireframeShader->RenderWireFrame(_meshes[S_WIREFRAME]);
 
 	// render planar reflections forward
-	_planarReflectionShader->Render(_meshes[S_ALPHA_REFLECTION], _meshes[S_CAST_REFLECTION], _particleSystems, _particleShader, _inputLayouts);
+	_planarReflectionShader->Render(_meshes[S_ALPHA_REFLECTION], _meshes[S_CAST_REFLECTION_OPAQUE], _meshes[S_CAST_REFLECTION_ALPHA], 
+									_particleSystems, _particleShader, _inputLayouts, _reflectionMapShader);
 
 	// TODO: alpha meshes and particles is not sorted against each other
 	// either sort them and send one object at a time to the shaders or

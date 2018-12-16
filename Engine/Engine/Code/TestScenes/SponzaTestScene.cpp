@@ -27,8 +27,6 @@ SponzaTestScene::SponzaTestScene()
 
 	// set skybox properties
 	_skyDome->SetSunDirectionTransformPtr(shadowMapRenderer->GetComponent<TransformComponent>());
-	_skyDome->SetSunDistance(5.0f);
-	_skyDome->SetSkyColorLayers(XMFLOAT4(0, 0, 0, 0), XMFLOAT4(0.45f, 0.40f, 0.2f, 40), XMFLOAT4(0.082f, 0.352f, 0.984f, 65));
 
 	renderer.CreateDebugImages();
 
@@ -55,31 +53,31 @@ SponzaTestScene::SponzaTestScene()
 
 	Entity* sponza = new Entity();
 	sponza->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(0.05f, 0.05f, 0.05f));
-	sponza->AddComponent<ModelComponent>()->InitModel("Models/sponza.obj", DEFERRED | CAST_SHADOW_DIR | CAST_REFLECTION, L"Textures/marble.dds", L"", L"", L"", true, 1);
+	sponza->AddComponent<ModelComponent>()->InitModel("Models/sponza.obj", DEFERRED | CAST_SHADOW_DIR | CAST_REFLECTION_OPAQUE, L"Textures/marble.dds", L"", L"", L"", true, 1);
 
 	Entity* sphere = new Entity();
 	sphere->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 5, 1), XMFLOAT3(0, 0, 0), XMFLOAT3(2, 2, 2));
-	sphere->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::SPHERE, DEFERRED | CAST_SHADOW_DIR | CAST_REFLECTION, L"", L"", L"", L"Textures/emissiveTest.dds");
+	sphere->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::SPHERE, DEFERRED | CAST_SHADOW_DIR | CAST_REFLECTION_OPAQUE, L"", L"", L"", L"Textures/emissiveTest.dds");
 	sphere->AddComponent<LightPointComponent>()->Init(20, 20, XMFLOAT3(0.1, 1.0f, 0), 0.0f, 1.0f, 0.2f);
 
 	Entity* sphere2 = new Entity();
 	sphere2->AddComponent<TransformComponent>()->Init(XMFLOAT3(-60, 7, -20.25f), XMFLOAT3(0, 0, 0), XMFLOAT3(4, 4, 4));
-	sphere2->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::SPHERE, DEFERRED | CAST_SHADOW_DIR | CAST_REFLECTION, L"", L"", L"", L"Textures/emissivePurple.dds");
+	sphere2->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::SPHERE, DEFERRED | CAST_SHADOW_DIR | CAST_REFLECTION_OPAQUE, L"", L"", L"", L"Textures/emissivePurple.dds");
 	sphere2->AddComponent<LightPointComponent>()->Init(20, 20, XMFLOAT3(0.8, 0.2f, 0.8), 0.0f, 1.0f, 0.2f);
 
 	Entity* sphere3 = new Entity();
 	sphere3->AddComponent<TransformComponent>()->Init(XMFLOAT3(56.0f, 7, -20.25f), XMFLOAT3(0, 0, 0), XMFLOAT3(4, 4, 4));
-	sphere3->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::SPHERE, DEFERRED | CAST_SHADOW_DIR | CAST_REFLECTION, L"", L"", L"", L"Textures/emissiveRed.dds");
+	sphere3->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::SPHERE, DEFERRED | CAST_SHADOW_DIR | CAST_REFLECTION_OPAQUE, L"", L"", L"", L"Textures/emissiveRed.dds");
 	sphere3->AddComponent<LightPointComponent>()->Init(20, 20, XMFLOAT3(1.0f, 0.0f, 0.0f), 0.0f, 1.0f, 0.2f);
 
 	Entity* sphere4 = new Entity();
 	sphere4->AddComponent<TransformComponent>()->Init(XMFLOAT3(-60, 7, 22.5f), XMFLOAT3(0, 0, 0), XMFLOAT3(4, 4, 4));
-	sphere4->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::SPHERE, DEFERRED | CAST_SHADOW_DIR | CAST_REFLECTION, L"", L"", L"", L"Textures/emissiveBlue.dds");
+	sphere4->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::SPHERE, DEFERRED | CAST_SHADOW_DIR | CAST_REFLECTION_OPAQUE, L"", L"", L"", L"Textures/emissiveBlue.dds");
 	sphere4->AddComponent<LightPointComponent>()->Init(20, 20, XMFLOAT3(0.0f, 0.4f, 0.95f), 0.0f, 1.0f, 0.2f);
 
 	Entity* sphere5 = new Entity();
 	sphere5->AddComponent<TransformComponent>()->Init(XMFLOAT3(56.0f, 7, 22.5f), XMFLOAT3(0, 0, 0), XMFLOAT3(4, 4, 4));
-	sphere5->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::SPHERE, DEFERRED | CAST_SHADOW_DIR | CAST_REFLECTION, L"", L"", L"", L"Textures/emissivePink.dds");
+	sphere5->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::SPHERE, DEFERRED | CAST_SHADOW_DIR | CAST_REFLECTION_OPAQUE, L"", L"", L"", L"Textures/emissivePink.dds");
 	sphere5->AddComponent<LightPointComponent>()->Init(20, 20, XMFLOAT3(1.0f, 0.5f, 0.85f), 0.0f, 1.0f, 0.2f);
 
 	Entity* floor = new Entity();
@@ -91,25 +89,25 @@ SponzaTestScene::SponzaTestScene()
 	fire->AddComponent<TransformComponent>()->Init(XMFLOAT3(60.0f, 0.0f, -6.0f), XMFLOAT3(0, 0, 0), XMFLOAT3(0.25, 0.25, 0.25));
 	fire->AddComponent<ParticleSystemComponent>()->Init("Particles/fire.json");
 	fire->AddComponent<LightPointComponent>()->Init(9, 8, XMFLOAT3(0.8f, 0.4f, 0.0f), 0.0f, 1.0f, 0.1f);
-	fire->AddComponent<ModelComponent>()->InitModel("Models/fogata1.obj", DEFERRED | CAST_SHADOW_DIR | CAST_REFLECTION);
+	fire->AddComponent<ModelComponent>()->InitModel("Models/fogata1.obj", DEFERRED | CAST_SHADOW_DIR | CAST_REFLECTION_OPAQUE);
 
 	Entity* fire2 = new Entity();
 	fire2->AddComponent<TransformComponent>()->Init(XMFLOAT3(60.0f, 0.0f, 12.0f), XMFLOAT3(0, 0, 0), XMFLOAT3(0.25, 0.25, 0.25));
 	fire2->AddComponent<ParticleSystemComponent>()->Init("Particles/fire.json");
 	fire2->AddComponent<LightPointComponent>()->Init(9, 10, XMFLOAT3(0.8f, 0.4f, 0.0f), 0.0f, 1.0f, 0.0f);
-	fire2->AddComponent<ModelComponent>()->InitModel("Models/fogata1.obj", DEFERRED | CAST_SHADOW_DIR | CAST_REFLECTION);
+	fire2->AddComponent<ModelComponent>()->InitModel("Models/fogata1.obj", DEFERRED | CAST_SHADOW_DIR | CAST_REFLECTION_OPAQUE);
 
 	Entity* fire7 = new Entity();
 	fire7->AddComponent<TransformComponent>()->Init(XMFLOAT3(-65.0f, 0.0f, -6.0f), XMFLOAT3(0, 0, 0), XMFLOAT3(0.25, 0.25, 0.25));
 	fire7->AddComponent<ParticleSystemComponent>()->Init("Particles/fire.json");
 	fire7->AddComponent<LightPointComponent>()->Init(9, 8, XMFLOAT3(0.8f, 0.4f, 0.0f), 0.0f, 1.0f, 0.1f);
-	fire7->AddComponent<ModelComponent>()->InitModel("Models/fogata1.obj", DEFERRED | CAST_SHADOW_DIR | CAST_REFLECTION);
+	fire7->AddComponent<ModelComponent>()->InitModel("Models/fogata1.obj", DEFERRED | CAST_SHADOW_DIR | CAST_REFLECTION_OPAQUE);
 
 	Entity* fire8 = new Entity();
 	fire8->AddComponent<TransformComponent>()->Init(XMFLOAT3(-65.0f, 0.0f, 12.0f), XMFLOAT3(0, 0, 0), XMFLOAT3(0.25, 0.25, 0.25));
 	fire8->AddComponent<ParticleSystemComponent>()->Init("Particles/fire.json");
 	fire8->AddComponent<LightPointComponent>()->Init(9, 10, XMFLOAT3(0.8f, 0.4f, 0.0f), 0.0f, 1.0f, 0.0f);
-	fire8->AddComponent<ModelComponent>()->InitModel("Models/fogata1.obj", DEFERRED | CAST_SHADOW_DIR | CAST_REFLECTION);
+	fire8->AddComponent<ModelComponent>()->InitModel("Models/fogata1.obj", DEFERRED | CAST_SHADOW_DIR | CAST_REFLECTION_OPAQUE);
 
 	Entity* fire3 = new Entity();
 	fire3->AddComponent<TransformComponent>()->Init(XMFLOAT3(24.5f, 5.5f, -7.0f));

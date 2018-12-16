@@ -124,9 +124,13 @@ void Mesh::AddRemoveToRenderer(bool add)
 	if ((_FLAGS & ALPHA_FORWARD) == ALPHA_FORWARD) 	
 		add ? renderer.AddMeshToRenderer(this, SHADER_TYPE::S_FORWARD_ALPHA) : renderer.RemoveMeshFromRenderer(this, SHADER_TYPE::S_FORWARD_ALPHA);
 
-	// meshes that will be rendered to reflection maps
-	if ((_FLAGS & CAST_REFLECTION) == CAST_REFLECTION)
-		add ? renderer.AddMeshToRenderer(this, SHADER_TYPE::S_CAST_REFLECTION) : renderer.RemoveMeshFromRenderer(this, SHADER_TYPE::S_CAST_REFLECTION);
+	//  opaque meshes that will be rendered to reflection maps
+	if ((_FLAGS & CAST_REFLECTION_OPAQUE) == CAST_REFLECTION_OPAQUE)
+		add ? renderer.AddMeshToRenderer(this, SHADER_TYPE::S_CAST_REFLECTION_OPAQUE) : renderer.RemoveMeshFromRenderer(this, SHADER_TYPE::S_CAST_REFLECTION_OPAQUE);
+
+	// alpha meshes that will be rendered to reflection maps
+	if ((_FLAGS & CAST_REFLECTION_ALPHA) == CAST_REFLECTION_ALPHA)
+		add ? renderer.AddMeshToRenderer(this, SHADER_TYPE::S_CAST_REFLECTION_ALPHA) : renderer.RemoveMeshFromRenderer(this, SHADER_TYPE::S_CAST_REFLECTION_ALPHA);
 
 	// forward rendered alpha meshes with planear reflections
 	if ((_FLAGS & ALPHA_REFLECTION) == ALPHA_REFLECTION)

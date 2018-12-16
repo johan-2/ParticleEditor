@@ -23,6 +23,7 @@ class ForwardAlphaShader;
 class WireframeShader;
 class PlanarReflectionShader;
 class PostProcessingShader;
+class ReflectionMapShader;
 
 // the different render lists we have
 enum SHADER_TYPE
@@ -31,7 +32,8 @@ enum SHADER_TYPE
 	S_DEPTH,
 	S_FORWARD_ALPHA,
 	S_WIREFRAME,
-	S_CAST_REFLECTION,
+	S_CAST_REFLECTION_OPAQUE,
+	S_CAST_REFLECTION_ALPHA,
 	S_ALPHA_REFLECTION,
 	S_NUM_RENDER_TYPES,
 };
@@ -93,6 +95,7 @@ private:
 	WireframeShader*        _wireframeShader;
 	PlanarReflectionShader* _planarReflectionShader;
 	PostProcessingShader*   _PostProcessingShader;
+	ReflectionMapShader*    _reflectionMapShader;
 
 	// skybox class with all rendering built in
 	SkyDome* _skyBox;

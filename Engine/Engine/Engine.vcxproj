@@ -187,6 +187,7 @@
     <ClCompile Include="Code\Renderer\ShaderPrograms\ParticleShader.cpp" />
     <ClCompile Include="Code\Renderer\ShaderPrograms\PlanarReflectionShader.cpp" />
     <ClCompile Include="Code\Renderer\ShaderPrograms\QuadShader.cpp" />
+    <ClCompile Include="Code\Renderer\ShaderPrograms\ReflectionMapShader.cpp" />
     <ClCompile Include="Code\Renderer\ShaderPrograms\WireframeShader.cpp" />
     <ClCompile Include="Code\System\DXModules\DXBlendStates.cpp" />
     <ClCompile Include="Code\System\DXModules\DXDepthStencilStates.cpp" />
@@ -247,6 +248,7 @@
     <ClInclude Include="Code\Renderer\ShaderPrograms\ParticleShader.h" />
     <ClInclude Include="Code\Renderer\ShaderPrograms\PlanarReflectionShader.h" />
     <ClInclude Include="Code\Renderer\ShaderPrograms\QuadShader.h" />
+    <ClInclude Include="Code\Renderer\ShaderPrograms\ReflectionMapShader.h" />
     <ClInclude Include="Code\Renderer\ShaderPrograms\WireframeShader.h" />
     <ClInclude Include="Code\System\DXModules\DXBlendStates.h" />
     <ClInclude Include="Code\System\DXModules\DXDepthStencilStates.h" />
