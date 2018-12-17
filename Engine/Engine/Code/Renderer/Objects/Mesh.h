@@ -2,7 +2,7 @@
 #include <d3d11.h>
 #include <DirectXMath.h>
 #include "TransformComponent.h"
-#include "Color32.h";
+#include "Color32.h"
 
 #define DEFERRED               1 << 0
 #define ALPHA_FORWARD          1 << 1

@@ -23,7 +23,8 @@ SponzaTestScene::SponzaTestScene()
 	Entity* shadowMapRenderer = renderer.CreateShadowMap(250.0f, 8192.0f, XMFLOAT3(-6, 325, 9), XMFLOAT3(85.0f, -90.0f, 0));
 
 	// create skybox
-	_skyDome = renderer.CreateSkyBox(L"SkyBoxes/ThickCloudsWater.dds", SKY_DOME_RENDER_MODE::CUBEMAP_COLOR_BLEND);
+	_skyDome = renderer.CreateSkyBox(L"SkyBoxes/ThickCloudsWater.dds", SKY_DOME_RENDER_MODE::THREE_LAYER_COLOR_BLEND);
+	_skyDome->SetSkyColorLayers(XMFLOAT4(0, 0, 0, 0), XMFLOAT4(0, 0, 0, 30), XMFLOAT4(0, 0, 0, 70));
 
 	// set skybox properties
 	_skyDome->SetSunDirectionTransformPtr(shadowMapRenderer->GetComponent<TransformComponent>());
@@ -58,12 +59,12 @@ SponzaTestScene::SponzaTestScene()
 	Entity* sphere = new Entity();
 	sphere->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 5, 1), XMFLOAT3(0, 0, 0), XMFLOAT3(2, 2, 2));
 	sphere->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::SPHERE, DEFERRED | CAST_SHADOW_DIR | CAST_REFLECTION_OPAQUE, L"", L"", L"", L"Textures/emissiveTest.dds");
-	sphere->AddComponent<LightPointComponent>()->Init(20, 20, XMFLOAT3(0.1, 1.0f, 0), 0.0f, 1.0f, 0.2f);
+	sphere->AddComponent<LightPointComponent>()->Init(20, 20, XMFLOAT3(0.1f, 1.0f, 0), 0.0f, 1.0f, 0.2f);
 
 	Entity* sphere2 = new Entity();
 	sphere2->AddComponent<TransformComponent>()->Init(XMFLOAT3(-60, 7, -20.25f), XMFLOAT3(0, 0, 0), XMFLOAT3(4, 4, 4));
 	sphere2->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::SPHERE, DEFERRED | CAST_SHADOW_DIR | CAST_REFLECTION_OPAQUE, L"", L"", L"", L"Textures/emissivePurple.dds");
-	sphere2->AddComponent<LightPointComponent>()->Init(20, 20, XMFLOAT3(0.8, 0.2f, 0.8), 0.0f, 1.0f, 0.2f);
+	sphere2->AddComponent<LightPointComponent>()->Init(20, 20, XMFLOAT3(0.8f, 0.2f, 0.8f), 0.0f, 1.0f, 0.2f);
 
 	Entity* sphere3 = new Entity();
 	sphere3->AddComponent<TransformComponent>()->Init(XMFLOAT3(56.0f, 7, -20.25f), XMFLOAT3(0, 0, 0), XMFLOAT3(4, 4, 4));
@@ -82,7 +83,7 @@ SponzaTestScene::SponzaTestScene()
 
 	Entity* floor = new Entity();
 	floor->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0.05f, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(800, 1, 800));
-	floor->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::PLANE, ALPHA_REFLECTION, L"Textures/sponza_floor_a_diff.dds", L"Textures/sponza_floor_a_ddn.dds", L"Textures/FlatHighSpecular.dds", L"", 170.0f);
+	floor->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::PLANE, ALPHA_REFLECTION, L"Textures/sponza_floor_a_diff.dds", L"Textures/sponza_floor_a_ddn.dds", L"Textures/FlatHighSpecular.dds", L"", 350.0f);
 	floor->GetComponent<ModelComponent>()->GetMeshes()[0]->SetReflectionData(Mesh::ReflectiveData(0.2f, true, true));
 
 	Entity* fire = new Entity();

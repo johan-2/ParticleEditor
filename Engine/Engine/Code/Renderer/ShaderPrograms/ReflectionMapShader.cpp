@@ -72,17 +72,15 @@ void ReflectionMapShader::GenerateReflectionMap(std::vector<Mesh*>& reflectiveOp
 
 	// get lights
 	LightDirectionComponent*&          directionalLight = LM.GetDirectionalLight();
-	std::vector<LightPointComponent*>& pointLights      = LM.GetPointLight();
 
 	// create constant buffer structures
 	CBAmbDirPixel constantAmbDirPixel;
-	CBPointPixel  constantPointPixel[MAX_POINT_LIGHTS];
 	CBVertex      constantVertex;
 
 	// set ambient and directional light properties for pixel shader
 	constantAmbDirPixel.ambientColor    = LM.GetAmbientColor();
 	constantAmbDirPixel.dirDiffuseColor = directionalLight->GetLightColor();
-	XMStoreFloat3(&constantAmbDirPixel.lightDir, XMVectorNegate(XMLoadFloat3(&directionalLight->GetLightDirection())));
+	constantAmbDirPixel.lightDir        = directionalLight->GetLightDirectionInv();
 
 	// update pixel shader constant buffer fro point lights
 	SHADER_HELPERS::UpdateConstantBuffer((void*)LM.GetCBPointBuffer(), sizeof(CBPoint) * LM.GetNumPointLights(), _CBPixelPoint);

@@ -43,11 +43,14 @@ public:
 	// remove the current directional light
 	void RemoveDirectionalLight();
 
+	// updates the data for light constant buffers
 	void UpdateLightBuffers();
 
+	// get pointer to point light data
 	CBPoint* GetCBPointBuffer() { return _pointCBBuffer; }
 
-	int GetNumPointLights() { return _pointLights.size(); }
+	// get num of pointlights active
+	int GetNumPointLights() { return (int)_pointLights.size(); }
 	
 private:
 	
@@ -60,7 +63,7 @@ private:
 	// list of all point lights
 	std::vector<LightPointComponent*> _pointLights;
 
-	//
+	// holds the properties of all point lights
 	CBPoint _pointCBBuffer[MAX_POINT_LIGHTS];
 };
 

@@ -113,7 +113,7 @@ namespace SHADER_HELPERS
 
 	static void MeshSort(std::vector<Mesh*>& meshes, const XMFLOAT3& position, bool backToFront)
 	{
-		const int size = meshes.size();
+		const int size = (int)meshes.size();
 
 		for (int i = 0; i < size; i++)
 		{

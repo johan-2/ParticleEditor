@@ -1,34 +1,14 @@
-﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(377,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
-  Entity.cpp
-  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-c:\users\nilss\desktop\enginedx11\engine\engine\code\managers\lightmanager.h(50): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+﻿  Entity.cpp
   IComponent.cpp
-  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-c:\users\nilss\desktop\enginedx11\engine\engine\code\managers\lightmanager.h(50): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
   World.cpp
-  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-c:\users\nilss\desktop\enginedx11\engine\engine\code\managers\lightmanager.h(50): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\world.cpp(23): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
 c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\world.cpp(25): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\world.cpp(53): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\world.cpp(69): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
 c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\world.cpp(75): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\world.cpp(88): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
 c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\world.cpp(90): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\world.cpp(97): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
 c:\users\nilss\desktop\enginedx11\engine\engine\code\componentsystem\world.cpp(99): warning C4018: '<': signed/unsigned mismatch
   FreeMoveComponent.cpp
-  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-c:\users\nilss\desktop\enginedx11\engine\engine\code\managers\lightmanager.h(50): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
   LightDirectionComponent.cpp
-c:\users\nilss\desktop\enginedx11\engine\engine\code\managers\lightmanager.h(50): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
-  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
   LightPointComponent.cpp
-c:\users\nilss\desktop\enginedx11\engine\engine\code\managers\lightmanager.h(50): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
-  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
   ParticleSystemComponent.cpp
-  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-c:\users\nilss\desktop\enginedx11\engine\engine\code\managers\lightmanager.h(50): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
 c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(35): warning C4018: '<': signed/unsigned mismatch
 c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(63): warning C4267: '=': conversion from 'size_t' to 'unsigned int', possible loss of data
 c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(67): warning C4018: '<': signed/unsigned mismatch
@@ -56,166 +36,54 @@ c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemco
 c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(607): warning C4018: '<': signed/unsigned mismatch
 c:\users\nilss\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(691): warning C4018: '<': signed/unsigned mismatch
   QuadComponent.cpp
-  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-c:\users\nilss\desktop\enginedx11\engine\engine\code\managers\lightmanager.h(50): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
   RotationComponent.cpp
-  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-c:\users\nilss\desktop\enginedx11\engine\engine\code\managers\lightmanager.h(50): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
   UVScrollComponent.cpp
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\objects\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-c:\users\nilss\desktop\enginedx11\engine\engine\code\managers\lightmanager.h(50): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
 c:\users\nilss\desktop\enginedx11\engine\engine\code\components\uvscrollcomponent.cpp(35): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
 c:\users\nilss\desktop\enginedx11\engine\engine\code\components\uvscrollcomponent.cpp(36): warning C4018: '<': signed/unsigned mismatch
   Framework.cpp
-c:\users\nilss\desktop\enginedx11\engine\engine\code\managers\lightmanager.h(50): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
-  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\objects\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-c:\users\nilss\desktop\enginedx11\engine\engine\code\framework.cpp(41): warning C4244: 'argument': conversion from 'const float' to 'int', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\framework.cpp(163): warning C4244: 'initializing': conversion from '_Rep' to 'unsigned int', possible loss of data
-          with
-          [
-              _Rep=std::chrono::system_clock::rep
-          ]
-  CameraManager.cpp
   GuiManager.cpp
-  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-c:\users\nilss\desktop\enginedx11\engine\engine\code\managers\lightmanager.h(50): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+  LightManager.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\code\managers\lightmanager.cpp(40): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\managers\lightmanager.cpp(40): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
   GBuffer.cpp
-  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-c:\users\nilss\desktop\enginedx11\engine\engine\code\managers\lightmanager.h(50): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\systemdefs.h(3): warning C4244: '=': conversion from 'float' to 'UINT', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\systemdefs.h(4): warning C4244: '=': conversion from 'float' to 'UINT', possible loss of data
   ScreenQuad.cpp
-  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-c:\users\nilss\desktop\enginedx11\engine\engine\code\managers\lightmanager.h(50): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
   Mesh.cpp
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\objects\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-c:\users\nilss\desktop\enginedx11\engine\engine\code\managers\lightmanager.h(50): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
   SkyDome.cpp
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\objects\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-c:\users\nilss\desktop\enginedx11\engine\engine\code\managers\lightmanager.h(50): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\shaderhelpers.h(116): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\shaderhelpers.h(116): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
 c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\modelloader.h(462): warning C4002: too many arguments for function-like macro invocation 'assert'
-c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\modelloader.h(141): warning C4267: 'argument': conversion from 'size_t' to 'unsigned int', possible loss of data
 c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\modelloader.h(478): warning C4018: '<': signed/unsigned mismatch
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\objects\skydome.cpp(45): warning C4305: 'argument': truncation from 'double' to 'float'
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\objects\skydome.cpp(492): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
   RenderToTexture.cpp
-  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-c:\users\nilss\desktop\enginedx11\engine\engine\code\managers\lightmanager.h(50): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
   Renderer.cpp
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\objects\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-c:\users\nilss\desktop\enginedx11\engine\engine\code\managers\lightmanager.h(50): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\renderer.cpp(88): warning C4244: 'argument': conversion from 'const float' to 'unsigned int', possible loss of data
 c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\renderer.cpp(94): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
   DeferredShader.cpp
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\objects\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-c:\users\nilss\desktop\enginedx11\engine\engine\code\managers\lightmanager.h(50): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\shaderhelpers.h(116): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\shaderhelpers.h(116): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
 c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\deferredshader.cpp(80): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
 c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\deferredshader.cpp(81): warning C4018: '<': signed/unsigned mismatch
   Generating Code...
   Compiling...
   DepthShader.cpp
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\objects\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-c:\users\nilss\desktop\enginedx11\engine\engine\code\managers\lightmanager.h(50): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\shaderhelpers.h(116): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\shaderhelpers.h(116): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
 c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\depthshader.cpp(59): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
 c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\depthshader.cpp(60): warning C4018: '<': signed/unsigned mismatch
   ForwardAlphaShader.cpp
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\objects\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-c:\users\nilss\desktop\enginedx11\engine\engine\code\managers\lightmanager.h(50): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\shaderhelpers.h(116): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\shaderhelpers.h(116): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
 c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\forwardalphashader.cpp(98): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
 c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\forwardalphashader.cpp(98): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
   ImGUIShader.cpp
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\objects\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-c:\users\nilss\desktop\enginedx11\engine\engine\code\managers\lightmanager.h(50): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\shaderhelpers.h(116): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\shaderhelpers.h(116): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
   ParticleShader.cpp
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\objects\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-c:\users\nilss\desktop\enginedx11\engine\engine\code\managers\lightmanager.h(50): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\shaderhelpers.h(116): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\shaderhelpers.h(116): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
 c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\particleshader.cpp(76): warning C4018: '<': signed/unsigned mismatch
   PlanarReflectionShader.cpp
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\objects\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-c:\users\nilss\desktop\enginedx11\engine\engine\code\managers\lightmanager.h(50): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\shaderhelpers.h(116): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\shaderhelpers.h(116): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
 c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\planarreflectionshader.cpp(97): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
 c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\planarreflectionshader.cpp(97): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
   PostProcessingShader.cpp
-  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-c:\users\nilss\desktop\enginedx11\engine\engine\code\managers\lightmanager.h(50): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\objects\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\shaderhelpers.h(116): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\shaderhelpers.h(116): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\postprocessingshader.cpp(28): warning C4244: 'argument': conversion from 'const float' to 'unsigned int', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\postprocessingshader.cpp(29): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\postprocessingshader.cpp(30): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\postprocessingshader.cpp(31): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\postprocessingshader.cpp(32): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
   QuadShader.cpp
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\objects\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-c:\users\nilss\desktop\enginedx11\engine\engine\code\managers\lightmanager.h(50): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\shaderhelpers.h(116): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\shaderhelpers.h(116): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
   ReflectionMapShader.cpp
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\objects\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-c:\users\nilss\desktop\enginedx11\engine\engine\code\managers\lightmanager.h(50): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\shaderhelpers.h(116): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\shaderhelpers.h(116): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\reflectionmapshader.cpp(29): warning C4244: 'argument': conversion from 'const float' to 'unsigned int', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\reflectionmapshader.cpp(79): warning C4101: 'constantPointPixel': unreferenced local variable
   WireframeShader.cpp
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\objects\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-c:\users\nilss\desktop\enginedx11\engine\engine\code\managers\lightmanager.h(50): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\shaderhelpers.h(116): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\shaderhelpers.h(116): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
 c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\wireframeshader.cpp(62): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
 c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\wireframeshader.cpp(63): warning C4018: '<': signed/unsigned mismatch
   DXInputLayouts.cpp
-  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-c:\users\nilss\desktop\enginedx11\engine\engine\code\managers\lightmanager.h(50): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
   Systems.cpp
 c:\users\nilss\desktop\enginedx11\engine\engine\code\system\systems.cpp(1): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-c:\users\nilss\desktop\enginedx11\engine\engine\code\managers\lightmanager.h(50): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
 c:\users\nilss\desktop\enginedx11\engine\engine\code\system\systems.cpp(20): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
   IslandTestScene.cpp
-c:\users\nilss\desktop\enginedx11\engine\engine\code\managers\lightmanager.h(50): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
-  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\objects\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
   SponzaTestScene.cpp
-c:\users\nilss\desktop\enginedx11\engine\engine\code\managers\lightmanager.h(50): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
-  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\objects\mesh.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-c:\users\nilss\desktop\enginedx11\engine\engine\code\testscenes\sponzatestscene.cpp(61): warning C4305: 'argument': truncation from 'double' to 'float'
-c:\users\nilss\desktop\enginedx11\engine\engine\code\testscenes\sponzatestscene.cpp(66): warning C4305: 'argument': truncation from 'double' to 'float'
   DebugStats.cpp
-  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-c:\users\nilss\desktop\enginedx11\engine\engine\code\managers\lightmanager.h(50): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
   TexturePool.cpp
-  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-c:\users\nilss\desktop\enginedx11\engine\engine\code\managers\lightmanager.h(50): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
   Generating Code...
   Engine.vcxproj -> C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\Engine.exe

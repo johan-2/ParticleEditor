@@ -138,7 +138,7 @@ public:
 
 		// create mesh and buffers
 		Mesh* modelMesh = new Mesh(parent, flags, diffuse.c_str(), normal.c_str(), specular.c_str(), emissive.c_str());
-		modelMesh->CreateBuffers(&vertices[0], &indices[0], vertices.size(), indices.size());
+		modelMesh->CreateBuffers(&vertices[0], &indices[0], (int)vertices.size(), (int)indices.size());
 
 		return modelMesh;
 	}
@@ -459,7 +459,7 @@ public:
 		const aiScene* scene = importer.ReadFile("Models/sphere.obj", aiProcess_Triangulate | aiProcess_ConvertToLeftHanded | aiProcess_CalcTangentSpace);
 
 		// assert if scene failed to be created
-		assert(scene != nullptr, "Failed to load aiScene for sphere %s", model);
+		assert(scene != nullptr, "Failed to load aiScene for sphere");
 
 		return CreateMesh(scene->mMeshes[scene->mRootNode->mChildren[0]->mMeshes[0]], scene, flags, diffuseMap, normalMap, specularMap, emissiveMap, tiling, false, parent);
 	}

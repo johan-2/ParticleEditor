@@ -186,13 +186,13 @@ bool Input::IsKeyReleased(unsigned char key)
 // get mouse X movement of this frame
 float Input::GetMouseX() 
 {
-	return _currentMouseState.lX;	
+	return (float)_currentMouseState.lX;	
 }
 
 // get mouse y movement of this frame
 float Input::GetMouseY() 
 {
-	return _currentMouseState.lY;
+	return (float)_currentMouseState.lY;
 }
 
 // is a mouse button down

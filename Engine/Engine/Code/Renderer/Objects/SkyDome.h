@@ -41,7 +41,7 @@ public:
 
 	// set skyColorProperties
 	// colors is declared in 0 - 255 range
-	// the layer fraction is set between 0 - 100 and these should not overlap between the layers
+	// the layer fraction is set between 0 - 100 and is stored in the alpha channel
 	// ex 20, 60, 80 will set layer 1 color from 0 to 20 % on the skyDome 
 	// layer 1 and 2 will blend between 20 - 60 % of the dome
 	// layer2 and 3 will blend between 60 - 80 % of the dome and layer 3 will cover the final 20%
@@ -118,7 +118,7 @@ private:
 		XMFLOAT4 topSkyColorDay      = XMFLOAT4(0.082f, 0.352f, 0.984f, 1.0f);
 		XMFLOAT4 topSkyColorSunSet   = XMFLOAT4(0.35f, 0.45f, 0.984f, 1.0f);
 		XMFLOAT4 topSkyColorNight    = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
-		XMFLOAT4 midSkyColorDay      = XMFLOAT4(0.45f, 0.40f, 0.2f, 1.0f);
+		XMFLOAT4 midSkyColorDay      = XMFLOAT4(0.5f, 0.53f, 0.30f, 1.0f);
 		XMFLOAT4 midSkyColorSunSet   = XMFLOAT4(0.9935f, 0.07211f, 0.08812f, 1.0f);
 		XMFLOAT4 midSkyColorNight    = XMFLOAT4(0.109f, 0.035f, 0.1f, 1.0f);
 	};

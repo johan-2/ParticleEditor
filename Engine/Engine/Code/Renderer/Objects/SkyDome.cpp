@@ -38,11 +38,11 @@ SkyDome::SkyDome(const wchar_t* textureFile, SKY_DOME_RENDER_MODE mode):
 	SHADER_HELPERS::CreateConstantBuffer(_constantSunPixel);
 
 	// initialize sun/moon values
-	_sunMoon.sun.distance      = XMFLOAT3(5, 5, 5);
+	_sunMoon.sun.distance      = XMFLOAT3(5.0f, 5.0f, 5.0f);
 	_sunMoon.sun.beginEndFade  = XMFLOAT2(-0.1f, -0.25f);
-	_sunMoon.moon.distance     = XMFLOAT3(5, 5, 5);
+	_sunMoon.moon.distance     = XMFLOAT3(5.0f, 5.0f, 5.0f);
 	_sunMoon.moon.beginEndFade = XMFLOAT2(0.3f, 0.05f);
-	_sunMoon.moon.colorTint    = XMFLOAT3(0.4, 0.4f, 0.4f);
+	_sunMoon.moon.colorTint    = XMFLOAT3(0.4f, 0.4f, 0.4f);
 	_sunMoon.directionPtr      = nullptr;
 }
 
@@ -137,8 +137,8 @@ void SkyDome::RenderCubeMapSimple(bool useReflectViewMatrix)
 	XMStoreFloat4x4(&matrixPosition, XMMatrixTranspose(XMLoadFloat4x4(&matrixPosition)));
 
 	// set vertices
-	vertexData.world = matrixPosition;
-	vertexData.view = camera->GetViewMatrix();
+	vertexData.world      = matrixPosition;
+	vertexData.view       = camera->GetViewMatrix();
 	vertexData.projection = camera->GetProjectionMatrix();
 
 	// if the skybox is being rendered to a reflection map
@@ -489,7 +489,7 @@ float SkyDome::inverseLerp(float a, float b, float t)
 
 float SkyDome::lerpF(float a, float b, float f)
 {
-	return (a * (1.0 - f)) + (b * f);
+	return (a * (1.0f - f)) + (b * f);
 }
 
 void SkyDome::LerpColorRGB(XMFLOAT4& result, XMFLOAT4 colorA, XMFLOAT4 colorB, float startBlend, float endBlend, float fraction)

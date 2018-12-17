@@ -1,4 +1,4 @@
-#include "Systems.h";
+#include "Systems.h"
 
 DXManager*     Systems::dxManager     = nullptr;
 GuiManager*    Systems::guiManager    = nullptr;

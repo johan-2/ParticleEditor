@@ -28,7 +28,7 @@ void ModelComponent::InitModel(char* model, unsigned int flags, wchar_t* diffuse
 	const aiScene* scene = importer.ReadFile(model, aiProcess_Triangulate | aiProcess_ConvertToLeftHanded | aiProcess_CalcTangentSpace);
 
 	// assert if scene failed to be created
-	assert(scene != nullptr, "Failed to load aiScene from file %s", model);
+	assert(scene != nullptr, "Failed to load aiScene from file");
 
 	// send the root node and recurivly create all meshes
 	ProcessNode(scene->mRootNode, scene, diffuseMap, normalMap, specularMap, emissiveMap, useMaterial, tiling);

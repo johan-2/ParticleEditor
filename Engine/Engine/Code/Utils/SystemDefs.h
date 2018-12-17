@@ -1,7 +1,7 @@
 #pragma once
 
-const float SCREEN_WIDTH = 1920.0f;
-const float SCREEN_HEIGHT = 1080.0f;
+#define SCREEN_WIDTH  1920
+#define SCREEN_HEIGHT 1080
 
 #define V_SYNC false
 #define FULLSCREEN false
