@@ -75,20 +75,5 @@ private:
 		XMFLOAT3   lightDirection;
 		float      padding;
 	};
-
-	// constant data for point lightning in the lightning pass
-	struct ConstantDeferredPoint
-	{
-		XMFLOAT3 lightPosition;
-		float    radius;
-
-		XMFLOAT3 color;
-		float    intensity;		
-
-		float attConstant;
-		float attLinear;
-		float attExponential;
-		int   numLights;
-	};
 };
 

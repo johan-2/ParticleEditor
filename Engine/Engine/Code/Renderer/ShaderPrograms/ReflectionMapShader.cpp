@@ -84,22 +84,8 @@ void ReflectionMapShader::GenerateReflectionMap(std::vector<Mesh*>& reflectiveOp
 	constantAmbDirPixel.dirDiffuseColor = directionalLight->GetLightColor();
 	XMStoreFloat3(&constantAmbDirPixel.lightDir, XMVectorNegate(XMLoadFloat3(&directionalLight->GetLightDirection())));
 
-	// set point light properties for pixel shader
-	const int size = pointLights.size();
-	for (int i = 0; i < size; i++)
-	{
-		constantPointPixel[i].color          = pointLights[i]->GetLightColor();
-		constantPointPixel[i].intensity      = pointLights[i]->GetIntensity();
-		constantPointPixel[i].radius         = pointLights[i]->GetRadius();
-		constantPointPixel[i].lightPosition  = pointLights[i]->GetComponent<TransformComponent>()->GetPositionRef();
-		constantPointPixel[i].attConstant    = pointLights[i]->GetAttConstant();
-		constantPointPixel[i].attLinear      = pointLights[i]->GetAttLinear();
-		constantPointPixel[i].attExponential = pointLights[i]->GetAttExponential();
-		constantPointPixel[i].numLights      = size;
-	}
-
 	// update pixel shader constant buffer fro point lights
-	SHADER_HELPERS::UpdateConstantBuffer((void*)&constantPointPixel, sizeof(CBPointPixel) * size, _CBPixelPoint);
+	SHADER_HELPERS::UpdateConstantBuffer((void*)LM.GetCBPointBuffer(), sizeof(CBPoint) * LM.GetNumPointLights(), _CBPixelPoint);
 	SHADER_HELPERS::UpdateConstantBuffer((void*)&constantAmbDirPixel, sizeof(CBAmbDirPixel), _CBPixelAmbDir);
 
 	// get reflect data of this mesh

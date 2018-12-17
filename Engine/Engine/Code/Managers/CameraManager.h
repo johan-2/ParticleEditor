@@ -21,7 +21,7 @@ public:
 
 private:
 
-	// camera component references
+	// camera component pointer
 	CameraComponent* _currentCameraGame;
 	CameraComponent* _currentCameraUI;
 	CameraComponent* _currentCameraDepthMap;

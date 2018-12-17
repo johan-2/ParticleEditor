@@ -22,9 +22,9 @@ PlanarReflectionShader::PlanarReflectionShader()
 	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelForwardPlanar.ps",   _planarPixelShader, _planarPixelShaderByteCode);
 
 	// create constant buffers
-	SHADER_HELPERS::CreateConstantBuffer(_constantBufferPlanarVertex);
-	SHADER_HELPERS::CreateConstantBuffer(_constantBufferPlanarPixelAmbDir);
-	SHADER_HELPERS::CreateConstantBuffer(_constantBufferPlanarPixelPoint);		
+	SHADER_HELPERS::CreateConstantBuffer(_CBVertex);
+	SHADER_HELPERS::CreateConstantBuffer(_CBPixelAmbDir);
+	SHADER_HELPERS::CreateConstantBuffer(_CBPixelPoint);		
 }
 
 PlanarReflectionShader::~PlanarReflectionShader()
@@ -35,9 +35,9 @@ PlanarReflectionShader::~PlanarReflectionShader()
 	_planarVertexShaderByteCode->Release();
 	_planarPixelShaderByteCode->Release();
 	
-	_constantBufferPlanarPixelAmbDir->Release();
-	_constantBufferPlanarPixelPoint->Release();
-	_constantBufferPlanarVertex->Release();	
+	_CBPixelAmbDir->Release();
+	_CBPixelPoint->Release();
+	_CBVertex->Release();	
 }
 
 void PlanarReflectionShader::Render(std::vector<Mesh*>& reflectionMeshes,
@@ -60,38 +60,20 @@ void PlanarReflectionShader::Render(std::vector<Mesh*>& reflectionMeshes,
 	ID3D11DeviceContext*& devCon = DXM.GetDeviceCon();
 
 	// get game camera and shadow camera
-	CameraComponent* camera      = CM.GetCurrentCameraGame();
-	CameraComponent* cameraLight = CM.GetCurrentCameraDepthMap();
+	CameraComponent*& camera      = CM.GetCurrentCameraGame();
+	CameraComponent*& cameraLight = CM.GetCurrentCameraDepthMap();
 
 	// get directional light
 	LightDirectionComponent*& directionalLight = LM.GetDirectionalLight();
 
-	// get point lights
-	std::vector<LightPointComponent*>& pointLights = LM.GetPointLight();
-
 	// create constant buffer structures
-	ConstantVertexPlanar                  constantVertex;
-	ConstantAmbientDirectionalPixelPlanar constantAmbDirPixel;
-	ConstantPointPixelPlanar              constantPointPixel[MAX_POINT_LIGHTS];
+	CBVertexPlanar      constantVertex;
+	CBAmbDirPixelPlanar constantAmbDirPixel;
 
 	// set ambient and directional light properties for pixel shader
 	constantAmbDirPixel.ambientColor    = LM.GetAmbientColor();
 	constantAmbDirPixel.dirDiffuseColor = directionalLight->GetLightColor();
-	XMStoreFloat3(&constantAmbDirPixel.lightDir, XMVectorNegate(XMLoadFloat3(&directionalLight->GetLightDirection())));
-
-	// set point light properties for pixel shader
-	const int size = pointLights.size();
-	for (int i = 0; i < size; i++)
-	{
-		constantPointPixel[i].color          = pointLights[i]->GetLightColor();
-		constantPointPixel[i].intensity      = pointLights[i]->GetIntensity();
-		constantPointPixel[i].radius         = pointLights[i]->GetRadius();
-		constantPointPixel[i].lightPosition  = pointLights[i]->GetComponent<TransformComponent>()->GetPositionRef();
-		constantPointPixel[i].attConstant    = pointLights[i]->GetAttConstant();
-		constantPointPixel[i].attLinear      = pointLights[i]->GetAttLinear();
-		constantPointPixel[i].attExponential = pointLights[i]->GetAttExponential();
-		constantPointPixel[i].numLights      = size;
-	}
+	constantAmbDirPixel.lightDir        = directionalLight->GetLightDirectionInv();
 
 	// get camera matrices
 	const XMFLOAT4X4& viewMatrix       = camera->GetViewMatrix();
@@ -108,8 +90,8 @@ void PlanarReflectionShader::Render(std::vector<Mesh*>& reflectionMeshes,
 	ID3D11ShaderResourceView* shadowMap = cameraLight->GetSRV();
 
 	// update pixel shader constant buffer fro point lights
-	SHADER_HELPERS::UpdateConstantBuffer((void*)&constantPointPixel, sizeof(ConstantPointPixelPlanar) * size,        _constantBufferPlanarPixelPoint);
-	SHADER_HELPERS::UpdateConstantBuffer((void*)&constantAmbDirPixel, sizeof(ConstantAmbientDirectionalPixelPlanar), _constantBufferPlanarPixelAmbDir);
+	SHADER_HELPERS::UpdateConstantBuffer((void*)LM.GetCBPointBuffer(), sizeof(CBPoint) * LM.GetNumPointLights(), _CBPixelPoint);
+	SHADER_HELPERS::UpdateConstantBuffer((void*)&constantAmbDirPixel, sizeof(CBAmbDirPixelPlanar), _CBPixelAmbDir);
 
 	// loop over all meshes that will project reflections onto itself
 	const int numMeshes = reflectionMeshes.size();
@@ -132,9 +114,9 @@ void PlanarReflectionShader::Render(std::vector<Mesh*>& reflectionMeshes,
 		devCon->PSSetShader(_planarPixelShader, NULL, 0);
 
 		// set the vertex constant buffer, the pixel ones is already set
-		devCon->VSSetConstantBuffers(0, 1, &_constantBufferPlanarVertex);
-		devCon->PSSetConstantBuffers(0, 1, &_constantBufferPlanarPixelAmbDir);
-		devCon->PSSetConstantBuffers(1, 1, &_constantBufferPlanarPixelPoint);
+		devCon->VSSetConstantBuffers(0, 1, &_CBVertex);
+		devCon->PSSetConstantBuffers(0, 1, &_CBPixelAmbDir);
+		devCon->PSSetConstantBuffers(1, 1, &_CBPixelPoint);
 
 		// set to alpha blending
 		DXM.BlendStates()->SetBlendState(BLEND_STATE::BLEND_ALPHA);			
@@ -153,8 +135,8 @@ void PlanarReflectionShader::Render(std::vector<Mesh*>& reflectionMeshes,
 		constantAmbDirPixel.reflectiveFraction = mesh->GetReflectiveData().reflectiveFraction;
 
 		// update vertex constant buffer
-		SHADER_HELPERS::UpdateConstantBuffer((void*)&constantVertex,      sizeof(ConstantVertexPlanar),                  _constantBufferPlanarVertex);
-		SHADER_HELPERS::UpdateConstantBuffer((void*)&constantAmbDirPixel, sizeof(ConstantAmbientDirectionalPixelPlanar), _constantBufferPlanarPixelAmbDir);
+		SHADER_HELPERS::UpdateConstantBuffer((void*)&constantVertex,      sizeof(CBVertexPlanar),      _CBVertex);
+		SHADER_HELPERS::UpdateConstantBuffer((void*)&constantAmbDirPixel, sizeof(CBAmbDirPixelPlanar), _CBPixelAmbDir);
 
 		// get the texture array of mesh
 		ID3D11ShaderResourceView** meshTextures = mesh->GetTextureArray();

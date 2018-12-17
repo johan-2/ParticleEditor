@@ -33,15 +33,15 @@ private:
 	ID3D11PixelShader*  _planarPixelShader;
 	
 	// constant buffers
-	ID3D11Buffer* _constantBufferPlanarVertex;
-	ID3D11Buffer* _constantBufferPlanarPixelAmbDir;
-	ID3D11Buffer* _constantBufferPlanarPixelPoint;	
+	ID3D11Buffer* _CBVertex;
+	ID3D11Buffer* _CBPixelAmbDir;
+	ID3D11Buffer* _CBPixelPoint;	
 
 	// the shader bytecode
 	ID3D10Blob* _planarVertexShaderByteCode;
 	ID3D10Blob* _planarPixelShaderByteCode;
 
-	struct ConstantVertexPlanar
+	struct CBVertexPlanar
 	{
 		XMFLOAT4X4 world;
 		XMFLOAT4X4 view;
@@ -56,25 +56,12 @@ private:
 		XMFLOAT2 pad2;
 	};
 
-	struct ConstantAmbientDirectionalPixelPlanar
+	struct CBAmbDirPixelPlanar
 	{
 		XMFLOAT4 ambientColor;
 		XMFLOAT4 dirDiffuseColor;
 		XMFLOAT3 lightDir;
 		float    reflectiveFraction;
-	};
-
-	struct ConstantPointPixelPlanar
-	{
-		XMFLOAT3 lightPosition;
-		float    radius;
-		XMFLOAT3 color;
-		float    intensity;
-
-		float attConstant;
-		float attLinear;
-		float attExponential;
-		int   numLights;
 	};
 };
 

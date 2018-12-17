@@ -31,8 +31,8 @@ DepthShader::~DepthShader()
 void DepthShader::RenderDepth(std::vector<Mesh*>& meshes)
 {
 	// get dx manager
-	DXManager& DXM   = *Systems::dxManager;
-	CameraManager CM = *Systems::cameraManager;
+	DXManager& DXM    = *Systems::dxManager;
+	CameraManager& CM = *Systems::cameraManager;
 
 	DXM.BlendStates()->SetBlendState(BLEND_STATE::BLEND_ALPHA);
 

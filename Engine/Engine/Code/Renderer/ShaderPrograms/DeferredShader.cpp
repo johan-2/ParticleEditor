@@ -106,19 +106,16 @@ void DeferredShader::RenderGeometry(std::vector<Mesh*>& meshes)
 void DeferredShader::RenderLightning(GBuffer*& gBuffer)
 {
 	// get DXManager
-	DXManager& DXM   = *Systems::dxManager;
-	LightManager LM  = *Systems::lightManager;
-	CameraManager CM = *Systems::cameraManager;
+	DXManager& DXM    = *Systems::dxManager;
+	LightManager& LM  = *Systems::lightManager;
+	CameraManager& CM = *Systems::cameraManager;
 
 	// get devicecontext
-	ID3D11DeviceContext* devCon = DXM.GetDeviceCon();
+	ID3D11DeviceContext*& devCon = DXM.GetDeviceCon();
 
 	// get cameras
-	CameraComponent* camera      = CM.GetCurrentCameraGame();
-	CameraComponent* cameraLight = CM.GetCurrentCameraDepthMap();
-
-	// get point lights
-	std::vector<LightPointComponent*>& pointLights = LM.GetPointLight();
+	CameraComponent*& camera      = CM.GetCurrentCameraGame();
+	CameraComponent*& cameraLight = CM.GetCurrentCameraDepthMap();
 
 	// set shaders			
 	devCon->VSSetShader(_vertexLightShader, NULL, 0);
@@ -130,21 +127,6 @@ void DeferredShader::RenderLightning(GBuffer*& gBuffer)
 	// constantbuffer structures
 	ConstantDeferredAmbient     ambientLightData;
 	ConstantDeferredDirectional directionalLightData;
-	ConstantDeferredPoint       pointLightData[MAX_POINT_LIGHTS];
-
-	// set the pointlight data
-	const int size = pointLights.size();
-	for (int i = 0; i < size; i++)
-	{
-		pointLightData[i].color          = pointLights[i]->GetLightColor();
-		pointLightData[i].intensity      = pointLights[i]->GetIntensity();
-		pointLightData[i].radius         = pointLights[i]->GetRadius();
-		pointLightData[i].lightPosition  = pointLights[i]->GetComponent<TransformComponent>()->GetPositionRef();		
-		pointLightData[i].attConstant    = pointLights[i]->GetAttConstant();
-		pointLightData[i].attLinear      = pointLights[i]->GetAttLinear();
-		pointLightData[i].attExponential = pointLights[i]->GetAttExponential();
-		pointLightData[i].numLights      = size;
-	}
 
 	// set ambientdata(camerapos is in this buffer aswell)
 	ambientLightData.ambientColor = LM.GetAmbientColor();
@@ -155,26 +137,19 @@ void DeferredShader::RenderLightning(GBuffer*& gBuffer)
 	// get directional light
 	LightDirectionComponent*& directionalLight = LM.GetDirectionalLight();
 
-	// get directionallight matrices for shadow calculations
-	directionalLightData.lightView        =  cameraLight->GetViewMatrix();
-	directionalLightData.lightProjection  = cameraLight->GetProjectionMatrix();
-
-	// set the inversed light direction
-	XMStoreFloat3(&directionalLightData.lightDirection, 
-		XMVectorNegate(XMLoadFloat3(&directionalLight->GetLightDirection())));
-
-	// set the light properties of directional light
-	directionalLightData.lightColor = directionalLight->GetLightColor();
+	// get directional light data
+	directionalLightData.lightView       = cameraLight->GetViewMatrix();
+	directionalLightData.lightProjection = cameraLight->GetProjectionMatrix();
+	directionalLightData.lightColor      = directionalLight->GetLightColor();
+	directionalLightData.lightDirection  = directionalLight->GetLightDirectionInv();
 	
 	// update constantbuffers		
-	SHADER_HELPERS::UpdateConstantBuffer((void*)&ambientLightData,     sizeof(ConstantDeferredAmbient),                    _constantBufferDefAmbient);
-	SHADER_HELPERS::UpdateConstantBuffer((void*)&directionalLightData, sizeof(ConstantDeferredDirectional),                _constantBufferDefDirectional);
-	SHADER_HELPERS::UpdateConstantBuffer((void*)&pointLightData,       sizeof(ConstantDeferredPoint) * pointLights.size(), _constantBufferDefPoint);
+	SHADER_HELPERS::UpdateConstantBuffer((void*)&ambientLightData,     sizeof(ConstantDeferredAmbient),          _constantBufferDefAmbient);
+	SHADER_HELPERS::UpdateConstantBuffer((void*)&directionalLightData, sizeof(ConstantDeferredDirectional),      _constantBufferDefDirectional);
+	SHADER_HELPERS::UpdateConstantBuffer((void*)LM.GetCBPointBuffer(), sizeof(CBPoint) * LM.GetNumPointLights(), _constantBufferDefPoint);
 
-	// get Gbuffer textures
+	// get Gbuffer textures and depthmap
 	ID3D11ShaderResourceView**& gBufferTextures = gBuffer->GetSrvArray();
-
-	// get depth map texture for shadow calculations
 	ID3D11ShaderResourceView* depthMap = cameraLight->GetSRV();
 
 	// add all to one array

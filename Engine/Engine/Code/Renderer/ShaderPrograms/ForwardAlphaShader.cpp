@@ -15,9 +15,9 @@ ForwardAlphaShader::ForwardAlphaShader()
 	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelForward.ps",    _pixelShader,  _pixelShaderByteCode);
 
 	// create constant buffers
-	SHADER_HELPERS::CreateConstantBuffer(_constantBufferVertex);
-	SHADER_HELPERS::CreateConstantBuffer(_constantBufferPixelAmbDir);
-	SHADER_HELPERS::CreateConstantBuffer(_constantBufferPixelPoint);
+	SHADER_HELPERS::CreateConstantBuffer(_CBVertex);
+	SHADER_HELPERS::CreateConstantBuffer(_CBPixelAmbDir);
+	SHADER_HELPERS::CreateConstantBuffer(_CBPixelPoint);
 }
 
 ForwardAlphaShader::~ForwardAlphaShader()
@@ -28,9 +28,9 @@ ForwardAlphaShader::~ForwardAlphaShader()
 	_vertexShaderByteCode->Release();
 	_pixelShaderByteCode->Release();
 
-	_constantBufferPixelAmbDir->Release();
-	_constantBufferPixelPoint->Release();
-	_constantBufferVertex->Release();
+	_CBPixelAmbDir->Release();
+	_CBPixelPoint->Release();
+	_CBVertex->Release();
 }
 
 void ForwardAlphaShader::RenderForward(std::vector<Mesh*>& meshes)
@@ -39,58 +39,40 @@ void ForwardAlphaShader::RenderForward(std::vector<Mesh*>& meshes)
 		return;
 
 	// get systems
-	DXManager& DXM   = *Systems::dxManager;
-	CameraManager CM = *Systems::cameraManager;
-	LightManager LM  = *Systems::lightManager;
+	DXManager& DXM    = *Systems::dxManager;
+	CameraManager& CM = *Systems::cameraManager;
+	LightManager& LM  = *Systems::lightManager;
 
 	// get device context
 	ID3D11DeviceContext*& devCon = DXM.GetDeviceCon();
 
 	// get game camera and shadow camera
-	CameraComponent* camera      = CM.GetCurrentCameraGame();
-	CameraComponent* cameraLight = CM.GetCurrentCameraDepthMap();
+	CameraComponent*& camera      = CM.GetCurrentCameraGame();
+	CameraComponent*& cameraLight = CM.GetCurrentCameraDepthMap();
 
 	// get directional light
 	LightDirectionComponent*& directionalLight = LM.GetDirectionalLight();
-
-	// get point lights
-	std::vector<LightPointComponent*>& pointLights = LM.GetPointLight();
 
 	// set shaders
 	devCon->VSSetShader(_vertexShader, NULL, 0);
 	devCon->PSSetShader(_pixelShader, NULL, 0);
 
 	// set constant buffers
-	devCon->VSSetConstantBuffers(0, 1, &_constantBufferVertex);
-	devCon->PSSetConstantBuffers(0, 1, &_constantBufferPixelAmbDir);
-	devCon->PSSetConstantBuffers(1, 1, &_constantBufferPixelPoint);
+	devCon->VSSetConstantBuffers(0, 1, &_CBVertex);
+	devCon->PSSetConstantBuffers(0, 1, &_CBPixelAmbDir);
+	devCon->PSSetConstantBuffers(1, 1, &_CBPixelPoint);
 
 	// set to alpha blending
 	DXM.BlendStates()->SetBlendState(BLEND_STATE::BLEND_ALPHA);
 
 	// create constant buffer structures
-	ConstantVertex                  constantVertex;
-	ConstantAmbientDirectionalPixel constantAmbDirPixel;
-	ConstantPointPixel              constantPointPixel[MAX_POINT_LIGHTS];
+	CBVertex constantVertex;
+	CBAmbDir constantAmbDirPixel;
 
 	// set ambient and directional light properties for pixel shader
-	constantAmbDirPixel.ambientColor     = LM.GetAmbientColor();
-	constantAmbDirPixel.dirDiffuseColor  = directionalLight->GetLightColor();
-	XMStoreFloat3(&constantAmbDirPixel.lightDir, XMVectorNegate(XMLoadFloat3(&directionalLight->GetLightDirection())));
-
-	// set point light properties for pixel shader
-	const int size = pointLights.size();
-	for (int i = 0; i < size; i++)
-	{
-		constantPointPixel[i].color          = pointLights[i]->GetLightColor();
-		constantPointPixel[i].intensity      = pointLights[i]->GetIntensity();
-		constantPointPixel[i].radius         = pointLights[i]->GetRadius();
-		constantPointPixel[i].lightPosition  = pointLights[i]->GetComponent<TransformComponent>()->GetPositionRef();
-		constantPointPixel[i].attConstant    = pointLights[i]->GetAttConstant();
-		constantPointPixel[i].attLinear      = pointLights[i]->GetAttLinear();
-		constantPointPixel[i].attExponential = pointLights[i]->GetAttExponential();
-		constantPointPixel[i].numLights      = size;
-	}
+	constantAmbDirPixel.ambientColor    = LM.GetAmbientColor();
+	constantAmbDirPixel.dirDiffuseColor = directionalLight->GetLightColor();
+	constantAmbDirPixel.lightDir        = directionalLight->GetLightDirectionInv();
 
 	// get camera matrices
 	const XMFLOAT4X4& viewMatrix            = camera->GetViewMatrix();
@@ -107,8 +89,8 @@ void ForwardAlphaShader::RenderForward(std::vector<Mesh*>& meshes)
 	ID3D11ShaderResourceView* shadowMap = cameraLight->GetSRV();
 
 	// update pixel shader constant buffers
-	SHADER_HELPERS::UpdateConstantBuffer((void*)&constantAmbDirPixel, sizeof(ConstantAmbientDirectionalPixel), _constantBufferPixelAmbDir);
-	SHADER_HELPERS::UpdateConstantBuffer((void*)&constantPointPixel,  sizeof(ConstantPointPixel) * size,       _constantBufferPixelPoint);
+	SHADER_HELPERS::UpdateConstantBuffer((void*)&constantAmbDirPixel, sizeof(CBAmbDir), _CBPixelAmbDir);
+	SHADER_HELPERS::UpdateConstantBuffer((void*)LM.GetCBPointBuffer(), sizeof(CBPoint) * LM.GetNumPointLights(), _CBPixelPoint);
 
 	// sort alpha meshes to render back to front
 	SHADER_HELPERS::MeshSort(meshes, cameraPos, true);
@@ -129,7 +111,7 @@ void ForwardAlphaShader::RenderForward(std::vector<Mesh*>& meshes)
 		constantVertex.uvOffset        = mesh->GetUvOffset();
 
 		// update vertex constant buffer
-		SHADER_HELPERS::UpdateConstantBuffer((void*)&constantVertex, sizeof(ConstantVertex), _constantBufferVertex);
+		SHADER_HELPERS::UpdateConstantBuffer((void*)&constantVertex, sizeof(CBVertex), _CBVertex);
 
 		// get the texture array of mesh
 		ID3D11ShaderResourceView** meshTextures = mesh->GetTextureArray();
