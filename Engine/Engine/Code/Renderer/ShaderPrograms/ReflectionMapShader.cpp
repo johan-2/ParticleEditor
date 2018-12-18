@@ -68,8 +68,11 @@ void ReflectionMapShader::GenerateReflectionMap(std::vector<Mesh*>& reflectiveOp
 	CameraComponent* camera      = CM.GetCurrentCameraGame();
 	CameraComponent* cameraLight = CM.GetCurrentCameraDepthMap();
 
-	// get lights
+	// get direction light
 	LightDirectionComponent*& directionalLight = LM.GetDirectionalLight();
+
+	// get reflect data of this mesh
+	Mesh::ReflectiveData reflectData = reflectionMesh->GetReflectiveData();
 
 	// create constant buffer structures
 	CBAmbDirPixel constantAmbDirPixel;
@@ -84,9 +87,6 @@ void ReflectionMapShader::GenerateReflectionMap(std::vector<Mesh*>& reflectiveOp
 	SHADER_HELPERS::UpdateConstantBuffer((void*)LM.GetCBPointBuffer(), sizeof(CBPoint) * LM.GetNumPointLights(), _CBPixelPoint);
 	SHADER_HELPERS::UpdateConstantBuffer((void*)&constantAmbDirPixel, sizeof(CBAmbDirPixel), _CBPixelAmbDir);
 
-	// get reflect data of this mesh
-	Mesh::ReflectiveData reflectData = reflectionMesh->GetReflectiveData();
-
 	// set vertex data that all meshes share
 	XMStoreFloat4(&constantVertex.clipingPlane, XMLoadFloat4(&clipPlane));
 	XMStoreFloat4x4(&constantVertex.view,       XMLoadFloat4x4(&camera->GetReflectionViewMatrix(reflectionMesh->GetPosition().y)));
@@ -100,6 +100,9 @@ void ReflectionMapShader::GenerateReflectionMap(std::vector<Mesh*>& reflectiveOp
 	if (reflectData.reflectSkybox)
 		Systems::renderer->GetSkybox()->Render(true);
 
+	// set opaque blend state
+	DXM.BlendStates()->SetBlendState(BLEND_STATE::BLEND_OPAQUE);
+
 	// set shaders that will handle rednering opaque meshes to reflectionmap
 	devCon->VSSetShader(_reflectionMapVertexShader, NULL, 0);
 	devCon->PSSetShader(_reflectionMapPixelShaderOpaque, NULL, 0);
@@ -108,9 +111,6 @@ void ReflectionMapShader::GenerateReflectionMap(std::vector<Mesh*>& reflectiveOp
 	devCon->VSSetConstantBuffers(0, 1, &_CBVertex);
 	devCon->PSSetConstantBuffers(0, 1, &_CBPixelAmbDir);
 	devCon->PSSetConstantBuffers(1, 1, &_CBPixelPoint);
-
-	// set opaque blend state
-	DXM.BlendStates()->SetBlendState(BLEND_STATE::BLEND_OPAQUE);
 
 	// loop over all opaque meshes that is set to cast reflections
 	for (int y = 0; y < reflectiveOpaqueMeshes.size(); y++)

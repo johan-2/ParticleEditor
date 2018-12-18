@@ -1,16 +1,7 @@
-﻿  ModelComponent.cpp
-c:\users\johan\documents\github\enginedx11\engine\engine\code\utils\modelloader.h(471): warning C4002: too many arguments for function-like macro invocation 'assert'
-c:\users\johan\documents\github\enginedx11\engine\engine\code\utils\modelloader.h(487): warning C4018: '<': signed/unsigned mismatch
-c:\users\johan\documents\github\enginedx11\engine\engine\code\components\modelcomponent.cpp(15): warning C4018: '<': signed/unsigned mismatch
-c:\users\johan\documents\github\enginedx11\engine\engine\code\components\modelcomponent.cpp(31): warning C4002: too many arguments for function-like macro invocation 'assert'
-c:\users\johan\documents\github\enginedx11\engine\engine\code\components\modelcomponent.cpp(37): warning C4267: '=': conversion from 'size_t' to 'unsigned int', possible loss of data
-c:\users\johan\documents\github\enginedx11\engine\engine\code\components\modelcomponent.cpp(91): warning C4018: '<': signed/unsigned mismatch
-  SkyDome.cpp
-c:\users\johan\documents\github\enginedx11\engine\engine\code\utils\modelloader.h(471): warning C4002: too many arguments for function-like macro invocation 'assert'
-c:\users\johan\documents\github\enginedx11\engine\engine\code\utils\modelloader.h(487): warning C4018: '<': signed/unsigned mismatch
+﻿  ReflectionMapShader.cpp
   Generating code
-  0 of 2616 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+  2 of 2617 functions (<0.1%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    0 functions had inline decision re-evaluated but remain unchanged
+    2 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
-  Engine.vcxproj -> C:\Users\Johan\Documents\GitHub\EngineDx11\Engine\Engine\Engine.exe
+  Engine.vcxproj -> C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\Engine.exe

@@ -154,7 +154,7 @@ void Renderer::Render()
 	// update the light buffers for GPU input
 	Systems::lightManager->UpdateLightBuffers();
 
-	// clear the backbuffer rendertarget
+	// clear the backbuffer and main rendertarget buffers
 	dXM.ClearRenderTarget(_clearColor[0], _clearColor[1], _clearColor[2], _clearColor[3]);
 	_mainRendertarget->ClearRenderTarget(_clearColor[0], _clearColor[1], _clearColor[2], _clearColor[3], false);
 

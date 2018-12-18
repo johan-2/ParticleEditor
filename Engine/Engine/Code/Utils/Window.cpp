@@ -33,6 +33,7 @@ void Window::CreateApplicationWindow(const char* title, int x, int y, int width,
 	wc.lpszMenuName  = NULL;
 	wc.lpszClassName = title;
 	wc.cbSize        = sizeof(WNDCLASSEX);
+	wc.hbrBackground = CreateSolidBrush(RGB(0, 0, 0));
 
 	if (!RegisterClassEx(&wc))
 	{
