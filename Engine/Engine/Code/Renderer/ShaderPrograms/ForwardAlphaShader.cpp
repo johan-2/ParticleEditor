@@ -50,6 +50,9 @@ void ForwardAlphaShader::RenderForward(std::vector<Mesh*>& meshes)
 	CameraComponent*& camera      = CM.GetCurrentCameraGame();
 	CameraComponent*& cameraLight = CM.GetCurrentCameraDepthMap();
 
+	// get camera position
+	const XMFLOAT3& cameraPos = camera->GetComponent<TransformComponent>()->GetPositionRef();
+
 	// get directional light
 	LightDirectionComponent*& directionalLight = LM.GetDirectionalLight();
 
@@ -70,27 +73,25 @@ void ForwardAlphaShader::RenderForward(std::vector<Mesh*>& meshes)
 	CBAmbDir constantAmbDirPixel;
 
 	// set ambient and directional light properties for pixel shader
-	constantAmbDirPixel.ambientColor    = LM.GetAmbientColor();
-	constantAmbDirPixel.dirDiffuseColor = directionalLight->GetLightColor();
-	constantAmbDirPixel.lightDir        = directionalLight->GetLightDirectionInv();
+	XMStoreFloat4(&constantAmbDirPixel.ambientColor,    XMLoadFloat4(&LM.GetAmbientColor()));
+	XMStoreFloat4(&constantAmbDirPixel.dirDiffuseColor, XMLoadFloat4(&directionalLight->GetLightColor()));
+	XMStoreFloat3(&constantAmbDirPixel.lightDir,        XMLoadFloat3(&directionalLight->GetLightDirectionInv()));
 
-	// get camera matrices
-	const XMFLOAT4X4& viewMatrix            = camera->GetViewMatrix();
-	const XMFLOAT4X4& projectionMatrix      = camera->GetProjectionMatrix();
+	// set camera matrices
+	XMStoreFloat4x4(&constantVertex.view,       XMLoadFloat4x4(&camera->GetViewMatrix()));
+	XMStoreFloat4x4(&constantVertex.projection, XMLoadFloat4x4(&camera->GetProjectionMatrix()));
+	XMStoreFloat3(&constantVertex.camPos,       XMLoadFloat3(&cameraPos));
 
-	// get light matrices
-	const XMFLOAT4X4& lightViewMatrix       = cameraLight->GetViewMatrix();
-	const XMFLOAT4X4& lightProjectionMatrix = cameraLight->GetProjectionMatrix();
+	// set direction light matrices
+	XMStoreFloat4x4(&constantVertex.lightView,       XMLoadFloat4x4(&cameraLight->GetViewMatrix()));
+	XMStoreFloat4x4(&constantVertex.lightProjection, XMLoadFloat4x4(&cameraLight->GetProjectionMatrix()));
 
-	// get camera position
-	const XMFLOAT3& cameraPos = camera->GetComponent<TransformComponent>()->GetPositionRef();
-
-	// get shadow map 
+	// get shadow map
 	ID3D11ShaderResourceView* shadowMap = cameraLight->GetSRV();
 
 	// update pixel shader constant buffers
 	SHADER_HELPERS::UpdateConstantBuffer((void*)&constantAmbDirPixel, sizeof(CBAmbDir), _CBPixelAmbDir);
-	SHADER_HELPERS::UpdateConstantBuffer((void*)LM.GetCBPointBuffer(), sizeof(CBPoint) * LM.GetNumPointLights(), _CBPixelPoint);
+	SHADER_HELPERS::UpdateConstantBuffer((void*)LM.GetCBPointBuffer(),sizeof(CBPoint) * LM.GetNumPointLights(), _CBPixelPoint);
 
 	// sort alpha meshes to render back to front
 	SHADER_HELPERS::MeshSort(meshes, cameraPos, true);
@@ -101,14 +102,9 @@ void ForwardAlphaShader::RenderForward(std::vector<Mesh*>& meshes)
 		// get mesh
 		Mesh* mesh = meshes[i];
 
-		// set vertex constant values
-		constantVertex.world           = mesh->GetWorldMatrix();
-		constantVertex.view            = viewMatrix;
-		constantVertex.projection      = projectionMatrix;
-		constantVertex.lightView       = lightViewMatrix;
-		constantVertex.lightProjection = lightProjectionMatrix;
-		constantVertex.camPos          = cameraPos;
-		constantVertex.uvOffset        = mesh->GetUvOffset();
+		// get mesh specific constant data
+		XMStoreFloat4x4(&constantVertex.world,  XMLoadFloat4x4(&mesh->GetWorldMatrix()));
+		XMStoreFloat2(&constantVertex.uvOffset, XMLoadFloat2(&mesh->GetUvOffset()));
 
 		// update vertex constant buffer
 		SHADER_HELPERS::UpdateConstantBuffer((void*)&constantVertex, sizeof(CBVertex), _CBVertex);

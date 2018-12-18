@@ -19,7 +19,7 @@ class SkyDome
 public:
 	SkyDome(const wchar_t* textureFile, SKY_DOME_RENDER_MODE mode);
 	~SkyDome();
-	
+
 	// load cubemap
 	void LoadCubemap(const wchar_t* file);
 
@@ -42,11 +42,11 @@ public:
 	// set skyColorProperties
 	// colors is declared in 0 - 255 range
 	// the layer fraction is set between 0 - 100 and is stored in the alpha channel
-	// ex 20, 60, 80 will set layer 1 color from 0 to 20 % on the skyDome 
+	// ex 20, 60, 80 will set layer 1 color from 0 to 20 % on the skyDome
 	// layer 1 and 2 will blend between 20 - 60 % of the dome
 	// layer2 and 3 will blend between 60 - 80 % of the dome and layer 3 will cover the final 20%
-	void SetSkyColorLayers(XMFLOAT4 bottomColor, XMFLOAT4 midColor, XMFLOAT4 topColor) { _skyColorLayers.bottomColor = bottomColor; 
-	                                                                                                   _skyColorLayers.midColor    = midColor; 
+	void SetSkyColorLayers(XMFLOAT4 bottomColor, XMFLOAT4 midColor, XMFLOAT4 topColor) { _skyColorLayers.bottomColor = bottomColor;
+	                                                                                                   _skyColorLayers.midColor    = midColor;
 	                                                                                                   _skyColorLayers.topColor    = topColor; }
 
 	// set if the cubemap should be rendered in the top or bottom
@@ -62,7 +62,7 @@ private:
 		// billboarded 2D bitmap
 		Mesh* mesh;
 
-		XMFLOAT4X4 positionMatrix;		
+		XMFLOAT4X4 positionMatrix;
 		XMFLOAT3   distance;
 		XMFLOAT3   colorTint = XMFLOAT3(1, 1, 1);
 		float      relativeHeight;
@@ -92,11 +92,11 @@ private:
 		float cycleTimer = 0;
 
 		// start/end blend values
-		XMFLOAT2 sunLightBeginEndFade           = XMFLOAT2(0.0f, -0.1f);	
-		XMFLOAT2 sunsetLightColorStartEndBlend  = XMFLOAT2(0.2f, 0.0f);	
-		XMFLOAT2 sunsetTopSkyColorStartEndBlend = XMFLOAT2(0.5f, 0.1f);		
-		XMFLOAT2 nightTopSkyColorStartEndBlend  = XMFLOAT2(0.1f, -0.3f);		
-		XMFLOAT2 sunsetMidSkyColorStartEndBlend = XMFLOAT2(0.45f, 0.0f);	
+		XMFLOAT2 sunLightBeginEndFade           = XMFLOAT2(0.0f, -0.1f);
+		XMFLOAT2 sunsetLightColorStartEndBlend  = XMFLOAT2(0.2f, 0.0f);
+		XMFLOAT2 sunsetTopSkyColorStartEndBlend = XMFLOAT2(0.5f, 0.1f);
+		XMFLOAT2 nightTopSkyColorStartEndBlend  = XMFLOAT2(0.1f, -0.3f);
+		XMFLOAT2 sunsetMidSkyColorStartEndBlend = XMFLOAT2(0.45f, 0.0f);
 		XMFLOAT2 nightMidSkyColorStartEndBlend  = XMFLOAT2(0.0f, -0.25f);
 
 		// sun distance

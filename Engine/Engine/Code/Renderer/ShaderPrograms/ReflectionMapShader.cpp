@@ -51,7 +51,7 @@ void ReflectionMapShader::GenerateReflectionMap(std::vector<Mesh*>& reflectiveOp
 	std::vector<Mesh*>& reflectiveAlphaMeshes,
 	std::vector<ParticleSystemComponent*>& reflectiveParticles,
 	ParticleShader*& particleShader,
-	DXInputLayouts*& inputLayouts, 
+	DXInputLayouts*& inputLayouts,
 	Mesh*& reflectionMesh,
 	XMFLOAT4 clipPlane)
 {
@@ -69,16 +69,16 @@ void ReflectionMapShader::GenerateReflectionMap(std::vector<Mesh*>& reflectiveOp
 	CameraComponent* cameraLight = CM.GetCurrentCameraDepthMap();
 
 	// get lights
-	LightDirectionComponent*&          directionalLight = LM.GetDirectionalLight();
+	LightDirectionComponent*& directionalLight = LM.GetDirectionalLight();
 
 	// create constant buffer structures
 	CBAmbDirPixel constantAmbDirPixel;
 	CBVertex      constantVertex;
 
 	// set ambient and directional light properties for pixel shader
-	constantAmbDirPixel.ambientColor    = LM.GetAmbientColor();
-	constantAmbDirPixel.dirDiffuseColor = directionalLight->GetLightColor();
-	constantAmbDirPixel.lightDir        = directionalLight->GetLightDirectionInv();
+	XMStoreFloat4(&constantAmbDirPixel.ambientColor,    XMLoadFloat4(&LM.GetAmbientColor()));
+	XMStoreFloat4(&constantAmbDirPixel.dirDiffuseColor, XMLoadFloat4(&directionalLight->GetLightColor()));
+	XMStoreFloat3(&constantAmbDirPixel.lightDir,        XMLoadFloat3(&directionalLight->GetLightDirectionInv()));
 
 	// update pixel shader constant buffer fro point lights
 	SHADER_HELPERS::UpdateConstantBuffer((void*)LM.GetCBPointBuffer(), sizeof(CBPoint) * LM.GetNumPointLights(), _CBPixelPoint);
@@ -88,19 +88,19 @@ void ReflectionMapShader::GenerateReflectionMap(std::vector<Mesh*>& reflectiveOp
 	Mesh::ReflectiveData reflectData = reflectionMesh->GetReflectiveData();
 
 	// set vertex data that all meshes share
-	constantVertex.clipingPlane = clipPlane;
-	constantVertex.view         = camera->GetReflectionViewMatrix(reflectionMesh->GetPosition().y);
-	constantVertex.projection   = camera->GetProjectionMatrix();
+	XMStoreFloat4(&constantVertex.clipingPlane, XMLoadFloat4(&clipPlane));
+	XMStoreFloat4x4(&constantVertex.view,       XMLoadFloat4x4(&camera->GetReflectionViewMatrix(reflectionMesh->GetPosition().y)));
+	XMStoreFloat4x4(&constantVertex.projection, XMLoadFloat4x4(&camera->GetProjectionMatrix()));
 
 	// clear our reflection map render texture and set it to active
 	_reflectionMap->ClearRenderTarget(0, 0, 0, 1, false);
 	_reflectionMap->SetRendertarget(false, false);
 
-	// render skybox first 
+	// render skybox first
 	if (reflectData.reflectSkybox)
 		Systems::renderer->GetSkybox()->Render(true);
 
-	// set shaders that will handle rednering opaque meshes to reflectionmap 
+	// set shaders that will handle rednering opaque meshes to reflectionmap
 	devCon->VSSetShader(_reflectionMapVertexShader, NULL, 0);
 	devCon->PSSetShader(_reflectionMapPixelShaderOpaque, NULL, 0);
 
@@ -116,7 +116,7 @@ void ReflectionMapShader::GenerateReflectionMap(std::vector<Mesh*>& reflectiveOp
 	for (int y = 0; y < reflectiveOpaqueMeshes.size(); y++)
 	{
 		// get world matrix of mesh and update the buffer
-		constantVertex.world = reflectiveOpaqueMeshes[y]->GetWorldMatrix();
+		XMStoreFloat4x4(&constantVertex.world, XMLoadFloat4x4(&reflectiveOpaqueMeshes[y]->GetWorldMatrix()));
 		SHADER_HELPERS::UpdateConstantBuffer((void*)&constantVertex, sizeof(CBVertex), _CBVertex);
 
 		// get the texture array of mesh
@@ -149,7 +149,7 @@ void ReflectionMapShader::GenerateReflectionMap(std::vector<Mesh*>& reflectiveOp
 	for (int y = 0; y < reflectiveAlphaMeshes.size(); y++)
 	{
 		// get world matrix of mesh and update the buffer
-		constantVertex.world = reflectiveAlphaMeshes[y]->GetWorldMatrix();
+		XMStoreFloat4x4(&constantVertex.world, XMLoadFloat4x4(&reflectiveAlphaMeshes[y]->GetWorldMatrix()));
 		SHADER_HELPERS::UpdateConstantBuffer((void*)&constantVertex, sizeof(CBVertex), _CBVertex);
 
 		// get the texture array of mesh

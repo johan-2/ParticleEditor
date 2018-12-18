@@ -24,28 +24,28 @@ PlanarReflectionShader::PlanarReflectionShader()
 	// create constant buffers
 	SHADER_HELPERS::CreateConstantBuffer(_CBVertex);
 	SHADER_HELPERS::CreateConstantBuffer(_CBPixelAmbDir);
-	SHADER_HELPERS::CreateConstantBuffer(_CBPixelPoint);		
+	SHADER_HELPERS::CreateConstantBuffer(_CBPixelPoint);
 }
 
 PlanarReflectionShader::~PlanarReflectionShader()
 {
 	_planarVertexShader->Release();
-	_planarPixelShader->Release();	
+	_planarPixelShader->Release();
 
 	_planarVertexShaderByteCode->Release();
 	_planarPixelShaderByteCode->Release();
-	
+
 	_CBPixelAmbDir->Release();
 	_CBPixelPoint->Release();
-	_CBVertex->Release();	
+	_CBVertex->Release();
 }
 
 void PlanarReflectionShader::Render(std::vector<Mesh*>& reflectionMeshes,
-    std::vector<Mesh*>& reflectiveOpaqueMeshes, 
+    std::vector<Mesh*>& reflectiveOpaqueMeshes,
     std::vector<Mesh*>& reflectiveAlphaMeshes,
     std::vector<ParticleSystemComponent*>& reflectiveParticles,
-    ParticleShader*& particleShader, 
-    DXInputLayouts*& inputLayouts, 
+    ParticleShader*& particleShader,
+    DXInputLayouts*& inputLayouts,
 	ReflectionMapShader*& reflectionMapShader)
 {
 	if (reflectionMeshes.size() == 0)
@@ -63,6 +63,9 @@ void PlanarReflectionShader::Render(std::vector<Mesh*>& reflectionMeshes,
 	CameraComponent*& camera      = CM.GetCurrentCameraGame();
 	CameraComponent*& cameraLight = CM.GetCurrentCameraDepthMap();
 
+	// get camera position
+	const XMFLOAT3& cameraPos = camera->GetComponent<TransformComponent>()->GetPositionRef();
+
 	// get directional light
 	LightDirectionComponent*& directionalLight = LM.GetDirectionalLight();
 
@@ -71,22 +74,20 @@ void PlanarReflectionShader::Render(std::vector<Mesh*>& reflectionMeshes,
 	CBAmbDirPixelPlanar constantAmbDirPixel;
 
 	// set ambient and directional light properties for pixel shader
-	constantAmbDirPixel.ambientColor    = LM.GetAmbientColor();
-	constantAmbDirPixel.dirDiffuseColor = directionalLight->GetLightColor();
-	constantAmbDirPixel.lightDir        = directionalLight->GetLightDirectionInv();
+	XMStoreFloat4(&constantAmbDirPixel.ambientColor,    XMLoadFloat4(&LM.GetAmbientColor()));
+	XMStoreFloat4(&constantAmbDirPixel.dirDiffuseColor, XMLoadFloat4(&directionalLight->GetLightColor()));
+	XMStoreFloat3(&constantAmbDirPixel.lightDir,        XMLoadFloat3(&directionalLight->GetLightDirectionInv()));
 
-	// get camera matrices
-	const XMFLOAT4X4& viewMatrix       = camera->GetViewMatrix();
-	const XMFLOAT4X4& projectionMatrix = camera->GetProjectionMatrix();
+	// set camera matrices
+	XMStoreFloat4x4(&constantVertex.view,       XMLoadFloat4x4(&camera->GetViewMatrix()));
+	XMStoreFloat4x4(&constantVertex.projection, XMLoadFloat4x4(&camera->GetProjectionMatrix()));
+	XMStoreFloat3(&constantVertex.camPos,       XMLoadFloat3(&cameraPos));
 
-	// get light matrices
-	const XMFLOAT4X4& lightViewMatrix       = cameraLight->GetViewMatrix();
-	const XMFLOAT4X4& lightProjectionMatrix = cameraLight->GetProjectionMatrix();
+	// set direction light matrices
+	XMStoreFloat4x4(&constantVertex.lightView,       XMLoadFloat4x4(&cameraLight->GetViewMatrix()));
+	XMStoreFloat4x4(&constantVertex.lightProjection, XMLoadFloat4x4(&cameraLight->GetProjectionMatrix()));
 
-	// get camera position
-	const XMFLOAT3& cameraPos = camera->GetComponent<TransformComponent>()->GetPositionRef();
-
-	// get shadow map 
+	// get shadow map
 	ID3D11ShaderResourceView* shadowMap = cameraLight->GetSRV();
 
 	// update pixel shader constant buffer fro point lights
@@ -96,7 +97,7 @@ void PlanarReflectionShader::Render(std::vector<Mesh*>& reflectionMeshes,
 	// loop over all meshes that will project reflections onto itself
 	const int numMeshes = reflectionMeshes.size();
 	for (int i = 0; i < numMeshes; i++)
-	{	
+	{
 		// get the mesh that will project the reflections
 		Mesh* mesh = reflectionMeshes[i];
 
@@ -119,17 +120,12 @@ void PlanarReflectionShader::Render(std::vector<Mesh*>& reflectionMeshes,
 		devCon->PSSetConstantBuffers(1, 1, &_CBPixelPoint);
 
 		// set to alpha blending
-		DXM.BlendStates()->SetBlendState(BLEND_STATE::BLEND_ALPHA);			
+		DXM.BlendStates()->SetBlendState(BLEND_STATE::BLEND_ALPHA);
 
 		// set vertex constant values
-		constantVertex.world           = mesh->GetWorldMatrix();
-		constantVertex.view            = viewMatrix;
-		constantVertex.projection      = projectionMatrix;
-		constantVertex.lightView       = lightViewMatrix;
-		constantVertex.lightProjection = lightProjectionMatrix;
-		constantVertex.camPos          = cameraPos;
-		constantVertex.uvOffset        = mesh->GetUvOffset();
-		constantVertex.reflectionView  = camera->GetReflectionViewMatrix(mesh->GetPosition().y);
+		XMStoreFloat4x4(&constantVertex.world,          XMLoadFloat4x4(&mesh->GetWorldMatrix()));
+		XMStoreFloat4x4(&constantVertex.reflectionView, XMLoadFloat4x4(&camera->GetReflectionViewMatrix(mesh->GetPosition().y)));
+		XMStoreFloat2(&constantVertex.uvOffset,         XMLoadFloat2(&mesh->GetUvOffset()));
 
 		// set the fraction of the reflection blending with the texture color
 		constantAmbDirPixel.reflectiveFraction = mesh->GetReflectiveData().reflectiveFraction;
