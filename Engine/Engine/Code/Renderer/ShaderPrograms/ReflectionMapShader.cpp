@@ -16,9 +16,9 @@
 ReflectionMapShader::ReflectionMapShader()
 {
 	// create shaders
-	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexReflectionMap.vs",     _reflectionMapVertexShader,      _reflectionMapVertexShaderByteCode);
+	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexReflectionMap.vs", _reflectionMapVertexShader, _reflectionMapVertexShaderByteCode);
 	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelReflectionMapOpaque.ps", _reflectionMapPixelShaderOpaque, _reflectionMapPixelShaderByteCodeOpaque);
-	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelReflectionMapAlpha.ps",  _reflectionMapPixelShaderAlpha,  _reflectionMapPixelShaderByteCodeAlpha);
+	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelReflectionMapAlpha.ps", _reflectionMapPixelShaderAlpha, _reflectionMapPixelShaderByteCodeAlpha);
 
 	// create constant buffers
 	SHADER_HELPERS::CreateConstantBuffer(_CBVertex);
@@ -29,11 +29,9 @@ ReflectionMapShader::ReflectionMapShader()
 	_reflectionMap = new RenderToTexture(SCREEN_WIDTH, SCREEN_HEIGHT, false);
 
 	// create debug quad
-#ifdef _DEBUG
 	Entity* reflectionQuad = new Entity();
 	reflectionQuad->AddComponent<QuadComponent>()->Init(XMFLOAT2(SCREEN_WIDTH * 0.66f, SCREEN_HEIGHT * 0.1f), XMFLOAT2(SCREEN_WIDTH * 0.1f, SCREEN_HEIGHT * 0.1f), L"");
 	reflectionQuad->GetComponent<QuadComponent>()->SetTexture(_reflectionMap->GetRenderTargetSRV());
-#endif // DEBUG
 }
 
 ReflectionMapShader::~ReflectionMapShader()

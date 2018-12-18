@@ -22,7 +22,7 @@ public:
 		std::wstring normal   = normalMap;
 		std::wstring specular = specularMap;
 		std::wstring emissive = emissiveMap;
-	
+
 		// if we want to load the textures from a material file
 		if (useMaterial)
 		{
@@ -181,8 +181,8 @@ public:
 	static Mesh* CreateCube(unsigned int flags, wchar_t* diffuseMap, wchar_t* normalMap, wchar_t* specularMap, wchar_t* emissiveMap, float tiling, Entity* parent)
 	{
 		// allocate memory for vertex and index buffers
-		Mesh::VertexData vertices[24];
-		unsigned long indices[36]
+		Mesh::VertexData* vertices = new Mesh::VertexData[24];
+		unsigned long*    indices = new unsigned long[36]
 		{
 			0,1,2,2,1,3,
 			4,5,6,6,5,7,
@@ -360,16 +360,19 @@ public:
 		vertices[23].binormal = XMFLOAT3(0, 0, -1);
 		vertices[23].color    = Color32(255, 255, 255, 255);
 
-		// create mesh and buffers	
+		// create mesh and buffers
 		Mesh* mesh = new Mesh(parent, flags, diffuseMap, normalMap, specularMap, emissiveMap);
 		mesh->CreateBuffers(vertices, indices, 24, 36);
+
+		delete[] vertices;
+		delete[] indices;
 
 		return mesh;
 	}
 
 	static Mesh* CreatePlane(unsigned int flags, wchar_t* diffuseMap, wchar_t* normalMap, wchar_t* specularMap, wchar_t* emissiveMap, float tiling, Entity* parent)
 	{
-		Mesh::VertexData vertices[4];
+		Mesh::VertexData* vertices = new Mesh::VertexData [4];
 
 		vertices[0].position = XMFLOAT3(-2.0f, 0.0f, 2.0f);
 		vertices[0].texture  = XMFLOAT2(0.0f * tiling, 0.0f * tiling);
@@ -399,19 +402,22 @@ public:
 		vertices[3].binormal = XMFLOAT3(0.0f, 0.0f, 1.0f);
 		vertices[3].color    = Color32(255, 255, 255, 255);
 
-		unsigned long indices[6]{ 0,1,2,2,1,3 };
+		unsigned long* indices = new unsigned long[6]{ 0,1,2,2,1,3 };
 
-		// create mesh and buffers	
+		// create mesh and buffers
 		Mesh* mesh = new Mesh(parent, flags, diffuseMap, normalMap, specularMap, emissiveMap);
 		mesh->CreateBuffers(vertices, indices, 24, 36);
 
+		delete[] vertices;
+		delete[] indices;
+
 		return mesh;
-	}	
+	}
 
 	// sprite that renders in 3d space without lightning
 	static Mesh* CreateWorldSprite(unsigned int flags, wchar_t* diffuseMap, Entity* parent)
 	{
-		Mesh::VertexData vertices[4];
+		Mesh::VertexData* vertices = new Mesh::VertexData[4];
 
 		vertices[0].position = XMFLOAT3(-0.5f, 0.5f, 0.0f);
 		vertices[0].texture  = XMFLOAT2(0.0f, 0.0f);
@@ -441,11 +447,14 @@ public:
 		vertices[3].binormal = XMFLOAT3(0.0f, 0.0f, 0.0f);
 		vertices[3].color    = Color32(255, 255, 255, 255);
 
-		unsigned long indices[6]{ 0,1,2,2,1,3 };
+		unsigned long*    indices = new unsigned long[6]{ 0,1,2,2,1,3 };
 
-		// create mesh and buffers	
+		// create mesh and buffers
 		Mesh* mesh = new Mesh(parent, flags, diffuseMap, L"", L"", L"");
 		mesh->CreateBuffers(vertices, indices, 24, 36);
+
+		delete[] vertices;
+		delete[] indices;
 
 		return mesh;
 	}
@@ -527,7 +536,7 @@ public:
 			}
 		}
 
-		// create mesh and buffers	
+		// create mesh and buffers
 		Mesh* mesh = new Mesh(parent, flags, diffuseMap, normalMap, specularMap, emissiveMap);
 		mesh->CreateBuffers(vertices, indices, 4 * (size * size), 6 * (size * size));
 
@@ -535,7 +544,7 @@ public:
 		delete[] indices;
 
 		return mesh;
-	}	
+	}
 };
 
-	
+

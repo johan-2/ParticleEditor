@@ -62,9 +62,7 @@ void Framework::Start()
 {
 	_testScene = new SponzaTestScene();
 
-#ifdef _DEBUG
 	_debugStats = new DebugStats();
-#endif
 }
 
 void Framework::Update()
@@ -72,9 +70,9 @@ void Framework::Update()
 	Systems::world->Update();
 	_testScene->Update();
 
-#ifdef _DEBUG
+
 	_debugStats->Update();
-#endif
+
 }
 
 void Framework::Render()
