@@ -1,4 +1,4 @@
-#include "Systems.h";
+#include "Systems.h"
 
 DXManager*     Systems::dxManager     = nullptr;
 GuiManager*    Systems::guiManager    = nullptr;
@@ -36,7 +36,7 @@ void Systems::InitSystems(Window* window, float screenWidth, float screenHeight,
 
 	// Create the renderer
 	renderer = new Renderer();
-	renderer->Initailize();
+	renderer->Initialize();
 }
 
 void Systems::DeleteSystems()

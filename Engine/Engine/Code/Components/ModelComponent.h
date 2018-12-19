@@ -26,13 +26,13 @@ public:
 	~ModelComponent();
 
 	// creates a primitive model
-	void InitPrimitive(PRIMITIVE_TYPE primitive, unsigned int flags, wchar_t* diffuseMap = L"", wchar_t* normalMap = L"", wchar_t* specularMap = L"", float tiling = 1.0f);
+	void InitPrimitive(PRIMITIVE_TYPE primitive, unsigned int flags, wchar_t* diffuseMap = L"", wchar_t* normalMap = L"", wchar_t* specularMap = L"", wchar_t* emissiveMap = L"", float tiling = 1.0f);
 
 	// creates a 2D grid along x and y axis
-	void InitGrid(unsigned int size, float cellSize, Color32 gridColor, unsigned int flags, wchar_t* diffuseMap = L"", wchar_t* normalMap = L"", wchar_t* specularMap = L"", float tiling = 1.0f);
+	void InitGrid(unsigned int size, float cellSize, Color32 gridColor, unsigned int flags, wchar_t* diffuseMap = L"", wchar_t* normalMap = L"", wchar_t* specularMap = L"", wchar_t* emissiveMap = L"", float tiling = 1.0f);
 
 	// creates a model from file
-	void InitModel(char* model, unsigned int flags, wchar_t* diffuseMap = L"", wchar_t* normalMap = L"", wchar_t* specularMap = L"", bool useMaterial = true, float tiling = 1.0f);
+	void InitModel(char* model, unsigned int flags, wchar_t* diffuseMap = L"", wchar_t* normalMap = L"", wchar_t* specularMap = L"", wchar_t* emissiveMap = L"", bool useMaterial = true, float tiling = 1.0f);
 	void Update(const float& delta);
 
 	// overides and calls base
@@ -48,11 +48,13 @@ public:
 
 private:
 
-	void ProcessNode(aiNode* node, const aiScene* scene, wchar_t* diffuseMap, wchar_t* normalMap, wchar_t* specularMap, bool useMaterial, float tiling);
+	void ProcessNode(aiNode* node, const aiScene* scene, wchar_t* diffuseMap, wchar_t* normalMap, wchar_t* specularMap, wchar_t* emissiveMap, bool useMaterial, float tiling);
 	
 	// meshes list and num meshes count
 	std::vector<Mesh*> _meshes;
 	unsigned int       _numMeshes;
+
+	bool _useMaterial;
 	
 	// render flags
 	unsigned int _FLAGS;

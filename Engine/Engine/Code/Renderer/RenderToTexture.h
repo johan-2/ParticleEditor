@@ -8,9 +8,11 @@ public:
 	~RenderToTexture();
 
 	// get render texture properties
-	ID3D11ShaderResourceView* GetShaderResource() { return _shaderResoureView; }
-	ID3D11RenderTargetView*   GetRenderTarget()   { return _renderTargetView; }
-	ID3D11DepthStencilView*   GetDepthStencil()   { return _depthStencilView; }
+	ID3D11ShaderResourceView* GetRenderTargetSRV()      { return _renderTargetSRV; }
+	ID3D11ShaderResourceView* GetDepthStencilSRV()      { return _depthStencilSRV; }
+	ID3D11RenderTargetView*   GetRenderTarget()         { return _renderTargetView; }
+	ID3D11DepthStencilView*   GetDepthStencil()         { return _depthStencilView; }
+	ID3D11DepthStencilView*   GetDepthStencilReadOnly() { return _depthStencilView; }
 
 	// get viewport
 	D3D11_VIEWPORT* GetViewport() {	return &_viewport;	}
@@ -19,14 +21,16 @@ public:
 	void ClearRenderTarget(float r,float g, float b, float a, bool depthOnly);
 
 	// set this rendertarget
-	void SetRendertarget();
+	void SetRendertarget(bool depthOnly, bool depthReadOnly);
 
 private:
 
 	ID3D11Texture2D*          _textureView;
 	ID3D11RenderTargetView*   _renderTargetView;
 	ID3D11DepthStencilView*   _depthStencilView;
-	ID3D11ShaderResourceView* _shaderResoureView;
+	ID3D11DepthStencilView*   _depthStencilViewReadOnly;
+	ID3D11ShaderResourceView* _renderTargetSRV;
+	ID3D11ShaderResourceView* _depthStencilSRV;
 	D3D11_VIEWPORT            _viewport;	
 };
 

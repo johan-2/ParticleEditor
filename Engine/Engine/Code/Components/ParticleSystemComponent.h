@@ -3,18 +3,17 @@
 #include "IComponent.h"
 #include "DXManager.h"
 #include "DXBlendStates.h"
+#include "TransformComponent.h"
 
 using namespace DirectX;
 
 class Entity;
-class TransformComponent;
 
 // structure for the per particle instance buffer
 struct ParticleInstanceType
 {
 	XMFLOAT4X4 worldMatrix;
 	XMFLOAT4   color;
-	XMFLOAT2   uvOffset;
 };
 
 // vertex structure
@@ -46,8 +45,6 @@ struct ParticleData
 	XMFLOAT3   previousPosition;
 	XMFLOAT4X4 rotationMatrix;
 	float      zRotationSpeed;
-	XMFLOAT2   uvOffset;
-	XMFLOAT2   uvOffsetSpeed;
 };
 
 struct EmitterData
@@ -94,8 +91,6 @@ struct ParticleSettings
 	XMFLOAT2     endScaleMinMax; 
 	bool         rotationByVelocity;
 	XMFLOAT2     rotationPerSecMinMax;
-	XMFLOAT2     uvScrollXMinMax;
-	XMFLOAT2     uvScrollYMinMax;
 	XMFLOAT3     inheritVelocityScale;
 };
 
@@ -132,6 +127,9 @@ public:
 
 	// get all textures in this system
 	ID3D11ShaderResourceView** GetTextureArray() { return _texture; }
+
+	// get the position of the system transform
+	XMFLOAT3 GetSystemPosition() { return _transform->GetPositionVal(); }
 
 private:
 

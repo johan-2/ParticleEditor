@@ -14,12 +14,11 @@ GBuffer::~GBuffer()
 {
 }
 
-void GBuffer::SetRenderTargets()
+void GBuffer::SetRenderTargets(ID3D11DepthStencilView* depthStencil)
 {
 	// get devcon and default depth stencil view
 	DXManager& dXM                        = *Systems::dxManager;
 	ID3D11DeviceContext* devCon           = dXM.GetDeviceCon();
-	ID3D11DepthStencilView*& depthStencil = dXM.GetDefaultDepthStencilView();
 	
 	// clear to black
 	float clear[4] = { 0,0,0,1 };

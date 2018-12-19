@@ -20,7 +20,7 @@ void World::Update()
 	// update all components one type at the time
 	for (int i = 0; i < NUM_COMPONENT_TYPES; i++) 
 	{
-		unsigned int size = _components[i].size();
+		unsigned int size = (int)_components[i].size();
 
 		for (int y = 0; y < size; y++)
 			if (_components[i][y]->IsActive())
@@ -50,7 +50,7 @@ void World::DeleteEntity(Entity* entity)
 // check if we have any components flagged for removal
 void World::HandleDirtyComponents() 
 {
-	int count = _componentsToRemove.size();
+	int count = (int)_componentsToRemove.size();
 
 	if (count == 0)
 		return;
@@ -66,7 +66,7 @@ void World::HandleDirtyComponents()
 // check if we have any entities flagged for removal
 void World::HandleDirtyEntities()
 {
-	unsigned int count = _entitiesToRemove.size();
+	unsigned int count = (int)_entitiesToRemove.size();
 
 	if (count == 0)
 		return;
@@ -85,7 +85,7 @@ void World::Empty()
 	// delete all components and entitys in the world
 	for (int i = 0; i < NUM_COMPONENT_TYPES; i++) 
 	{
-		unsigned int size = _components[i].size();
+		unsigned int size = (int)_components[i].size();
 
 		for (int y = 0; y < size; y++)
 			delete _components[i][y];
@@ -94,7 +94,7 @@ void World::Empty()
 		_components[i].clear();
 	}
 
-	unsigned int size = _entities.size();
+	unsigned int size = (int)_entities.size();
 
 	for (int i = 0; i < size; i++)
 		delete _entities[i];

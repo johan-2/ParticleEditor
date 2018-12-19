@@ -7,6 +7,19 @@ using namespace DirectX;
 
 #define MAX_POINT_LIGHTS 1024
 
+// constant data for point lightning in the lightning pass
+struct CBPoint
+{
+	XMFLOAT3 lightPosition;
+	float    radius;
+	XMFLOAT3 color;
+	float    intensity;
+	float attConstant;
+	float attLinear;
+	float attExponential;
+	int   numLights;
+};
+
 class LightManager
 {
 public:
@@ -30,6 +43,15 @@ public:
 	// remove the current directional light
 	void RemoveDirectionalLight();
 
+	// updates the data for light constant buffers
+	void UpdateLightBuffers();
+
+	// get pointer to point light data
+	CBPoint* GetCBPointBuffer() { return _pointCBBuffer; }
+
+	// get num of pointlights active
+	int GetNumPointLights() { return (int)_pointLights.size(); }
+	
 private:
 	
 	// color for ambient light
@@ -40,5 +62,8 @@ private:
 	
 	// list of all point lights
 	std::vector<LightPointComponent*> _pointLights;
+
+	// holds the properties of all point lights
+	CBPoint _pointCBBuffer[MAX_POINT_LIGHTS];
 };
 

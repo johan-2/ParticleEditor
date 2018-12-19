@@ -11,7 +11,7 @@
 class ModelLoader
 {
 public:
-	static Mesh* CreateMesh(aiMesh* mesh, const aiScene* scene, unsigned int flags, wchar_t* diffuseMap, wchar_t* normalMap, wchar_t* specularMap, float tiling, bool useMaterial, Entity* parent)
+	static Mesh* CreateMesh(aiMesh* mesh, const aiScene* scene, unsigned int flags, wchar_t* diffuseMap, wchar_t* normalMap, wchar_t* specularMap, wchar_t* emissiveMap, bool useMaterial, float tiling, Entity* parent)
 	{
 		// structures for vertex/index data
 		std::vector<Mesh::VertexData> vertices;
@@ -21,6 +21,7 @@ public:
 		std::wstring diffuse  = diffuseMap;
 		std::wstring normal   = normalMap;
 		std::wstring specular = specularMap;
+		std::wstring emissive = emissiveMap;
 
 		// if we want to load the textures from a material file
 		if (useMaterial)
@@ -56,6 +57,15 @@ public:
 					material->GetTexture(aiTextureType_SPECULAR, 0, &stringSpecular);
 
 					specular = GetRelativePathAndSetExtension(stringSpecular.C_Str(), ".dds");
+				}
+
+				// emissive map
+				if (material->GetTextureCount(aiTextureType_EMISSIVE) > 0)
+				{
+					aiString emissiveSpecular;
+					material->GetTexture(aiTextureType_EMISSIVE, 0, &emissiveSpecular);
+
+					emissive = GetRelativePathAndSetExtension(emissiveSpecular.C_Str(), ".dds");
 				}
 			}
 		}
@@ -127,8 +137,8 @@ public:
 		}
 
 		// create mesh and buffers
-		Mesh* modelMesh = new Mesh(parent, flags, diffuse.c_str(), normal.c_str(), specular.c_str());
-		modelMesh->CreateBuffers(&vertices[0], &indices[0], vertices.size(), indices.size());
+		Mesh* modelMesh = new Mesh(parent, flags, diffuse.c_str(), normal.c_str(), specular.c_str(), emissive.c_str());
+		modelMesh->CreateBuffers(&vertices[0], &indices[0], (int)vertices.size(), (int)indices.size());
 
 		return modelMesh;
 	}
@@ -139,7 +149,10 @@ public:
 
 		// get the offset where our last backslash is located
 		// we only want the name of the texture
-		const size_t lastSlash = filename.find_last_of("\\");
+		size_t lastSlash = filename.find_last_of("\\");
+
+		if (std::string::npos == lastSlash)
+			lastSlash = filename.find_last_of("/");
 
 		// erease filepath
 		if (std::string::npos != lastSlash)
@@ -165,11 +178,11 @@ public:
 	}
 
 	// PRIMITIVES
-	static Mesh* CreateCube(unsigned int flags, wchar_t* diffuseMap, wchar_t* normalMap, wchar_t* specularMap, float tiling, Entity* parent)
+	static Mesh* CreateCube(unsigned int flags, wchar_t* diffuseMap, wchar_t* normalMap, wchar_t* specularMap, wchar_t* emissiveMap, float tiling, Entity* parent)
 	{
 		// allocate memory for vertex and index buffers
-		Mesh::VertexData vertices[24];
-		unsigned long indices[36]
+		Mesh::VertexData* vertices = new Mesh::VertexData[24];
+		unsigned long*    indices = new unsigned long[36]
 		{
 			0,1,2,2,1,3,
 			4,5,6,6,5,7,
@@ -347,16 +360,19 @@ public:
 		vertices[23].binormal = XMFLOAT3(0, 0, -1);
 		vertices[23].color    = Color32(255, 255, 255, 255);
 
-		// create mesh and buffers	
-		Mesh* mesh = new Mesh(parent, flags, diffuseMap, normalMap, specularMap);
+		// create mesh and buffers
+		Mesh* mesh = new Mesh(parent, flags, diffuseMap, normalMap, specularMap, emissiveMap);
 		mesh->CreateBuffers(vertices, indices, 24, 36);
+
+		delete[] vertices;
+		delete[] indices;
 
 		return mesh;
 	}
 
-	static Mesh* CreatePlane(unsigned int flags, wchar_t* diffuseMap, wchar_t* normalMap, wchar_t* specularMap, float tiling, Entity* parent)
+	static Mesh* CreatePlane(unsigned int flags, wchar_t* diffuseMap, wchar_t* normalMap, wchar_t* specularMap, wchar_t* emissiveMap, float tiling, Entity* parent)
 	{
-		Mesh::VertexData vertices[4];
+		Mesh::VertexData* vertices = new Mesh::VertexData [4];
 
 		vertices[0].position = XMFLOAT3(-2.0f, 0.0f, 2.0f);
 		vertices[0].texture  = XMFLOAT2(0.0f * tiling, 0.0f * tiling);
@@ -386,16 +402,64 @@ public:
 		vertices[3].binormal = XMFLOAT3(0.0f, 0.0f, 1.0f);
 		vertices[3].color    = Color32(255, 255, 255, 255);
 
-		unsigned long indices[6]{ 0,1,2,2,1,3 };
+		unsigned long* indices = new unsigned long[6]{ 0,1,2,2,1,3 };
 
-		// create mesh and buffers	
-		Mesh* mesh = new Mesh(parent, flags, diffuseMap, normalMap, specularMap);
+		// create mesh and buffers
+		Mesh* mesh = new Mesh(parent, flags, diffuseMap, normalMap, specularMap, emissiveMap);
 		mesh->CreateBuffers(vertices, indices, 24, 36);
 
-		return mesh;
-	}	
+		delete[] vertices;
+		delete[] indices;
 
-	static Mesh* CreateSphere(unsigned int flags, wchar_t* diffuseMap, wchar_t* normalMap, wchar_t* specularMap, float tiling, Entity* parent)
+		return mesh;
+	}
+
+	// sprite that renders in 3d space without lightning
+	static Mesh* CreateWorldSprite(unsigned int flags, wchar_t* diffuseMap, Entity* parent)
+	{
+		Mesh::VertexData* vertices = new Mesh::VertexData[4];
+
+		vertices[0].position = XMFLOAT3(-0.5f, 0.5f, 0.0f);
+		vertices[0].texture  = XMFLOAT2(0.0f, 0.0f);
+		vertices[0].normal   = XMFLOAT3(0.0f, 0.0f, 0.0f);
+		vertices[0].tangent  = XMFLOAT3(0.0f, 0.0f, 0.0f);
+		vertices[0].binormal = XMFLOAT3(0.0f, 0.0f, 0.0f);
+		vertices[0].color    = Color32(255, 255, 255, 255);
+
+		vertices[1].position = XMFLOAT3(0.5f, 0.5f, 0.0f);
+		vertices[1].texture  = XMFLOAT2(1.0f, 0.0f);
+		vertices[1].normal   = XMFLOAT3(0.0f, 0.0f, 0.0f);
+		vertices[1].tangent  = XMFLOAT3(0.0f, 0.0f, 0.0f);
+		vertices[1].binormal = XMFLOAT3(0.0f, 0.0f, 0.0f);
+		vertices[1].color    = Color32(255, 255, 255, 255);
+
+		vertices[2].position = XMFLOAT3(-0.5f, -0.5f, 0.0f);
+		vertices[2].texture  = XMFLOAT2(0.0f, 1.0f);
+		vertices[2].normal   = XMFLOAT3(0.0f, 0.0f, 0.0f);
+		vertices[2].tangent  = XMFLOAT3(0.0f, 0.0f, 0.0f);
+		vertices[2].binormal = XMFLOAT3(0.0f, 0.0f, 0.0f);
+		vertices[2].color    = Color32(255, 255, 255, 255);
+
+		vertices[3].position = XMFLOAT3(0.5f, -0.5f, 0.0f);
+		vertices[3].texture  = XMFLOAT2(1.0f, 1.0f);
+		vertices[3].normal   = XMFLOAT3(0.0f, 0.0f, 0.0f);
+		vertices[3].tangent  = XMFLOAT3(0.0f, 0.0f, 0.0f);
+		vertices[3].binormal = XMFLOAT3(0.0f, 0.0f, 0.0f);
+		vertices[3].color    = Color32(255, 255, 255, 255);
+
+		unsigned long*    indices = new unsigned long[6]{ 0,1,2,2,1,3 };
+
+		// create mesh and buffers
+		Mesh* mesh = new Mesh(parent, flags, diffuseMap, L"", L"", L"");
+		mesh->CreateBuffers(vertices, indices, 24, 36);
+
+		delete[] vertices;
+		delete[] indices;
+
+		return mesh;
+	}
+
+	static Mesh* CreateSphere(unsigned int flags, wchar_t* diffuseMap, wchar_t* normalMap, wchar_t* specularMap, wchar_t* emissiveMap, float tiling, Entity* parent)
 	{
 		//get assimp imoprter
 		Assimp::Importer importer;
@@ -404,12 +468,12 @@ public:
 		const aiScene* scene = importer.ReadFile("Models/sphere.obj", aiProcess_Triangulate | aiProcess_ConvertToLeftHanded | aiProcess_CalcTangentSpace);
 
 		// assert if scene failed to be created
-		assert(scene != nullptr, "Failed to load aiScene for sphere %s", model);
+		assert(scene != nullptr, "Failed to load aiScene for sphere");
 
-		return CreateMesh(scene->mMeshes[scene->mRootNode->mChildren[0]->mMeshes[0]], scene, flags, diffuseMap, normalMap, specularMap, tiling, false, parent);
+		return CreateMesh(scene->mMeshes[scene->mRootNode->mChildren[0]->mMeshes[0]], scene, flags, diffuseMap, normalMap, specularMap, emissiveMap, tiling, false, parent);
 	}
 
-	static Mesh* CreateGrid(unsigned int size, float cellSize, Color32 gridColor, unsigned int flags, wchar_t* diffuseMap, wchar_t* normalMap, wchar_t* specularMap, float tiling, Entity* parent)
+	static Mesh* CreateGrid(unsigned int size, float cellSize, Color32 gridColor, unsigned int flags, wchar_t* diffuseMap, wchar_t* normalMap, wchar_t* specularMap, wchar_t* emissiveMap, float tiling, Entity* parent)
 	{
 		Mesh::VertexData* vertices = new Mesh::VertexData[4 * (size * size)];
 		unsigned long*    indices  = new unsigned long[6 * (size * size)];
@@ -472,15 +536,15 @@ public:
 			}
 		}
 
-		// create mesh and buffers	
-		Mesh* mesh = new Mesh(parent, flags, diffuseMap, normalMap, specularMap);
+		// create mesh and buffers
+		Mesh* mesh = new Mesh(parent, flags, diffuseMap, normalMap, specularMap, emissiveMap);
 		mesh->CreateBuffers(vertices, indices, 4 * (size * size), 6 * (size * size));
 
 		delete[] vertices;
 		delete[] indices;
 
 		return mesh;
-	}	
+	}
 };
 
-	
+

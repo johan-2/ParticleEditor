@@ -18,6 +18,8 @@ public:
 	// get the look direction of this light
 	XMFLOAT3 GetLightDirection();
 
+	XMFLOAT3 GetLightDirectionInv(); 
+
 	// get light properties
 	const XMFLOAT4& GetLightColor()    { return _lightColor; }
 
@@ -34,8 +36,7 @@ private:
 	// pointer to transform to overide light direction
 	TransformComponent* _overrideTransform;
 
-	// light properties
-	XMFLOAT3 _lightDir;
+	// light color
 	XMFLOAT4 _lightColor;
 };
 

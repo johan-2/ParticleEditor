@@ -53,28 +53,27 @@ void DeferredShader::RenderGeometry(std::vector<Mesh*>& meshes)
 	DXManager& DXM    = *Systems::dxManager;
 	CameraManager& CM = *Systems::cameraManager;
 
+	// render opaque objects here only
+	DXM.BlendStates()->SetBlendState(BLEND_STATE::BLEND_OPAQUE);
+
 	// get devicecontext
 	ID3D11DeviceContext* devCon = DXM.GetDeviceCon();
 
 	// get the game camera
 	CameraComponent* camera = CM.GetCurrentCameraGame();
 
-	// render opaque objects here only	
-	DXM.BlendStates()->SetBlendState(BLEND_STATE::BLEND_OPAQUE);
-
-	// set shaders			
+	// set shaders
 	devCon->VSSetShader(_vertexGeometryShader, NULL, 0);
 	devCon->PSSetShader(_pixelGeometryShader,  NULL, 0);
 
 	// set the vertex constant buffer
 	devCon->VSSetConstantBuffers(0, 1, &_constantBufferGeometry);
 
-	// get camera matrices
-	const XMFLOAT4X4& viewMatrix       = camera->GetViewMatrix();
-	const XMFLOAT4X4& projectionMatrix = camera->GetProjectionMatrix();
-	
 	// constantbuffer structure
 	ConstantGeometryVertex vertexData;
+
+	XMStoreFloat4x4(&vertexData.view,       XMLoadFloat4x4(&camera->GetViewMatrix()));
+	XMStoreFloat4x4(&vertexData.projection, XMLoadFloat4x4(&camera->GetProjectionMatrix()));
 
 	// stuff that need to be set per mesh
 	unsigned int size = meshes.size();
@@ -83,20 +82,15 @@ void DeferredShader::RenderGeometry(std::vector<Mesh*>& meshes)
 		// upload vertex and indexbuffers
 		meshes[i]->UploadBuffers();
 
-		// get world matrix for the mesh
-		const XMFLOAT4X4& worldMatrix = meshes[i]->GetWorldMatrix();
-
-		//set and upload vertexconstantdata 
-		vertexData.world      = worldMatrix;
-		vertexData.view       = viewMatrix;
-		vertexData.projection = projectionMatrix;
-		vertexData.uvOffset   = meshes[i]->GetUvOffset();
+		//set and upload vertex constantdata
+		XMStoreFloat4x4(&vertexData.world,  XMLoadFloat4x4(&meshes[i]->GetWorldMatrix()));
+		XMStoreFloat2(&vertexData.uvOffset, XMLoadFloat2(&meshes[i]->GetUvOffset()));
 
 		// update the constant buffer with the mesh data
 		SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(ConstantGeometryVertex), _constantBufferGeometry);
 
 		// set textures
-		devCon->PSSetShaderResources(0, 3, meshes[i]->GetTextureArray());
+		devCon->PSSetShaderResources(0, 4, meshes[i]->GetTextureArray());
 
 		// draw
 		devCon->DrawIndexed(meshes[i]->GetNumIndices(), 0, 0);
@@ -106,21 +100,18 @@ void DeferredShader::RenderGeometry(std::vector<Mesh*>& meshes)
 void DeferredShader::RenderLightning(GBuffer*& gBuffer)
 {
 	// get DXManager
-	DXManager& DXM   = *Systems::dxManager;
-	LightManager LM  = *Systems::lightManager;
-	CameraManager CM = *Systems::cameraManager;
+	DXManager& DXM    = *Systems::dxManager;
+	LightManager& LM  = *Systems::lightManager;
+	CameraManager& CM = *Systems::cameraManager;
 
 	// get devicecontext
-	ID3D11DeviceContext* devCon = DXM.GetDeviceCon();
+	ID3D11DeviceContext*& devCon = DXM.GetDeviceCon();
 
 	// get cameras
-	CameraComponent* camera      = CM.GetCurrentCameraGame();
-	CameraComponent* cameraLight = CM.GetCurrentCameraDepthMap();
+	CameraComponent*& camera      = CM.GetCurrentCameraGame();
+	CameraComponent*& cameraLight = CM.GetCurrentCameraDepthMap();
 
-	// get point lights
-	std::vector<LightPointComponent*>& pointLights = LM.GetPointLight();
-
-	// set shaders			
+	// set shaders
 	devCon->VSSetShader(_vertexLightShader, NULL, 0);
 	devCon->PSSetShader(_pixelLightShader, NULL, 0);
 
@@ -130,21 +121,6 @@ void DeferredShader::RenderLightning(GBuffer*& gBuffer)
 	// constantbuffer structures
 	ConstantDeferredAmbient     ambientLightData;
 	ConstantDeferredDirectional directionalLightData;
-	ConstantDeferredPoint       pointLightData[MAX_POINT_LIGHTS];
-
-	// set the pointlight data
-	const int size = pointLights.size();
-	for (int i = 0; i < size; i++)
-	{
-		pointLightData[i].color          = pointLights[i]->GetLightColor();
-		pointLightData[i].intensity      = pointLights[i]->GetIntensity();
-		pointLightData[i].radius         = pointLights[i]->GetRadius();
-		pointLightData[i].lightPosition  = pointLights[i]->GetComponent<TransformComponent>()->GetPositionRef();		
-		pointLightData[i].attConstant    = pointLights[i]->GetAttConstant();
-		pointLightData[i].attLinear      = pointLights[i]->GetAttLinear();
-		pointLightData[i].attExponential = pointLights[i]->GetAttExponential();
-		pointLightData[i].numLights      = size;
-	}
 
 	// set ambientdata(camerapos is in this buffer aswell)
 	ambientLightData.ambientColor = LM.GetAmbientColor();
@@ -155,26 +131,19 @@ void DeferredShader::RenderLightning(GBuffer*& gBuffer)
 	// get directional light
 	LightDirectionComponent*& directionalLight = LM.GetDirectionalLight();
 
-	// get directionallight matrices for shadow calculations
-	directionalLightData.lightView        =  cameraLight->GetViewMatrix();
-	directionalLightData.lightProjection  = cameraLight->GetProjectionMatrix();
+	// get directional light data
+	XMStoreFloat4x4(&directionalLightData.lightView,       XMLoadFloat4x4(&cameraLight->GetViewMatrix()));
+	XMStoreFloat4x4(&directionalLightData.lightProjection, XMLoadFloat4x4(&cameraLight->GetProjectionMatrix()));
+	XMStoreFloat4(&directionalLightData.lightColor,        XMLoadFloat4(&directionalLight->GetLightColor()));
+	XMStoreFloat3(&directionalLightData.lightDirection,    XMLoadFloat3(&directionalLight->GetLightDirectionInv()));
 
-	// set the inversed light direction
-	XMStoreFloat3(&directionalLightData.lightDirection, 
-		XMVectorNegate(XMLoadFloat3(&directionalLight->GetLightDirection())));
+	// update constantbuffers
+	SHADER_HELPERS::UpdateConstantBuffer((void*)&ambientLightData,     sizeof(ConstantDeferredAmbient),          _constantBufferDefAmbient);
+	SHADER_HELPERS::UpdateConstantBuffer((void*)&directionalLightData, sizeof(ConstantDeferredDirectional),      _constantBufferDefDirectional);
+	SHADER_HELPERS::UpdateConstantBuffer((void*)LM.GetCBPointBuffer(), sizeof(CBPoint) * LM.GetNumPointLights(), _constantBufferDefPoint);
 
-	// set the light properties of directional light
-	directionalLightData.lightColor = directionalLight->GetLightColor();
-	
-	// update constantbuffers		
-	SHADER_HELPERS::UpdateConstantBuffer((void*)&ambientLightData,     sizeof(ConstantDeferredAmbient),                    _constantBufferDefAmbient);
-	SHADER_HELPERS::UpdateConstantBuffer((void*)&directionalLightData, sizeof(ConstantDeferredDirectional),                _constantBufferDefDirectional);
-	SHADER_HELPERS::UpdateConstantBuffer((void*)&pointLightData,       sizeof(ConstantDeferredPoint) * pointLights.size(), _constantBufferDefPoint);
-
-	// get Gbuffer textures
+	// get Gbuffer textures and depthmap
 	ID3D11ShaderResourceView**& gBufferTextures = gBuffer->GetSrvArray();
-
-	// get depth map texture for shadow calculations
 	ID3D11ShaderResourceView* depthMap = cameraLight->GetSRV();
 
 	// add all to one array

@@ -73,14 +73,6 @@
         -150.0,
         150.0
     ],
-    "uvScrollXMinMax0": [
-        0.0,
-        0.0
-    ],
-    "uvScrollYMinMax0": [
-        0.0,
-        0.0
-    ],
     "inheritVelocityScale0": [
         0.0,
         0.0,
@@ -158,14 +150,6 @@
     "rotationPerSecMinMax1": [
         -50.0,
         50.0
-    ],
-    "uvScrollXMinMax1": [
-        0.0,
-        0.0
-    ],
-    "uvScrollYMinMax1": [
-        0.0,
-        0.0
     ],
     "inheritVelocityScale1": [
         0.0,
@@ -245,14 +229,6 @@
         -50.0,
         50.0
     ],
-    "uvScrollXMinMax2": [
-        0.0,
-        0.0
-    ],
-    "uvScrollYMinMax2": [
-        0.0,
-        0.0
-    ],
     "inheritVelocityScale2": [
         0.0,
         0.0,
@@ -330,14 +306,6 @@
     "rotationPerSecMinMax3": [
         -360.0,
         360.0
-    ],
-    "uvScrollXMinMax3": [
-        0.0,
-        0.0
-    ],
-    "uvScrollYMinMax3": [
-        0.0,
-        0.0
     ],
     "inheritVelocityScale3": [
         0.0,

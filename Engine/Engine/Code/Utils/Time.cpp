@@ -12,20 +12,6 @@ Time::Time() :
 	_fps(0),
 	_lastDelta(0)
 {
-	INT64 frequancy = 0;
-	// returns the number of ticks per second
-	QueryPerformanceFrequency((LARGE_INTEGER*)&frequancy);
-	if (frequancy == 0)
-		printf("System do not support high performance timers\n");
-
-	// convert to ticks per ms
-	_ticksPerSecond = (float)frequancy;
-
-	// get number of ticks elapsed before we start time calculations
-	QueryPerformanceCounter((LARGE_INTEGER*)&_startTimeDelta);
-
-	// get time elapsed in ms
-	_startTimeFps = timeGetTime();	
 }
 
 Time::~Time()
@@ -46,6 +32,26 @@ void Time::Update()
 
 void Time::CalculateDelta() 
 {
+	// if this is the first frame of the application
+	// setup the start delta
+	if (_delta == 0)
+	{
+		INT64 frequancy = 0;
+		// returns the number of ticks per second
+		QueryPerformanceFrequency((LARGE_INTEGER*)&frequancy);
+		if (frequancy == 0)
+			printf("System do not support high performance timers\n");
+
+		// convert to ticks per ms
+		_ticksPerSecond = (float)frequancy;
+
+		// get number of ticks elapsed before we start time calculations
+		QueryPerformanceCounter((LARGE_INTEGER*)&_startTimeDelta);
+
+		// get time elapsed in ms
+		_startTimeFps = timeGetTime();
+	}
+
 	INT64 currentTime = 0;
 
 	// get the current time

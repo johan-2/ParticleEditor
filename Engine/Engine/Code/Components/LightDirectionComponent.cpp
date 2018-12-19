@@ -34,6 +34,14 @@ XMFLOAT3 LightDirectionComponent::GetLightDirection()
 	return _transform->GetForward();
 }
 
+XMFLOAT3 LightDirectionComponent::GetLightDirectionInv()
+{ 
+	XMFLOAT3 result; 
+	XMStoreFloat3(&result, XMVectorNegate(XMLoadFloat3(&GetLightDirection())));
+
+	return result;
+}
+
 void LightDirectionComponent::Update(const float& delta)
 {
 }

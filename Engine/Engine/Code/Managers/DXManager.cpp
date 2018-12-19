@@ -21,8 +21,6 @@ DXManager::~DXManager()
 
 	_renderTargetView->Release();
 	_depthStencilView->Release();
-	_depthStencilViewReadOnly->Release();
-	_depthShaderResourceView->Release();
 
 	_device->Release();
 	_devCon->Release();
@@ -50,10 +48,7 @@ void DXManager::Initialize(HWND hwnd,int screenWidth, int screenHeight, bool vsy
 	_DXSamplerStates      = new DXSamplerStates(_device, _devCon);
 
 	// Create and set viewport
-	CreateViewport(screenWidth, screenHeight);
-	
-	// set our render target and depth stencil view active
-	SetRenderTarget(nullptr, nullptr, true);		
+	CreateViewport(screenWidth, screenHeight);	
 }
 
 void DXManager::CreateSwapchainAndRenderTarget(HWND hwnd, bool fullscreen, int screenWidth, int screenHeight) 
@@ -158,14 +153,6 @@ void DXManager::CreateDepthStencilViews(int screenWidth, int screenHeight)
 	depthStencilViewDesc.Texture2D.MipSlice = 0;
 	depthStencilViewDesc.Flags              = 0;
 
-	// setup description for depthstencilview 
-	D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewReadDesc;
-	ZeroMemory(&depthStencilViewReadDesc, sizeof(D3D11_DEPTH_STENCIL_VIEW_DESC));
-	depthStencilViewReadDesc.Format             = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	depthStencilViewReadDesc.ViewDimension      = D3D11_DSV_DIMENSION_TEXTURE2D;
-	depthStencilViewReadDesc.Texture2D.MipSlice = 0;
-	depthStencilViewReadDesc.Flags              = D3D11_DSV_READ_ONLY_DEPTH;
-
 	// setup description for shaderresource
 	D3D11_SHADER_RESOURCE_VIEW_DESC resourceViewDesc;
 	ZeroMemory(&resourceViewDesc, sizeof(D3D11_SHADER_RESOURCE_VIEW_DESC));
@@ -183,18 +170,6 @@ void DXManager::CreateDepthStencilViews(int screenWidth, int screenHeight)
 	result = _device->CreateDepthStencilView(depthTex2D, &depthStencilViewDesc, &_depthStencilView);
 	if (FAILED(result))
 		DX_ERROR::PrintError(result, "failed to create defualt depth stencil view");
-
-	// create a read only depthstencilview
-	// this enables us to have the depthstencil view bound at the 
-	// same time as using the depth texture as a shader resource input
-	result = _device->CreateDepthStencilView(depthTex2D, &depthStencilViewReadDesc, &_depthStencilViewReadOnly);
-	if (FAILED(result))
-		DX_ERROR::PrintError(result, "failed to create depth stencil view read only");
-
-	// create the shaderresource view of the depth texture
-	result = _device->CreateShaderResourceView(depthTex2D, &resourceViewDesc, &_depthShaderResourceView);
-	if (FAILED(result))
-		DX_ERROR::PrintError(result, "failed to create depth stencil shader resource view");
 
 	depthTex2D->Release();
 }
@@ -233,11 +208,10 @@ void DXManager::PresentScene()
 
 // set render target and/or depthstencil
 // NOTE: null can be sent in as render target if we only care about having a depth stencil view bound
-void DXManager::SetRenderTarget(ID3D11RenderTargetView* renderTarget, ID3D11DepthStencilView* depthStencil, bool setDefault, bool setDepthReadOnly)
+void DXManager::SetBackBuffer()
 {
-	ID3D11DepthStencilView* depthStencilView = setDepthReadOnly ? _depthStencilViewReadOnly : _depthStencilView;
-
-	setDefault ? _devCon->OMSetRenderTargets(1, &_renderTargetView, depthStencilView) : _devCon->OMSetRenderTargets(1, &renderTarget, depthStencil);
+	_devCon->RSSetViewports(1, &_viewport);
+	_devCon->OMSetRenderTargets(1, &_renderTargetView, _depthStencilView);
 }
 
 // set a viewport

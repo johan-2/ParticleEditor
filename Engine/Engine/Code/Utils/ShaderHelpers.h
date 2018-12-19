@@ -39,8 +39,7 @@ namespace SHADER_HELPERS
 				DX_ERROR::PrintError(result, "failed to create new constant buffer when upgrading size");
 		}
 
-		//uppdate the buffer with the new data
-		void* destination;
+		// uppdate the buffer with the new data
 		D3D11_MAPPED_SUBRESOURCE subResource;
 		devCon->Map(buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &subResource);
 
@@ -114,7 +113,7 @@ namespace SHADER_HELPERS
 
 	static void MeshSort(std::vector<Mesh*>& meshes, const XMFLOAT3& position, bool backToFront)
 	{
-		const int size = meshes.size();
+		const int size = (int)meshes.size();
 
 		for (int i = 0; i < size; i++)
 		{

@@ -1,5 +1,4 @@
-
-Texture2D Textures[3];	// diffuse, normal, specular
+Texture2D Textures[4];	// diffuse, normal, specular, emissive
 SamplerState SampleType[2]; // wrap,clamp 	
  		
 struct PixelInputType
@@ -28,6 +27,7 @@ Output Main(PixelInputType input)
 	float4 textureColor = Textures[0].Sample(SampleType[0],input.texCoord) * input.color; 	
 	float4 normalMap    = Textures[1].Sample(SampleType[0],input.texCoord);
 	float4 specularMap  = Textures[2].Sample(SampleType[0],input.texCoord);
+	float4 emissiveMap  = Textures[3].Sample(SampleType[0],input.texCoord);
 			
 	normalMap = (normalMap * 2.0) -1.0;
 	
@@ -36,8 +36,15 @@ Output Main(PixelInputType input)
 			    		  					   		    				
 	output.position = input.worldPosition;
 	output.normal   = float4(bumpNormal.xyz,1);
-	output.diffuse  = float4(textureColor.xyz, 1);
+	output.diffuse  = float4(textureColor.rgb, 1);
 	output.specular = specularMap;
-				
+	
+	// if the pixel is emissive is stored in the alpha channel of the emissive map
+	// if it is we will multiply the diffuse color with the emisive color and flag 
+	// the alpha channel with 0 so the deferred ligtning pass can check for this and
+	// know if it should perfom lightning calculations or not on this pixel
+	if (emissiveMap.a > 0)	
+		output.diffuse = float4(textureColor.rgb * emissiveMap.rgb, 0);
+			
 	return output;    
 }

@@ -28,7 +28,7 @@ ParticleShader::~ParticleShader()
 	_constantBufferVertex->Release();
 }
 
-void ParticleShader::RenderParticles(const std::vector<ParticleSystemComponent*>& systems)
+void ParticleShader::RenderParticles(const std::vector<ParticleSystemComponent*>& systems, bool useReflectViewMatrix, float reflectHeight)
 {
 	if (systems.size() == 0)
 		return;
@@ -54,9 +54,10 @@ void ParticleShader::RenderParticles(const std::vector<ParticleSystemComponent*>
 	ConstantVertex vertexData;
 
 	// set the vertex constant data
-	vertexData.view       = camera->GetViewMatrix();
-	vertexData.projection = camera->GetProjectionMatrix();
-
+	XMStoreFloat4x4(&vertexData.projection, XMLoadFloat4x4(&camera->GetProjectionMatrix()));
+	if (useReflectViewMatrix) XMStoreFloat4x4(&vertexData.view, XMLoadFloat4x4(&camera->GetReflectionViewMatrix(reflectHeight)));
+	else                      XMStoreFloat4x4(&vertexData.view, XMLoadFloat4x4(&camera->GetViewMatrix()));
+	
 	// update the vertex constant buffer
 	SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(ConstantVertex), _constantBufferVertex);
 

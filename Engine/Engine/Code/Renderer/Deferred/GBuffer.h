@@ -8,7 +8,7 @@ public:
 	~GBuffer();
 
 	// sets the rendertargets of this buffer
-	void SetRenderTargets();
+	void SetRenderTargets(ID3D11DepthStencilView* depthStencil);
 
 	// get All SRV's in this buffer
 	ID3D11ShaderResourceView**& GetSrvArray() { return _srvArray; }

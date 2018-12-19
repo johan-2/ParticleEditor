@@ -19,9 +19,9 @@ public:
 
 	// set quad properties
 	void SetPosition(XMFLOAT2 position)            { _position = position; }
-	void SetSize(XMFLOAT2 size)                    { _size = size; }
-	void SetColor(XMFLOAT4 color)                  { _color = color; }
-	void SetTexture(ID3D11ShaderResourceView* tex) { _texture = tex; }
+	void SetSize(XMFLOAT2 size)                    { _size     = size; }
+	void SetColor(XMFLOAT4 color)                  { _color    = color; }
+	void SetTexture(ID3D11ShaderResourceView* tex) { _texture  = tex; }
 
 	// get quad properties
 	XMFLOAT2 GetPosition()                 { return _position; }

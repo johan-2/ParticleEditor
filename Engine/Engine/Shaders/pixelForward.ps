@@ -1,4 +1,4 @@
-Texture2D Texture[4];	    // diffuse, normal, specular, shadowmap
+Texture2D Texture[5];	    // diffuse, normal, specular, emissive, shadowmap
 SamplerState SampleType[2]; // wrap,clamp 	
 
 struct PointLight
@@ -18,6 +18,7 @@ cbuffer AmbientDirectionalBuffer : register(b0)
 	float4 ambientColor;
 	float4 dirDiffuseColor;
 	float3 dirLightDirection;
+	float  reflectiveFraction;
 }
 
 cbuffer PointLightBuffer : register(b1)
@@ -38,16 +39,16 @@ struct PixelInputType
 	float4 vertexColor        : COLOR;
 };
 
-float4 GetBaseColor(PixelInputType input)
+float3 GetBaseColor(PixelInputType input, float3 textureColor)
 {
-	return (Texture[0].Sample(SampleType[0], input.texCoord) * input.vertexColor) * ambientColor;
+	return (textureColor * input.vertexColor) * ambientColor;
 }
 
-float4 GetDirectionalColor(PixelInputType input)
+float3 GetDirectionalColor(PixelInputType input, float3 textureColor, float3 normalMap, float4 specularMap)
 {
 	// do all shadow calculations first to decide if the pixel should be lit or not
 	float bias         = 0.00001;
-	float numInLight   = 0;
+	float numInLight   = 9;
 	float lightPercent = 0;
 	
 	// get the projected texture coordinates based on the position in eye of the light
@@ -55,20 +56,22 @@ float4 GetDirectionalColor(PixelInputType input)
 	smTexCoord.x = ((input.positionLightSpace.x / input.positionLightSpace.w) / 2.0) + 0.5;
 	smTexCoord.y = ((-input.positionLightSpace.y / input.positionLightSpace.w) / 2.0) + 0.5;
 	
-	if((saturate(smTexCoord.x) == smTexCoord.x) && (saturate(smTexCoord.y) == smTexCoord.y))
+	if ((saturate(smTexCoord.x) == smTexCoord.x) && (saturate(smTexCoord.y) == smTexCoord.y))
 	{
+		numInLight = 0;
+		
 		float neighbour = 1 / 8192.0; // hardcoded for now, dont forget to change if depthmap res change	
 		float depthMapValues[9];
 		
-		depthMapValues[0] = Texture[3].Sample(SampleType[1], float2(smTexCoord.x, smTexCoord.y)).r; // middle
-		depthMapValues[1] = Texture[3].Sample(SampleType[1], float2(smTexCoord.x - neighbour, smTexCoord.y)).r; // left
-		depthMapValues[2] = Texture[3].Sample(SampleType[1], float2(smTexCoord.x - neighbour, smTexCoord.y - neighbour)).r; // top left
-		depthMapValues[3] = Texture[3].Sample(SampleType[1], float2(smTexCoord.x, smTexCoord.y - neighbour)).r; // top
-		depthMapValues[4] = Texture[3].Sample(SampleType[1], float2(smTexCoord.x + neighbour, smTexCoord.y - neighbour)).r; // top right
-		depthMapValues[5] = Texture[3].Sample(SampleType[1], float2(smTexCoord.x + neighbour, smTexCoord.y)).r; // right
-		depthMapValues[6] = Texture[3].Sample(SampleType[1], float2(smTexCoord.x + neighbour, smTexCoord.y + neighbour)).r; // bottom right
-		depthMapValues[7] = Texture[3].Sample(SampleType[1], float2(smTexCoord.x, smTexCoord.y + neighbour)).r; // bottom 
-		depthMapValues[8] = Texture[3].Sample(SampleType[1], float2(smTexCoord.x - neighbour, smTexCoord.y + neighbour)).r; // bottom left
+		depthMapValues[0] = Texture[4].Sample(SampleType[1], float2(smTexCoord.x, smTexCoord.y)).r; // middle
+		depthMapValues[1] = Texture[4].Sample(SampleType[1], float2(smTexCoord.x - neighbour, smTexCoord.y)).r; // left
+		depthMapValues[2] = Texture[4].Sample(SampleType[1], float2(smTexCoord.x - neighbour, smTexCoord.y - neighbour)).r; // top left
+		depthMapValues[3] = Texture[4].Sample(SampleType[1], float2(smTexCoord.x, smTexCoord.y - neighbour)).r; // top
+		depthMapValues[4] = Texture[4].Sample(SampleType[1], float2(smTexCoord.x + neighbour, smTexCoord.y - neighbour)).r; // top right
+		depthMapValues[5] = Texture[4].Sample(SampleType[1], float2(smTexCoord.x + neighbour, smTexCoord.y)).r; // right
+		depthMapValues[6] = Texture[4].Sample(SampleType[1], float2(smTexCoord.x + neighbour, smTexCoord.y + neighbour)).r; // bottom right
+		depthMapValues[7] = Texture[4].Sample(SampleType[1], float2(smTexCoord.x, smTexCoord.y + neighbour)).r; // bottom 
+		depthMapValues[8] = Texture[4].Sample(SampleType[1], float2(smTexCoord.x - neighbour, smTexCoord.y + neighbour)).r; // bottom left
 		
 		float lightDepthValue = (input.positionLightSpace.z / input.positionLightSpace.w) - bias;
 		
@@ -78,19 +81,12 @@ float4 GetDirectionalColor(PixelInputType input)
 				numInLight++;
 		}
 		
-		if(numInLight == 0)
-			return float4(0,0,0,0);	
+		if (numInLight == 0)
+			return float3(0,0,0);	
 	}
 	
 	// get how many pixels that not was ocluded in range 0-1 
 	lightPercent = numInLight / 9;
-										  
-	// sample from textures, multiply texturecolor with light percent to get blured shadow edges		
-	float4 textureColor = Texture[0].Sample(SampleType[0], input.texCoord) * lightPercent;		
-	float4 normalMap    = Texture[1].Sample(SampleType[0], input.texCoord);
-	float4 specularMap  = Texture[2].Sample(SampleType[0], input.texCoord);
-			
-	normalMap = (normalMap * 2.0) -1.0;
 	
 	float3x3 tangentSpaceMatrix = float3x3(input.tangent, input.binormal, input.normal);
 	float3 bumpNormal           = normalize(mul(normalMap, tangentSpaceMatrix));   	
@@ -98,9 +94,9 @@ float4 GetDirectionalColor(PixelInputType input)
     float lightIntensity = saturate(dot(bumpNormal.xyz, dirLightDirection)); 
 	
 	// get color based on texture, intensity and color of light
-    float4 color = textureColor * input.vertexColor * lightIntensity * dirDiffuseColor; 
+    float3 color = textureColor * input.vertexColor.rgb * lightIntensity * dirDiffuseColor.rgb; 
 	saturate(color);
-	float4 specular = float4(0,0,0,0);
+	float3 specular = float3(0,0,0);
 	
 	// add specular effect if the light is affecting the pixel
 	if (lightIntensity > 0)
@@ -111,15 +107,15 @@ float4 GetDirectionalColor(PixelInputType input)
 		// phong
 		float3 reflection = normalize(2 * lightIntensity * bumpNormal - dirLightDirection);		
 		float specularIntensity = pow(saturate(dot(reflection, vtc)), specularMap.a * 255.0);
-		specular = (dirDiffuseColor * specularIntensity) * float4(specularMap.rgb, 1.0);	
+		specular = (dirDiffuseColor.rgb * specularIntensity) * specularMap.rgb;	
 	} 
 			
 	return color + specular; 
 }
 
-float4 GetPointColor(PixelInputType input)
+float3 GetPointColor(PixelInputType input, float3 textureColor, float3 normalMap, float4 specularMap)
 {   
-	float4 finalColor = float4(0,0,0,1);
+	float3 finalColor = float3(0,0,0);
 	int numLights     = pointLights[0].numLights;
 	
 	for (int i =0; i < numLights; i++)
@@ -134,38 +130,28 @@ float4 GetPointColor(PixelInputType input)
 		attuniation       = (attuniation * pointLights[i].intensity) * fallOff;
 		
 		if (fallOff >= 0)
-		{	
-			// sample from textures		
-			float4 textureColor = Texture[0].Sample(SampleType[0], input.texCoord); 	
-			float4 bumpValues   = Texture[1].Sample(SampleType[0], input.texCoord);
-			
-			// convert normalmap sample to range -1 to 1
-			bumpValues = (bumpValues * 2.0) -1.0;
-			
+		{					
 			// get tangentSpaceMatrix for normalmapping and multiply with normalmapsample to get the bumpnormal
 			float3x3 tangentSpaceMatrix = float3x3(input.tangent,input.binormal,input.normal);	
-			float3 bumpNormal           = normalize(mul(bumpValues, tangentSpaceMatrix));   
+			float3 bumpNormal           = normalize(mul(normalMap, tangentSpaceMatrix));   
 				
 			// get intensity from the normal from normalmap and lightdirection
 			float lightIntensity = saturate(dot(bumpNormal, lightDir)); 
 			
 			// get color based on texture, intensity and color of light
-			float4 color = textureColor * input.vertexColor * lightIntensity * float4(pointLights[i].color,1); 
+			float3 color = textureColor * input.vertexColor.rgb * lightIntensity * pointLights[i].color; 
 			
 			// add specular effect if the light is affecting the pixel, dont add specular effect if dst is more then radius
-			float4 specular = float4(0,0,0,0);		
+			float3 specular = float3(0,0,0);		
 			if (lightIntensity > 0 && dst < pointLights[i].radius)
 			{		
-				// sample the specualr map
-				float4 specularMap = Texture[2].Sample(SampleType[0],input.texCoord);
-				
 				// normalize vertex to camera direction vector
 				float3 vtc = normalize(input.vertexToCamera);
 							
 				// phong
 				float3 reflection = normalize(2 * lightIntensity * bumpNormal - lightDir);		
 				float specularIntensity = pow(saturate(dot(reflection, vtc)), specularMap.a * 255.0);
-				specular.rgb = (pointLights[i].color * specularIntensity) * specularMap.rgb;	
+				specular = (pointLights[i].color * specularIntensity) * specularMap.rgb;	
 			} 
 						
 			color      += specular;	
@@ -177,15 +163,25 @@ float4 GetPointColor(PixelInputType input)
 }
 
 float4 Main(PixelInputType input) : SV_TARGET
-{					
-	float4 baseColor        = GetBaseColor(input);
-	float4 directionalColor = GetDirectionalColor(input);
-	float4 pointColor       = GetPointColor(input);
+{						
+	float4 textureColor = Texture[0].Sample(SampleType[0], input.texCoord);;		
+	float4 normalMap    = Texture[1].Sample(SampleType[0], input.texCoord);
+	float4 specularMap  = Texture[2].Sample(SampleType[0], input.texCoord);
 	
-	float4 finalColor = baseColor + directionalColor + pointColor; 
-	finalColor.a      = baseColor.a;
+	// convert normalmap sample to range -1 to 1
+	normalMap = (normalMap * 2.0) -1.0;
 	
-	return finalColor; 		                            		   
+	float3 baseColor        = GetBaseColor(input, textureColor.rgb);
+	float3 directionalColor = GetDirectionalColor(input, textureColor.rgb, normalMap.rgb, specularMap);
+	float3 pointColor       = GetPointColor(input, textureColor.rgb, normalMap.rgb, specularMap);
+	float4 emissiveMap      = Texture[3].Sample(SampleType[0],input.texCoord);
+	
+	// if the alpha channel of the emissivemap is zero it means that this is 
+	// an emissive pixel and should not recive lightning
+	if (emissiveMap.a > 0)	
+		return float4(Texture[0].Sample(SampleType[0],input.texCoord).rgb * emissiveMap.rgb, 0);
+			
+	return float4(baseColor + directionalColor + pointColor, textureColor.a); 		                            		   
 }
 
 

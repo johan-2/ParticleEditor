@@ -5,6 +5,7 @@
 #include "Mesh.h"
 #include "ShaderHelpers.h"
 #include "Systems.h"
+#include "DXBlendStates.h"
 
 DepthShader::DepthShader()
 {
@@ -30,8 +31,10 @@ DepthShader::~DepthShader()
 void DepthShader::RenderDepth(std::vector<Mesh*>& meshes)
 {
 	// get dx manager
-	DXManager& DXM   = *Systems::dxManager;
-	CameraManager CM = *Systems::cameraManager;
+	DXManager& DXM    = *Systems::dxManager;
+	CameraManager& CM = *Systems::cameraManager;
+
+	DXM.BlendStates()->SetBlendState(BLEND_STATE::BLEND_ALPHA);
 
 	// get devicecontext
 	ID3D11DeviceContext* devCon = DXM.GetDeviceCon();
@@ -49,20 +52,15 @@ void DepthShader::RenderDepth(std::vector<Mesh*>& meshes)
 	// set the vertex constant buffer
 	devCon->VSSetConstantBuffers(0, 1, &_constantBufferVertex);
 
-	// get camera matrices
-	const XMFLOAT4X4& viewMatrix       = camera->GetViewMatrix();
-	const XMFLOAT4X4& projectionMatrix = camera->GetProjectionMatrix();
+	// set constant data that is shared between all meshes
+	XMStoreFloat4x4(&vertexData.view,       XMLoadFloat4x4(&camera->GetViewMatrix()));
+	XMStoreFloat4x4(&vertexData.projection, XMLoadFloat4x4(&camera->GetProjectionMatrix()));
 
 	unsigned int size = meshes.size();
 	for (int i = 0; i < size; i++)
 	{
-		// get and transpose worldmatrix
-		const XMFLOAT4X4& worldMatrix = meshes[i]->GetWorldMatrix();
-
-		//set and upload vertexconstantdata 
-		vertexData.projection = projectionMatrix;
-		vertexData.view       = viewMatrix;
-		vertexData.world      = worldMatrix;
+		// set world matrix of mesh
+		XMStoreFloat4x4(&vertexData.world, XMLoadFloat4x4(&meshes[i]->GetWorldMatrix()));
 
 		// update the constant buffer with the vertexdata of this mesh
 		SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(ConstantVertex), _constantBufferVertex);

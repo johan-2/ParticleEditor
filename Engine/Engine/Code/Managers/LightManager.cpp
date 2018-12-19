@@ -17,7 +17,7 @@ void LightManager::SetDirectionalLight(LightDirectionComponent* light)
 // add a new point light
 void LightManager::AddPointLight(LightPointComponent* light)
 {
-	if(_pointLights.size() < MAX_POINT_LIGHTS)
+	if (_pointLights.size() < MAX_POINT_LIGHTS)
 	{
 		_pointLights.push_back(light);
 		return;
@@ -32,6 +32,23 @@ void LightManager::AddPointLight(LightPointComponent* light)
 void LightManager::RemoveDirectionalLight()
 {
 	_directionalLight = nullptr;
+}
+
+void LightManager::UpdateLightBuffers()
+{
+	// set the pointlight data
+	const int size = _pointLights.size();
+	for (int i = 0; i < size; i++)
+	{
+		_pointCBBuffer[i].color          = _pointLights[i]->GetLightColor();
+		_pointCBBuffer[i].intensity      = _pointLights[i]->GetIntensity();
+		_pointCBBuffer[i].radius         = _pointLights[i]->GetRadius();
+		_pointCBBuffer[i].lightPosition  = _pointLights[i]->GetComponent<TransformComponent>()->GetPositionRef();
+		_pointCBBuffer[i].attConstant    = _pointLights[i]->GetAttConstant();
+		_pointCBBuffer[i].attLinear      = _pointLights[i]->GetAttLinear();
+		_pointCBBuffer[i].attExponential = _pointLights[i]->GetAttExponential();
+		_pointCBBuffer[i].numLights      = size;
+	}
 }
 
 

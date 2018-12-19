@@ -1,6 +1,8 @@
 #pragma once
+#define DIRECTINPUT_VERSION 0x800
 #include <dinput.h>
 #include <map>
+
 
 // define the mouse buttons for read-ability
 #define MOUSE0 0
