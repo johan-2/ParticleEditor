@@ -56,8 +56,7 @@ float3 GetDirectionalColor(PixelInputType input, float3 textureColor, float3 nor
 	float2 smTexCoord;
 	smTexCoord.x = ((input.positionLightSpace.x / input.positionLightSpace.w) / 2.0) + 0.5;
 	smTexCoord.y = ((-input.positionLightSpace.y / input.positionLightSpace.w) / 2.0) + 0.5;
-	
-	
+		
 	if((saturate(smTexCoord.x) == smTexCoord.x) && (saturate(smTexCoord.y) == smTexCoord.y))
 	{
 		numInLight = 0;
@@ -96,7 +95,7 @@ float3 GetDirectionalColor(PixelInputType input, float3 textureColor, float3 nor
     float lightIntensity = saturate(dot(bumpNormal.xyz, dirLightDirection)); 
 	
 	// get color based on texture, intensity and color of light
-    float3 color = textureColor * input.vertexColor * lightIntensity * dirDiffuseColor; 
+    float3 color = (textureColor * input.vertexColor.rgb * lightIntensity * dirDiffuseColor.rgb) * lightPercent; 
 	saturate(color);
 	float3 specular = float3(0,0,0);
 	
