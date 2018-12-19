@@ -1,10 +1,4 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(377,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
-  Framework.cpp
-c:\users\nilss\desktop\particleeditor\engine\engine\code\framework.cpp(188): warning C4244: 'initializing': conversion from '_Rep' to 'unsigned int', possible loss of data
-          with
-          [
-              _Rep=std::chrono::system_clock::rep
-          ]
   ParticleEditor.cpp
 c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(63): warning C4018: '<': signed/unsigned mismatch
 c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(151): warning C4305: 'argument': truncation from 'double' to 'float'
@@ -46,5 +40,4 @@ c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particle
 c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(634): warning C4018: '<': signed/unsigned mismatch
 c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(673): warning C4018: '<': signed/unsigned mismatch
 c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(919): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-  Generating Code...
   Engine.vcxproj -> C:\Users\nilss\Desktop\ParticleEditor\Engine\Engine\Engine.exe
