@@ -470,7 +470,7 @@ public:
 		// assert if scene failed to be created
 		assert(scene != nullptr, "Failed to load aiScene for sphere");
 
-		return CreateMesh(scene->mMeshes[scene->mRootNode->mChildren[0]->mMeshes[0]], scene, flags, diffuseMap, normalMap, specularMap, emissiveMap, tiling, false, parent);
+		return CreateMesh(scene->mMeshes[scene->mRootNode->mChildren[0]->mMeshes[0]], scene, flags, diffuseMap, normalMap, specularMap, emissiveMap, false, tiling, parent);
 	}
 
 	static Mesh* CreateGrid(unsigned int size, float cellSize, Color32 gridColor, unsigned int flags, wchar_t* diffuseMap, wchar_t* normalMap, wchar_t* specularMap, wchar_t* emissiveMap, float tiling, Entity* parent)

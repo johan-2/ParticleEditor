@@ -18,7 +18,7 @@
 #include "SystemDefs.h"
 #include "FreeMoveComponent.h"
 #include <string>
-#include "SkyBox.h"
+#include "SkyDome.h"
 
 ParticleEditor::ParticleEditor(Input& input, FreeMoveComponent* moveComponent, Renderer& renderer, Time& time) :
 	_input(input),
@@ -38,14 +38,14 @@ ParticleEditor::ParticleEditor(Input& input, FreeMoveComponent* moveComponent, R
 	_clearColor[3] = 1.0f;
 
 	// create a grid
-	_grid = new Entity();
-	_grid->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0, 0), XMFLOAT3(180,180,0));
-	_grid->AddComponent<ModelComponent>()->InitGrid(40, 1, Color32(255, 255, 255, 255), DEFERRED | CAST_SHADOW_DIR, L"Textures/bricks.dds", L"Textures/bricksNormal.dds", L"Textures/bricksSpecular.dds", 5.0f);
+	_floor = new Entity();
+	_floor->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(40, 1, 40));
+	_floor->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::PLANE, DEFERRED, L"Textures/bricks.dds", L"Textures/bricksNormal.dds", L"Textures/bricksSpecular.dds", L"", 30.0f);
 
 	// create particle system entity
 	_particleEntity = new Entity();
 	_particleEntity->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0.5f, 0), XMFLOAT3(0,0,0), XMFLOAT3(0.5f,0.5f,0.5f));
-	_particleEntity->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::SPHERE, WIREFRAME_COLOR | CAST_SHADOW_DIR, L"Textures/Dirt_21_Diffuse.dds", L"Textures/Dirt_21_Normal.dds", L"Textures/Dirt_21_Specular.dds");
+	_particleEntity->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::SPHERE, WIREFRAME_COLOR | CAST_SHADOW_DIR | CAST_REFLECTION_OPAQUE, L"Textures/Dirt_21_Diffuse.dds", L"Textures/Dirt_21_Normal.dds", L"Textures/Dirt_21_Specular.dds", L"", 1.0f);
 	_particleEntity->AddComponent<ParticleSystemComponent>()->Init("Particles/fire.json");
 
 	// cache components
@@ -320,22 +320,6 @@ void ParticleEditor::UpdateParticleSettingsWindow()
 	ShowToolTip("Will rotate the particle x amount per second on the local z axis (will not affect billboarding)\n- Rotation by velocity need to be set to false to use this feature");
 	ImGui::PopItemWidth();
 
-	//uv scroll x minmax
-	ImGui::PushItemWidth(SCREEN_WIDTH * 0.09f);
-	ImGui::InputFloat2("22", &_particleSettings[_currentEmitterIndex].uvScrollXMinMax.x, 2);
-	ImGui::SameLine();
-	ImGui::TextColored(ImVec4(0.9, 0.9, 0.9, 1), "Uv Scroll X min max");
-	ShowToolTip("Will scroll the U coordinate of texture");
-	ImGui::PopItemWidth();
-
-	//uv scroll y minmax
-	ImGui::PushItemWidth(SCREEN_WIDTH * 0.09f);
-	ImGui::InputFloat2("23", &_particleSettings[_currentEmitterIndex].uvScrollYMinMax.x, 2);
-	ImGui::SameLine();
-	ImGui::TextColored(ImVec4(0.9, 0.9, 0.9, 1), "Uv Scroll Y min max");
-	ShowToolTip("Will scroll the V coordinate of texture");
-	ImGui::PopItemWidth();
-
 	// burst
 	ImGui::Checkbox("24", &_particleSettings[_currentEmitterIndex].burst);
 	ImGui::SameLine();
@@ -561,7 +545,7 @@ void ParticleEditor::UpdateEditorSettingsWindow()
 		{
 			// remove and add new model component
 			_particleEntity->RemoveComponent(_systemModelComponent);
-			_particleEntity->AddComponent<ModelComponent>()->InitModel((char*)name.c_str(), DEFERRED | CAST_SHADOW_DIR);
+			_particleEntity->AddComponent<ModelComponent>()->InitModel((char*)name.c_str(), DEFERRED | CAST_SHADOW_DIR | CAST_REFLECTION_OPAQUE);
 
 			// get pointer to model component
 			_systemModelComponent = _particleEntity->GetComponent<ModelComponent>();
@@ -583,18 +567,11 @@ void ParticleEditor::UpdateEditorSettingsWindow()
 	if (_miscSettings.emitterAsWireFrame)
 		_systemModelComponent->SetRenderFlags(WIREFRAME_COLOR | CAST_SHADOW_DIR);
 	else
-		_systemModelComponent->SetRenderFlags(DEFERRED | CAST_SHADOW_DIR);
-
-	// grid rendermode
-	ImGui::Checkbox("Grid as wireframe", &_miscSettings.gridAsWireFrame);
-	if (_miscSettings.gridAsWireFrame)
-		_grid->GetComponent<ModelComponent>()->SetRenderFlags(WIREFRAME_COLOR | CAST_SHADOW_DIR);
-	else
-		_grid->GetComponent<ModelComponent>()->SetRenderFlags(DEFERRED | CAST_SHADOW_DIR);
+		_systemModelComponent->SetRenderFlags(DEFERRED | CAST_SHADOW_DIR | CAST_REFLECTION_OPAQUE);
 
 	// show grid
 	ImGui::Checkbox("Show Grid", &_miscSettings.showGrid);
-	_grid->GetComponent<ModelComponent>()->SetActive(_miscSettings.showGrid);
+	_floor->GetComponent<ModelComponent>()->SetActive(_miscSettings.showGrid);
 
 	// show particle model
 	ImGui::Checkbox("Show Entity Model", &_miscSettings.showParticleModel);
@@ -874,22 +851,6 @@ void ParticleEditor::SaveParticle(const char* destination)
 		writer.StartArray();
 		writer.Double(_particleSettings[i].rotationPerSecMinMax.x);
 		writer.Double(_particleSettings[i].rotationPerSecMinMax.y);
-		writer.EndArray();
-
-		key = "uvScrollXMinMax";
-		key.append(index.c_str());
-		writer.Key(key.c_str());
-		writer.StartArray();
-		writer.Double(_particleSettings[i].uvScrollXMinMax.x);
-		writer.Double(_particleSettings[i].uvScrollXMinMax.y);
-		writer.EndArray();
-
-		key = "uvScrollYMinMax";
-		key.append(index.c_str());
-		writer.Key(key.c_str());
-		writer.StartArray();
-		writer.Double(_particleSettings[i].uvScrollYMinMax.x);
-		writer.Double(_particleSettings[i].uvScrollYMinMax.y);
 		writer.EndArray();
 
 		key = "inheritVelocityScale";

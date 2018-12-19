@@ -30,10 +30,6 @@ PostProcessingShader::PostProcessingShader()
 	_verticalBlurPass1   = new RenderToTexture(SCREEN_WIDTH / BLOOM_BLUR_SCALE_DOWN_PASS_1, SCREEN_HEIGHT / BLOOM_BLUR_SCALE_DOWN_PASS_1, false);
 	_horizontalBlurPass2 = new RenderToTexture(SCREEN_WIDTH / BLOOM_BLUR_SCALE_DOWN_PASS_2, SCREEN_HEIGHT / BLOOM_BLUR_SCALE_DOWN_PASS_2, false);
 	_verticalBlurPass2   = new RenderToTexture(SCREEN_WIDTH / BLOOM_BLUR_SCALE_DOWN_PASS_2, SCREEN_HEIGHT / BLOOM_BLUR_SCALE_DOWN_PASS_2, false);
-
-	Entity* reflectionQuad = new Entity();
-	reflectionQuad->AddComponent<QuadComponent>()->Init(XMFLOAT2(SCREEN_WIDTH * 0.78f, SCREEN_HEIGHT * 0.1f), XMFLOAT2(SCREEN_WIDTH * 0.1f, SCREEN_HEIGHT * 0.1f), L"");
-	reflectionQuad->GetComponent<QuadComponent>()->SetTexture(_brightnessMap->GetRenderTargetSRV());
 }
 
 PostProcessingShader::~PostProcessingShader()

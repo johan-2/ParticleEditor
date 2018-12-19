@@ -36,7 +36,7 @@ public:
 	struct ReflectiveData
 	{
 		float reflectiveFraction = 0.2f;
-		bool  reflectSkybox      = false;
+		bool  reflectSkybox      = true;
 		bool  reflectParticles   = true;
 
 		ReflectiveData(){}

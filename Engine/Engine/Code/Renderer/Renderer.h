@@ -10,7 +10,6 @@ class Mesh;
 class QuadComponent;
 class RenderToTexture;
 class Entity;
-class SkyDome;
 class ParticleSystemComponent;
 class GBuffer;
 class ScreenQuad;

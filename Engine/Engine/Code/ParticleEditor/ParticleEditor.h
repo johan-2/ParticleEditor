@@ -59,7 +59,7 @@ private:
 	// entities needed for editor
 	Entity* _cameraGame;
 	Entity* _particleEntity;
-	Entity* _grid;
+	Entity* _floor;
 
 	// cached components
 	ParticleSystemComponent* _systemParticleComponent;

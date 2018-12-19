@@ -109,7 +109,7 @@ float3 GetDirectionalColor(PixelInputType input, float3 textureColor, float3 nor
 		// phong
 		float3 reflection = normalize(2 * lightIntensity * bumpNormal - dirLightDirection);		
 		float specularIntensity = pow(saturate(dot(reflection, vtc)), specularMap.a * 255.0);
-		specular = (dirDiffuseColor * specularIntensity) * specularMap.rgb ;	
+		specular = (dirDiffuseColor * specularIntensity) * specularMap.rgb;	
 	} 
 			
 	return color + specular; 

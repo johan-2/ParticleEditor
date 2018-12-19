@@ -59,6 +59,18 @@ void Framework::Start()
 	CameraManager& CM = *Systems::cameraManager;
 	LightManager& LM  = *Systems::lightManager;
 
+	Renderer& renderer = *Systems::renderer;
+
+	// create shadowMap
+	Entity* shadowMapRenderer = renderer.CreateShadowMap(30.0f, 8192.0f, XMFLOAT3(-60, 100, 100), XMFLOAT3(40.0f, 150.0f, 0));
+
+	// create skybox
+	SkyDome* skyDome = renderer.CreateSkyBox(L"SkyBoxes/ThickCloudsWater.dds", SKY_DOME_RENDER_MODE::CUBEMAP_SIMPLE);
+	skyDome->SetSkyColorLayers(XMFLOAT4(0, 0, 0, 0), XMFLOAT4(0, 0, 0, 30), XMFLOAT4(0, 0, 0, 70));
+
+	// set skybox properties
+	skyDome->SetSunDirectionTransformPtr(shadowMapRenderer->GetComponent<TransformComponent>());
+
 	// create game camera
 	Entity* cameraGame = new Entity();
 	cameraGame->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 5, -12), XMFLOAT3(5,0,0));
@@ -78,7 +90,7 @@ void Framework::Start()
 	TransformComponent* shadowMapTransform = Systems::cameraManager->GetCurrentCameraDepthMap()->GetComponent<TransformComponent>();
 
 	Entity* directionalLight = new Entity;
-	directionalLight->AddComponent<LightDirectionComponent>()->Init(XMFLOAT4(1.0f, 0.9f, 0.8f, 1), shadowMapTransform);
+	directionalLight->AddComponent<LightDirectionComponent>()->Init(XMFLOAT4(1.0f, 0.9f, 0.8f, 1), shadowMapRenderer->GetComponent<TransformComponent>());
 
 	// create the particle editor and pass in some dependencies
 	_particleEditor = new ParticleEditor(*Systems::input, cameraGame->GetComponent<FreeMoveComponent>(), *Systems::renderer, *Systems::time);	

@@ -50,8 +50,7 @@ float4 GetDirectionalColor(float4 position, float4 diffuse, float4 normal, float
 	float numInLight   = 9;
 	float lightPercent = 0;
 	
-	float4x4 lightViewProj =  mul(lightView, lightProj);
-	
+	float4x4 lightViewProj    =  mul(lightView, lightProj);	
 	float4 positionLightSpace = mul(position, lightViewProj);
 	
 	// get the projected texture coordinates based on the position in eye of the light

@@ -181,7 +181,7 @@
     <ClCompile Include="Code\Renderer\Deferred\GBuffer.cpp" />
     <ClCompile Include="Code\Renderer\Deferred\ScreenQuad.cpp" />
     <ClCompile Include="Code\Renderer\Objects\Mesh.cpp" />
-    <ClCompile Include="Code\Renderer\Objects\SkyBox.cpp" />
+    <ClCompile Include="Code\Renderer\Objects\SkyDome.cpp" />
     <ClCompile Include="Code\Renderer\Renderer.cpp" />
     <ClCompile Include="Code\Renderer\RenderToTexture.cpp" />
     <ClCompile Include="Code\Renderer\ShaderPrograms\DeferredShader.cpp" />
@@ -189,7 +189,10 @@
     <ClCompile Include="Code\Renderer\ShaderPrograms\ForwardAlphaShader.cpp" />
     <ClCompile Include="Code\Renderer\ShaderPrograms\ImGUIShader.cpp" />
     <ClCompile Include="Code\Renderer\ShaderPrograms\ParticleShader.cpp" />
+    <ClCompile Include="Code\Renderer\ShaderPrograms\PlanarReflectionShader.cpp" />
+    <ClCompile Include="Code\Renderer\ShaderPrograms\PostProcessingShader.cpp" />
     <ClCompile Include="Code\Renderer\ShaderPrograms\QuadShader.cpp" />
+    <ClCompile Include="Code\Renderer\ShaderPrograms\ReflectionMapShader.cpp" />
     <ClCompile Include="Code\Renderer\ShaderPrograms\WireframeShader.cpp" />
     <ClCompile Include="Code\System\DXModules\DXBlendStates.cpp" />
     <ClCompile Include="Code\System\DXModules\DXDepthStencilStates.cpp" />
@@ -238,7 +241,7 @@
     <ClInclude Include="Code\Renderer\Deferred\GBuffer.h" />
     <ClInclude Include="Code\Renderer\Deferred\ScreenQuad.h" />
     <ClInclude Include="Code\Renderer\Objects\Mesh.h" />
-    <ClInclude Include="Code\Renderer\Objects\SkyBox.h" />
+    <ClInclude Include="Code\Renderer\Objects\SkyDome.h" />
     <ClInclude Include="Code\Renderer\Renderer.h" />
     <ClInclude Include="Code\Renderer\RenderToTexture.h" />
     <ClInclude Include="Code\Renderer\ShaderPrograms\DeferredShader.h" />
@@ -246,7 +249,10 @@
     <ClInclude Include="Code\Renderer\ShaderPrograms\ForwardAlphaShader.h" />
     <ClInclude Include="Code\Renderer\ShaderPrograms\ImGUIShader.h" />
     <ClInclude Include="Code\Renderer\ShaderPrograms\ParticleShader.h" />
+    <ClInclude Include="Code\Renderer\ShaderPrograms\PlanarReflectionShader.h" />
+    <ClInclude Include="Code\Renderer\ShaderPrograms\PostProcessingShader.h" />
     <ClInclude Include="Code\Renderer\ShaderPrograms\QuadShader.h" />
+    <ClInclude Include="Code\Renderer\ShaderPrograms\ReflectionMapShader.h" />
     <ClInclude Include="Code\Renderer\ShaderPrograms\WireframeShader.h" />
     <ClInclude Include="Code\System\DXModules\DXBlendStates.h" />
     <ClInclude Include="Code\System\DXModules\DXDepthStencilStates.h" />
@@ -256,6 +262,7 @@
     <ClInclude Include="Code\System\HardwareProperties.h" />
     <ClInclude Include="Code\System\Systems.h" />
     <ClInclude Include="Code\Utils\DebugStats.h" />
+    <ClInclude Include="Code\Utils\ModelLoader.h" />
     <ClInclude Include="Code\Utils\ShaderHelpers.h" />
     <ClInclude Include="Code\Utils\SystemDefs.h" />
     <ClInclude Include="Code\Utils\TexturePool.h" />
