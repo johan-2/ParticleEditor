@@ -293,10 +293,6 @@ void ParticleSystemComponent::SpawnParticle(ParticleData& particle, unsigned int
 	// get rotation speed from min7max values
 	float rotationSpeed = GetRandomFloat(_settings[index].rotationPerSecMinMax.x, _settings[index].rotationPerSecMinMax.y);
 
-	// get the amount of uv scroll we will use
-	XMFLOAT2 uvScrollSpeed(GetRandomFloat(_settings[index].uvScrollXMinMax.x, _settings[index].uvScrollXMinMax.y), 
-		                   GetRandomFloat(_settings[index].uvScrollYMinMax.x, _settings[index].uvScrollYMinMax.y));
-
 	// get spawn position
 	XMStoreFloat3(&particle.position,
 		XMVectorAdd(XMLoadFloat3(&XMFLOAT3(GetRandomFloat(spawnMinMaxX.x, spawnMinMaxX.y), 
@@ -322,8 +318,6 @@ void ParticleSystemComponent::SpawnParticle(ParticleData& particle, unsigned int
 	particle.startScale              = startScale;
 	particle.endScale                = endScale;
 	particle.zRotationSpeed          = rotationSpeed;
-	particle.uvOffset                = XMFLOAT2(0, 0);
-	particle.uvOffsetSpeed           = uvScrollSpeed;	
 }
 
 void ParticleSystemComponent::Update(const float& delta)
@@ -399,10 +393,6 @@ void ParticleSystemComponent::UpdateVelocity(const float& delta)
 			// if the particles should follower the enity transform
 			if (_settings[i].followEmitter)
 				XMStoreFloat3(&_particleData[i][y].position, XMVectorAdd(XMLoadFloat3(&_particleData[i][y].position), XMLoadFloat3(&velocityVector)));				
-
-			// add uv offset
-			_particleData[i][y].uvOffset.x += _particleData[i][y].uvOffsetSpeed.x * delta;
-			_particleData[i][y].uvOffset.y += _particleData[i][y].uvOffsetSpeed.y * delta;
 		}		
 	}
 	// save position for next frame
@@ -602,13 +592,13 @@ void ParticleSystemComponent::UpdateBuffer()
 	XMFLOAT3 color;
 	float alpha;
 			
-	for(int i =0; i < _numEmitters; i++)
+	for (int i =0; i < _numEmitters; i++)
 	{
 		for (int y = 0; y < _settings[i].numParticles; y++)
 		{
 			// calculate all matrices from the sorted particle values
 			XMStoreFloat4x4(&matrixPosition, XMMatrixTranslationFromVector(XMLoadFloat3(&_particleData[i][y].position)));
-			XMStoreFloat4x4(&matrixScale, XMMatrixScalingFromVector(XMLoadFloat3(&_particleData[i][y].scale)));
+			XMStoreFloat4x4(&matrixScale,    XMMatrixScalingFromVector(XMLoadFloat3(&_particleData[i][y].scale)));
 
 			// calculate worldmatrix
 			XMStoreFloat4x4(&_particleInstanceData[i][y].worldMatrix, XMMatrixMultiply(XMLoadFloat4x4(&matrixScale), XMLoadFloat4x4(&_particleData[i][y].rotationMatrix)));
@@ -619,13 +609,12 @@ void ParticleSystemComponent::UpdateBuffer()
 
 			// multiply all colors with alpha value, black == transparent
 			if (_settings[i].BLEND == BLEND_STATE::BLEND_ADDITIVE || _settings[i].BLEND == BLEND_STATE::BLEND_SUBTRACTIVE)
-				XMStoreFloat4(&_particleInstanceData[i][y].color, XMVectorMultiply(XMLoadFloat4(&XMFLOAT4(color.x, color.y, color.z, 1)), XMLoadFloat4(&XMFLOAT4(alpha, alpha, alpha, alpha))));	
-
-			// send in the color normaly, alpha is set in shader
+			{
+				XMStoreFloat4(&_particleInstanceData[i][y].color,
+					XMVectorMultiply(XMLoadFloat4(&XMFLOAT4(color.x, color.y, color.z, 1)), XMLoadFloat4(&XMFLOAT4(alpha, alpha, alpha, alpha))));
+			}
 			else if (_settings[i].BLEND == BLEND_STATE::BLEND_ALPHA)
-				_particleInstanceData[i][y].color = XMFLOAT4(color.x, color.y, color.z, alpha);
-
-			_particleInstanceData[i][y].uvOffset = _particleData[i][y].uvOffset;
+				XMStoreFloat4(&_particleInstanceData[i][y].color, XMLoadFloat4(&XMFLOAT4(color.x, color.y, color.z, alpha)));
 		}
 
 		ID3D11DeviceContext* devCon = Systems::dxManager->GetDeviceCon();
@@ -834,18 +823,6 @@ void ParticleSystemComponent::ParsefromJson(const char* file)
 		assert(d[key.c_str()].IsArray());
 		a = d[key.c_str()];
 		_settings[i].rotationPerSecMinMax = XMFLOAT2(a[0].GetFloat(), a[1].GetFloat());
-
-		key = "uvScrollXMinMax";
-		key.append(index.c_str());
-		assert(d[key.c_str()].IsArray());
-		a = d[key.c_str()];
-		_settings[i].uvScrollXMinMax = XMFLOAT2(a[0].GetFloat(), a[1].GetFloat());
-
-		key = "uvScrollYMinMax";
-		key.append(index.c_str());
-		assert(d[key.c_str()].IsArray());
-		a = d[key.c_str()];
-		_settings[i].uvScrollYMinMax = XMFLOAT2(a[0].GetFloat(), a[1].GetFloat());
 
 		key = "inheritVelocityScale";
 		key.append(index.c_str());

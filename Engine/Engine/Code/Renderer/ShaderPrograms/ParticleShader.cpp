@@ -54,9 +54,10 @@ void ParticleShader::RenderParticles(const std::vector<ParticleSystemComponent*>
 	ConstantVertex vertexData;
 
 	// set the vertex constant data
-	vertexData.view       = camera->GetViewMatrix();
-	vertexData.projection = camera->GetProjectionMatrix();
-
+	XMStoreFloat4x4(&vertexData.projection, XMLoadFloat4x4(&camera->GetProjectionMatrix()));
+	if (useReflectViewMatrix) XMStoreFloat4x4(&vertexData.view, XMLoadFloat4x4(&camera->GetReflectionViewMatrix(reflectHeight)));
+	else                      XMStoreFloat4x4(&vertexData.view, XMLoadFloat4x4(&camera->GetViewMatrix()));
+	
 	// update the vertex constant buffer
 	SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(ConstantVertex), _constantBufferVertex);
 
@@ -66,12 +67,6 @@ void ParticleShader::RenderParticles(const std::vector<ParticleSystemComponent*>
 	// loop over all particle systems
 	for (int i = 0; i < systems.size(); i++)
 	{
-		if (useReflectViewMatrix)
-		{
-			vertexData.view = camera->GetReflectionViewMatrix(reflectHeight);
-			SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(ConstantVertex), _constantBufferVertex);
-		}
-
 		// loop over all emitters in each system
 		for (int y = 0; y < systems[i]->GetNumEmitters(); y++)
 		{

@@ -108,10 +108,11 @@ void SkyDome::RenderCubeMapSimple(bool useReflectViewMatrix)
 	DXManager& DXM = *Systems::dxManager;
 
 	// get device context
-	ID3D11DeviceContext* devCon = DXM.GetDeviceCon();
+	ID3D11DeviceContext*& devCon = DXM.GetDeviceCon();
 
 	// get game camera
-	CameraComponent* camera = Systems::cameraManager->GetCurrentCameraGame();
+	CameraComponent*& camera     = Systems::cameraManager->GetCurrentCameraGame();
+	TransformComponent* camTrans = camera->GetComponent<TransformComponent>();
 
 	// set shaders			
 	devCon->VSSetShader(_vertexDomeCubeMapShader, NULL, 0);
@@ -132,21 +133,15 @@ void SkyDome::RenderCubeMapSimple(bool useReflectViewMatrix)
 	// constantbuffer structure
 	ConstantVertex vertexData;
 
-	// get and transpose the position matrix of camera transform
-	XMFLOAT4X4 matrixPosition = camera->GetComponent<TransformComponent>()->GetPositionMatrix();
-	XMStoreFloat4x4(&matrixPosition, XMMatrixTranspose(XMLoadFloat4x4(&matrixPosition)));
-
-	// set vertices
-	vertexData.world      = matrixPosition;
-	vertexData.view       = camera->GetViewMatrix();
-	vertexData.projection = camera->GetProjectionMatrix();
-
-	// if the skybox is being rendered to a reflection map
+	// set the matrices
+	XMStoreFloat4x4(&vertexData.world, XMMatrixTranspose(XMLoadFloat4x4(&camTrans->GetPositionMatrix())));
+	XMStoreFloat4x4(&vertexData.projection, XMLoadFloat4x4(&camera->GetProjectionMatrix()));
 	if (useReflectViewMatrix)
 	{
-		vertexData.view = camera->GetReflectionViewMatrix(camera->GetComponent<TransformComponent>()->GetPositionVal().y);
+		XMStoreFloat4x4(&vertexData.view, XMLoadFloat4x4(&camera->GetReflectionViewMatrix(camTrans->GetPositionRef().y)));
 		DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::DISABLED);
 	}
+	else XMStoreFloat4x4(&vertexData.view, XMLoadFloat4x4(&camera->GetViewMatrix()));
 
 	// update constant buffer
 	SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(ConstantVertex), _constantBufferVertex);
@@ -166,7 +161,8 @@ void SkyDome::RenderBlendedColors(bool useReflectViewMatrix)
 	ID3D11DeviceContext* devCon = DXM.GetDeviceCon();
 
 	// get game camera
-	CameraComponent* camera = Systems::cameraManager->GetCurrentCameraGame();
+	CameraComponent* camera      = Systems::cameraManager->GetCurrentCameraGame();
+	TransformComponent* camTrans = camera->GetComponent<TransformComponent>();
 
 	// set shaders			
 	devCon->VSSetShader(_vertexDomeColorBlendShader, NULL, 0);
@@ -181,16 +177,17 @@ void SkyDome::RenderBlendedColors(bool useReflectViewMatrix)
 
 	// only render non geometry pixels
 	DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::MASKED_SKYBOX);
-
-	// get and transpose the position matrix of camera transform
-	XMFLOAT4X4 matrixPosition = camera->GetComponent<TransformComponent>()->GetPositionMatrix();
-	XMStoreFloat4x4(&matrixPosition, XMMatrixTranspose(XMLoadFloat4x4(&matrixPosition)));
 	
 	// set vertex constants
 	ConstantVertex vertexData;
-	vertexData.world      = matrixPosition;
-	vertexData.view       = camera->GetViewMatrix();
-	vertexData.projection = camera->GetProjectionMatrix();
+	XMStoreFloat4x4(&vertexData.world, XMMatrixTranspose(XMLoadFloat4x4(&camTrans->GetPositionMatrix())));
+	XMStoreFloat4x4(&vertexData.projection, XMLoadFloat4x4(&camera->GetProjectionMatrix()));
+	if (useReflectViewMatrix) 
+	{
+		XMStoreFloat4x4(&vertexData.view, XMLoadFloat4x4(&camera->GetReflectionViewMatrix(camTrans->GetPositionRef().y))); 
+		DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::DISABLED);
+	}
+	else XMStoreFloat4x4(&vertexData.view, XMLoadFloat4x4(&camera->GetViewMatrix()));
 
 	// set the colors, the percent fraction is stored in the w channel that specifies how
 	// low to high a color will be used on the skydome 
@@ -198,13 +195,6 @@ void SkyDome::RenderBlendedColors(bool useReflectViewMatrix)
 	pixeldata.bottom   = _skyColorLayers.bottomColor;
 	pixeldata.mid      = _skyColorLayers.midColor;
 	pixeldata.top      = _skyColorLayers.topColor;
-	
-	// if the skybox is being rendered to a reflection map
-	if (useReflectViewMatrix)
-	{
-		vertexData.view = camera->GetReflectionViewMatrix(camera->GetComponent<TransformComponent>()->GetPositionVal().y);
-		DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::DISABLED);
-	}
 
 	// update constant buffers
 	SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(ConstantVertex),          _constantBufferVertex);
@@ -225,7 +215,8 @@ void SkyDome::RenderCubeMapColorBlend(bool useReflectViewMatrix)
 	ID3D11DeviceContext* devCon = DXM.GetDeviceCon();
 
 	// get game camera
-	CameraComponent* camera = Systems::cameraManager->GetCurrentCameraGame();
+	CameraComponent* camera      = Systems::cameraManager->GetCurrentCameraGame();
+	TransformComponent* camTrans = camera->GetComponent<TransformComponent>();
 
 	// set shaders			
 	devCon->VSSetShader(_vertexDomeCubeMapBlendShader, NULL, 0);
@@ -244,15 +235,16 @@ void SkyDome::RenderCubeMapColorBlend(bool useReflectViewMatrix)
 	// only render non geometry pixels
 	DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::MASKED_SKYBOX);
 
-	// get and transpose the position matrix of camera transform
-	XMFLOAT4X4 matrixPosition = camera->GetComponent<TransformComponent>()->GetPositionMatrix();
-	XMStoreFloat4x4(&matrixPosition, XMMatrixTranspose(XMLoadFloat4x4(&matrixPosition)));
-
 	// set vertex constants
 	ConstantVertex vertexData;
-	vertexData.world      = matrixPosition;
-	vertexData.view       = camera->GetViewMatrix();
-	vertexData.projection = camera->GetProjectionMatrix();
+	XMStoreFloat4x4(&vertexData.world, XMMatrixTranspose(XMLoadFloat4x4(&camTrans->GetPositionMatrix())));
+	XMStoreFloat4x4(&vertexData.projection, XMLoadFloat4x4(&camera->GetProjectionMatrix()));
+	if (useReflectViewMatrix)
+	{
+		XMStoreFloat4x4(&vertexData.view, XMLoadFloat4x4(&camera->GetReflectionViewMatrix(camTrans->GetPositionRef().y)));
+		DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::DISABLED);
+	}
+	else XMStoreFloat4x4(&vertexData.view, XMLoadFloat4x4(&camera->GetViewMatrix()));
 
 	// set the colors, the percent fraction is stored in the w channel that specifies how
 	// low to high a color will be used on the skydome 
@@ -263,13 +255,6 @@ void SkyDome::RenderCubeMapColorBlend(bool useReflectViewMatrix)
 	pixelData.cubeMapIsTop   = _cubeMapColorBlend.topIsCubeMap;
 	pixelData.topBottomColor = _cubeMapColorBlend.topIsCubeMap ? _skyColorLayers.bottomColor : _skyColorLayers.topColor;
 	pixelData.midColor       = _skyColorLayers.midColor;
-
-	// if the skybox is being rendered to a reflection map
-	if (useReflectViewMatrix)
-	{
-		vertexData.view = camera->GetReflectionViewMatrix(camera->GetComponent<TransformComponent>()->GetPositionVal().y);
-		DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::DISABLED);
-	}
 
 	// update constant buffers
 	SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(ConstantVertex),                 _constantBufferVertex);
@@ -287,11 +272,10 @@ void SkyDome::RenderSunMoon(bool reflect)
 
 	// get device context
 	ID3D11DeviceContext* devCon = DXM.GetDeviceCon();
-	ConstantVertex vertexData;
 
 	// get game camera
 	CameraComponent* camera             = Systems::cameraManager->GetCurrentCameraGame();
-	TransformComponent* cameraTransform = camera->GetComponent<TransformComponent>();
+	TransformComponent* camTrans = camera->GetComponent<TransformComponent>();
 
 	// render sun with alpha blend
 	DXM.BlendStates()->SetBlendState(BLEND_ALPHA);
@@ -302,28 +286,25 @@ void SkyDome::RenderSunMoon(bool reflect)
 
 	devCon->PSSetConstantBuffers(0, 1, &_constantSunPixel);
 
-	// get camera properties
-	XMFLOAT3 cameraPos = cameraTransform->GetPositionVal();
+	// calculate sun/moon data
+	CaluclateSunMoonMatrix(camTrans->GetPositionRef());
 
-	CaluclateSunMoonMatrix(cameraPos);
-
-	// constantbuffer vertex structure
-	vertexData.world      = _sunMoon.sun.positionMatrix;
-	vertexData.view       = camera->GetViewMatrix();
-	vertexData.projection = camera->GetProjectionMatrix();
+	// set vertex constants
+	ConstantVertex vertexData;
+	XMStoreFloat4x4(&vertexData.world, XMLoadFloat4x4(&_sunMoon.sun.positionMatrix));
+	XMStoreFloat4x4(&vertexData.projection, XMLoadFloat4x4(&camera->GetProjectionMatrix()));
+	if (reflect)
+	{
+		XMStoreFloat4x4(&vertexData.view, XMLoadFloat4x4(&camera->GetReflectionViewMatrix(camTrans->GetPositionRef().y)));
+		DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::DISABLED);
+	}
+	else XMStoreFloat4x4(&vertexData.view, XMLoadFloat4x4(&camera->GetViewMatrix()));
 
 	// constantbuffer pixel structure
 	ConstantSunPixel pixeldata;
 	pixeldata.sunDot       = _sunMoon.sun.relativeHeight;
 	pixeldata.colorTint    = _sunMoon.sun.colorTint;
 	pixeldata.beginEndFade = _sunMoon.sun.beginEndFade;
-
-	// if the skybox is being rendered to a reflection map
-	if (reflect)
-	{
-		vertexData.view = camera->GetReflectionViewMatrix(cameraPos.y);
-		DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::DISABLED);
-	}
 
 	// update constant buffer
 	SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(ConstantVertex),   _constantBufferVertex);

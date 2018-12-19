@@ -14,7 +14,6 @@ struct ParticleInstanceType
 {
 	XMFLOAT4X4 worldMatrix;
 	XMFLOAT4   color;
-	XMFLOAT2   uvOffset;
 };
 
 // vertex structure
@@ -46,8 +45,6 @@ struct ParticleData
 	XMFLOAT3   previousPosition;
 	XMFLOAT4X4 rotationMatrix;
 	float      zRotationSpeed;
-	XMFLOAT2   uvOffset;
-	XMFLOAT2   uvOffsetSpeed;
 };
 
 struct EmitterData
@@ -94,8 +91,6 @@ struct ParticleSettings
 	XMFLOAT2     endScaleMinMax; 
 	bool         rotationByVelocity;
 	XMFLOAT2     rotationPerSecMinMax;
-	XMFLOAT2     uvScrollXMinMax;
-	XMFLOAT2     uvScrollYMinMax;
 	XMFLOAT3     inheritVelocityScale;
 };
 

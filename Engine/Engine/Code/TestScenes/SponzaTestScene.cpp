@@ -82,7 +82,7 @@ SponzaTestScene::SponzaTestScene()
 	sphere5->AddComponent<LightPointComponent>()->Init(20, 20, XMFLOAT3(1.0f, 0.5f, 0.85f), 0.0f, 1.0f, 0.2f);
 
 	Entity* floor = new Entity();
-	floor->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0.05f, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(800, 1, 800));
+	floor->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0.1f, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(800, 1, 800));
 	floor->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::PLANE, ALPHA_REFLECTION, L"Textures/sponza_floor_a_diff.dds", L"Textures/sponza_floor_a_ddn.dds", L"Textures/FlatHighSpecular.dds", L"", 350.0f);
 	floor->GetComponent<ModelComponent>()->GetMeshes()[0]->SetReflectionData(Mesh::ReflectiveData(0.2f, true, true));
 

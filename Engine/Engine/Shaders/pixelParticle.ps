@@ -5,10 +5,9 @@ SamplerState SampleType[2]; // wrap,clamp
 struct PixelInputType
 {
 	float4 position : SV_POSITION;
-    float2 tex : TEXCOORD0;		
-	float4 color : COLOR;
+    float2 tex      : TEXCOORD0;		
+	float4 color    : COLOR;
 };
-
 
 float4 Main(PixelInputType input) : SV_TARGET
 {            
