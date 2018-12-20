@@ -86,6 +86,10 @@ SponzaTestScene::SponzaTestScene()
 	floor->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::PLANE, ALPHA_REFLECTION, L"Textures/sponza_floor_a_diff.dds", L"Textures/sponza_floor_a_ddn.dds", L"Textures/FlatHighSpecular.dds", L"", 350.0f);
 	floor->GetComponent<ModelComponent>()->GetMeshes()[0]->SetReflectionData(Mesh::ReflectiveData(0.2f, true, true));
 
+	Entity* dust = new Entity();
+	dust->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 20.0f, 0.0f), XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1));
+	dust->AddComponent<ParticleSystemComponent>()->Init("Particles/dust.json");
+
 	Entity* fire = new Entity();
 	fire->AddComponent<TransformComponent>()->Init(XMFLOAT3(60.0f, 0.0f, -6.0f), XMFLOAT3(0, 0, 0), XMFLOAT3(0.25, 0.25, 0.25));
 	fire->AddComponent<ParticleSystemComponent>()->Init("Particles/fire.json");
