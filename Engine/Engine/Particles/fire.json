@@ -1,6 +1,6 @@
 {
     "numEmitters": 4,
-    "numParticles0": 120,
+    "numParticles0": 70,
     "texture0": "fire02.dds",
     "startSize0": [
         1.5,
@@ -78,7 +78,7 @@
         0.0,
         0.0
     ],
-    "numParticles1": 100,
+    "numParticles1": 40,
     "texture1": "smoke2.dds",
     "startSize1": [
         0.4000000059604645,
