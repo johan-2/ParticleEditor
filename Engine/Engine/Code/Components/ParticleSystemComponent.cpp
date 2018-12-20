@@ -341,9 +341,13 @@ void ParticleSystemComponent::UpdateVelocity(const float& delta)
 {
 	XMFLOAT3 EmitterPos = _transform->GetPositionVal();
 
+	// get velocity rom last pos to currentpos
+	XMFLOAT3 velocityVector;
+	XMStoreFloat3(&velocityVector, XMVectorSubtract(XMLoadFloat3(&EmitterPos), XMLoadFloat3(&_previousPosition)));
+
 	for (int i = 0; i < _numEmitters; i++)
 	{
-		for(int y =0; y < _settings[i].numParticles; y++)
+		for (int y =0; y < _settings[i].numParticles; y++)
 		{
 			// if the particle is not active skip it
 			if (!_particleData[i][y].active)
@@ -374,10 +378,6 @@ void ParticleSystemComponent::UpdateVelocity(const float& delta)
 			_particleData[i][y].dragMultiplier -= _settings[i].drag * delta;
 			if (_particleData[i][y].dragMultiplier < 0.0f)
 				_particleData[i][y].dragMultiplier = 0;
-
-			// get velocity rom last pos to currentpos
-			XMFLOAT3 velocityVector;
-			XMStoreFloat3(&velocityVector, XMVectorSubtract(XMLoadFloat3(&EmitterPos), XMLoadFloat3(&_previousPosition)));
 
 			// update the position based on direction and speed
 			_particleData[i][y].position.x += (_particleData[i][y].direction.x * _particleData[i][y].speed.x * _particleData[i][y].dragMultiplier * delta) + velocityVector.x * _settings[i].inheritVelocityScale.x;
