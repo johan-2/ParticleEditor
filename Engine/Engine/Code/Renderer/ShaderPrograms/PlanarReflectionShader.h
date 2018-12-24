@@ -44,11 +44,9 @@ private:
 	struct CBVertexPlanar
 	{
 		XMFLOAT4X4 world;
-		XMFLOAT4X4 view;
-		XMFLOAT4X4 projection;
-		XMFLOAT4X4 lightView;
-		XMFLOAT4X4 lightProjection;
-		XMFLOAT4X4 reflectionView;
+		XMFLOAT4X4 worldViewProj;
+		XMFLOAT4X4 worldViewProjLight;
+		XMFLOAT4X4 worldViewProjReflect;
 
 		XMFLOAT3 camPos;
 		float    pad1;

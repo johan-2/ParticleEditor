@@ -1,6 +1,5 @@
-uniform matrix u_worldMatrix;
-uniform matrix u_viewMatrix;
-uniform matrix u_projectionMatrix;
+uniform float4x4 u_worldMatrix;
+uniform float4x4 u_worldViewProj;
 uniform float4 u_clippingPlane;
 uniform float2 u_uvOffset;
 
@@ -38,13 +37,11 @@ PixelInputType Main(VertexInputType input)
     input.position.w = 1.0f;
    
     // get the worldviewproj and multiply with position
-    output.position = mul(input.position,  u_worldMatrix); 	
-    output.position = mul(output.position, u_viewMatrix); 
-    output.position = mul(output.position, u_projectionMatrix);
+    output.position = mul(input.position, u_worldViewProj);
 	
 	// transform normals to worldSpace
-	output.normal   = normalize(mul(input.normal,   (float3x3)u_worldMatrix));	     	
-	output.tangent  = normalize(mul(input.tangent,  (float3x3)u_worldMatrix));		
+	output.normal   = normalize(mul(input.normal,   (float3x3)u_worldMatrix));
+	output.tangent  = normalize(mul(input.tangent,  (float3x3)u_worldMatrix));
 	output.binormal = normalize(mul(input.binormal, (float3x3)u_worldMatrix));
 	
 	// get the direction from vertex to camera for specular calculations	

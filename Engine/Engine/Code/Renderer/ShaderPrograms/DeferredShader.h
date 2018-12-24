@@ -51,26 +51,24 @@ private:
 	struct ConstantGeometryVertex
 	{
 		XMFLOAT4X4 world;
-		XMFLOAT4X4 view;
-		XMFLOAT4X4 projection;
+		XMFLOAT4X4 worldViewProj;
 		XMFLOAT2   uvOffset;
 		XMFLOAT2   pad;
 	};
 
 	// constant data for ambient lightning in the lightning pass
 	// put the camera world pos here aswell for the moment
-	struct ConstantDeferredAmbient
+	struct CBDefAmb
 	{
 		XMFLOAT4 ambientColor;
 		XMFLOAT4 cameraPosition;
 	};
 
 	// constant data for directional lightning in the lightning pass
-	struct ConstantDeferredDirectional
+	struct CBDefDir
 	{
-		XMFLOAT4X4 lightView;
-		XMFLOAT4X4 lightProjection;
-		XMFLOAT4   lightColor;		
+		XMFLOAT4X4 lightViewProj;
+		XMFLOAT4   lightColor;
 
 		XMFLOAT3   lightDirection;
 		float      padding;

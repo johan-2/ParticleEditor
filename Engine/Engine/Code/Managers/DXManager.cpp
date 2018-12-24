@@ -96,7 +96,7 @@ void DXManager::CreateSwapchainAndRenderTarget(HWND hwnd, bool fullscreen, int s
 	swapChainDesc.BufferDesc.Scaling          = DXGI_MODE_SCALING_UNSPECIFIED;	
 	swapChainDesc.SwapEffect                  = DXGI_SWAP_EFFECT_DISCARD;
 	swapChainDesc.Flags                       = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH; 
-	featureLevel                              = D3D_FEATURE_LEVEL_11_1;
+	featureLevel                              = D3D_FEATURE_LEVEL_11_0;
 	
 	// create the swapchain and d3d interfaces
 	result = D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL,

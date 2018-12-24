@@ -12,6 +12,7 @@
 #include "QuadComponent.h"
 #include "ParticleShader.h"
 #include "SkyDome.h"
+#include "MathHelpers.h"
 
 ReflectionMapShader::ReflectionMapShader()
 {
@@ -89,9 +90,11 @@ void ReflectionMapShader::GenerateReflectionMap(std::vector<Mesh*>& reflectiveOp
 
 	// set vertex data that all meshes share
 	XMStoreFloat4(&constantVertex.clipingPlane, XMLoadFloat4(&clipPlane));
-	XMStoreFloat4x4(&constantVertex.view,       XMLoadFloat4x4(&camera->GetReflectionViewMatrix(reflectionMesh->GetPosition().y)));
-	XMStoreFloat4x4(&constantVertex.projection, XMLoadFloat4x4(&camera->GetProjectionMatrix()));
 
+	//get the reflection view proj
+	XMFLOAT4X4 reflectionViewProj;
+	XMStoreFloat4x4(&reflectionViewProj, XMLoadFloat4x4(&camera->GetReflectionViewProj(reflectionMesh->GetPosition().y)));
+	
 	// clear our reflection map render texture and set it to active
 	_reflectionMap->ClearRenderTarget(0, 0, 0, 1, false);
 	_reflectionMap->SetRendertarget(false, false);
@@ -116,7 +119,8 @@ void ReflectionMapShader::GenerateReflectionMap(std::vector<Mesh*>& reflectiveOp
 	for (int y = 0; y < reflectiveOpaqueMeshes.size(); y++)
 	{
 		// get world matrix of mesh and update the buffer
-		XMStoreFloat4x4(&constantVertex.world, XMLoadFloat4x4(&reflectiveOpaqueMeshes[y]->GetWorldMatrix()));
+		XMStoreFloat4x4(&constantVertex.world, XMLoadFloat4x4(&reflectiveOpaqueMeshes[y]->GetWorldMatrixTrans()));
+		XMStoreFloat4x4(&constantVertex.worldViewProj, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&reflectiveOpaqueMeshes[y]->GetWorldMatrix(), &reflectionViewProj)));
 		SHADER_HELPERS::UpdateConstantBuffer((void*)&constantVertex, sizeof(CBVertex), _CBVertex);
 
 		// get the texture array of mesh
@@ -149,7 +153,8 @@ void ReflectionMapShader::GenerateReflectionMap(std::vector<Mesh*>& reflectiveOp
 	for (int y = 0; y < reflectiveAlphaMeshes.size(); y++)
 	{
 		// get world matrix of mesh and update the buffer
-		XMStoreFloat4x4(&constantVertex.world, XMLoadFloat4x4(&reflectiveAlphaMeshes[y]->GetWorldMatrix()));
+		XMStoreFloat4x4(&constantVertex.world,         XMLoadFloat4x4(&reflectiveAlphaMeshes[y]->GetWorldMatrixTrans()));
+		XMStoreFloat4x4(&constantVertex.worldViewProj, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&reflectiveAlphaMeshes[y]->GetWorldMatrix(), &reflectionViewProj)));
 		SHADER_HELPERS::UpdateConstantBuffer((void*)&constantVertex, sizeof(CBVertex), _CBVertex);
 
 		// get the texture array of mesh

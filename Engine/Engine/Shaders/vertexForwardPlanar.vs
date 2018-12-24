@@ -1,9 +1,7 @@
 uniform float4x4 u_worldMatrix;
-uniform float4x4 u_viewMatrix;
-uniform float4x4 u_projectionMatrix;
-uniform float4x4 u_lightViewMatrix;
-uniform float4x4 u_lightProjectionMatrix;
-uniform float4x4 u_reflectionViewMatrix;
+uniform float4x4 u_worldViewProj;
+uniform float4x4 u_worldViewProjLight;
+uniform float4x4 u_worldViewProjReflect;
 uniform float3 	 u_cameraPosition;
 uniform float2   u_uvOffset;
 
@@ -42,9 +40,7 @@ PixelInputType Main(VertexInputType input)
     input.position.w = 1.0f;
 	
 	// get position in the worldViewProjection
-    output.position = mul(input.position,  u_worldMatrix); 	
-    output.position = mul(output.position, u_viewMatrix); 
-    output.position = mul(output.position, u_projectionMatrix);
+    output.position = mul(input.position,  u_worldViewProj); 	
     	   	
 	// transform normals to worldSpace
 	output.normal   = normalize(mul(input.normal,   (float3x3)u_worldMatrix));	     	
@@ -52,10 +48,8 @@ PixelInputType Main(VertexInputType input)
 	output.binormal = normalize(mul(input.binormal, (float3x3)u_worldMatrix));
 	
 	// transform position into the space of the directional light that will calculate the shadows
-	output.positionLightSpace = mul(input.position,            u_worldMatrix); 	
-    output.positionLightSpace = mul(output.positionLightSpace, u_lightViewMatrix); 
-    output.positionLightSpace = mul(output.positionLightSpace, u_lightProjectionMatrix);
-					
+	output.positionLightSpace = mul(input.position,            u_worldViewProjLight); 	
+   
 	// get the direction from vertex to camera for specular calculations	
 	float4 worldPosition  = mul(input.position, u_worldMatrix);		
 	output.vertexToCamera = u_cameraPosition.xyz - worldPosition.xyz;
@@ -63,11 +57,8 @@ PixelInputType Main(VertexInputType input)
 	// send world pos to pixel shader for point light calculations
 	output.worldPos = worldPosition;
 	
-	// get the reflection worldview matrix
-	matrix reflectWorldViewMatrix = mul(u_worldMatrix ,mul(u_reflectionViewMatrix, u_projectionMatrix));
-	
 	// get reflection position
-	output.reflectionPosition = mul(input.position, reflectWorldViewMatrix); 	
+	output.reflectionPosition = mul(input.position, u_worldViewProjReflect); 	
     
 	// vertex color
 	output.vertexColor = input.color;

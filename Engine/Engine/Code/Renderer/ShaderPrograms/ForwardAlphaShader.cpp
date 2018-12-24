@@ -7,6 +7,7 @@
 #include "LightManager.h"
 #include "Mesh.h"
 #include "Systems.h"
+#include "MathHelpers.h"
 
 ForwardAlphaShader::ForwardAlphaShader()
 {
@@ -78,13 +79,7 @@ void ForwardAlphaShader::RenderForward(std::vector<Mesh*>& meshes)
 	XMStoreFloat3(&constantAmbDirPixel.lightDir,        XMLoadFloat3(&directionalLight->GetLightDirectionInv()));
 
 	// set camera matrices
-	XMStoreFloat4x4(&constantVertex.view,       XMLoadFloat4x4(&camera->GetViewMatrix()));
-	XMStoreFloat4x4(&constantVertex.projection, XMLoadFloat4x4(&camera->GetProjectionMatrix()));
-	XMStoreFloat3(&constantVertex.camPos,       XMLoadFloat3(&cameraPos));
-
-	// set direction light matrices
-	XMStoreFloat4x4(&constantVertex.lightView,       XMLoadFloat4x4(&cameraLight->GetViewMatrix()));
-	XMStoreFloat4x4(&constantVertex.lightProjection, XMLoadFloat4x4(&cameraLight->GetProjectionMatrix()));
+	XMStoreFloat3(&constantVertex.camPos, XMLoadFloat3(&cameraPos));
 
 	// get shadow map
 	ID3D11ShaderResourceView* shadowMap = cameraLight->GetSRV();
@@ -103,8 +98,12 @@ void ForwardAlphaShader::RenderForward(std::vector<Mesh*>& meshes)
 		Mesh* mesh = meshes[i];
 
 		// get mesh specific constant data
-		XMStoreFloat4x4(&constantVertex.world,  XMLoadFloat4x4(&mesh->GetWorldMatrix()));
-		XMStoreFloat2(&constantVertex.uvOffset, XMLoadFloat2(&mesh->GetUvOffset()));
+		const XMFLOAT4X4& worldMat = mesh->GetWorldMatrix();
+
+		XMStoreFloat4x4(&constantVertex.world,              XMLoadFloat4x4(&mesh->GetWorldMatrixTrans()));
+		XMStoreFloat4x4(&constantVertex.worldViewProj,      XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&worldMat, &camera->GetViewProjMatrix())));
+		XMStoreFloat4x4(&constantVertex.worldViewProjLight, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&worldMat, &cameraLight->GetViewProjMatrix())));
+		XMStoreFloat2(&constantVertex.uvOffset,             XMLoadFloat2(&mesh->GetUvOffset()));
 
 		// update vertex constant buffer
 		SHADER_HELPERS::UpdateConstantBuffer((void*)&constantVertex, sizeof(CBVertex), _CBVertex);
@@ -122,5 +121,4 @@ void ForwardAlphaShader::RenderForward(std::vector<Mesh*>& meshes)
 
 		devCon->DrawIndexed(mesh->GetNumIndices(), 0, 0);
 	}
-
 }

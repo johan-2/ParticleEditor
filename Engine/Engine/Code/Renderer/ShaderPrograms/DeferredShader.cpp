@@ -9,6 +9,7 @@
 #include "DXDepthStencilStates.h"
 #include "GBuffer.h"
 #include "Systems.h"
+#include "MathHelpers.h"
 
 DeferredShader::DeferredShader()
 {
@@ -72,9 +73,6 @@ void DeferredShader::RenderGeometry(std::vector<Mesh*>& meshes)
 	// constantbuffer structure
 	ConstantGeometryVertex vertexData;
 
-	XMStoreFloat4x4(&vertexData.view,       XMLoadFloat4x4(&camera->GetViewMatrix()));
-	XMStoreFloat4x4(&vertexData.projection, XMLoadFloat4x4(&camera->GetProjectionMatrix()));
-
 	// stuff that need to be set per mesh
 	unsigned int size = meshes.size();
 	for (int i = 0; i < size; i++)
@@ -83,8 +81,9 @@ void DeferredShader::RenderGeometry(std::vector<Mesh*>& meshes)
 		meshes[i]->UploadBuffers();
 
 		//set and upload vertex constantdata
-		XMStoreFloat4x4(&vertexData.world,  XMLoadFloat4x4(&meshes[i]->GetWorldMatrix()));
-		XMStoreFloat2(&vertexData.uvOffset, XMLoadFloat2(&meshes[i]->GetUvOffset()));
+		XMStoreFloat4x4(&vertexData.world,         XMLoadFloat4x4(&meshes[i]->GetWorldMatrixTrans()));
+		XMStoreFloat4x4(&vertexData.worldViewProj, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&meshes[i]->GetWorldMatrix(), &camera->GetViewProjMatrix())));
+		XMStoreFloat2(&vertexData.uvOffset,        XMLoadFloat2(&meshes[i]->GetUvOffset()));
 
 		// update the constant buffer with the mesh data
 		SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(ConstantGeometryVertex), _constantBufferGeometry);
@@ -119,27 +118,26 @@ void DeferredShader::RenderLightning(GBuffer*& gBuffer)
 	DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::MASKED_LIGHTNING);
 
 	// constantbuffer structures
-	ConstantDeferredAmbient     ambientLightData;
-	ConstantDeferredDirectional directionalLightData;
+	CBDefAmb ambLightData;
+	CBDefDir dirLightData;
 
 	// set ambientdata(camerapos is in this buffer aswell)
-	ambientLightData.ambientColor = LM.GetAmbientColor();
+	ambLightData.ambientColor = LM.GetAmbientColor();
 
 	const XMFLOAT3& camPos = camera->GetComponent<TransformComponent>()->GetPositionRef();
-	ambientLightData.cameraPosition = XMFLOAT4(camPos.x, camPos.y, camPos.z, 1.0f);
+	ambLightData.cameraPosition = XMFLOAT4(camPos.x, camPos.y, camPos.z, 1.0f);
 
 	// get directional light
 	LightDirectionComponent*& directionalLight = LM.GetDirectionalLight();
 
 	// get directional light data
-	XMStoreFloat4x4(&directionalLightData.lightView,       XMLoadFloat4x4(&cameraLight->GetViewMatrix()));
-	XMStoreFloat4x4(&directionalLightData.lightProjection, XMLoadFloat4x4(&cameraLight->GetProjectionMatrix()));
-	XMStoreFloat4(&directionalLightData.lightColor,        XMLoadFloat4(&directionalLight->GetLightColor()));
-	XMStoreFloat3(&directionalLightData.lightDirection,    XMLoadFloat3(&directionalLight->GetLightDirectionInv()));
+	XMStoreFloat4x4(&dirLightData.lightViewProj,   XMLoadFloat4x4(&cameraLight->GetViewProjMatrixTrans()));
+	XMStoreFloat4(&dirLightData.lightColor,        XMLoadFloat4(&directionalLight->GetLightColor()));
+	XMStoreFloat3(&dirLightData.lightDirection,    XMLoadFloat3(&directionalLight->GetLightDirectionInv()));
 
 	// update constantbuffers
-	SHADER_HELPERS::UpdateConstantBuffer((void*)&ambientLightData,     sizeof(ConstantDeferredAmbient),          _constantBufferDefAmbient);
-	SHADER_HELPERS::UpdateConstantBuffer((void*)&directionalLightData, sizeof(ConstantDeferredDirectional),      _constantBufferDefDirectional);
+	SHADER_HELPERS::UpdateConstantBuffer((void*)&ambLightData,         sizeof(CBDefAmb), _constantBufferDefAmbient);
+	SHADER_HELPERS::UpdateConstantBuffer((void*)&dirLightData,         sizeof(CBDefDir), _constantBufferDefDirectional);
 	SHADER_HELPERS::UpdateConstantBuffer((void*)LM.GetCBPointBuffer(), sizeof(CBPoint) * LM.GetNumPointLights(), _constantBufferDefPoint);
 
 	// get Gbuffer textures and depthmap

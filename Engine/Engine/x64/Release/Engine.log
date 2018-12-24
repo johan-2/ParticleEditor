@@ -1,7 +1,88 @@
-﻿  SponzaTestScene.cpp
+﻿  Entity.cpp
+  IComponent.cpp
+  World.cpp
+c:\users\johan\desktop\enginedx11\engine\engine\code\componentsystem\world.cpp(25): warning C4018: '<': signed/unsigned mismatch
+c:\users\johan\desktop\enginedx11\engine\engine\code\componentsystem\world.cpp(75): warning C4018: '<': signed/unsigned mismatch
+c:\users\johan\desktop\enginedx11\engine\engine\code\componentsystem\world.cpp(90): warning C4018: '<': signed/unsigned mismatch
+c:\users\johan\desktop\enginedx11\engine\engine\code\componentsystem\world.cpp(99): warning C4018: '<': signed/unsigned mismatch
+  FreeMoveComponent.cpp
+  LightDirectionComponent.cpp
+  LightPointComponent.cpp
+  ParticleSystemComponent.cpp
+c:\users\johan\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(35): warning C4018: '<': signed/unsigned mismatch
+c:\users\johan\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(63): warning C4267: '=': conversion from 'size_t' to 'unsigned int', possible loss of data
+c:\users\johan\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(67): warning C4018: '<': signed/unsigned mismatch
+c:\users\johan\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(91): warning C4018: '<': signed/unsigned mismatch
+c:\users\johan\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(107): warning C4018: '<': signed/unsigned mismatch
+c:\users\johan\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(138): warning C4018: '<': signed/unsigned mismatch
+c:\users\johan\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(242): warning C4018: '<': signed/unsigned mismatch
+c:\users\johan\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(332): warning C4018: '<': signed/unsigned mismatch
+c:\users\johan\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(348): warning C4018: '<': signed/unsigned mismatch
+c:\users\johan\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(350): warning C4018: '<': signed/unsigned mismatch
+c:\users\johan\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(404): warning C4018: '<': signed/unsigned mismatch
+c:\users\johan\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(406): warning C4018: '<': signed/unsigned mismatch
+c:\users\johan\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(431): warning C4018: '<': signed/unsigned mismatch
+c:\users\johan\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(451): warning C4018: '<': signed/unsigned mismatch
+c:\users\johan\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(482): warning C4018: '<': signed/unsigned mismatch
+c:\users\johan\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(493): warning C4244: 'initializing': conversion from '_Rep' to 'unsigned int', possible loss of data
+          with
+          [
+              _Rep=std::chrono::system_clock::rep
+          ]
+c:\users\johan\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(524): warning C4018: '<': signed/unsigned mismatch
+c:\users\johan\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(528): warning C4018: '<': signed/unsigned mismatch
+c:\users\johan\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(575): warning C4018: '<': signed/unsigned mismatch
+c:\users\johan\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(595): warning C4018: '<': signed/unsigned mismatch
+c:\users\johan\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(597): warning C4018: '<': signed/unsigned mismatch
+c:\users\johan\desktop\enginedx11\engine\engine\code\components\particlesystemcomponent.cpp(680): warning C4018: '<': signed/unsigned mismatch
+  QuadComponent.cpp
+  RotationComponent.cpp
+  UVScrollComponent.cpp
+c:\users\johan\desktop\enginedx11\engine\engine\code\components\uvscrollcomponent.cpp(35): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
+c:\users\johan\desktop\enginedx11\engine\engine\code\components\uvscrollcomponent.cpp(36): warning C4018: '<': signed/unsigned mismatch
+  Framework.cpp
+  GuiManager.cpp
+  GBuffer.cpp
+  ScreenQuad.cpp
+  Mesh.cpp
+  SkyDome.cpp
+c:\users\johan\desktop\enginedx11\engine\engine\code\utils\modelloader.h(471): warning C4002: too many arguments for function-like macro invocation 'assert'
+c:\users\johan\desktop\enginedx11\engine\engine\code\utils\modelloader.h(487): warning C4018: '<': signed/unsigned mismatch
+  RenderToTexture.cpp
+  Renderer.cpp
+c:\users\johan\desktop\enginedx11\engine\engine\code\renderer\renderer.cpp(94): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+  DeferredShader.cpp
+c:\users\johan\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\deferredshader.cpp(77): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
+c:\users\johan\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\deferredshader.cpp(78): warning C4018: '<': signed/unsigned mismatch
+  DepthShader.cpp
+c:\users\johan\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\depthshader.cpp(56): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
+c:\users\johan\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\depthshader.cpp(57): warning C4018: '<': signed/unsigned mismatch
+  Compiling...
+  ForwardAlphaShader.cpp
+c:\users\johan\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\forwardalphashader.cpp(94): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\johan\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\forwardalphashader.cpp(94): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
+  ImGUIShader.cpp
+  ParticleShader.cpp
+c:\users\johan\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\particleshader.cpp(70): warning C4018: '<': signed/unsigned mismatch
+  PlanarReflectionShader.cpp
+c:\users\johan\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\planarreflectionshader.cpp(92): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\johan\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\planarreflectionshader.cpp(92): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
+  PostProcessingShader.cpp
+  QuadShader.cpp
+  ReflectionMapShader.cpp
+  WireframeShader.cpp
+c:\users\johan\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\wireframeshader.cpp(59): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
+c:\users\johan\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\wireframeshader.cpp(60): warning C4018: '<': signed/unsigned mismatch
+  DXInputLayouts.cpp
+  Systems.cpp
+c:\users\johan\desktop\enginedx11\engine\engine\code\system\systems.cpp(20): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  IslandTestScene.cpp
+  SponzaTestScene.cpp
+  DebugStats.cpp
+  TexturePool.cpp
   Generating code
-  5 of 2617 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
+  15 of 2624 functions ( 0.6%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    6 functions had inline decision re-evaluated but remain unchanged
+    32 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
-  Engine.vcxproj -> C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\Engine.exe
+  Engine.vcxproj -> C:\Users\johan\Desktop\EngineDx11\Engine\Engine\Engine.exe

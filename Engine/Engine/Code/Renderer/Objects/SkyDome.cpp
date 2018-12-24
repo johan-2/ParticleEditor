@@ -12,6 +12,7 @@
 #include "ModelLoader.h"
 #include "Mesh.h"
 #include <algorithm>
+#include "MathHelpers.h"
 
 SkyDome::SkyDome(const wchar_t* textureFile, SKY_DOME_RENDER_MODE mode):
 	_isActive(true),
@@ -131,20 +132,18 @@ void SkyDome::RenderCubeMapSimple(bool useReflectViewMatrix)
 	DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::MASKED_SKYBOX);
 
 	// constantbuffer structure
-	ConstantVertex vertexData;
+	CBVertDome vertexData;
 
 	// set the matrices
-	XMStoreFloat4x4(&vertexData.world, XMMatrixTranspose(XMLoadFloat4x4(&camTrans->GetPositionMatrix())));
-	XMStoreFloat4x4(&vertexData.projection, XMLoadFloat4x4(&camera->GetProjectionMatrix()));
 	if (useReflectViewMatrix)
 	{
-		XMStoreFloat4x4(&vertexData.view, XMLoadFloat4x4(&camera->GetReflectionViewMatrix(camTrans->GetPositionRef().y)));
+		XMStoreFloat4x4(&vertexData.worldViewProj, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&camTrans->GetPositionMatrix(), &camera->GetReflectionViewProj(camTrans->GetPositionRef().y))));
 		DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::DISABLED);
 	}
-	else XMStoreFloat4x4(&vertexData.view, XMLoadFloat4x4(&camera->GetViewMatrix()));
+	else XMStoreFloat4x4(&vertexData.worldViewProj, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&camTrans->GetPositionMatrix(), &camera->GetViewProjMatrix())));
 
 	// update constant buffer
-	SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(ConstantVertex), _constantBufferVertex);
+	SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(CBVertDome), _constantBufferVertex);
 
 	// upload and draw dome mesh
 	_domeMesh->UploadBuffers();
@@ -179,15 +178,13 @@ void SkyDome::RenderBlendedColors(bool useReflectViewMatrix)
 	DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::MASKED_SKYBOX);
 	
 	// set vertex constants
-	ConstantVertex vertexData;
-	XMStoreFloat4x4(&vertexData.world, XMMatrixTranspose(XMLoadFloat4x4(&camTrans->GetPositionMatrix())));
-	XMStoreFloat4x4(&vertexData.projection, XMLoadFloat4x4(&camera->GetProjectionMatrix()));
-	if (useReflectViewMatrix) 
+	CBVertDome vertexData;
+	if (useReflectViewMatrix)
 	{
-		XMStoreFloat4x4(&vertexData.view, XMLoadFloat4x4(&camera->GetReflectionViewMatrix(camTrans->GetPositionRef().y))); 
+		XMStoreFloat4x4(&vertexData.worldViewProj, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&camTrans->GetPositionMatrix(), &camera->GetReflectionViewProj(camTrans->GetPositionRef().y))));
 		DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::DISABLED);
 	}
-	else XMStoreFloat4x4(&vertexData.view, XMLoadFloat4x4(&camera->GetViewMatrix()));
+	else XMStoreFloat4x4(&vertexData.worldViewProj, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&camTrans->GetPositionMatrix(), &camera->GetViewProjMatrix())));
 
 	// set the colors, the percent fraction is stored in the w channel that specifies how
 	// low to high a color will be used on the skydome 
@@ -197,7 +194,7 @@ void SkyDome::RenderBlendedColors(bool useReflectViewMatrix)
 	pixeldata.top      = _skyColorLayers.topColor;
 
 	// update constant buffers
-	SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(ConstantVertex),          _constantBufferVertex);
+	SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(CBVertDome),          _constantBufferVertex);
 	SHADER_HELPERS::UpdateConstantBuffer((void*)&pixeldata,  sizeof(ConstantColorBlendPixel), _constantBufferColorBlendPixel);
 
 	// upload and draw dome mesh
@@ -236,15 +233,13 @@ void SkyDome::RenderCubeMapColorBlend(bool useReflectViewMatrix)
 	DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::MASKED_SKYBOX);
 
 	// set vertex constants
-	ConstantVertex vertexData;
-	XMStoreFloat4x4(&vertexData.world, XMMatrixTranspose(XMLoadFloat4x4(&camTrans->GetPositionMatrix())));
-	XMStoreFloat4x4(&vertexData.projection, XMLoadFloat4x4(&camera->GetProjectionMatrix()));
+	CBVertDome vertexData;
 	if (useReflectViewMatrix)
 	{
-		XMStoreFloat4x4(&vertexData.view, XMLoadFloat4x4(&camera->GetReflectionViewMatrix(camTrans->GetPositionRef().y)));
+		XMStoreFloat4x4(&vertexData.worldViewProj, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&camTrans->GetPositionMatrix(), &camera->GetReflectionViewProj(camTrans->GetPositionRef().y))));
 		DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::DISABLED);
 	}
-	else XMStoreFloat4x4(&vertexData.view, XMLoadFloat4x4(&camera->GetViewMatrix()));
+	else XMStoreFloat4x4(&vertexData.worldViewProj, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&camTrans->GetPositionMatrix(), &camera->GetViewProjMatrix())));
 
 	// set the colors, the percent fraction is stored in the w channel that specifies how
 	// low to high a color will be used on the skydome 
@@ -257,7 +252,7 @@ void SkyDome::RenderCubeMapColorBlend(bool useReflectViewMatrix)
 	pixelData.midColor       = _skyColorLayers.midColor;
 
 	// update constant buffers
-	SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(ConstantVertex),                 _constantBufferVertex);
+	SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(CBVertDome),                 _constantBufferVertex);
 	SHADER_HELPERS::UpdateConstantBuffer((void*)&pixelData,  sizeof(ConstantCubeMapColorBlendPixel), _constantBufferCubeMapBlendPixel);
 
 	// upload and draw dome mesh
@@ -289,16 +284,18 @@ void SkyDome::RenderSunMoon(bool reflect)
 	// calculate sun/moon data
 	CaluclateSunMoonMatrix(camTrans->GetPositionRef());
 
-	// set vertex constants
-	ConstantVertex vertexData;
+	// set world and projection matrix
+	CBVertSun vertexData;
 	XMStoreFloat4x4(&vertexData.world, XMLoadFloat4x4(&_sunMoon.sun.positionMatrix));
-	XMStoreFloat4x4(&vertexData.projection, XMLoadFloat4x4(&camera->GetProjectionMatrix()));
+	XMStoreFloat4x4(&vertexData.Proj, XMMatrixTranspose(XMLoadFloat4x4(&camera->GetProjectionMatrix())));
+
+	// set view matrix based if we should reflect or not
 	if (reflect)
 	{
-		XMStoreFloat4x4(&vertexData.view, XMLoadFloat4x4(&camera->GetReflectionViewMatrix(camTrans->GetPositionRef().y)));
+		XMStoreFloat4x4(&vertexData.view, XMMatrixTranspose(XMLoadFloat4x4(&camera->GetReflectionViewProj(camTrans->GetPositionRef().y, true))));
 		DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::DISABLED);
 	}
-	else XMStoreFloat4x4(&vertexData.view, XMLoadFloat4x4(&camera->GetViewMatrix()));
+	else XMStoreFloat4x4(&vertexData.view, XMMatrixTranspose(XMLoadFloat4x4(&camera->GetViewMatrix())));
 
 	// constantbuffer pixel structure
 	ConstantSunPixel pixeldata;
@@ -307,7 +304,7 @@ void SkyDome::RenderSunMoon(bool reflect)
 	pixeldata.beginEndFade = _sunMoon.sun.beginEndFade;
 
 	// update constant buffer
-	SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(ConstantVertex),   _constantBufferVertex);
+	SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(CBVertSun),   _constantBufferVertex);
 	SHADER_HELPERS::UpdateConstantBuffer((void*)&pixeldata,  sizeof(ConstantSunPixel), _constantSunPixel);
 
 	// upload mesh
@@ -326,7 +323,7 @@ void SkyDome::RenderSunMoon(bool reflect)
 	pixeldata.beginEndFade = _sunMoon.moon.beginEndFade;
 
 	// update constant buffer
-	SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(ConstantVertex), _constantBufferVertex);
+	SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(CBVertDome), _constantBufferVertex);
 	SHADER_HELPERS::UpdateConstantBuffer((void*)&pixeldata, sizeof(ConstantSunPixel), _constantSunPixel);
 
 	// upload mesh
@@ -436,10 +433,9 @@ void SkyDome::UpdateDynamicSky(const float& delta)
 	LerpColorRGB(blendedLightColor, _dynamicSky.normalDirLightColor, _dynamicSky.sunsetDirLightColor,
 		_dynamicSky.sunsetLightColorStartEndBlend.x, _dynamicSky.sunsetLightColorStartEndBlend.y, highestPoint);
 
-	// set the strength of directional light based on sun height
-	float ls = inverseLerp(_dynamicSky.sunLightBeginEndFade.y, _dynamicSky.sunLightBeginEndFade.x, highestPoint);
-	XMFLOAT4 lightStrength(ls, ls, ls, 1.0f);
-	XMStoreFloat4(&blendedLightColor, XMVectorMultiply(XMLoadFloat4(&blendedLightColor), XMLoadFloat4(&lightStrength)));
+	LerpColorRGB(blendedLightColor, blendedLightColor, _dynamicSky.nightDirLightColor,
+		_dynamicSky.nightLightColorStartEndBlend.x, _dynamicSky.nightLightColorStartEndBlend.y, highestPoint);
+
 	directionLight->SetLightColor(blendedLightColor);
 
 	// set the color of the top part of sky

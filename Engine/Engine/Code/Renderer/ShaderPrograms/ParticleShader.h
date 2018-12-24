@@ -34,10 +34,9 @@ private:
 	ID3D11Buffer* _constantBufferVertex;
 
 	// constant vertex structure
-	struct ConstantVertex
+	struct CBVertex
 	{
-		XMFLOAT4X4 view;
-		XMFLOAT4X4 projection;
+		XMFLOAT4X4 viewProj;
 	};
 };
 

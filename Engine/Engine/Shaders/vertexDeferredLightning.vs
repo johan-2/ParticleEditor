@@ -8,7 +8,6 @@ struct VertexInputType
 struct PixelInputType
 {
     float4 position : SV_POSITION;
-  
 };
 
 PixelInputType Main(VertexInputType input)

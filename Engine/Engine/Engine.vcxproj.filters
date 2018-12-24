@@ -368,5 +368,8 @@
     <ClInclude Include="Code\Renderer\ShaderPrograms\ReflectionMapShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Code\Utils\MathHelpers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

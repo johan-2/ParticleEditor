@@ -51,15 +51,14 @@ void ParticleShader::RenderParticles(const std::vector<ParticleSystemComponent*>
 	devCon->VSSetConstantBuffers(0, 1, &_constantBufferVertex);
 
 	// constantbuffer structures
-	ConstantVertex vertexData;
+	CBVertex vertexData;
 
 	// set the vertex constant data
-	XMStoreFloat4x4(&vertexData.projection, XMLoadFloat4x4(&camera->GetProjectionMatrix()));
-	if (useReflectViewMatrix) XMStoreFloat4x4(&vertexData.view, XMLoadFloat4x4(&camera->GetReflectionViewMatrix(reflectHeight)));
-	else                      XMStoreFloat4x4(&vertexData.view, XMLoadFloat4x4(&camera->GetViewMatrix()));
+	if (useReflectViewMatrix) XMStoreFloat4x4(&vertexData.viewProj, XMMatrixTranspose(XMLoadFloat4x4(&camera->GetReflectionViewProj(reflectHeight))));
+	else                      XMStoreFloat4x4(&vertexData.viewProj, XMLoadFloat4x4(&camera->GetViewProjMatrixTrans()));
 	
 	// update the vertex constant buffer
-	SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(ConstantVertex), _constantBufferVertex);
+	SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(CBVertex), _constantBufferVertex);
 
 	// don't write the particles to the depth buffer, only read
 	DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::READ_ONLY);

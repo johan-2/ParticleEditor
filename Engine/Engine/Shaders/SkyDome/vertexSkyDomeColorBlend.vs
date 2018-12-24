@@ -1,6 +1,4 @@
-uniform matrix u_worldMatrix;
-uniform matrix u_viewMatrix;
-uniform matrix u_projectionMatrix;
+uniform matrix u_worldViewProj;
 
 struct VertexInputType
 {
@@ -26,9 +24,7 @@ PixelInputType Main(VertexInputType input)
     input.position.w = 1.0f;
    
    // mutiply all matrices
-    output.position = mul(input.position, u_worldMatrix); 	
-    output.position = mul(output.position, u_viewMatrix); 
-    output.position = mul(output.position, u_projectionMatrix);
+    output.position = mul(input.position, u_worldViewProj);
 	
 	output.height = input.position.y;
 	  

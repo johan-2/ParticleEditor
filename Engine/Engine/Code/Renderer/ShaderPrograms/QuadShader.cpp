@@ -61,8 +61,7 @@ void QuadShader::RenderQuadUI(const std::vector<QuadComponent*>& quads)
 	ConstantQuadUIPixel  pixelData;
 
 	// fill constant buffer vertex with the camera matrices
-	vertexData.projection = Systems::cameraManager->GetCurrentCameraUI()->GetViewMatrix();
-	vertexData.view       = Systems::cameraManager->GetCurrentCameraUI()->GetProjectionMatrix();
+	vertexData.viewProj = Systems::cameraManager->GetCurrentCameraUI()->GetViewProjMatrixTrans();
 
 	// update vertexconstantbuffers, only needs to be done once for all quads
 	SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(ConstantQuadUIVertex), _constantBufferVertex);

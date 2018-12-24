@@ -6,6 +6,7 @@
 #include "ShaderHelpers.h"
 #include "Systems.h"
 #include "DXBlendStates.h"
+#include "MathHelpers.h"
 
 DepthShader::DepthShader()
 {
@@ -52,15 +53,11 @@ void DepthShader::RenderDepth(std::vector<Mesh*>& meshes)
 	// set the vertex constant buffer
 	devCon->VSSetConstantBuffers(0, 1, &_constantBufferVertex);
 
-	// set constant data that is shared between all meshes
-	XMStoreFloat4x4(&vertexData.view,       XMLoadFloat4x4(&camera->GetViewMatrix()));
-	XMStoreFloat4x4(&vertexData.projection, XMLoadFloat4x4(&camera->GetProjectionMatrix()));
-
 	unsigned int size = meshes.size();
 	for (int i = 0; i < size; i++)
 	{
 		// set world matrix of mesh
-		XMStoreFloat4x4(&vertexData.world, XMLoadFloat4x4(&meshes[i]->GetWorldMatrix()));
+		XMStoreFloat4x4(&vertexData.worldViewProj, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&meshes[i]->GetWorldMatrix(), &camera->GetViewProjMatrix())));
 
 		// update the constant buffer with the vertexdata of this mesh
 		SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(ConstantVertex), _constantBufferVertex);

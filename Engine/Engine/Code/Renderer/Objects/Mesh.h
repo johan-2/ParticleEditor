@@ -55,8 +55,9 @@ public:
 
 	// get the world matrix of the transform this mesh belongs to
 	// get the position of the transform this mesh belongs to
-	const XMFLOAT4X4& GetWorldMatrix()   { return _transform->GetWorldMatrix(); }
-	const XMFLOAT3& GetPosition()        { return _transform->GetPositionRef(); }
+	const XMFLOAT4X4& GetWorldMatrix()      { return _transform->GetWorldMatrix(); }
+	const XMFLOAT4X4& GetWorldMatrixTrans() { return _transform->GetWorldMatrixTrans(); }
+	const XMFLOAT3& GetPosition()           { return _transform->GetPositionRef(); }
 
 	// get number of vertices and indices
 	unsigned int GetNumVertices() { return _numVertices; }

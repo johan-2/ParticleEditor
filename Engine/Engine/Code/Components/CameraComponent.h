@@ -14,9 +14,12 @@ public:
 	~CameraComponent();
 
 	// get camera matrices
-	const XMFLOAT4X4& GetViewMatrix()       { return _viewMatrix; }
-	const XMFLOAT4X4& GetProjectionMatrix() { return _projectionMatrix; }
-	XMFLOAT4X4 GetReflectionViewMatrix(float yPosition);
+	XMFLOAT4X4& GetViewMatrix()          { return _viewMatrix; }
+	XMFLOAT4X4& GetProjectionMatrix()    { return _projectionMatrix; }
+	XMFLOAT4X4& GetViewProjMatrix()      { return _viewProjMatrix; }
+	XMFLOAT4X4& GetViewProjMatrixTrans() { return _viewProjMatrixTrans; }
+
+	XMFLOAT4X4 GetReflectionViewProj(float yPosition, bool viewOnly = false);
 
 	// get and set an associated render texture with the camera
 	ID3D11ShaderResourceView* GetSRV()         { return _renderTexture;}
@@ -40,8 +43,10 @@ private:
 	// camera matrices
 	XMFLOAT4X4 _viewMatrix;
 	XMFLOAT4X4 _projectionMatrix;
+	XMFLOAT4X4 _viewProjMatrix;
+	XMFLOAT4X4 _viewProjMatrixTrans;
 
 	// pointer to a render texture
-	ID3D11ShaderResourceView* _renderTexture;		
+	ID3D11ShaderResourceView* _renderTexture;
 };
 

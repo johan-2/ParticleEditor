@@ -1,5 +1,4 @@
-uniform matrix u_viewMatrix;
-uniform matrix u_projectionMatrix;
+uniform matrix u_viewProj;
 
 struct VertexInputType
 {
@@ -32,8 +31,7 @@ PixelInputType Main(VertexInputType input)
 	float4x4 w = float4x4(input.worldM1, input.worldM2, input.worldM3, input.worldM4);
    
     output.position = mul(input.position, w); 	
-    output.position = mul(output.position, u_viewMatrix); 
-    output.position = mul(output.position, u_projectionMatrix);
+    output.position = mul(output.position, u_viewProj); 
     
 	// Store the texture coordinates for the pixel shader.
     output.tex = input.tex;

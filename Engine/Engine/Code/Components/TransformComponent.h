@@ -14,11 +14,11 @@ public:
 	void Init(XMFLOAT3 position = XMFLOAT3(0, 0, 0), XMFLOAT3 rotation = XMFLOAT3(0, 0, 0), XMFLOAT3 scale = XMFLOAT3(1, 1, 1));
 	
 	// get the matrices
-	// world matrix is always returned transposed, the others is not
-	const XMFLOAT4X4& GetWorldMatrix()    { return _worldMatrix; }
-	const XMFLOAT4X4& GetPositionMatrix() { return _positionMatrix; }
-	const XMFLOAT4X4& GetRotationMatrix() { return _rotationMatrix; }
-	const XMFLOAT4X4& GetScaleMatrix()    { return _scaleMatrix; }
+	const XMFLOAT4X4& GetWorldMatrix()      { return _worldMatrix; }
+	const XMFLOAT4X4& GetWorldMatrixTrans() { return _worldMatrixTrans; }
+	const XMFLOAT4X4& GetPositionMatrix()   { return _positionMatrix; }
+	const XMFLOAT4X4& GetRotationMatrix()   { return _rotationMatrix; }
+	const XMFLOAT4X4& GetScaleMatrix()      { return _scaleMatrix; }
 
 	// get transform properties by constant references
 	const XMFLOAT3& GetPositionRef() { return _position; }
@@ -66,6 +66,7 @@ private:
 	XMFLOAT4X4 _rotationMatrix;
 	XMFLOAT4X4 _scaleMatrix;
 	XMFLOAT4X4 _worldMatrix;
+	XMFLOAT4X4 _worldMatrixTrans;
 	
 };
 

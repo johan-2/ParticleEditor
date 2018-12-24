@@ -92,8 +92,8 @@ private:
 		float cycleTimer = 0;
 
 		// start/end blend values
-		XMFLOAT2 sunLightBeginEndFade           = XMFLOAT2(0.0f, -0.1f);
 		XMFLOAT2 sunsetLightColorStartEndBlend  = XMFLOAT2(0.2f, 0.0f);
+		XMFLOAT2 nightLightColorStartEndBlend   = XMFLOAT2(0.0f, -0.1f);
 		XMFLOAT2 sunsetTopSkyColorStartEndBlend = XMFLOAT2(0.5f, 0.1f);
 		XMFLOAT2 nightTopSkyColorStartEndBlend  = XMFLOAT2(0.1f, -0.3f);
 		XMFLOAT2 sunsetMidSkyColorStartEndBlend = XMFLOAT2(0.45f, 0.0f);
@@ -115,6 +115,7 @@ private:
 		// colors
 		XMFLOAT4 normalDirLightColor = XMFLOAT4(0.8f, 0.8f, 0.8f, 0.0f);
 		XMFLOAT4 sunsetDirLightColor = XMFLOAT4(0.9935f, 0.07211f, 0.08812f, 1.0f);
+		XMFLOAT4 nightDirLightColor  = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
 		XMFLOAT4 topSkyColorDay      = XMFLOAT4(0.082f, 0.352f, 0.984f, 1.0f);
 		XMFLOAT4 topSkyColorSunSet   = XMFLOAT4(0.35f, 0.45f, 0.984f, 1.0f);
 		XMFLOAT4 topSkyColorNight    = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
@@ -202,11 +203,16 @@ private:
 	SKY_DOME_RENDER_MODE _RENDER_MODE;
 
 	// vertex constant buffer
-	struct ConstantVertex
+	struct CBVertDome
+	{
+		XMFLOAT4X4 worldViewProj;
+	};
+
+	struct CBVertSun
 	{
 		XMFLOAT4X4 world;
 		XMFLOAT4X4 view;
-		XMFLOAT4X4 projection;
+		XMFLOAT4X4 Proj;
 	};
 
 	struct ConstantColorBlendPixel

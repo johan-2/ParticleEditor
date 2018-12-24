@@ -1,7 +1,7 @@
 #include "CameraComponent.h"
 #include "SystemDefs.h"
 #include "TransformComponent.h"
-
+#include "MathHelpers.h"
 
 CameraComponent::CameraComponent() : IComponent(COMPONENT_TYPE::CAMERA_COMPONENT)
 {
@@ -14,7 +14,6 @@ void CameraComponent::Init3D(const float& fov)
 
 	// Create the projection matrix for 3D rendering.	
 	XMStoreFloat4x4(&_projectionMatrix, XMMatrixPerspectiveFovLH(XMConvertToRadians(fov), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 50000.0f));
-	XMStoreFloat4x4(&_projectionMatrix, XMMatrixTranspose(XMLoadFloat4x4(&_projectionMatrix)));
 
 	CalculateViewMatrix();
 }
@@ -26,7 +25,6 @@ void CameraComponent::Init2D(const XMFLOAT2& size, const XMFLOAT2& nearfar)
 
 	// create ortho projection
 	XMStoreFloat4x4(&_projectionMatrix, XMMatrixOrthographicLH(size.x, size.y, nearfar.x, nearfar.y));
-	XMStoreFloat4x4(&_projectionMatrix, XMMatrixTranspose(XMLoadFloat4x4(&_projectionMatrix)));
 
 	CalculateViewMatrix();
 }
@@ -52,10 +50,12 @@ void CameraComponent::CalculateViewMatrix()
 
 	XMStoreFloat4x4(&_viewMatrix, XMMatrixLookAtLH(XMLoadFloat3(&pos), XMLoadFloat3(&forward), XMLoadFloat3(&up)));
 
-	XMStoreFloat4x4(&_viewMatrix, XMMatrixTranspose(XMLoadFloat4x4(&_viewMatrix)));
+	// create viewProjection matrices
+	XMStoreFloat4x4(&_viewProjMatrix, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiply(&_viewMatrix, &_projectionMatrix)));
+	XMStoreFloat4x4(&_viewProjMatrixTrans, XMMatrixTranspose(XMLoadFloat4x4(&_viewProjMatrix)));
 }
 
-XMFLOAT4X4 CameraComponent::GetReflectionViewMatrix(float yPosition)
+XMFLOAT4X4 CameraComponent::GetReflectionViewProj(float yPosition, bool viewOnly)
 {
 	XMFLOAT4X4 rotationMatrix;
 	XMFLOAT4X4 viewMatrix;
@@ -84,7 +84,8 @@ XMFLOAT4X4 CameraComponent::GetReflectionViewMatrix(float yPosition)
 
 	XMStoreFloat4x4(&viewMatrix, XMMatrixLookAtLH(XMLoadFloat3(&position), XMLoadFloat3(&forward), XMLoadFloat3(&up)));
 
-	XMStoreFloat4x4(&viewMatrix, XMMatrixTranspose(XMLoadFloat4x4(&viewMatrix)));
+	if (!viewOnly)
+		XMStoreFloat4x4(&viewMatrix, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiply(&viewMatrix, &_projectionMatrix)));
 
 	return viewMatrix;
 }

@@ -22,8 +22,7 @@ cbuffer AmbientBuffer : register(b0)
 
 cbuffer DirectionalBuffer : register(b1)
 {
-	float4x4 lightView;
-	float4x4 lightProj;
+	float4x4 lightViewProj;
 	float4 lightColorDir;		
 	float3 lightDirectionDir;		
 };
@@ -49,8 +48,6 @@ float4 GetDirectionalColor(float4 position, float4 diffuse, float4 normal, float
 	float bias         = 0.00001;
 	float numInLight   = 9;
 	float lightPercent = 0;
-	
-	float4x4 lightViewProj =  mul(lightView, lightProj);
 	
 	float4 positionLightSpace = mul(position, lightViewProj);
 	

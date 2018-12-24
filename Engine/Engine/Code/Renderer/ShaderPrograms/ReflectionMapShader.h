@@ -49,8 +49,7 @@ private:
 	struct CBVertex
 	{
 		XMFLOAT4X4 world;
-		XMFLOAT4X4 view;
-		XMFLOAT4X4 projection;
+		XMFLOAT4X4 worldViewProj;
 		XMFLOAT4   clipingPlane;
 	};
 

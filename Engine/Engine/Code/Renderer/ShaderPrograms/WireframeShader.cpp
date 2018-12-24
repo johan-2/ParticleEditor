@@ -6,6 +6,7 @@
 #include "ShaderHelpers.h"
 #include "DXRasterizerStates.h"
 #include "Systems.h"
+#include "MathHelpers.h"
 
 WireframeShader::WireframeShader()
 {
@@ -55,15 +56,11 @@ void WireframeShader::RenderWireFrame(std::vector<Mesh*>& meshes)
 
 	DXM.RasterizerStates()->SetRasterizerState(RASTERIZER_STATE::WIREFRAME);
 
-	// set camera matrices
-	XMStoreFloat4x4(&vertexData.view,       XMLoadFloat4x4(&camera->GetViewMatrix()));
-	XMStoreFloat4x4(&vertexData.projection, XMLoadFloat4x4(&camera->GetProjectionMatrix()));
-
 	unsigned int size = meshes.size();
 	for (int i = 0; i < size; i++)
 	{
 		// set world matrix
-		XMStoreFloat4x4(&vertexData.world, XMLoadFloat4x4(&meshes[i]->GetWorldMatrix()));
+		XMStoreFloat4x4(&vertexData.worldViewProj, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&meshes[i]->GetWorldMatrix(), &camera->GetViewProjMatrix())));
 
 		// update the constant buffer with the vertexdata of this mesh
 		SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(ConstantVertex), _constantBufferVertex);
