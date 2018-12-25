@@ -6,6 +6,7 @@
 using namespace DirectX;
 class Mesh;
 class TransformComponent;
+class Entity;
 
 enum SKY_DOME_RENDER_MODE
 {
@@ -35,7 +36,6 @@ public:
 	void SetRenderMode(SKY_DOME_RENDER_MODE mode) { _RENDER_MODE = mode; }
 
 	// set sun/moon properties
-	void SetSunDirectionTransformPtr(TransformComponent* direction) { _sunMoon.directionPtr  = direction; }
 	void SetSunDistance(float distance)                             { _sunMoon.sun.distance  = XMFLOAT3(distance, distance, distance); }
 	void SetMoonDistance(float distance)                            { _sunMoon.moon.distance = XMFLOAT3(distance, distance, distance); }
 
@@ -67,16 +67,15 @@ private:
 		XMFLOAT3   colorTint = XMFLOAT3(1, 1, 1);
 		float      relativeHeight;
 		XMFLOAT2   beginEndFade;
+
+		Entity* entity;
+		TransformComponent* transform;
 	};
 
 	struct SunMoon
 	{
 		SkyObject sun;
 		SkyObject moon;
-
-		// will use the forward direction of transform as sun direction
-		// and the invert of this as moon direction
-		TransformComponent* directionPtr;
 	};
 
 	struct DynamicDomeSettings
@@ -90,6 +89,8 @@ private:
 		// cycle values
 		float cycleInSec = 60.0f;
 		float cycleTimer = 0;
+
+		float switchToMoonLightThreshold = -0.1f;
 
 		// start/end blend values
 		XMFLOAT2 sunsetLightColorStartEndBlend  = XMFLOAT2(0.2f, 0.0f);
@@ -108,14 +109,13 @@ private:
 
 		// translation values for shadow rendering camera
 		XMFLOAT3 shadowMapDistance = XMFLOAT3(300, 300, 300);
-		XMFLOAT3 rotation          = XMFLOAT3(0, 0, 0);
 		XMFLOAT3 startRotation     = XMFLOAT3(0, 100.0f, 0);
 		XMFLOAT3 endRotation       = XMFLOAT3(360.0f, 100.0f, 0.0f);
 
 		// colors
 		XMFLOAT4 normalDirLightColor = XMFLOAT4(0.8f, 0.8f, 0.8f, 0.0f);
 		XMFLOAT4 sunsetDirLightColor = XMFLOAT4(0.9935f, 0.07211f, 0.08812f, 1.0f);
-		XMFLOAT4 nightDirLightColor  = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
+		XMFLOAT4 nightDirLightColor  = XMFLOAT4(0.05f, 0.05f, 0.13f, 1.0f);
 		XMFLOAT4 topSkyColorDay      = XMFLOAT4(0.082f, 0.352f, 0.984f, 1.0f);
 		XMFLOAT4 topSkyColorSunSet   = XMFLOAT4(0.35f, 0.45f, 0.984f, 1.0f);
 		XMFLOAT4 topSkyColorNight    = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);

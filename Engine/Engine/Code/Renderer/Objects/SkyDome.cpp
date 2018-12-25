@@ -13,6 +13,7 @@
 #include "Mesh.h"
 #include <algorithm>
 #include "MathHelpers.h"
+#include "Entity.h"
 
 SkyDome::SkyDome(const wchar_t* textureFile, SKY_DOME_RENDER_MODE mode):
 	_isActive(true),
@@ -44,7 +45,14 @@ SkyDome::SkyDome(const wchar_t* textureFile, SKY_DOME_RENDER_MODE mode):
 	_sunMoon.moon.distance     = XMFLOAT3(5.0f, 5.0f, 5.0f);
 	_sunMoon.moon.beginEndFade = XMFLOAT2(0.3f, 0.05f);
 	_sunMoon.moon.colorTint    = XMFLOAT3(0.4f, 0.4f, 0.4f);
-	_sunMoon.directionPtr      = nullptr;
+
+	_sunMoon.sun.entity = new Entity();	
+ 	_sunMoon.sun.transform = _sunMoon.sun.entity->AddComponent<TransformComponent>();
+	_sunMoon.sun.transform->Init();
+
+	_sunMoon.moon.entity = new Entity();
+	_sunMoon.moon.transform = _sunMoon.moon.entity->AddComponent<TransformComponent>();
+	_sunMoon.moon.transform->Init();
 }
 
 SkyDome::~SkyDome()
@@ -269,7 +277,7 @@ void SkyDome::RenderSunMoon(bool reflect)
 	ID3D11DeviceContext* devCon = DXM.GetDeviceCon();
 
 	// get game camera
-	CameraComponent* camera             = Systems::cameraManager->GetCurrentCameraGame();
+	CameraComponent* camera      = Systems::cameraManager->GetCurrentCameraGame();
 	TransformComponent* camTrans = camera->GetComponent<TransformComponent>();
 
 	// render sun with alpha blend
@@ -346,7 +354,7 @@ void SkyDome::CaluclateSunMoonMatrix(XMFLOAT3 cameraPosition)
 {
 	XMFLOAT3 offsetSun;
 	XMFLOAT3 offsetMoon;
-	XMFLOAT3 sunDirection = _sunMoon.directionPtr->GetForward();
+	XMFLOAT3 sunDirection = _sunMoon.sun.transform->GetForward();
 	
 	// calculate translation for sun and moon
 	XMStoreFloat3(&offsetSun,  XMVectorMultiply(XMLoadFloat3(&sunDirection), XMLoadFloat3(&_sunMoon.sun.distance)));
@@ -391,25 +399,28 @@ void SkyDome::UpdateDynamicSky(const float& delta)
 	if (_dynamicSky.cycleTimer > _dynamicSky.cycleInSec)
 		_dynamicSky.cycleTimer = 0.0f;
 
-	// get the current rotation of light depending on fraction of cycle passed
-	XMStoreFloat3(&_dynamicSky.rotation,
+	XMFLOAT3 sunRotation;
+	XMFLOAT3 moonRotation;
+	XMFLOAT3 moonOffset(_dynamicSky.startRotation.x + 180.0f, 0, 0);
+
+	// get the current rotation of the sun bassed on cycle passed
+	XMStoreFloat3(&sunRotation,
 		XMVectorLerp(XMLoadFloat3(&_dynamicSky.startRotation),
 			XMLoadFloat3(&_dynamicSky.endRotation),
 			_dynamicSky.cycleTimer / _dynamicSky.cycleInSec));
 
-	// set new light rotation and update the world matrix
-	lightTransform->SetRotation(_dynamicSky.rotation);
-	lightTransform->UpdateWorldMatrix();
+	// add on 180 degress to moon rotation from sun rotation
+	XMStoreFloat3(&moonRotation, XMVectorAdd(XMLoadFloat3(&sunRotation), XMLoadFloat3(&moonOffset)));
 
-	// get the inverse look at of light so we can translate back from origin
-	XMFLOAT3 invertedForward = lightTransform->GetForward();
+	// update rotation and matrices
+	_sunMoon.sun.transform->SetRotation(sunRotation);
+	_sunMoon.moon.transform->SetRotation(moonRotation);
+	_sunMoon.sun.transform->UpdateWorldMatrix();
+	_sunMoon.moon.transform->UpdateWorldMatrix();
+
+	// get the inverse look of sun
+	XMFLOAT3 invertedForward = _sunMoon.sun.transform->GetForward();
 	XMStoreFloat3(&invertedForward, XMVectorNegate(XMLoadFloat3(&invertedForward)));
-
-	// get and set the final position of light source
-	XMFLOAT3 finalPosition;
-	XMStoreFloat3(&finalPosition, XMVectorMultiply(XMLoadFloat3(&invertedForward), XMLoadFloat3(&_dynamicSky.shadowMapDistance)));
-	lightTransform->SetPosition(finalPosition);
-	lightTransform->UpdateWorldMatrix();
 
 	// get the dot product that will represent the sun at its highest point
 	// 1.0 = top, 0.0 = at horizon, -1 = at lowest point under the world
@@ -417,6 +428,22 @@ void SkyDome::UpdateDynamicSky(const float& delta)
 	float highestPoint;
 	XMStoreFloat(&highestPoint,
 		XMVector3Dot(XMLoadFloat3(&invertedForward), XMLoadFloat3(&up)));
+
+	// set new light rotation depending on the threshold if
+	// the sun or the moon is the light casting source
+	lightTransform->SetRotation(highestPoint < _dynamicSky.switchToMoonLightThreshold ? _sunMoon.moon.transform->GetRotationVal() : _sunMoon.sun.transform->GetRotationVal());
+	lightTransform->UpdateWorldMatrix();
+
+	// get the inverted forward of the current lightsource
+	// so we can offset the shadowmap camera based on this
+	XMFLOAT3 invertedForwardLight = lightTransform->GetForward();
+	XMStoreFloat3(&invertedForwardLight, XMVectorNegate(XMLoadFloat3(&invertedForwardLight)));
+
+	// move the shadowmap camera 
+	XMFLOAT3 finalPosition;
+	XMStoreFloat3(&finalPosition, XMVectorMultiply(XMLoadFloat3(&invertedForwardLight), XMLoadFloat3(&_dynamicSky.shadowMapDistance)));
+	lightTransform->SetPosition(finalPosition);
+	lightTransform->UpdateWorldMatrix();	
 
 	// make sun distance smaller the closer to the horizon it gets
 	// this will make it appear bigger
@@ -429,13 +456,16 @@ void SkyDome::UpdateDynamicSky(const float& delta)
 		_dynamicSky.sunBeginEndColorBlend.x, _dynamicSky.sunBeginEndColorBlend.y, highestPoint);
 
 	// final directional light color depending on the dot product
+	// day to sunset
 	XMFLOAT4 blendedLightColor;
 	LerpColorRGB(blendedLightColor, _dynamicSky.normalDirLightColor, _dynamicSky.sunsetDirLightColor,
 		_dynamicSky.sunsetLightColorStartEndBlend.x, _dynamicSky.sunsetLightColorStartEndBlend.y, highestPoint);
 
+	// sunset to night
 	LerpColorRGB(blendedLightColor, blendedLightColor, _dynamicSky.nightDirLightColor,
 		_dynamicSky.nightLightColorStartEndBlend.x, _dynamicSky.nightLightColorStartEndBlend.y, highestPoint);
 
+	// set the color of directional light
 	directionLight->SetLightColor(blendedLightColor);
 
 	// set the color of the top part of sky

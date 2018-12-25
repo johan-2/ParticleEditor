@@ -26,9 +26,6 @@ SponzaTestScene::SponzaTestScene()
 	_skyDome = renderer.CreateSkyBox(L"SkyBoxes/ThickCloudsWater.dds", SKY_DOME_RENDER_MODE::THREE_LAYER_COLOR_BLEND);
 	_skyDome->SetSkyColorLayers(XMFLOAT4(0, 0, 0, 0), XMFLOAT4(0, 0, 0, 30), XMFLOAT4(0, 0, 0, 70));
 
-	// set skybox properties
-	_skyDome->SetSunDirectionTransformPtr(shadowMapRenderer->GetComponent<TransformComponent>());
-
 	renderer.CreateDebugImages();
 
 	// create game camera

@@ -48,20 +48,17 @@ c:\users\johan\desktop\enginedx11\engine\engine\code\components\uvscrollcomponen
   SkyDome.cpp
 c:\users\johan\desktop\enginedx11\engine\engine\code\utils\modelloader.h(471): warning C4002: too many arguments for function-like macro invocation 'assert'
 c:\users\johan\desktop\enginedx11\engine\engine\code\utils\modelloader.h(487): warning C4018: '<': signed/unsigned mismatch
-  RenderToTexture.cpp
-  Renderer.cpp
-c:\users\johan\desktop\enginedx11\engine\engine\code\renderer\renderer.cpp(94): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
   DeferredShader.cpp
 c:\users\johan\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\deferredshader.cpp(77): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
 c:\users\johan\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\deferredshader.cpp(78): warning C4018: '<': signed/unsigned mismatch
   DepthShader.cpp
 c:\users\johan\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\depthshader.cpp(56): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
 c:\users\johan\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\depthshader.cpp(57): warning C4018: '<': signed/unsigned mismatch
-  Compiling...
   ForwardAlphaShader.cpp
 c:\users\johan\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\forwardalphashader.cpp(94): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
 c:\users\johan\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\forwardalphashader.cpp(94): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
   ImGUIShader.cpp
+  Compiling...
   ParticleShader.cpp
 c:\users\johan\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\particleshader.cpp(70): warning C4018: '<': signed/unsigned mismatch
   PlanarReflectionShader.cpp
@@ -78,11 +75,9 @@ c:\users\johan\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\wir
 c:\users\johan\desktop\enginedx11\engine\engine\code\system\systems.cpp(20): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
   IslandTestScene.cpp
   SponzaTestScene.cpp
-  DebugStats.cpp
-  TexturePool.cpp
   Generating code
-  15 of 2624 functions ( 0.6%) were compiled, the rest were copied from previous compilation.
+  1 of 2623 functions (<0.1%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    32 functions had inline decision re-evaluated but remain unchanged
+    2 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   Engine.vcxproj -> C:\Users\johan\Desktop\EngineDx11\Engine\Engine\Engine.exe

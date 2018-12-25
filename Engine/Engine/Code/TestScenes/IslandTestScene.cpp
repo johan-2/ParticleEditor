@@ -25,9 +25,6 @@ IslandTestScene::IslandTestScene()
 	// create skybox
 	_skyDome = renderer.CreateSkyBox(L"SkyBoxes/ThickCloudsWater.dds", SKY_DOME_RENDER_MODE::CUBEMAP_COLOR_BLEND);
 
-	// set skybox properties
-	_skyDome->SetSunDirectionTransformPtr(shadowMapRenderer->GetComponent<TransformComponent>());
-
 	renderer.CreateDebugImages();
 
 	// create game camera
