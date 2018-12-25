@@ -100,6 +100,10 @@ private:
 		XMFLOAT2 sunsetMidSkyColorStartEndBlend = XMFLOAT2(0.45f, 0.0f);
 		XMFLOAT2 nightMidSkyColorStartEndBlend  = XMFLOAT2(0.0f, -0.25f);
 
+		// start == to beginning to fade out
+		XMFLOAT2 dayLightStartEndfade   = XMFLOAT2(0.0f, -0.1f);
+		XMFLOAT2 nightLightStartEndfade = XMFLOAT2(-0.2f, -0.1f);
+
 		// sun distance
 		XMFLOAT2 sunMinMaxDst          = XMFLOAT2(0.8f, 5.0f);
 		XMFLOAT2 sunBeginEndDstLerp    = XMFLOAT2(0.5f, -0.25f);

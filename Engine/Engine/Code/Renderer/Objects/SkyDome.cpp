@@ -465,6 +465,18 @@ void SkyDome::UpdateDynamicSky(const float& delta)
 	LerpColorRGB(blendedLightColor, blendedLightColor, _dynamicSky.nightDirLightColor,
 		_dynamicSky.nightLightColorStartEndBlend.x, _dynamicSky.nightLightColorStartEndBlend.y, highestPoint);
 
+	// get the light strength fraction depending on if night or day
+	// this makes the light completely fade out before we switch between
+	// the sun and moon light sources. After the switch the light strength is 
+	// then faded back in, this avoids a rough light transition
+	float ls = highestPoint < _dynamicSky.switchToMoonLightThreshold ?
+		inverseLerp(_dynamicSky.nightLightStartEndfade.y, _dynamicSky.nightLightStartEndfade.x, highestPoint) :
+		inverseLerp(_dynamicSky.dayLightStartEndfade.y, _dynamicSky.dayLightStartEndfade.x, highestPoint);
+
+	// mutiply light color by strenght
+	XMFLOAT4 lightStrength(ls, ls, ls, 1.0f);
+	XMStoreFloat4(&blendedLightColor, XMVectorMultiply(XMLoadFloat4(&blendedLightColor), XMLoadFloat4(&lightStrength)));
+
 	// set the color of directional light
 	directionLight->SetLightColor(blendedLightColor);
 
