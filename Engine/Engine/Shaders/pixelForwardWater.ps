@@ -3,10 +3,10 @@ SamplerState SampleType[2]; // wrap,clamp
 
 static float darkenOcludedPercent = 0.2;
 static float highlightStrength = 2.0;
-static float4 waterColorTint = float4(0.0, 0.3, 0.5, 1.0);
-static float tintStrength = 0.05;
+static float4 waterColorTint = float4(0.0, 0.3, 0.1, 1.0);
+static float tintStrength = 0.2;
 static float distortionDamping = 0.012;
-static float minTransparancy = 0.2;
+static float reflectivePower = 0.9;
 
 struct PointLight
 {
@@ -210,7 +210,8 @@ float4 Main(PixelInputType input) : SV_TARGET
 	float4 refractionColor = GetRefractionColor(input, distortionMap);
 
 	// get the amount of reflective/transparency based on the fresnel effect
-	float fresnelDot = clamp(dot(float3(0, 1, 0), normalize(input.vertexToCamera)), minTransparancy, 1.0); 
+	float fresnelDot = saturate(dot(float3(0, 1, 0), normalize(input.vertexToCamera))); 
+	fresnelDot = pow(fresnelDot, reflectivePower);
 
 	// set the mix of reflection color and refraction color
 	float4 colorMix = lerp(reflectionColor, refractionColor, fresnelDot);
