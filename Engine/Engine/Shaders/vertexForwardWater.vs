@@ -28,6 +28,7 @@ struct PixelInputType
 	float4 vertexColor         : COLOR;
 	float4 reflectionPosition  : TEXCOORD4;
 	float4 positionCameraSpace : TEXCOORD5;
+	float2 texCoordOffset      : TEXCOORD6;
 };
 
 PixelInputType Main(VertexInputType input)
@@ -35,7 +36,8 @@ PixelInputType Main(VertexInputType input)
     PixelInputType output;
 	
 	// send texcoords to pixelshader
-	output.texCoord = input.texCoord + u_uvOffset;
+	output.texCoord = input.texCoord;
+	output.texCoordOffset = u_uvOffset;
 	  
     // set the w component of position
     input.position.w = 1.0f;

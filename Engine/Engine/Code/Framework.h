@@ -2,6 +2,7 @@
 #include <Windows.h>
 #include <string>
 #include "SponzaTestScene.h"
+#include "IslandTestScene.h"
 
 class DebugStats;
 class Window;
@@ -27,5 +28,6 @@ private:
 	Window*     _window;
 	DebugStats* _debugStats;
 	SponzaTestScene* _testScene;
+	IslandTestScene* _islandTestScene;
 };
 

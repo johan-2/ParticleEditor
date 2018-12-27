@@ -40,7 +40,7 @@ public:
 
 		ReflectiveData(){}
 
-		ReflectiveData(float fraction, bool refSkybox, bool refParticles) :
+		ReflectiveData(float fraction) :
 			reflectiveFraction(fraction)
 			{}
 	};
@@ -83,6 +83,9 @@ public:
 	ReflectiveData GetReflectiveData()          { return _reflectData; }
 	void SetReflectionData(ReflectiveData data) { _reflectData = data; }
 
+	void CreateUVDVMap(const wchar_t* texture);
+	ID3D11ShaderResourceView* GetDUDVMap() { return _DUDVMap; }
+
 private:
 
 	// pointers to the vertex/index buffers
@@ -96,6 +99,7 @@ private:
 	// texture array
 	ID3D11ShaderResourceView* _textures[4];
 
+	ID3D11ShaderResourceView* _DUDVMap;
 	// uv offset
 	XMFLOAT2 _uvOffset;
 	

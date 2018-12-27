@@ -42,6 +42,12 @@ Mesh::~Mesh()
 	AddRemoveToRenderer(false);
 }
 
+void Mesh::CreateUVDVMap(const wchar_t* texture)
+{
+	TexturePool& TP = *Systems::texturePool;
+	_DUDVMap = TP.GetTexture(texture);
+}
+
 void Mesh::CreateBuffers(VertexData* verticesData, unsigned long* indicesData, unsigned int numVertices, unsigned int numIndices) 
 {
 	// save number of vertices/indices

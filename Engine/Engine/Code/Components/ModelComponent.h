@@ -46,6 +46,8 @@ public:
 	const std::vector<Mesh*>& GetMeshes()    { return _meshes; }
 	const unsigned int&       GetNumMeshes() { return _numMeshes; }
 
+	void SetUVDVMap(const wchar_t* texture);
+
 private:
 
 	void ProcessNode(aiNode* node, const aiScene* scene, wchar_t* diffuseMap, wchar_t* normalMap, wchar_t* specularMap, wchar_t* emissiveMap, bool useMaterial, float tiling);

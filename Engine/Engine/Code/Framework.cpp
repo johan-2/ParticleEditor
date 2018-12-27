@@ -60,6 +60,7 @@ Framework::~Framework()
 
 void Framework::Start()
 {
+	//_islandTestScene = new IslandTestScene();
 	_testScene = new SponzaTestScene();
 
 	_debugStats = new DebugStats();
@@ -68,6 +69,7 @@ void Framework::Start()
 void Framework::Update()
 {
 	Systems::world->Update();
+	//_islandTestScene->Update(Systems::time->GetDeltaTime());
 	_testScene->Update();
 
 

@@ -110,6 +110,9 @@ void ModelComponent::ProcessNode(aiNode* node, const aiScene* scene, wchar_t* di
 		ProcessNode(node->mChildren[i], scene, diffuseMap, normalMap, specularMap, emissiveMap, useMaterial, tiling);	
 }
 
-
-
+void ModelComponent::SetUVDVMap(const wchar_t* texture)
+{
+	for (int i = 0; i < _meshes.size(); i++)
+		_meshes[i]->CreateUVDVMap(texture);
+}
 
