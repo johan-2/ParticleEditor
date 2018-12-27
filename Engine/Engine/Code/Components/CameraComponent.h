@@ -19,8 +19,6 @@ public:
 	XMFLOAT4X4& GetViewProjMatrix()      { return _viewProjMatrix; }
 	XMFLOAT4X4& GetViewProjMatrixTrans() { return _viewProjMatrixTrans; }
 
-	XMFLOAT4X4 GetReflectionViewProj(float yPosition, bool viewOnly = false);
-
 	// get and set an associated render texture with the camera
 	ID3D11ShaderResourceView* GetSRV()         { return _renderTexture;}
 	void SetSRV(ID3D11ShaderResourceView* tex) { _renderTexture = tex; }
@@ -32,10 +30,10 @@ public:
 	// update from pure virtual in IComponent
 	void Update(const float& delta);
 	
-private:
-	
 	// calculates the camera viewmatrix
 	void CalculateViewMatrix();
+private:
+	
 
 	// cached pointer to transform component
 	TransformComponent* _transform;

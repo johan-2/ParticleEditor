@@ -177,7 +177,10 @@
     <ClCompile Include="Code\Renderer\Objects\SkyDome.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Renderer\ShaderPrograms\ReflectionMapShader.cpp">
+    <ClCompile Include="Code\Renderer\ShaderPrograms\SimpleClipSceneShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Renderer\ShaderPrograms\WaterShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -365,10 +368,13 @@
     <ClInclude Include="Code\Renderer\Objects\SkyDome.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Renderer\ShaderPrograms\ReflectionMapShader.h">
+    <ClInclude Include="Code\Utils\MathHelpers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Utils\MathHelpers.h">
+    <ClInclude Include="Code\Renderer\ShaderPrograms\SimpleClipSceneShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Renderer\ShaderPrograms\WaterShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

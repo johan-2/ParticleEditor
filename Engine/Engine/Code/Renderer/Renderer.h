@@ -23,7 +23,8 @@ class ForwardAlphaShader;
 class WireframeShader;
 class PlanarReflectionShader;
 class PostProcessingShader;
-class ReflectionMapShader;
+class SimpleClipSceneShader;
+class WaterShader;
 
 // the different render lists we have
 enum SHADER_TYPE
@@ -35,6 +36,7 @@ enum SHADER_TYPE
 	S_CAST_REFLECTION_OPAQUE,
 	S_CAST_REFLECTION_ALPHA,
 	S_ALPHA_REFLECTION,
+	S_ALPHA_WATER,
 	S_NUM_RENDER_TYPES,
 };
 
@@ -56,6 +58,16 @@ public:
 	void RemoveQuadFromRenderer(QuadComponent* quad)                        { VECTOR_HELPERS::RemoveItemFromVector(_quads, quad); }
 	void RemoveParticleSystemFromRenderer(ParticleSystemComponent* emitter) { VECTOR_HELPERS::RemoveItemFromVector(_particleSystems, emitter); }
 	
+	// get meshes
+	std::vector<Mesh*>& GetMeshes(SHADER_TYPE type)       { return _meshes[type]; }
+	std::vector<ParticleSystemComponent*>& GetParticles() { return _particleSystems; }
+
+	// get input layouts
+	DXInputLayouts* GetInputLayouts() { return _inputLayouts; } 
+
+	// get shaders
+	ParticleShader* GetParticleShader()        { return _particleShader; }
+
 	// create/ get skydome
 	SkyDome* GetSkybox() { return _skyBox; }
 	SkyDome* CreateSkyBox(const wchar_t* cubeMap, SKY_DOME_RENDER_MODE mode);
@@ -95,7 +107,7 @@ private:
 	WireframeShader*        _wireframeShader;
 	PlanarReflectionShader* _planarReflectionShader;
 	PostProcessingShader*   _PostProcessingShader;
-	ReflectionMapShader*    _reflectionMapShader;
+	WaterShader*            _waterShader;
 
 	// skybox class with all rendering built in
 	SkyDome* _skyBox;

@@ -98,19 +98,19 @@ void SkyDome::LoadCubemap(const wchar_t* file)
 		DX_ERROR::PrintError(result, (std::string("failed to create cubemap with filename ") + DX_ERROR::ConvertFromWString(file)).c_str());
 }
 
-void SkyDome::Render(bool useReflectViewMatrix)
+void SkyDome::Render(bool noMask)
 {
 	if (!_isActive)
 		return;
 
-	if      (_RENDER_MODE == SKY_DOME_RENDER_MODE::CUBEMAP_SIMPLE)          RenderCubeMapSimple(useReflectViewMatrix);
-	else if (_RENDER_MODE == SKY_DOME_RENDER_MODE::THREE_LAYER_COLOR_BLEND) RenderBlendedColors(useReflectViewMatrix);
-	else if (_RENDER_MODE == SKY_DOME_RENDER_MODE::CUBEMAP_COLOR_BLEND)     RenderCubeMapColorBlend(useReflectViewMatrix);
+	if      (_RENDER_MODE == SKY_DOME_RENDER_MODE::CUBEMAP_SIMPLE)          RenderCubeMapSimple(noMask);
+	else if (_RENDER_MODE == SKY_DOME_RENDER_MODE::THREE_LAYER_COLOR_BLEND) RenderBlendedColors(noMask);
+	else if (_RENDER_MODE == SKY_DOME_RENDER_MODE::CUBEMAP_COLOR_BLEND)     RenderCubeMapColorBlend(noMask);
 	
-	RenderSunMoon(useReflectViewMatrix);	
+	RenderSunMoon(noMask);	
 }
 
-void SkyDome::RenderCubeMapSimple(bool useReflectViewMatrix)
+void SkyDome::RenderCubeMapSimple(bool noMask)
 {
 	// RENDER SKYDOME SPHERE
 	// get DX manager
@@ -136,19 +136,11 @@ void SkyDome::RenderCubeMapSimple(bool useReflectViewMatrix)
 	// use no culling
 	DXM.RasterizerStates()->SetRasterizerState(RASTERIZER_STATE::NOCULL);
 
-	// only render non geometry pixels
-	DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::MASKED_SKYBOX);
-
-	// constantbuffer structure
+	if (noMask) DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::DISABLED);
+	else        DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::MASKED_SKYBOX);
+	
 	CBVertDome vertexData;
-
-	// set the matrices
-	if (useReflectViewMatrix)
-	{
-		XMStoreFloat4x4(&vertexData.worldViewProj, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&camTrans->GetPositionMatrix(), &camera->GetReflectionViewProj(camTrans->GetPositionRef().y))));
-		DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::DISABLED);
-	}
-	else XMStoreFloat4x4(&vertexData.worldViewProj, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&camTrans->GetPositionMatrix(), &camera->GetViewProjMatrix())));
+	XMStoreFloat4x4(&vertexData.worldViewProj, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&camTrans->GetPositionMatrix(), &camera->GetViewProjMatrix())));
 
 	// update constant buffer
 	SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(CBVertDome), _constantBufferVertex);
@@ -158,7 +150,7 @@ void SkyDome::RenderCubeMapSimple(bool useReflectViewMatrix)
 	devCon->DrawIndexed(_domeMesh->GetNumIndices(), 0, 0);
 }
 
-void SkyDome::RenderBlendedColors(bool useReflectViewMatrix)
+void SkyDome::RenderBlendedColors(bool noMask)
 {
 	// RENDER SKYDOME SPHERE
 	// get DX manager
@@ -181,18 +173,13 @@ void SkyDome::RenderBlendedColors(bool useReflectViewMatrix)
 
 	// use no culling
 	DXM.RasterizerStates()->SetRasterizerState(RASTERIZER_STATE::NOCULL);
-
-	// only render non geometry pixels
-	DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::MASKED_SKYBOX);
 	
 	// set vertex constants
+	if (noMask) DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::DISABLED);
+	else        DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::MASKED_SKYBOX);
+	
 	CBVertDome vertexData;
-	if (useReflectViewMatrix)
-	{
-		XMStoreFloat4x4(&vertexData.worldViewProj, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&camTrans->GetPositionMatrix(), &camera->GetReflectionViewProj(camTrans->GetPositionRef().y))));
-		DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::DISABLED);
-	}
-	else XMStoreFloat4x4(&vertexData.worldViewProj, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&camTrans->GetPositionMatrix(), &camera->GetViewProjMatrix())));
+	XMStoreFloat4x4(&vertexData.worldViewProj, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&camTrans->GetPositionMatrix(), &camera->GetViewProjMatrix())));
 
 	// set the colors, the percent fraction is stored in the w channel that specifies how
 	// low to high a color will be used on the skydome 
@@ -210,7 +197,7 @@ void SkyDome::RenderBlendedColors(bool useReflectViewMatrix)
 	devCon->DrawIndexed(_domeMesh->GetNumIndices(), 0, 0);
 }
 
-void SkyDome::RenderCubeMapColorBlend(bool useReflectViewMatrix) 
+void SkyDome::RenderCubeMapColorBlend(bool noMask) 
 {
 	// RENDER SKYDOME SPHERE
 	// get DX manager
@@ -237,17 +224,11 @@ void SkyDome::RenderCubeMapColorBlend(bool useReflectViewMatrix)
 	// use no culling
 	DXM.RasterizerStates()->SetRasterizerState(RASTERIZER_STATE::NOCULL);
 
-	// only render non geometry pixels
-	DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::MASKED_SKYBOX);
+	if (noMask) DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::DISABLED);
+	else        DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::MASKED_SKYBOX);
 
-	// set vertex constants
 	CBVertDome vertexData;
-	if (useReflectViewMatrix)
-	{
-		XMStoreFloat4x4(&vertexData.worldViewProj, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&camTrans->GetPositionMatrix(), &camera->GetReflectionViewProj(camTrans->GetPositionRef().y))));
-		DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::DISABLED);
-	}
-	else XMStoreFloat4x4(&vertexData.worldViewProj, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&camTrans->GetPositionMatrix(), &camera->GetViewProjMatrix())));
+	XMStoreFloat4x4(&vertexData.worldViewProj, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&camTrans->GetPositionMatrix(), &camera->GetViewProjMatrix())));
 
 	// set the colors, the percent fraction is stored in the w channel that specifies how
 	// low to high a color will be used on the skydome 
@@ -268,7 +249,7 @@ void SkyDome::RenderCubeMapColorBlend(bool useReflectViewMatrix)
 	devCon->DrawIndexed(_domeMesh->GetNumIndices(), 0, 0);
 }
 
-void SkyDome::RenderSunMoon(bool reflect)
+void SkyDome::RenderSunMoon(bool noMask)
 {
 	// get DX manager
 	DXManager& DXM = *Systems::dxManager;
@@ -295,15 +276,8 @@ void SkyDome::RenderSunMoon(bool reflect)
 	// set world and projection matrix
 	CBVertSun vertexData;
 	XMStoreFloat4x4(&vertexData.world, XMLoadFloat4x4(&_sunMoon.sun.positionMatrix));
+	XMStoreFloat4x4(&vertexData.view, XMMatrixTranspose(XMLoadFloat4x4(&camera->GetViewMatrix())));
 	XMStoreFloat4x4(&vertexData.Proj, XMMatrixTranspose(XMLoadFloat4x4(&camera->GetProjectionMatrix())));
-
-	// set view matrix based if we should reflect or not
-	if (reflect)
-	{
-		XMStoreFloat4x4(&vertexData.view, XMMatrixTranspose(XMLoadFloat4x4(&camera->GetReflectionViewProj(camTrans->GetPositionRef().y, true))));
-		DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::DISABLED);
-	}
-	else XMStoreFloat4x4(&vertexData.view, XMMatrixTranspose(XMLoadFloat4x4(&camera->GetViewMatrix())));
 
 	// constantbuffer pixel structure
 	ConstantSunPixel pixeldata;

@@ -10,7 +10,7 @@ class ParticleSystemComponent;
 class RenderToTexture;
 class ParticleShader;
 class DXInputLayouts;
-class ReflectionMapShader;
+class SimpleClipSceneShader;
 
 class PlanarReflectionShader
 {
@@ -18,20 +18,15 @@ public:
 	PlanarReflectionShader();
 	~PlanarReflectionShader();
 
-	void Render(std::vector<Mesh*>& reflectionMeshes, 
-		        std::vector<Mesh*>& reflectiveOpaqueMeshes,
-				std::vector<Mesh*>& reflectiveAlphaMeshes,
-		        std::vector<ParticleSystemComponent*>& reflectiveParticles, 
-		        ParticleShader*& particleShader, 
-		        DXInputLayouts*& inputLayouts,
-		        ReflectionMapShader*& reflectionMapShader);
+	void Render(std::vector<Mesh*>& reflectionMeshes);
 
 private:
 	
 	// compiled shaders
-	ID3D11VertexShader* _planarVertexShader;
-	ID3D11PixelShader*  _planarPixelShader;
-	
+	ID3D11VertexShader*    _planarVertexShader;
+	ID3D11PixelShader*     _planarPixelShader;
+	SimpleClipSceneShader* _simpleClipShaderReflection;
+
 	// constant buffers
 	ID3D11Buffer* _CBVertex;
 	ID3D11Buffer* _CBPixelAmbDir;

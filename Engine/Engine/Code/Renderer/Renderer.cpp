@@ -25,7 +25,8 @@
 #include "FreeMoveComponent.h"
 #include "PlanarReflectionShader.h"
 #include "PostProcessingShader.h"
-#include "ReflectionMapShader.h"
+#include "SimpleClipSceneShader.h"
+#include "WaterShader.h"
 
 using namespace DirectX;
 
@@ -48,7 +49,7 @@ Renderer::~Renderer()
 	delete _inputLayouts;
 	delete _planarReflectionShader;
 	delete _PostProcessingShader;
-	delete _reflectionMapShader;
+	delete _waterShader;
 }
 
 void Renderer::Initialize()
@@ -66,7 +67,7 @@ void Renderer::Initialize()
 	_wireframeShader        = new WireframeShader();
 	_planarReflectionShader = new PlanarReflectionShader();
 	_PostProcessingShader   = new PostProcessingShader();
-	_reflectionMapShader    = new ReflectionMapShader();
+	_waterShader            = new WaterShader();
 
 	// create input layouts
 	_inputLayouts = new DXInputLayouts();
@@ -177,8 +178,10 @@ void Renderer::Render()
 	_wireframeShader->RenderWireFrame(_meshes[S_WIREFRAME]);
 
 	// render planar reflections forward
-	_planarReflectionShader->Render(_meshes[S_ALPHA_REFLECTION], _meshes[S_CAST_REFLECTION_OPAQUE], _meshes[S_CAST_REFLECTION_ALPHA], 
-									_particleSystems, _particleShader, _inputLayouts, _reflectionMapShader);
+	_planarReflectionShader->Render(_meshes[S_ALPHA_REFLECTION]);
+
+	// render reflective/refractive water
+	_waterShader->Render(_meshes[S_ALPHA_WATER]);
 
 	// TODO: alpha meshes and particles is not sorted against each other
 	// either sort them and send one object at a time to the shaders or

@@ -136,6 +136,10 @@ void Mesh::AddRemoveToRenderer(bool add)
 	if ((_FLAGS & ALPHA_REFLECTION) == ALPHA_REFLECTION)
 		add ? renderer.AddMeshToRenderer(this, SHADER_TYPE::S_ALPHA_REFLECTION) : renderer.RemoveMeshFromRenderer(this, SHADER_TYPE::S_ALPHA_REFLECTION);
 
+	// forward rendered alpha meshes with planar reflections
+	if ((_FLAGS & ALPHA_WATER) == ALPHA_WATER)
+		add ? renderer.AddMeshToRenderer(this, SHADER_TYPE::S_ALPHA_WATER) : renderer.RemoveMeshFromRenderer(this, SHADER_TYPE::S_ALPHA_WATER);
+
 	// debug meshes that only renders a wireframe
 	if ((_FLAGS & WIREFRAME_COLOR) == WIREFRAME_COLOR)
 		add ? renderer.AddMeshToRenderer(this, SHADER_TYPE::S_WIREFRAME) : renderer.RemoveMeshFromRenderer(this, SHADER_TYPE::S_WIREFRAME);

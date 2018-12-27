@@ -13,8 +13,9 @@
 #include "QuadComponent.h"
 #include "ParticleShader.h"
 #include "SkyDome.h"
-#include "ReflectionMapShader.h"
+#include "SimpleClipSceneShader.h"
 #include "MathHelpers.h"
+#include "Renderer.h"
 
 PlanarReflectionShader::PlanarReflectionShader()
 {
@@ -26,6 +27,8 @@ PlanarReflectionShader::PlanarReflectionShader()
 	SHADER_HELPERS::CreateConstantBuffer(_CBVertex);
 	SHADER_HELPERS::CreateConstantBuffer(_CBPixelAmbDir);
 	SHADER_HELPERS::CreateConstantBuffer(_CBPixelPoint);
+
+	_simpleClipShaderReflection = new SimpleClipSceneShader();
 }
 
 PlanarReflectionShader::~PlanarReflectionShader()
@@ -39,15 +42,11 @@ PlanarReflectionShader::~PlanarReflectionShader()
 	_CBPixelAmbDir->Release();
 	_CBPixelPoint->Release();
 	_CBVertex->Release();
+
+	delete _simpleClipShaderReflection;
 }
 
-void PlanarReflectionShader::Render(std::vector<Mesh*>& reflectionMeshes,
-    std::vector<Mesh*>& reflectiveOpaqueMeshes,
-    std::vector<Mesh*>& reflectiveAlphaMeshes,
-    std::vector<ParticleSystemComponent*>& reflectiveParticles,
-    ParticleShader*& particleShader,
-    DXInputLayouts*& inputLayouts,
-	ReflectionMapShader*& reflectionMapShader)
+void PlanarReflectionShader::Render(std::vector<Mesh*>& reflectionMeshes)
 {
 	if (reflectionMeshes.size() == 0)
 		return;
@@ -56,6 +55,7 @@ void PlanarReflectionShader::Render(std::vector<Mesh*>& reflectionMeshes,
 	DXManager&     DXM = *Systems::dxManager;
 	CameraManager& CM  = *Systems::cameraManager;
 	LightManager&  LM  = *Systems::lightManager;
+	Renderer& renderer = *Systems::renderer;
 
 	// get device context
 	ID3D11DeviceContext*& devCon = DXM.GetDeviceCon();
@@ -64,8 +64,11 @@ void PlanarReflectionShader::Render(std::vector<Mesh*>& reflectionMeshes,
 	CameraComponent*& camera      = CM.GetCurrentCameraGame();
 	CameraComponent*& cameraLight = CM.GetCurrentCameraDepthMap();
 
+	TransformComponent* camTrans = camera->GetComponent<TransformComponent>();
+
 	// get camera position
-	const XMFLOAT3& cameraPos = camera->GetComponent<TransformComponent>()->GetPositionRef();
+	XMFLOAT3 cameraPos = camTrans->GetPositionVal();
+	XMFLOAT3 cameraRot = camTrans->GetRotationVal();
 
 	// get directional light
 	LightDirectionComponent*& directionalLight = LM.GetDirectionalLight();
@@ -98,8 +101,27 @@ void PlanarReflectionShader::Render(std::vector<Mesh*>& reflectionMeshes,
 		// get the clip plane of the reflection mesh so we dont render anything below this plane
 		XMFLOAT4 clipPlane(0, 1, 0, -mesh->GetPosition().y);
 
+		// change the camera y position to render reflection
+		XMFLOAT3 reflectPos = cameraPos;
+		reflectPos.y -= (cameraPos.y - mesh->GetPosition().y) * 2.0f;
+
+		// set reflection position/rotation and build matrices
+		camTrans->SetRotation(XMFLOAT3(-cameraRot.x, cameraRot.y, cameraRot.z));
+		camTrans->SetPosition(reflectPos);
+		camTrans->UpdateWorldMatrix();
+		camera->CalculateViewMatrix();
+
+		// save the reflection viewprojmatrix
+		XMFLOAT4X4 reflectMat = camera->GetViewProjMatrix();
+
 		// render the reflectionmap
-		reflectionMapShader->GenerateReflectionMap(reflectiveOpaqueMeshes, reflectiveAlphaMeshes, reflectiveParticles, particleShader, inputLayouts, mesh, clipPlane);
+		_simpleClipShaderReflection->RenderScene(renderer.GetMeshes(SHADER_TYPE::S_CAST_REFLECTION_OPAQUE), renderer.GetMeshes(SHADER_TYPE::S_CAST_REFLECTION_ALPHA), clipPlane, true);
+
+		// change back to original camera position/rotation
+		camTrans->SetRotation(cameraRot);
+		camTrans->SetPosition(cameraPos);
+		camTrans->UpdateWorldMatrix();
+		camera->CalculateViewMatrix();
 
 		// set back to defualt render target and render the reflection mesh
 		Systems::renderer->SetMainRenderTarget();
@@ -122,7 +144,7 @@ void PlanarReflectionShader::Render(std::vector<Mesh*>& reflectionMeshes,
 		XMStoreFloat4x4(&constantVertex.world,                XMLoadFloat4x4(&mesh->GetWorldMatrixTrans()));
 		XMStoreFloat4x4(&constantVertex.worldViewProj,        XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&worldMat, &camera->GetViewProjMatrix())));
 		XMStoreFloat4x4(&constantVertex.worldViewProjLight,   XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&worldMat, &cameraLight->GetViewProjMatrix())));
-		XMStoreFloat4x4(&constantVertex.worldViewProjReflect, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&worldMat, &camera->GetReflectionViewProj(mesh->GetPosition().y))));
+		XMStoreFloat4x4(&constantVertex.worldViewProjReflect, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&worldMat, &reflectMat)));
 		XMStoreFloat2(&constantVertex.uvOffset,               XMLoadFloat2(&mesh->GetUvOffset()));
 
 		// set the fraction of the reflection blending with the texture color
@@ -136,7 +158,7 @@ void PlanarReflectionShader::Render(std::vector<Mesh*>& reflectionMeshes,
 		ID3D11ShaderResourceView** meshTextures = mesh->GetTextureArray();
 
 		// fill texture array with all textures including the shadow map and reflection map
-		ID3D11ShaderResourceView* t[6] = { meshTextures[0], meshTextures[1], meshTextures[2], meshTextures[3], shadowMap, reflectionMapShader->GetReflectionMap() };
+		ID3D11ShaderResourceView* t[6] = { meshTextures[0], meshTextures[1], meshTextures[2], meshTextures[3], shadowMap, _simpleClipShaderReflection->GetSRV() };
 
 		// set SRV's
 		devCon->PSSetShaderResources(0, 6, t);

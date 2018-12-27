@@ -11,6 +11,7 @@
 #define CAST_REFLECTION_OPAQUE 1 << 4
 #define CAST_REFLECTION_ALPHA  1 << 5
 #define ALPHA_REFLECTION       1 << 6
+#define ALPHA_WATER            1 << 7
 
 using namespace DirectX;
 
@@ -36,15 +37,12 @@ public:
 	struct ReflectiveData
 	{
 		float reflectiveFraction = 0.2f;
-		bool  reflectSkybox      = false;
-		bool  reflectParticles   = true;
 
 		ReflectiveData(){}
 
 		ReflectiveData(float fraction, bool refSkybox, bool refParticles) :
-			reflectiveFraction(fraction),
-			reflectSkybox(refSkybox),
-			reflectParticles(refParticles){}
+			reflectiveFraction(fraction)
+			{}
 	};
 
 	// create vertex and index buffers

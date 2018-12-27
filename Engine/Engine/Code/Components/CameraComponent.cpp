@@ -54,38 +54,3 @@ void CameraComponent::CalculateViewMatrix()
 	XMStoreFloat4x4(&_viewProjMatrix, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiply(&_viewMatrix, &_projectionMatrix)));
 	XMStoreFloat4x4(&_viewProjMatrixTrans, XMMatrixTranspose(XMLoadFloat4x4(&_viewProjMatrix)));
 }
-
-XMFLOAT4X4 CameraComponent::GetReflectionViewProj(float yPosition, bool viewOnly)
-{
-	XMFLOAT4X4 rotationMatrix;
-	XMFLOAT4X4 viewMatrix;
-
-	XMFLOAT3 rotation = _transform->GetRotationVal();
-	XMFLOAT3 position = _transform->GetPositionVal();
-
-	position.y -= 2.0f * (position.y - yPosition);
-	rotation.x = -rotation.x;
-
-	XMFLOAT3 rotRadian(XMConvertToRadians(rotation.x), XMConvertToRadians(rotation.y), XMConvertToRadians(rotation.z));
-	
-	XMStoreFloat4x4(&rotationMatrix, XMMatrixRotationRollPitchYaw(rotRadian.x, rotRadian.y, rotRadian.z));
-
-	XMFLOAT3 f = XMFLOAT3(0.0f, 0.0f, 1.0f);	
-	XMFLOAT3 u = XMFLOAT3(0.0f, 1.0f, 0.0f);
-
-	XMFLOAT3 forward;
-	XMFLOAT3 up;
-
-	XMStoreFloat3(&forward, XMVector3Normalize(XMVector3TransformCoord(XMLoadFloat3(&f), XMLoadFloat4x4(&rotationMatrix))));	
-	XMStoreFloat3(&up, XMVector3Normalize(XMVector3TransformCoord(XMLoadFloat3(&u), XMLoadFloat4x4(&rotationMatrix))));
-
-	// create the viewMatrix based on our position, look direction and updirection of the camera	
-	XMStoreFloat3(&forward, XMVectorAdd(XMLoadFloat3(&position), XMLoadFloat3(&forward)));
-
-	XMStoreFloat4x4(&viewMatrix, XMMatrixLookAtLH(XMLoadFloat3(&position), XMLoadFloat3(&forward), XMLoadFloat3(&up)));
-
-	if (!viewOnly)
-		XMStoreFloat4x4(&viewMatrix, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiply(&viewMatrix, &_projectionMatrix)));
-
-	return viewMatrix;
-}
