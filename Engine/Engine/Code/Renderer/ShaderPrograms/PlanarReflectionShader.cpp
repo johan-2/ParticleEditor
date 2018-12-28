@@ -158,7 +158,7 @@ void PlanarReflectionShader::Render(std::vector<Mesh*>& reflectionMeshes)
 		ID3D11ShaderResourceView** meshTextures = mesh->GetTextureArray();
 
 		// fill texture array with all textures including the shadow map and reflection map
-		ID3D11ShaderResourceView* t[6] = { meshTextures[0], meshTextures[1], meshTextures[2], meshTextures[3], shadowMap, _simpleClipShaderReflection->GetSRV() };
+		ID3D11ShaderResourceView* t[6] = { meshTextures[0], meshTextures[1], meshTextures[2], meshTextures[3], shadowMap, _simpleClipShaderReflection->GetRenderSRV() };
 
 		// set SRV's
 		devCon->PSSetShaderResources(0, 6, t);

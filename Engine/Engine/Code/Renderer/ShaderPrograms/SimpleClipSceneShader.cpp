@@ -27,14 +27,14 @@ SimpleClipSceneShader::SimpleClipSceneShader(bool debugQuad, XMFLOAT2 pos)
 	SHADER_HELPERS::CreateConstantBuffer(_CBPixelPoint);
 
 	// create render texture
-	_srv = new RenderToTexture(SCREEN_WIDTH, SCREEN_HEIGHT, false);
+	_renderTexture = new RenderToTexture(SCREEN_WIDTH, SCREEN_HEIGHT, false);
 
 	if (debugQuad)
 	{
 		// create debug quad
 		Entity* reflectionQuad = new Entity();
 		reflectionQuad->AddComponent<QuadComponent>()->Init(XMFLOAT2(SCREEN_WIDTH * 0.66f, SCREEN_HEIGHT * 0.1f), XMFLOAT2(SCREEN_WIDTH * 0.1f, SCREEN_HEIGHT * 0.1f), L"");
-		reflectionQuad->GetComponent<QuadComponent>()->SetTexture(_srv->GetRenderTargetSRV());
+		reflectionQuad->GetComponent<QuadComponent>()->SetTexture(_renderTexture->GetRenderTargetSRV());
 	}
 }
 
@@ -85,8 +85,8 @@ void SimpleClipSceneShader::RenderScene(std::vector<Mesh*>& opaqueMeshes, std::v
 	XMStoreFloat4(&constantVertex.clipingPlane, XMLoadFloat4(&clipPlane));
 	
 	// clear our reflection map render texture and set it to active
-	_srv->ClearRenderTarget(0, 0, 0, 1, false);
-	_srv->SetRendertarget(false, false);
+	_renderTexture->ClearRenderTarget(0, 0, 0, 1, false);
+	_renderTexture->SetRendertarget(false, false);
 
 	// render skybox first
 	if (includeSkyBox)

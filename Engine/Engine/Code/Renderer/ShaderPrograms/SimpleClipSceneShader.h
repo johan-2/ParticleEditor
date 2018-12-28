@@ -20,12 +20,13 @@ public:
 	void RenderScene(std::vector<Mesh*>& opaqueMeshes, std::vector<Mesh*>& alphaMeshes, XMFLOAT4 clipPlane, bool includeSkyBox = true, bool includeParticles = true);
 
 	// gets the reflection map srv
-	ID3D11ShaderResourceView* GetSRV() { return _srv->GetRenderTargetSRV(); }
+	ID3D11ShaderResourceView* GetRenderSRV() { return _renderTexture->GetRenderTargetSRV(); }
+	ID3D11ShaderResourceView* GetDepthSRV()  { return _renderTexture->GetDepthStencilSRV(); }
 
 private:
 
 	// render texture
-	RenderToTexture* _srv;
+	RenderToTexture* _renderTexture;
 
 	// shaders
 	ID3D11VertexShader* _reflectionMapVertexShader;

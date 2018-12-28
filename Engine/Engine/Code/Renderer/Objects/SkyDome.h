@@ -87,7 +87,7 @@ private:
 		float speedMultiplier = 1.0f;
 
 		// cycle values
-		float cycleInSec = 400.0f;
+		float cycleInSec = 60.0f;
 		float cycleTimer = 0;
 
 		float switchToMoonLightThreshold = -0.1f;
