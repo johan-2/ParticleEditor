@@ -17,9 +17,8 @@
 SimpleClipSceneShader::SimpleClipSceneShader(bool debugQuad, XMFLOAT2 pos)
 {
 	// create shaders
-	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexSimpleClip.vs",     _reflectionMapVertexShader,      _reflectionMapVertexShaderByteCode);
-	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelSimpleClipOpaque.ps", _reflectionMapPixelShaderOpaque, _reflectionMapPixelShaderByteCodeOpaque);
-	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelSimpleClipAlpha.ps",  _reflectionMapPixelShaderAlpha,  _reflectionMapPixelShaderByteCodeAlpha);
+	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexSimpleClip.vs", _vertexShader, _vertexShaderByteCode);
+	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelSimpleClip.ps",   _pixelShader,  _pixelShaderByteCodeOpaque);
 
 	// create constant buffers
 	SHADER_HELPERS::CreateConstantBuffer(_CBVertex);
@@ -40,13 +39,11 @@ SimpleClipSceneShader::SimpleClipSceneShader(bool debugQuad, XMFLOAT2 pos)
 
 SimpleClipSceneShader::~SimpleClipSceneShader()
 {
-	_reflectionMapVertexShader->Release();
-	_reflectionMapPixelShaderOpaque->Release();
-	_reflectionMapPixelShaderAlpha->Release();
+	_vertexShader->Release();
+	_pixelShader->Release();
 
-	_reflectionMapVertexShaderByteCode->Release();
-	_reflectionMapPixelShaderByteCodeOpaque->Release();
-	_reflectionMapPixelShaderByteCodeAlpha->Release();
+	_vertexShaderByteCode->Release();
+	_pixelShaderByteCodeOpaque->Release();
 
 	_CBVertex->Release();
 }
@@ -96,8 +93,8 @@ void SimpleClipSceneShader::RenderScene(std::vector<Mesh*>& opaqueMeshes, std::v
 	DXM.BlendStates()->SetBlendState(BLEND_STATE::BLEND_OPAQUE);
 
 	// set shaders that will handle rednering opaque meshes to reflectionmap
-	devCon->VSSetShader(_reflectionMapVertexShader, NULL, 0);
-	devCon->PSSetShader(_reflectionMapPixelShaderOpaque, NULL, 0);
+	devCon->VSSetShader(_vertexShader, NULL, 0);
+	devCon->PSSetShader(_pixelShader, NULL, 0);
 
 	// set constant buffer for the vertex and pixel shader
 	devCon->VSSetConstantBuffers(0, 1, &_CBVertex);
@@ -131,7 +128,6 @@ void SimpleClipSceneShader::RenderScene(std::vector<Mesh*>& opaqueMeshes, std::v
 	if (alphaMeshes.size() > 0)
 	{
 		DXM.BlendStates()->SetBlendState(BLEND_STATE::BLEND_ALPHA);
-		devCon->PSSetShader(_reflectionMapPixelShaderAlpha, NULL, 0);
 		SHADER_HELPERS::MeshSort(alphaMeshes, camera->GetComponent<TransformComponent>()->GetPositionVal(), true);
 	}
 
@@ -147,8 +143,8 @@ void SimpleClipSceneShader::RenderScene(std::vector<Mesh*>& opaqueMeshes, std::v
 		ID3D11ShaderResourceView** meshTextures = alphaMeshes[y]->GetTextureArray();
 
 		// specular map is not sent to this shader tho this is not calculated
-		ID3D11ShaderResourceView* texArray[2] = { meshTextures[0], meshTextures[1] };
-		devCon->PSSetShaderResources(0, 2, texArray);
+		ID3D11ShaderResourceView* texArray[3] = { meshTextures[0], meshTextures[1], meshTextures[3] };
+		devCon->PSSetShaderResources(0, 3, texArray);
 
 		// upload and draw the mesh
 		alphaMeshes[y]->UploadBuffers();

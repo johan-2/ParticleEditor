@@ -189,16 +189,11 @@ float4 Main(PixelInputType input) : SV_TARGET
 	float3 pointColor       = GetPointColor(input, textureColor.rgb, normalMap.rgb, specularMap);
 	
 	float reflectFraction = reflectiveFraction;
-		
-	// if the pixel got flagged as emissive(-1) do a higher reflectFraction
-	// this should be exposed somewhere but this is fine for now
-	if (reflectionColor.a == -1)
-		reflectFraction = 0.7;
 	
 	float3 finalColor = baseColor + directionalColor + pointColor; 
 	finalColor = lerp(finalColor, reflectionColor, reflectFraction);
 	
-	return float4(finalColor.rgb, textureColor.a); 		                            		   
+	return float4(finalColor.rgb, textureColor.a); 
 }
 
 

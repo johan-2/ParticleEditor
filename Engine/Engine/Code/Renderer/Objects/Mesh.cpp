@@ -11,6 +11,7 @@ Mesh::Mesh(Entity* parent, unsigned int FLAGS, const wchar_t* diffuseMap, const 
 	// set rendering flags
 	_FLAGS = FLAGS;
 
+	// set if mesh contains alpha
 	_hasAlpha = hasAlpha;
 
 	// get pointer to transform component
@@ -119,16 +120,26 @@ void Mesh::AddRemoveToRenderer(bool add)
 {
 	Renderer& renderer = *Systems::renderer;
 
+	// will render with the regular Deferred render pass for opaque objects or with forward rendering for alpha objects
+	// the standard shader renders directional and point lights, directional shadows, supports normal,specular and emissive maps
 	if ((_FLAGS & STANDARD) == STANDARD)
 	{
 		if (_hasAlpha) add ? renderer.AddMeshToRenderer(this, SHADER_TYPE::S_FORWARD_ALPHA) : renderer.RemoveMeshFromRenderer(this, SHADER_TYPE::S_FORWARD_ALPHA);
 		else           add ? renderer.AddMeshToRenderer(this, SHADER_TYPE::S_DEFERRED) : renderer.RemoveMeshFromRenderer(this, SHADER_TYPE::S_DEFERRED);   
 	}
 
+	// if the meshes should be included when rendering reflection maps
 	if ((_FLAGS & CAST_REFLECTION) == CAST_REFLECTION)
 	{
 		if (_hasAlpha) add ? renderer.AddMeshToRenderer(this, SHADER_TYPE::S_CAST_REFLECTION_ALPHA) : renderer.RemoveMeshFromRenderer(this, SHADER_TYPE::S_CAST_REFLECTION_ALPHA);
 		else           add ? renderer.AddMeshToRenderer(this, SHADER_TYPE::S_CAST_REFLECTION_OPAQUE) : renderer.RemoveMeshFromRenderer(this, SHADER_TYPE::S_CAST_REFLECTION_OPAQUE);
+	}
+
+	// if the mesh should be rendered to refraction maps
+	if ((_FLAGS & REFRACT) == REFRACT)
+	{
+		if (_hasAlpha) add ? renderer.AddMeshToRenderer(this, SHADER_TYPE::S_REFRACT_ALPHA) : renderer.RemoveMeshFromRenderer(this, SHADER_TYPE::S_REFRACT_ALPHA);
+		else           add ? renderer.AddMeshToRenderer(this, SHADER_TYPE::S_REFRACT_OPAQUE) : renderer.RemoveMeshFromRenderer(this, SHADER_TYPE::S_REFRACT_OPAQUE);
 	}
 
 	// add to depth rendering for shadow casting
@@ -140,11 +151,12 @@ void Mesh::AddRemoveToRenderer(bool add)
 	if ((_FLAGS & ALPHA_REFLECTION) == ALPHA_REFLECTION)
 		add ? renderer.AddMeshToRenderer(this, SHADER_TYPE::S_ALPHA_REFLECTION) : renderer.RemoveMeshFromRenderer(this, SHADER_TYPE::S_ALPHA_REFLECTION);
 
-	// forward rendered alpha meshes with planar reflections
+	// forward rendered water meshes, renders both a reflection and refractionmap
+	// a DUDV map can be set by calling the model
 	if ((_FLAGS & ALPHA_WATER) == ALPHA_WATER)
 		add ? renderer.AddMeshToRenderer(this, SHADER_TYPE::S_ALPHA_WATER) : renderer.RemoveMeshFromRenderer(this, SHADER_TYPE::S_ALPHA_WATER);
 
-	// debug meshes that only renders a wireframe
+	// debug meshes that only renders a colored wireframe
 	if ((_FLAGS & WIREFRAME_COLOR) == WIREFRAME_COLOR)
 		add ? renderer.AddMeshToRenderer(this, SHADER_TYPE::S_WIREFRAME) : renderer.RemoveMeshFromRenderer(this, SHADER_TYPE::S_WIREFRAME);
 }

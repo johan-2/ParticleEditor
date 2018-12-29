@@ -35,6 +35,8 @@ enum SHADER_TYPE
 	S_WIREFRAME,
 	S_CAST_REFLECTION_OPAQUE,
 	S_CAST_REFLECTION_ALPHA,
+	S_REFRACT_OPAQUE,
+	S_REFRACT_ALPHA,
 	S_ALPHA_REFLECTION,
 	S_ALPHA_WATER,
 	S_NUM_RENDER_TYPES,
@@ -66,7 +68,7 @@ public:
 	DXInputLayouts* GetInputLayouts() { return _inputLayouts; } 
 
 	// get shaders
-	ParticleShader* GetParticleShader()        { return _particleShader; }
+	ParticleShader* GetParticleShader() { return _particleShader; }
 
 	// create/ get skydome
 	SkyDome* GetSkybox() { return _skyBox; }

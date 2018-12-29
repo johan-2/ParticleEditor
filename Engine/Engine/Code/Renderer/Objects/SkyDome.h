@@ -87,7 +87,7 @@ private:
 		float speedMultiplier = 1.0f;
 
 		// cycle values
-		float cycleInSec = 400.0f;
+		float cycleInSec = 200.0f;
 		float cycleTimer = 0;
 
 		float switchToMoonLightThreshold = -0.1f;
@@ -119,11 +119,11 @@ private:
 		// colors
 		XMFLOAT4 normalDirLightColor = XMFLOAT4(0.8f, 0.8f, 0.8f, 0.0f);
 		XMFLOAT4 sunsetDirLightColor = XMFLOAT4(0.9935f, 0.07211f, 0.08812f, 1.0f);
-		XMFLOAT4 nightDirLightColor  = XMFLOAT4(0.05f, 0.05f, 0.13f, 1.0f);
+		XMFLOAT4 nightDirLightColor  = XMFLOAT4(0.1f, 0.1f, 0.26f, 1.0f);
 		XMFLOAT4 topSkyColorDay      = XMFLOAT4(0.082f, 0.352f, 0.984f, 1.0f);
 		XMFLOAT4 topSkyColorSunSet   = XMFLOAT4(0.35f, 0.45f, 0.984f, 1.0f);
 		XMFLOAT4 topSkyColorNight    = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
-		XMFLOAT4 midSkyColorDay      = XMFLOAT4(0.5f, 0.53f, 0.30f, 1.0f);
+		XMFLOAT4 midSkyColorDay      = XMFLOAT4(0.62f, 0.6f, 0.30f, 1.0f);
 		XMFLOAT4 midSkyColorSunSet   = XMFLOAT4(0.9935f, 0.07211f, 0.08812f, 1.0f);
 		XMFLOAT4 midSkyColorNight    = XMFLOAT4(0.109f, 0.035f, 0.1f, 1.0f);
 	};

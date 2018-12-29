@@ -29,14 +29,12 @@ private:
 	RenderToTexture* _renderTexture;
 
 	// shaders
-	ID3D11VertexShader* _reflectionMapVertexShader;
-	ID3D11PixelShader*  _reflectionMapPixelShaderOpaque;
-	ID3D11PixelShader*  _reflectionMapPixelShaderAlpha;
+	ID3D11VertexShader* _vertexShader;
+	ID3D11PixelShader*  _pixelShader;
 
 	// bytecode
-	ID3D10Blob* _reflectionMapVertexShaderByteCode;
-	ID3D10Blob* _reflectionMapPixelShaderByteCodeOpaque;
-	ID3D10Blob* _reflectionMapPixelShaderByteCodeAlpha;
+	ID3D10Blob* _vertexShaderByteCode;
+	ID3D10Blob* _pixelShaderByteCodeOpaque;;
 
 	// constant buffers
 	ID3D11Buffer* _CBVertex;

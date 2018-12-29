@@ -104,7 +104,7 @@ void WaterShader::Render(std::vector<Mesh*>& waterMeshes)
 		XMFLOAT4 clipPlaneRefract(0, -1, 0, mesh->GetPosition().y);
 
 		// render the reflectionmap
-		_simpleClipShaderRefraction->RenderScene(renderer.GetMeshes(SHADER_TYPE::S_CAST_REFLECTION_OPAQUE), renderer.GetMeshes(SHADER_TYPE::S_CAST_REFLECTION_ALPHA), clipPlaneRefract, true);
+		_simpleClipShaderRefraction->RenderScene(renderer.GetMeshes(SHADER_TYPE::S_REFRACT_OPAQUE), renderer.GetMeshes(SHADER_TYPE::S_REFRACT_ALPHA), clipPlaneRefract, true, false);
 
 		// get the clip plane of the water mesh so we dont render anything below this plane
 		XMFLOAT4 clipPlaneReflect(0, 1, 0, -mesh->GetPosition().y);

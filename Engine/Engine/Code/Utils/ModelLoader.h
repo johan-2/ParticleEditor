@@ -17,7 +17,7 @@ public:
 		std::vector<Mesh::VertexData> vertices;
 		std::vector<unsigned long>    indices;
 
-		// set default textures, these will be used if useMaterial is set to false
+		// set passed in textures, these will be used if useMaterial is set to false
 		std::wstring diffuse  = diffuseMap;
 		std::wstring normal   = normalMap;
 		std::wstring specular = specularMap;
@@ -41,10 +41,12 @@ public:
 					material->GetTexture(aiTextureType_DIFFUSE, 0, &stringDiffuse);
 
 					diffuse = GetRelativePathAndSetExtension(stringDiffuse.C_Str(), ".dds");
+
+					// get if this texture contains transparancy
 					hasAlpha = HasAlpha(diffuse);
 				}
 
-				// normal map
+				// normal map (flagged as height for some reason)
 				if (material->GetTextureCount(aiTextureType_HEIGHT) > 0)
 				{
 					aiString stringNormal;
@@ -177,15 +179,14 @@ public:
 
 	static bool HasAlpha(std::wstring diffuseMap)
 	{
-		// get the offset where our last backslash is located
-		// we only want the name of the texture
+		// get the offset where our last Underscore is located
 		size_t lastUnderScore = diffuseMap.find_last_of(L"_");
 
-		// erease filepath
-		if (std::string::npos != lastUnderScore)
-			diffuseMap.erase(0, lastUnderScore + 1);
+		// erease string to after last underscore
+		if (std::string::npos != lastUnderScore) diffuseMap.erase(0, lastUnderScore + 1);
 		else return false;
 
+		// if the texture ends with _A it has alpha
 		if (diffuseMap == L"A.dds")
 			return true;
 

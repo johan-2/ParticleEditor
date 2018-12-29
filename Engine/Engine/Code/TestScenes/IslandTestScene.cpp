@@ -25,6 +25,7 @@ IslandTestScene::IslandTestScene()
 
 	// create skybox
 	_skyDome = renderer.CreateSkyBox(L"SkyBoxes/ThickCloudsWater.dds", SKY_DOME_RENDER_MODE::THREE_LAYER_COLOR_BLEND);
+	_skyDome->SetSkyColorLayers(XMFLOAT4(0, 0, 0, 0), XMFLOAT4(0, 0, 0, 30), XMFLOAT4(0, 0, 0, 70));
 
 	renderer.CreateDebugImages();
 
@@ -51,7 +52,7 @@ IslandTestScene::IslandTestScene()
 
 	Entity* lake = new Entity();
 	lake->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(0.5f, 0.5f, 0.5f));
-	lake->AddComponent<ModelComponent>()->InitModel("Models/terrain.fbx", STANDARD | CAST_SHADOW_DIR | CAST_REFLECTION, L"Textures/Dirt_21_Diffuse.dds", L"Textures/Dirt_21_Normal.dds", L"Textures/Dirt_21_Specular.dds", L"", false, 6);
+	lake->AddComponent<ModelComponent>()->InitModel("Models/terrain.fbx", STANDARD | CAST_SHADOW_DIR | CAST_REFLECTION | REFRACT, L"Textures/Dirt_21_Diffuse.dds", L"Textures/Dirt_21_Normal.dds", L"Textures/Dirt_21_Specular.dds", L"", false, 6);
 
 	Entity* water = new Entity();
 	water->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 5.0f, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(50, 1, 50));
@@ -61,7 +62,7 @@ IslandTestScene::IslandTestScene()
 
 	Entity* tree = new Entity();
 	tree->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0.0f, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(0.1f, 0.1f, 0.1f));
-	tree->AddComponent<ModelComponent>()->InitModel("Models/white_oak.obj", STANDARD | CAST_REFLECTION | CAST_SHADOW_DIR);
+	tree->AddComponent<ModelComponent>()->InitModel("Models/white_oak.obj", STANDARD | CAST_REFLECTION | CAST_SHADOW_DIR | REFRACT);
 
 	Entity* sphere = new Entity();
 	sphere->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 10, 10), XMFLOAT3(0, 0, 0), XMFLOAT3(2, 2, 2));
@@ -69,7 +70,7 @@ IslandTestScene::IslandTestScene()
 	sphere->AddComponent<LightPointComponent>()->Init(20, 20, XMFLOAT3(0.1f, 1.0f, 0), 0.0f, 1.0f, 0.2f);
 
 	Entity* tree1 = new Entity();
-	tree1->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 8.0f, 65), XMFLOAT3(0, 0, 0), XMFLOAT3(1.0f, 1.0f, 1.0f));
+	tree1->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 7.0f, 65), XMFLOAT3(0, 0, 0), XMFLOAT3(1.0f, 1.0f, 1.0f));
 	tree1->AddComponent<ModelComponent>()->InitModel("Models/Palm_01.obj", STANDARD | CAST_REFLECTION | CAST_SHADOW_DIR);
 }
 

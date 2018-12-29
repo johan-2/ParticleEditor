@@ -184,7 +184,7 @@ void Renderer::Render()
 	_waterShader->Render(_meshes[S_ALPHA_WATER]);
 
 	// TODO: alpha meshes and particles is not sorted against each other
-	// either sort them and send one object at a time to the shaders or
+	// either sort them and send one object at a time to the shaders (feels like a bad brutforce way) or
 	// research to see if there are a more elegant solution to this problem
 	// right now particles is not visable throught alpha meshes
 	_forwardAlphaShader->RenderForward(_meshes[S_FORWARD_ALPHA]);
