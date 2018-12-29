@@ -39,9 +39,8 @@ newmtl White_Oak_Leaves_Hero_3
 	Kd 0.800 0.800 0.800
 	Ks 0.010 0.010 0.010
 	Ke 0.000 0.000 0.000
-	map_Ka T_White_Oak_Leaves_Hero_3_D.png
-	map_Kd T_White_Oak_Leaves_Hero_3_D.png
-	map_d T_White_Oak_Leaves_Hero_3_A.png
+	
+	map_Kd T_White_Oak_Leaves_Hero_3_A_A.png
 	map_bump T_White_Oak_Leaves_Hero_3_N.png
 
 newmtl White_Oak_Leaves_Hero_1
@@ -55,6 +54,6 @@ newmtl White_Oak_Leaves_Hero_1
 	Kd 0.800 0.800 0.800
 	Ks 0.010 0.010 0.010
 	Ke 0.000 0.000 0.000
-	map_Ka T_White_Oak_Leaves_Hero_1_D.png
-	map_Kd T_White_Oak_Leaves_Hero_1_D.png
+	map_Ka T_White_Oak_Leaves_Hero_1_D_A.png
+	map_Kd T_White_Oak_Leaves_Hero_1_D_A.png
 	map_bump T_White_Oak_Leaves_Hero_1_N.png

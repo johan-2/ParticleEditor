@@ -4,21 +4,20 @@
 #include "TransformComponent.h"
 #include "Color32.h"
 
-#define DEFERRED               1 << 0
-#define ALPHA_FORWARD          1 << 1
-#define CAST_SHADOW_DIR        1 << 2
+#define STANDARD               1 << 0
+#define CAST_SHADOW_DIR        1 << 1
+#define CAST_REFLECTION        1 << 2
 #define WIREFRAME_COLOR        1 << 3
-#define CAST_REFLECTION_OPAQUE 1 << 4
-#define CAST_REFLECTION_ALPHA  1 << 5
-#define ALPHA_REFLECTION       1 << 6
-#define ALPHA_WATER            1 << 7
+#define ALPHA_REFLECTION       1 << 4
+#define ALPHA_WATER            1 << 5
+#define REFRACT                1 << 6
 
 using namespace DirectX;
 
 class Mesh
 {
 public:	
-	Mesh(Entity* parent, unsigned int FLAGS, const wchar_t* diffuseMap, const wchar_t* normalMap, const wchar_t* specularMap, const wchar_t* emissiveMap);
+	Mesh(Entity* parent, unsigned int FLAGS, const wchar_t* diffuseMap, const wchar_t* normalMap, const wchar_t* specularMap, const wchar_t* emissiveMap, bool hasAlpha);
 	~Mesh();
 
 	// vertex data structure
@@ -105,6 +104,7 @@ private:
 	
 	// rendering flags
 	unsigned int _FLAGS;
+	bool _hasAlpha;
 
 	// distance from camera
 	float _distance;

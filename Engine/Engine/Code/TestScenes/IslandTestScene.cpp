@@ -51,7 +51,7 @@ IslandTestScene::IslandTestScene()
 
 	Entity* lake = new Entity();
 	lake->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(0.5f, 0.5f, 0.5f));
-	lake->AddComponent<ModelComponent>()->InitModel("Models/terrain.fbx", DEFERRED | CAST_SHADOW_DIR | CAST_REFLECTION_OPAQUE, L"Textures/Dirt_21_Diffuse.dds", L"Textures/Dirt_21_Normal.dds", L"Textures/Dirt_21_Specular.dds", L"", false, 6);
+	lake->AddComponent<ModelComponent>()->InitModel("Models/terrain.fbx", STANDARD | CAST_SHADOW_DIR | CAST_REFLECTION, L"Textures/Dirt_21_Diffuse.dds", L"Textures/Dirt_21_Normal.dds", L"Textures/Dirt_21_Specular.dds", L"", false, 6);
 
 	Entity* water = new Entity();
 	water->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 5.0f, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(50, 1, 50));
@@ -61,11 +61,11 @@ IslandTestScene::IslandTestScene()
 
 	Entity* tree = new Entity();
 	tree->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0.0f, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(0.1f, 0.1f, 0.1f));
-	tree->AddComponent<ModelComponent>()->InitModel("Models/white_oak.obj", ALPHA_FORWARD| CAST_REFLECTION_ALPHA | CAST_SHADOW_DIR);
+	tree->AddComponent<ModelComponent>()->InitModel("Models/white_oak.obj", STANDARD | CAST_REFLECTION | CAST_SHADOW_DIR);
 
 	Entity* tree1 = new Entity();
 	tree1->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 8.0f, 65), XMFLOAT3(0, 0, 0), XMFLOAT3(1.0f, 1.0f, 1.0f));
-	tree1->AddComponent<ModelComponent>()->InitModel("Models/Palm_01.obj", ALPHA_FORWARD | CAST_REFLECTION_ALPHA | CAST_SHADOW_DIR);
+	tree1->AddComponent<ModelComponent>()->InitModel("Models/Palm_01.obj", STANDARD | CAST_REFLECTION | CAST_SHADOW_DIR);
 }
 
 IslandTestScene::~IslandTestScene()

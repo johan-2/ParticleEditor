@@ -5,11 +5,13 @@
 #include "Systems.h"
 #include "DXErrorhandler.h"
 
-Mesh::Mesh(Entity* parent, unsigned int FLAGS, const wchar_t* diffuseMap, const wchar_t* normalMap, const wchar_t* specularMap, const wchar_t* emissiveMap) :
+Mesh::Mesh(Entity* parent, unsigned int FLAGS, const wchar_t* diffuseMap, const wchar_t* normalMap, const wchar_t* specularMap, const wchar_t* emissiveMap, bool hasAlpha) :
 	_uvOffset(XMFLOAT2(0,0))
 {
 	// set rendering flags
 	_FLAGS = FLAGS;
+
+	_hasAlpha = hasAlpha;
 
 	// get pointer to transform component
 	if (parent != nullptr)
@@ -117,27 +119,23 @@ void Mesh::AddRemoveToRenderer(bool add)
 {
 	Renderer& renderer = *Systems::renderer;
 
+	if ((_FLAGS & STANDARD) == STANDARD)
+	{
+		if (_hasAlpha) add ? renderer.AddMeshToRenderer(this, SHADER_TYPE::S_FORWARD_ALPHA) : renderer.RemoveMeshFromRenderer(this, SHADER_TYPE::S_FORWARD_ALPHA);
+		else           add ? renderer.AddMeshToRenderer(this, SHADER_TYPE::S_DEFERRED) : renderer.RemoveMeshFromRenderer(this, SHADER_TYPE::S_DEFERRED);   
+	}
+
+	if ((_FLAGS & CAST_REFLECTION) == CAST_REFLECTION)
+	{
+		if (_hasAlpha) add ? renderer.AddMeshToRenderer(this, SHADER_TYPE::S_CAST_REFLECTION_ALPHA) : renderer.RemoveMeshFromRenderer(this, SHADER_TYPE::S_CAST_REFLECTION_ALPHA);
+		else           add ? renderer.AddMeshToRenderer(this, SHADER_TYPE::S_CAST_REFLECTION_OPAQUE) : renderer.RemoveMeshFromRenderer(this, SHADER_TYPE::S_CAST_REFLECTION_OPAQUE);
+	}
+
 	// add to depth rendering for shadow casting
 	// at the moment all meshes recive shadows
 	if ((_FLAGS & CAST_SHADOW_DIR) == CAST_SHADOW_DIR)
 		add ? renderer.AddMeshToRenderer(this, SHADER_TYPE::S_DEPTH) : renderer.RemoveMeshFromRenderer(this, SHADER_TYPE::S_DEPTH);
-
-	// if using deffered rendering 
-	if ((_FLAGS & DEFERRED) == DEFERRED)	
-		add ? renderer.AddMeshToRenderer(this, SHADER_TYPE::S_DEFERRED) : renderer.RemoveMeshFromRenderer(this, SHADER_TYPE::S_DEFERRED);
-	
-	// alpha needs to be forward rendered
-	if ((_FLAGS & ALPHA_FORWARD) == ALPHA_FORWARD) 	
-		add ? renderer.AddMeshToRenderer(this, SHADER_TYPE::S_FORWARD_ALPHA) : renderer.RemoveMeshFromRenderer(this, SHADER_TYPE::S_FORWARD_ALPHA);
-
-	// opaque meshes that will be rendered to reflection maps
-	if ((_FLAGS & CAST_REFLECTION_OPAQUE) == CAST_REFLECTION_OPAQUE)
-		add ? renderer.AddMeshToRenderer(this, SHADER_TYPE::S_CAST_REFLECTION_OPAQUE) : renderer.RemoveMeshFromRenderer(this, SHADER_TYPE::S_CAST_REFLECTION_OPAQUE);
-
-	// alpha meshes that will be rendered to reflection maps
-	if ((_FLAGS & CAST_REFLECTION_ALPHA) == CAST_REFLECTION_ALPHA)
-		add ? renderer.AddMeshToRenderer(this, SHADER_TYPE::S_CAST_REFLECTION_ALPHA) : renderer.RemoveMeshFromRenderer(this, SHADER_TYPE::S_CAST_REFLECTION_ALPHA);
-
+		
 	// forward rendered alpha meshes with planar reflections
 	if ((_FLAGS & ALPHA_REFLECTION) == ALPHA_REFLECTION)
 		add ? renderer.AddMeshToRenderer(this, SHADER_TYPE::S_ALPHA_REFLECTION) : renderer.RemoveMeshFromRenderer(this, SHADER_TYPE::S_ALPHA_REFLECTION);

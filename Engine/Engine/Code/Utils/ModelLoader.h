@@ -23,6 +23,8 @@ public:
 		std::wstring specular = specularMap;
 		std::wstring emissive = emissiveMap;
 
+		bool hasAlpha = false;
+
 		// if we want to load the textures from a material file
 		if (useMaterial)
 		{
@@ -39,6 +41,7 @@ public:
 					material->GetTexture(aiTextureType_DIFFUSE, 0, &stringDiffuse);
 
 					diffuse = GetRelativePathAndSetExtension(stringDiffuse.C_Str(), ".dds");
+					hasAlpha = HasAlpha(diffuse);
 				}
 
 				// normal map
@@ -137,7 +140,7 @@ public:
 		}
 
 		// create mesh and buffers
-		Mesh* modelMesh = new Mesh(parent, flags, diffuse.c_str(), normal.c_str(), specular.c_str(), emissive.c_str());
+		Mesh* modelMesh = new Mesh(parent, flags, diffuse.c_str(), normal.c_str(), specular.c_str(), emissive.c_str(), hasAlpha);
 		modelMesh->CreateBuffers(&vertices[0], &indices[0], (int)vertices.size(), (int)indices.size());
 
 		return modelMesh;
@@ -170,6 +173,23 @@ public:
 		std::wstring wtp(relativeFilePath.begin(), relativeFilePath.end());
 
 		return wtp;
+	}
+
+	static bool HasAlpha(std::wstring diffuseMap)
+	{
+		// get the offset where our last backslash is located
+		// we only want the name of the texture
+		size_t lastUnderScore = diffuseMap.find_last_of(L"_");
+
+		// erease filepath
+		if (std::string::npos != lastUnderScore)
+			diffuseMap.erase(0, lastUnderScore + 1);
+		else return false;
+
+		if (diffuseMap == L"A.dds")
+			return true;
+
+		return false;
 	}
 
 	static float InverseLerp(float a, float b, float t)
@@ -361,7 +381,7 @@ public:
 		vertices[23].color    = Color32(255, 255, 255, 255);
 
 		// create mesh and buffers
-		Mesh* mesh = new Mesh(parent, flags, diffuseMap, normalMap, specularMap, emissiveMap);
+		Mesh* mesh = new Mesh(parent, flags, diffuseMap, normalMap, specularMap, emissiveMap, HasAlpha(diffuseMap));
 		mesh->CreateBuffers(vertices, indices, 24, 36);
 
 		delete[] vertices;
@@ -405,7 +425,7 @@ public:
 		unsigned long* indices = new unsigned long[6]{ 0,1,2,2,1,3 };
 
 		// create mesh and buffers
-		Mesh* mesh = new Mesh(parent, flags, diffuseMap, normalMap, specularMap, emissiveMap);
+		Mesh* mesh = new Mesh(parent, flags, diffuseMap, normalMap, specularMap, emissiveMap, HasAlpha(diffuseMap));
 		mesh->CreateBuffers(vertices, indices, 24, 36);
 
 		delete[] vertices;
@@ -450,7 +470,7 @@ public:
 		unsigned long*    indices = new unsigned long[6]{ 0,1,2,2,1,3 };
 
 		// create mesh and buffers
-		Mesh* mesh = new Mesh(parent, flags, diffuseMap, L"", L"", L"");
+		Mesh* mesh = new Mesh(parent, flags, diffuseMap, L"", L"", L"", HasAlpha(diffuseMap));
 		mesh->CreateBuffers(vertices, indices, 24, 36);
 
 		delete[] vertices;
@@ -537,7 +557,7 @@ public:
 		}
 
 		// create mesh and buffers
-		Mesh* mesh = new Mesh(parent, flags, diffuseMap, normalMap, specularMap, emissiveMap);
+		Mesh* mesh = new Mesh(parent, flags, diffuseMap, normalMap, specularMap, emissiveMap, HasAlpha(diffuseMap));
 		mesh->CreateBuffers(vertices, indices, 4 * (size * size), 6 * (size * size));
 
 		delete[] vertices;
