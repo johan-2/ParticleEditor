@@ -55,13 +55,18 @@ IslandTestScene::IslandTestScene()
 
 	Entity* water = new Entity();
 	water->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 5.0f, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(50, 1, 50));
-	water->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::PLANE, ALPHA_WATER, L"", L"Textures/waterNormal.dds", L"Textures/FlatHighSpecular.dds", L"", 3.0f);
+	water->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::PLANE, ALPHA_WATER, L"", L"Textures/waterNormal.dds", L"Textures/FlatHighSpecular.dds", L"", 10.0f);
 	water->AddComponent<UVScrollComponent>()->Init(XMFLOAT2(0.02f, -0.01f));
 	water->GetComponent<ModelComponent>()->SetUVDVMap(L"Textures/waterDuDv.dds");
 
 	Entity* tree = new Entity();
 	tree->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0.0f, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(0.1f, 0.1f, 0.1f));
 	tree->AddComponent<ModelComponent>()->InitModel("Models/white_oak.obj", STANDARD | CAST_REFLECTION | CAST_SHADOW_DIR);
+
+	Entity* sphere = new Entity();
+	sphere->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 10, 10), XMFLOAT3(0, 0, 0), XMFLOAT3(2, 2, 2));
+	sphere->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::SPHERE, STANDARD | CAST_SHADOW_DIR | CAST_REFLECTION, L"", L"", L"", L"Textures/emissiveTest.dds");
+	sphere->AddComponent<LightPointComponent>()->Init(20, 20, XMFLOAT3(0.1f, 1.0f, 0), 0.0f, 1.0f, 0.2f);
 
 	Entity* tree1 = new Entity();
 	tree1->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 8.0f, 65), XMFLOAT3(0, 0, 0), XMFLOAT3(1.0f, 1.0f, 1.0f));

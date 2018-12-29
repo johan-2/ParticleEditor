@@ -101,7 +101,7 @@ float GetLightPercent(PixelInputType input)
 	return numInLight / 9.0;
 }
 
-float3 GetDirectionalColor(PixelInputType input, float3 normalMap, float4 specularMap)
+float3 GetDirectionalColor(PixelInputType input, float3 baseColor, float3 normalMap, float4 specularMap)
 {	
 	float3x3 tangentSpaceMatrix = float3x3(input.tangent, input.binormal, input.normal);
 	float3 bumpNormal           = normalize(mul(normalMap, tangentSpaceMatrix));   	
@@ -109,7 +109,7 @@ float3 GetDirectionalColor(PixelInputType input, float3 normalMap, float4 specul
     float lightIntensity = saturate(dot(bumpNormal.xyz, dirLightDirection)); 
 	
 	// get color based on texture, intensity and color of light
-    float3 color = dirDiffuseColor.rgb; 
+    float3 color = (baseColor * dirDiffuseColor.rgb) * lightIntensity; 
 	saturate(color);
 	float3 specular = float3(0,0,0);
 	
@@ -125,10 +125,10 @@ float3 GetDirectionalColor(PixelInputType input, float3 normalMap, float4 specul
 		specular = (dirDiffuseColor * specularIntensity) * specularMap.rgb ;	
 	} 
 			
-	return (color * (specular * highlightStrength)); 
+	return color + ((dirDiffuseColor * specular) * highlightStrength); 
 }
 
-float3 GetPointColor(PixelInputType input, float3 bumpValues, float4 specularMap)
+float3 GetPointColor(PixelInputType input, float3 baseColor, float3 bumpValues, float4 specularMap)
 {   
 	float3 finalColor = float3(0,0,0);
 	int numLights     = pointLights[0].numLights;
@@ -154,7 +154,7 @@ float3 GetPointColor(PixelInputType input, float3 bumpValues, float4 specularMap
 			float lightIntensity = saturate(dot(bumpNormal, lightDir)); 
 			
 			// get color based on texture, intensity and color of light
-			float3 color = pointLights[i].color.rgb; 
+			float3 color = (baseColor * pointLights[i].color.rgb) * lightIntensity; 
 			
 			// add specular effect if the light is affecting the pixel, dont add specular effect if dst is more then radius
 			float3 specular = float3(0,0,0);		
@@ -169,7 +169,7 @@ float3 GetPointColor(PixelInputType input, float3 bumpValues, float4 specularMap
 				specular.rgb = (pointLights[i].color.rgb * specularIntensity) * specularMap.rgb;	
 			} 
 						
-			color      *= specular * (highlightStrength);	
+			color      += (specular * highlightStrength);	
 			finalColor += (color * attuniation);
 		}
 	}
@@ -253,12 +253,11 @@ float4 Main(PixelInputType input) : SV_TARGET
 	float3 fullLightColor = (colorMix * darkenOcludedPercent) * lightPercent;
 	
 	// get the specular highlights for the water surface
-	float3 directionalColor = GetDirectionalColor(input, normalMap.rgb, specularMap) * lightPercent;
-	float3 pointColor       = GetPointColor(input, normalMap.rgb, specularMap);
+	float3 directionalColor = GetDirectionalColor(input, fullLightColor, normalMap.rgb, specularMap) * lightPercent;
+	float3 pointColor       = GetPointColor(input, fullLightColor, normalMap.rgb, specularMap);
 	
-	// add all colors together
 	float4 finalColor = float4(0,0,0,1);
-	finalColor.rgb = ocludedColor + fullLightColor + directionalColor + pointColor; 
+	finalColor.rgb = ocludedColor + directionalColor + pointColor; 
 		
 	float waterDepth = 0;
 
