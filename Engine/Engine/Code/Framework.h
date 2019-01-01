@@ -4,7 +4,7 @@
 #include "SponzaTestScene.h"
 #include "IslandTestScene.h"
 
-class DebugStats;
+class MasterEditor;
 class Window;
 
 class Framework
@@ -26,7 +26,7 @@ private:
 
 	// window and debug stats
 	Window*     _window;
-	DebugStats* _debugStats;
+	MasterEditor* _editor;
 	SponzaTestScene* _testScene;
 	IslandTestScene* _islandTestScene;
 };

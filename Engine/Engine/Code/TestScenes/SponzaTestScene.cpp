@@ -23,7 +23,7 @@ SponzaTestScene::SponzaTestScene()
 	Entity* shadowMapRenderer = renderer.CreateShadowMap(250.0f, 8192.0f, XMFLOAT3(-6, 325, 9), XMFLOAT3(85.0f, -90.0f, 0));
 
 	// create skybox
-	_skyDome = renderer.CreateSkyBox(L"SkyBoxes/ThickCloudsWater.dds", SKY_DOME_RENDER_MODE::THREE_LAYER_COLOR_BLEND);
+	_skyDome = renderer.CreateSkyDome(L"SkyBoxes/ThickCloudsWater.dds", SKY_DOME_RENDER_MODE::THREE_LAYER_COLOR_BLEND);
 	_skyDome->SetSkyColorLayers(XMFLOAT4(0, 0, 0, 0), XMFLOAT4(0, 0, 0, 30), XMFLOAT4(0, 0, 0, 70));
 
 	renderer.CreateDebugImages();

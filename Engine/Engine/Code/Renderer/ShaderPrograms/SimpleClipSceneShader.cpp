@@ -87,7 +87,7 @@ void SimpleClipSceneShader::RenderScene(std::vector<Mesh*>& opaqueMeshes, std::v
 
 	// render skybox first
 	if (includeSkyBox)
-		Systems::renderer->GetSkybox()->Render(true);
+		Systems::renderer->GetSkyDome()->Render(true);
 
 	// set opaque blend state
 	DXM.BlendStates()->SetBlendState(BLEND_STATE::BLEND_OPAQUE);

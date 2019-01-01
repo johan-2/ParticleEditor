@@ -39,7 +39,7 @@ Renderer::~Renderer()
 	delete _depthMap;
 	delete _gBuffer;
 	delete _fullScreenQuad;
-	delete _skyBox;
+	delete _skyDome;
 	delete _depthShader;
 	delete _deferredShader;
 	delete _quadShader;
@@ -115,12 +115,12 @@ Entity* Renderer::CreateShadowMap(float orthoSize, float resolution, XMFLOAT3 po
 	return _cameraDepth;
 }
 
-SkyDome* Renderer::CreateSkyBox(const wchar_t* cubeMap, SKY_DOME_RENDER_MODE mode)
+SkyDome* Renderer::CreateSkyDome(const wchar_t* cubeMap, SKY_DOME_RENDER_MODE mode)
 {
 	// create skybox
-	_skyBox = new SkyDome(cubeMap, mode);
+	_skyDome = new SkyDome(cubeMap, mode);
 
-	return _skyBox;
+	return _skyDome;
 }
 
 void Renderer::CreateDebugImages()
@@ -172,7 +172,7 @@ void Renderer::Render()
 	_inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT3D);	
 
 	// render skybox, will mask out all pixels that contains geometry in the fullscreen quad, leaving only the skybox rendered on "empty" pixels
-	_skyBox->Render();
+	_skyDome->Render();
 
 	// render debug wireframe meshes, these are forward rendered
 	_wireframeShader->RenderWireFrame(_meshes[S_WIREFRAME]);

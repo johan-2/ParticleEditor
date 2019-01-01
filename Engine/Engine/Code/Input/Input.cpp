@@ -76,10 +76,7 @@ void Input::Update()
 {
 	UpdateKeyboard();
 	UpdateMouse();
-
-#ifdef _DEBUG
 	UpdateGuiInput();
-#endif
 }
 
 // get the current state of the keyboard

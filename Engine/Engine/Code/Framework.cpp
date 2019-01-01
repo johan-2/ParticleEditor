@@ -23,7 +23,7 @@
 #include "LightPointComponent.h"
 #include <iostream>
 #include "GuiManager.h"
-#include "DebugStats.h"
+#include "MasterEditor.h"
 #include <algorithm>
 #include <random>
 #include <chrono>
@@ -63,7 +63,7 @@ void Framework::Start()
 	//_islandTestScene = new IslandTestScene();
 	_testScene = new SponzaTestScene();
 
-	_debugStats = new DebugStats();
+	_editor = new MasterEditor();
 }
 
 void Framework::Update()
@@ -73,7 +73,7 @@ void Framework::Update()
 	_testScene->Update();
 
 
-	_debugStats->Update();
+	_editor->Update();
 	
 }
 

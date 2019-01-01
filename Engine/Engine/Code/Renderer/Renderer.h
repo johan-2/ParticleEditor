@@ -71,8 +71,8 @@ public:
 	ParticleShader* GetParticleShader() { return _particleShader; }
 
 	// create/ get skydome
-	SkyDome* GetSkybox() { return _skyBox; }
-	SkyDome* CreateSkyBox(const wchar_t* cubeMap, SKY_DOME_RENDER_MODE mode);
+	SkyDome* GetSkyDome() { return _skyDome; }
+	SkyDome* CreateSkyDome(const wchar_t* cubeMap, SKY_DOME_RENDER_MODE mode);
 
 	// create the shadowmap
 	Entity* CreateShadowMap(float orthoSize, float resolution, XMFLOAT3 position, XMFLOAT3 rotation);
@@ -112,7 +112,7 @@ private:
 	WaterShader*            _waterShader;
 
 	// skybox class with all rendering built in
-	SkyDome* _skyBox;
+	SkyDome* _skyDome;
 
 	// contains all input layouts
 	DXInputLayouts* _inputLayouts;
