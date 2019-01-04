@@ -17,7 +17,6 @@ public:
 	MainEditorWindow* mainWindow;
 	SkyDomeWindow*    skyDomeWindow;
 
-
 private:
 
 	bool _showEditorWindow;

@@ -10,9 +10,8 @@ class Entity;
 
 enum SKY_DOME_RENDER_MODE
 {
-	CUBEMAP_SIMPLE,
+	CUBEMAP,
 	THREE_LAYER_COLOR_BLEND,
-	CUBEMAP_COLOR_BLEND,
 };
 
 class SkyDome
@@ -35,24 +34,17 @@ public:
 	// change the render mode
 	void SetRenderMode(SKY_DOME_RENDER_MODE mode) { _RENDER_MODE = mode; }
 
-	// set sun/moon properties
-	void SetSunDistance(float distance)  { _sunMoon.sun.distance  = XMFLOAT3(distance, distance, distance); }
-	void SetMoonDistance(float distance) { _sunMoon.moon.distance = XMFLOAT3(distance, distance, distance); }
-
 	// set skyColorProperties
 	// colors is declared in 0 - 255 range
 	// the layer fraction is set between 0 - 100 and is stored in the alpha channel
 	// ex 20, 60, 80 will set layer 1 color from 0 to 20 % on the skyDome
 	// layer 1 and 2 will blend between 20 - 60 % of the dome
 	// layer2 and 3 will blend between 60 - 80 % of the dome and layer 3 will cover the final 20%
-	void SetSkyColorLayers(XMFLOAT4 bottomColor, XMFLOAT4 midColor, XMFLOAT4 topColor) { _skyColorLayers.bottomColor = bottomColor;
-	                                                                                                   _skyColorLayers.midColor    = midColor;
-	                                                                                                   _skyColorLayers.topColor    = topColor; }
-
-	// set if the cubemap should be rendered in the top or bottom
-	// part of the skydome if the render mode is set to CUBEMAP_COLOR_BLEND
-	// the other part will be set to the corresponding skycolor layer
-	void SetCubeMapOrientation(bool isTop) { _cubeMapColorBlend.topIsCubeMap = isTop; }
+	void SetSkyColorLayers(XMFLOAT4 bottomColor, XMFLOAT4 midColor, XMFLOAT4 topColor) {
+		_skyColorLayers.bottomColor = bottomColor;
+		_skyColorLayers.midColor    = midColor;
+		_skyColorLayers.topColor    = topColor;
+	}
 
 private:
 
@@ -65,8 +57,13 @@ private:
 		XMFLOAT4X4 positionMatrix;
 		XMFLOAT3   distance;
 		XMFLOAT3   colorTint = XMFLOAT3(1, 1, 1);
-		float      relativeHeight;
+		XMFLOAT3   dayColorTint;
+		XMFLOAT3   sunsetColorTint;
 		XMFLOAT2   beginEndFade;
+		XMFLOAT2   minMaxDst;
+		XMFLOAT2   beginEndDstLerp;
+		XMFLOAT2   beginEndColorBlend;
+		float      relativeHeight;
 
 		Entity* entity;
 		TransformComponent* transform;
@@ -104,13 +101,6 @@ private:
 		XMFLOAT2 dayLightStartEndfade   = XMFLOAT2(0.0f, -0.1f);
 		XMFLOAT2 nightLightStartEndfade = XMFLOAT2(-0.2f, -0.1f);
 
-		// sun distance
-		XMFLOAT2 sunMinMaxDst          = XMFLOAT2(0.8f, 5.0f);
-		XMFLOAT2 sunBeginEndDstLerp    = XMFLOAT2(0.5f, -0.25f);
-		XMFLOAT2 sunBeginEndColorBlend = XMFLOAT2(0.5f, -0.15f);
-		XMFLOAT3 sunDayColorTint       = XMFLOAT3(1.0f, 1.0f, 1.0f);
-		XMFLOAT3 sunSunsetColorTint    = XMFLOAT3(0.95f, 0.65f, 0.1f);
-
 		// translation values for shadow rendering camera
 		XMFLOAT3 shadowMapDistance = XMFLOAT3(300, 300, 300);
 		XMFLOAT3 startRotation     = XMFLOAT3(0, 100.0f, 0);
@@ -135,11 +125,6 @@ private:
 		XMFLOAT4 topColor;
 	};
 
-	struct CubeMapColorBlend
-	{
-		bool topIsCubeMap;
-	};
-
 	// create mesh
 	void CreateMeshes();
 
@@ -147,12 +132,16 @@ private:
 	void CaluclateSunMoonMatrix(XMFLOAT3 cameraPosition);
 
 	// render functions
-	void RenderCubeMapSimple(bool useReflectMatrix);
-	void RenderCubeMapColorBlend(bool useReflectMatrix);
+	void RenderCubeMap(bool useReflectMatrix);
 	void RenderBlendedColors(bool useReflectMatrix);
 	void RenderSunMoon(bool useReflectMatrix);
 
-	void UpdateDynamicSky(const float& delta);
+	// update functions
+	void UpdateSunMoonTranslation(const float& delta);
+	void UpdateSunMoonColors(const float& delta);
+	void UpdateShadowLightTranslation(const float& delta);
+	void UpdateShadowLightColor(const float& delta);
+	void UpdateSkyColors(const float& delta);
 
 	// helpers, these should be moved to some static math helper header
 	float inverseLerp(float a, float b, float t);
@@ -171,8 +160,6 @@ private:
 	ID3D11PixelShader*  _pixelDomeCubeMapShader;
 	ID3D11VertexShader* _vertexDomeColorBlendShader;
 	ID3D11PixelShader*  _pixelDomeColorBlendShader;
-	ID3D11VertexShader* _vertexDomeCubeMapBlendShader;
-	ID3D11PixelShader*  _pixelDomeCubeMapBlendShader;
 	ID3D11VertexShader* _vertexSunShader;
 	ID3D11PixelShader*  _pixelSunShader;
 
@@ -181,8 +168,6 @@ private:
 	ID3D10Blob* _pixelDomeCubeMapShaderByteCode;
 	ID3D10Blob* _vertexDomeColorBlendShaderByteCode;
 	ID3D10Blob* _pixelDomeColorBlendShaderByteCode;
-	ID3D10Blob* _vertexDomeCubeMapBlendShaderByteCode;
-	ID3D10Blob* _pixelDomeCubeMapBlendShaderByteCode;
 	ID3D10Blob* _vertexSunShaderByteCode;
 	ID3D10Blob* _pixelSunShaderByteCode;
 
@@ -196,8 +181,7 @@ private:
 	Mesh* _domeMesh;
 
 	// colors to use if renders in color mode
-	SkyColorLayers    _skyColorLayers;
-	CubeMapColorBlend _cubeMapColorBlend;
+	SkyColorLayers _skyColorLayers;
 
 	// sun data
 	SunMoon _sunMoon;
@@ -232,16 +216,6 @@ private:
 		XMFLOAT3 colorTint;
 		XMFLOAT2 beginEndFade;
 		XMFLOAT2 pad;
-	};
-
-	struct ConstantCubeMapColorBlendPixel
-	{
-		XMFLOAT4 topBottomColor;
-		XMFLOAT4 midColor;
-		float    bottomBlend;
-		float    midBlend;
-		float    topBlend;
-		int      cubeMapIsTop;
 	};
 };
 
