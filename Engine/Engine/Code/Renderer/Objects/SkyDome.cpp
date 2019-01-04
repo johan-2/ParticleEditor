@@ -286,7 +286,7 @@ void SkyDome::RenderSunMoon(bool noMask)
 	pixeldata.beginEndFade = _sunMoon.sun.beginEndFade;
 
 	// update constant buffer
-	SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(CBVertSun),   _constantBufferVertex);
+	SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(CBVertSun),        _constantBufferVertex);
 	SHADER_HELPERS::UpdateConstantBuffer((void*)&pixeldata,  sizeof(ConstantSunPixel), _constantSunPixel);
 
 	// upload mesh
@@ -305,7 +305,7 @@ void SkyDome::RenderSunMoon(bool noMask)
 	pixeldata.beginEndFade = _sunMoon.moon.beginEndFade;
 
 	// update constant buffer
-	SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(CBVertDome), _constantBufferVertex);
+	SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(CBVertSun),       _constantBufferVertex);
 	SHADER_HELPERS::UpdateConstantBuffer((void*)&pixeldata, sizeof(ConstantSunPixel), _constantSunPixel);
 
 	// upload mesh
@@ -328,14 +328,15 @@ void SkyDome::CaluclateSunMoonMatrix(XMFLOAT3 cameraPosition)
 {
 	XMFLOAT3 offsetSun;
 	XMFLOAT3 offsetMoon;
-	XMFLOAT3 sunDirection = _sunMoon.sun.transform->GetForward();
+	XMFLOAT3 sunDirection  = _sunMoon.sun.transform->GetForward();
+	XMFLOAT3 moonDirection = _sunMoon.moon.transform->GetForward();
 	
 	// calculate translation for sun and moon
 	XMStoreFloat3(&offsetSun,  XMVectorMultiply(XMLoadFloat3(&sunDirection), XMLoadFloat3(&_sunMoon.sun.distance)));
-	XMStoreFloat3(&offsetMoon, XMVectorMultiply(XMLoadFloat3(&sunDirection), XMLoadFloat3(&_sunMoon.moon.distance)));
+	XMStoreFloat3(&offsetMoon, XMVectorMultiply(XMLoadFloat3(&moonDirection), XMLoadFloat3(&_sunMoon.moon.distance)));
 
-	XMStoreFloat3(&offsetSun, XMVectorSubtract(XMLoadFloat3(&cameraPosition), XMLoadFloat3(&offsetSun)));
-	XMStoreFloat3(&offsetMoon, XMVectorAdd(XMLoadFloat3(&cameraPosition), XMLoadFloat3(&offsetMoon)));
+	XMStoreFloat3(&offsetSun,  XMVectorSubtract(XMLoadFloat3(&cameraPosition), XMLoadFloat3(&offsetSun)));
+	XMStoreFloat3(&offsetMoon, XMVectorSubtract(XMLoadFloat3(&cameraPosition), XMLoadFloat3(&offsetMoon)));
 
 	// calculate position matrix for sun and moon
 	XMStoreFloat4x4(&_sunMoon.sun.positionMatrix,  XMMatrixTranslationFromVector(XMLoadFloat3(&offsetSun)));

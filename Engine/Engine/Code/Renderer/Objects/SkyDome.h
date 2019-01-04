@@ -36,8 +36,8 @@ public:
 	void SetRenderMode(SKY_DOME_RENDER_MODE mode) { _RENDER_MODE = mode; }
 
 	// set sun/moon properties
-	void SetSunDistance(float distance)                             { _sunMoon.sun.distance  = XMFLOAT3(distance, distance, distance); }
-	void SetMoonDistance(float distance)                            { _sunMoon.moon.distance = XMFLOAT3(distance, distance, distance); }
+	void SetSunDistance(float distance)  { _sunMoon.sun.distance  = XMFLOAT3(distance, distance, distance); }
+	void SetMoonDistance(float distance) { _sunMoon.moon.distance = XMFLOAT3(distance, distance, distance); }
 
 	// set skyColorProperties
 	// colors is declared in 0 - 255 range
@@ -87,7 +87,7 @@ private:
 		float speedMultiplier = 1.0f;
 
 		// cycle values
-		float cycleInSec = 200.0f;
+		float cycleInSec = 20.0f;
 		float cycleTimer = 0;
 
 		float switchToMoonLightThreshold = -0.1f;

@@ -7,6 +7,10 @@ CameraComponent::CameraComponent() : IComponent(COMPONENT_TYPE::CAMERA_COMPONENT
 {
 }
 
+CameraComponent::~CameraComponent()
+{
+}
+
 void CameraComponent::Init3D(const float& fov)
 {
 	// get ptr to transform component
@@ -29,10 +33,6 @@ void CameraComponent::Init2D(const XMFLOAT2& size, const XMFLOAT2& nearfar)
 	CalculateViewMatrix();
 }
 
-CameraComponent::~CameraComponent()
-{
-}
-
 void CameraComponent::Update(const float& delta)
 {		
 	CalculateViewMatrix();	
@@ -48,9 +48,8 @@ void CameraComponent::CalculateViewMatrix()
 	// create the viewMatrix based on our position, look direction and updirection of the camera	
 	XMStoreFloat3(&forward, XMVectorAdd(XMLoadFloat3(&pos), XMLoadFloat3(&forward)));
 
-	XMStoreFloat4x4(&_viewMatrix, XMMatrixLookAtLH(XMLoadFloat3(&pos), XMLoadFloat3(&forward), XMLoadFloat3(&up)));
-
-	// create viewProjection matrices
-	XMStoreFloat4x4(&_viewProjMatrix, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiply(&_viewMatrix, &_projectionMatrix)));
+	// create matrices
+	XMStoreFloat4x4(&_viewMatrix,          XMMatrixLookAtLH(XMLoadFloat3(&pos), XMLoadFloat3(&forward), XMLoadFloat3(&up)));
+	XMStoreFloat4x4(&_viewProjMatrix,      XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiply(&_viewMatrix, &_projectionMatrix)));
 	XMStoreFloat4x4(&_viewProjMatrixTrans, XMMatrixTranspose(XMLoadFloat4x4(&_viewProjMatrix)));
 }
