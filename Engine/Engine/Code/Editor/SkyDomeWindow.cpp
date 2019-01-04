@@ -5,6 +5,7 @@
 #include "SkyDome.h"
 #include "Systems.h"
 #include "Renderer.h"
+#include "TexturePool.h"
 
 SkyDomeWindow::SkyDomeWindow(MasterEditor* masterEditor) : IEditorWindow(masterEditor)
 {
@@ -19,6 +20,7 @@ void SkyDomeWindow::Render()
 	SkyDome* skyDome         = Systems::renderer->GetSkyDome();
 	SkySettings* skySettings = skyDome->GetSkySettings();
 	SunMoon* sunMoon         = skyDome->GetSoonMoonSettings();
+	ID3D11ShaderResourceView* previewTex = Systems::texturePool->GetTexture(L"Textures/domeMap.dds");
 
 	// set properties of next window;
 	ImGui::SetNextWindowBgAlpha(0.6f);
@@ -29,8 +31,10 @@ void SkyDomeWindow::Render()
 	ImGui::Begin("Skydome Settings", nullptr);
 
 	// speed 
+	ImGui::PushItemWidth(SCREEN_WIDTH * 0.10f);
 	FloatSlider("28", "Time Multiplier", "one cycle is set to 1 minute, alter the duration with this multiplier", 0.0f, 20.0f, &skySettings->speedMultiplier);
 	ImGui::Spacing(1);
+	ImGui::PopItemWidth();
 
 	// sky color layers percentage
 	ImGui::TextColored(ImVec4(1, 1, 1, 1), "SKY LAYERS USAGE PERCENT");
@@ -43,26 +47,39 @@ void SkyDomeWindow::Render()
 	// sky colors
 	ImGui::Spacing(10);
 	ImGui::TextColored(ImVec4(1, 1, 1, 1), "SKY COLORS");
-	ColorPickerNoAlpha("11", "Top Color Day",    "the color of the top part of skydome during day",    "pick4", &skySettings->topSkyColorDay);
-	ColorPickerNoAlpha("12", "Top Color Sunset", "the color of the top part of skydome during Sunset", "pick5", &skySettings->topSkyColorSunSet);
-	ColorPickerNoAlpha("13", "Top Color Night",  "the color of the top part of skydome during Night",  "pick6", &skySettings->topSkyColorNight);
+	ImGui::TextColored(ImVec4(0.9f, 0.9f, 0.9f, 1), "Top Colors:");
+	ImGui::SameLine();
+	ColorPickerNoAlpha("11", "Day",    "the color of the top part of skydome during day",    "pick4", &skySettings->topSkyColorDay);
+	ImGui::SameLine();
+	ColorPickerNoAlpha("12", "Sunset", "the color of the top part of skydome during Sunset", "pick5", &skySettings->topSkyColorSunSet);
+	ImGui::SameLine();
+	ColorPickerNoAlpha("13", "Night",  "the color of the top part of skydome during Night",  "pick6", &skySettings->topSkyColorNight);
 
-	ColorPickerNoAlpha("14", "Mid Color Day",    "the color of the mid part of skydome during day",    "pick7", &skySettings->midSkyColorDay);
-	ColorPickerNoAlpha("15", "Mid Color Sunset", "the color of the mid part of skydome during Sunset", "pick8", &skySettings->midSkyColorSunSet);
-	ColorPickerNoAlpha("16", "Mid Color Night",  "the color of the mid part of skydome during Night",  "pick9", &skySettings->midSkyColorNight);
+	ImGui::TextColored(ImVec4(0.9f, 0.9f, 0.9f, 1), "Mid Colors:");
+	ImGui::SameLine();
+	ColorPickerNoAlpha("14", "Day",    "the color of the mid part of skydome during day",    "pick7", &skySettings->midSkyColorDay);
+	ImGui::SameLine();
+	ColorPickerNoAlpha("15", "Sunset", "the color of the mid part of skydome during Sunset", "pick8", &skySettings->midSkyColorSunSet);
+	ImGui::SameLine();
+	ColorPickerNoAlpha("16", "Night",  "the color of the mid part of skydome during Night",  "pick9", &skySettings->midSkyColorNight);
 
-	ColorPickerNoAlpha("4", "Current Bottom Color", "the color of the bottom part of skydome", "pick1", &skySettings->skyBottomColor);
-	ColorPickerNoAlpha("5", "Current Mid Color", "the color of the middle part of skydome",    "pick2", &skySettings->skyMidColor);
-	ColorPickerNoAlpha("6", "Current Top Color", "the color of the top part of skydome",       "pick3", &skySettings->skyTopColor);
+	ImGui::TextColored(ImVec4(0.9f, 0.9f, 0.9f, 1), "Cur Colors:");
+	ImGui::SameLine();
+	ColorPickerNoAlpha("4", "Bottom", "the color of the bottom part of skydome", "pick1", &skySettings->skyBottomColor);
+	ImGui::SameLine();
+	ColorPickerNoAlpha("5", "Mid", "the color of the middle part of skydome",    "pick2", &skySettings->skyMidColor);
+	ImGui::SameLine();
+	ColorPickerNoAlpha("6", "Top", "the color of the top part of skydome",       "pick3", &skySettings->skyTopColor);
 
 	// blend timings
 	ImGui::Spacing(10);
 	ImGui::TextColored(ImVec4(1, 1, 1, 1), "SKY COLORS BLEND TIMINGS");
+	ImGui::Image((void*)previewTex, ImVec2(128, 128), ImVec2(0, 0), ImVec2(1, 1), ImVec4(1, 1, 1, 1), ImVec4(1, 1, 1, 1));
 	ImGui::PushItemWidth(SCREEN_WIDTH * 0.06f);
-	FloatSlider2("7", "Blend Top Sunset", "when the top sky color will start blending from day to sunset color", -1.0f, 1.0f, &skySettings->sunsetTopSkyColorStartEndBlend.x);
-	FloatSlider2("8", "Blend Top Night", "when the top sky color will start blending from sunset to night color", -1.0f, 1.0f, &skySettings->nightTopSkyColorStartEndBlend.x);
-	FloatSlider2("9", "Blend Mid Sunset", "when the Mid sky color will start blending from day to sunset color", -1.0f, 1.0f, &skySettings->sunsetMidSkyColorStartEndBlend.x);
-	FloatSlider2("10", "Blend Mid Night", "when the Mid sky color will start blending from sunset to night color", -1.0f, 1.0f, &skySettings->nightMidSkyColorStartEndBlend.x);
+	FloatSlider2("7",  "Blend Top Sunset", "when the top sky color will start blending from day to sunset color",   -1.0f, 1.0f, &skySettings->sunsetTopSkyColorStartEndBlend.x);
+	FloatSlider2("8",  "Blend Top Night",  "when the top sky color will start blending from sunset to night color", -1.0f, 1.0f, &skySettings->nightTopSkyColorStartEndBlend.x);
+	FloatSlider2("9",  "Blend Mid Sunset", "when the Mid sky color will start blending from day to sunset color",   -1.0f, 1.0f, &skySettings->sunsetMidSkyColorStartEndBlend.x);
+	FloatSlider2("10", "Blend Mid Night",  "when the Mid sky color will start blending from sunset to night color", -1.0f, 1.0f, &skySettings->nightMidSkyColorStartEndBlend.x);
 	ImGui::PopItemWidth();
 
 	// lightning settings
@@ -150,7 +167,7 @@ void SkyDomeWindow::FloatInput3(const char* ID, const char* header, const char* 
 
 void SkyDomeWindow::FloatInput(const char* ID, const char* header, const char* toolTip, float* data)
 {
-	ImGui::InputFloat(ID, data, 2);
+	ImGui::InputFloat(ID, data, 1.0f, 1.0f, 1);
 	ImGui::SameLine();
 	ImGui::TextColored(ImVec4(0.9, 0.9, 0.9, 1), header);
 	ShowToolTip(toolTip);

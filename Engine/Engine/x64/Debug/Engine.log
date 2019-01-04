@@ -1,7 +1,7 @@
 ﻿  SkyDomeWindow.cpp
-c:\users\nilss\desktop\enginedx11\engine\engine\code\editor\skydomewindow.cpp(117): warning C4305: 'argument': truncation from 'double' to 'float'
-c:\users\nilss\desktop\enginedx11\engine\engine\code\editor\skydomewindow.cpp(131): warning C4305: 'argument': truncation from 'double' to 'float'
-c:\users\nilss\desktop\enginedx11\engine\engine\code\editor\skydomewindow.cpp(139): warning C4305: 'argument': truncation from 'double' to 'float'
-c:\users\nilss\desktop\enginedx11\engine\engine\code\editor\skydomewindow.cpp(147): warning C4305: 'argument': truncation from 'double' to 'float'
-c:\users\nilss\desktop\enginedx11\engine\engine\code\editor\skydomewindow.cpp(155): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\editor\skydomewindow.cpp(134): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\editor\skydomewindow.cpp(148): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\editor\skydomewindow.cpp(156): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\editor\skydomewindow.cpp(164): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\editor\skydomewindow.cpp(172): warning C4305: 'argument': truncation from 'double' to 'float'
   Engine.vcxproj -> C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\Engine.exe
