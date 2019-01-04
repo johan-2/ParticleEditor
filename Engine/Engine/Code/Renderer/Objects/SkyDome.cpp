@@ -187,9 +187,9 @@ void SkyDome::RenderBlendedColors(bool noMask)
 	// set the colors, the percent fraction is stored in the w channel that specifies how
 	// low to high a color will be used on the skydome 
 	ConstantColorBlendPixel pixeldata;
-	pixeldata.bottom   = _skyColorLayers.bottomColor;
-	pixeldata.mid      = _skyColorLayers.midColor;
-	pixeldata.top      = _skyColorLayers.topColor;
+	pixeldata.bottom   = _dynamicSky.skyBottomColor;
+	pixeldata.mid      = _dynamicSky.skyMidColor;
+	pixeldata.top      = _dynamicSky.skyTopColor;
 
 	// update constant buffers
 	SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(CBVertDome),          _constantBufferVertex);
@@ -426,7 +426,7 @@ void SkyDome::UpdateSkyColors(const float& delta)
 	LerpColorRGB(topSkyColor, _dynamicSky.topSkyColorDay, _dynamicSky.topSkyColorSunSet,
 		_dynamicSky.sunsetTopSkyColorStartEndBlend.x,     _dynamicSky.sunsetTopSkyColorStartEndBlend.y, _sunMoon.sun.relativeHeight);
 
-	LerpColorRGB(_skyColorLayers.topColor, topSkyColor, _dynamicSky.topSkyColorNight,
+	LerpColorRGB(_dynamicSky.skyTopColor, topSkyColor, _dynamicSky.topSkyColorNight,
 		_dynamicSky.nightTopSkyColorStartEndBlend.x,    _dynamicSky.nightTopSkyColorStartEndBlend.y, _sunMoon.sun.relativeHeight);
 
 	// set the color of the mid part of sky
@@ -435,7 +435,7 @@ void SkyDome::UpdateSkyColors(const float& delta)
 	LerpColorRGB(midSkyColor, _dynamicSky.midSkyColorDay, _dynamicSky.midSkyColorSunSet,
 		_dynamicSky.sunsetMidSkyColorStartEndBlend.x, _dynamicSky.sunsetMidSkyColorStartEndBlend.y, _sunMoon.sun.relativeHeight);
 
-	LerpColorRGB(_skyColorLayers.midColor, midSkyColor, _dynamicSky.midSkyColorNight,
+	LerpColorRGB(_dynamicSky.skyMidColor, midSkyColor, _dynamicSky.midSkyColorNight,
 		_dynamicSky.nightMidSkyColorStartEndBlend.x, _dynamicSky.nightMidSkyColorStartEndBlend.y, _sunMoon.sun.relativeHeight);
 }
 

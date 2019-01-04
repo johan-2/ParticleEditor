@@ -14,6 +14,77 @@ enum SKY_DOME_RENDER_MODE
 	THREE_LAYER_COLOR_BLEND,
 };
 
+// hold all sun/moon specific settings
+struct SkyObject
+{
+	// billboarded 2D bitmap
+	Mesh* mesh;
+
+	XMFLOAT4X4 positionMatrix;
+	XMFLOAT3   distance;
+	XMFLOAT3   colorTint = XMFLOAT3(1, 1, 1);
+	XMFLOAT3   dayColorTint;
+	XMFLOAT3   sunsetColorTint;
+	XMFLOAT2   beginEndFade;
+	XMFLOAT2   minMaxDst;
+	XMFLOAT2   beginEndDstLerp;
+	XMFLOAT2   beginEndColorBlend;
+	float      relativeHeight;
+
+	Entity* entity;
+	TransformComponent* transform;
+};
+
+struct SunMoon
+{
+	SkyObject sun;
+	SkyObject moon;
+};
+
+struct SkySettings
+{	
+	float speedMultiplier = 0.5f;
+
+	// cycle values
+	float cycleInSec = 60.0f;
+	float cycleTimer = 0;
+
+	float switchToMoonLightThreshold = -0.1f;
+
+	// start/end blend values
+	XMFLOAT2 sunsetLightColorStartEndBlend  = XMFLOAT2(0.2f, 0.0f);
+	XMFLOAT2 nightLightColorStartEndBlend   = XMFLOAT2(0.0f, -0.1f);
+	XMFLOAT2 sunsetTopSkyColorStartEndBlend = XMFLOAT2(0.5f, 0.1f);
+	XMFLOAT2 nightTopSkyColorStartEndBlend  = XMFLOAT2(0.1f, -0.3f);
+	XMFLOAT2 sunsetMidSkyColorStartEndBlend = XMFLOAT2(0.45f, 0.0f);
+	XMFLOAT2 nightMidSkyColorStartEndBlend  = XMFLOAT2(0.0f, -0.25f);
+
+	// start                        == to beginning to fade out
+	XMFLOAT2 dayLightStartEndfade   = XMFLOAT2(0.0f, -0.1f);
+	XMFLOAT2 nightLightStartEndfade = XMFLOAT2(-0.2f, -0.1f);
+
+	// translation values for shadow rendering camera
+	XMFLOAT3 shadowMapDistance = XMFLOAT3(300, 300, 300);
+	XMFLOAT3 startRotation     = XMFLOAT3(0, 100.0f, 0);
+	XMFLOAT3 endRotation       = XMFLOAT3(360.0f, 100.0f, 0.0f);
+
+	// blend colors
+	XMFLOAT4 normalDirLightColor = XMFLOAT4(0.8f, 0.8f, 0.8f, 0.0f);
+	XMFLOAT4 sunsetDirLightColor = XMFLOAT4(0.9935f, 0.07211f, 0.08812f, 1.0f);
+	XMFLOAT4 nightDirLightColor  = XMFLOAT4(0.1f, 0.1f, 0.26f, 1.0f);
+	XMFLOAT4 topSkyColorDay      = XMFLOAT4(0.082f, 0.352f, 0.984f, 1.0f);
+	XMFLOAT4 topSkyColorSunSet   = XMFLOAT4(0.35f, 0.45f, 0.984f, 1.0f);
+	XMFLOAT4 topSkyColorNight    = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
+	XMFLOAT4 midSkyColorDay      = XMFLOAT4(0.62f, 0.6f, 0.30f, 1.0f);
+	XMFLOAT4 midSkyColorSunSet   = XMFLOAT4(0.9935f, 0.07211f, 0.08812f, 1.0f);
+	XMFLOAT4 midSkyColorNight    = XMFLOAT4(0.109f, 0.035f, 0.1f, 1.0f);
+
+	// color results
+	XMFLOAT4 skyBottomColor = XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f);
+	XMFLOAT4 skyMidColor    = XMFLOAT4(0.0f, 0.0f, 0.0f, 30.0f);
+	XMFLOAT4 skyTopColor    = XMFLOAT4(0.0f, 0.0f, 0.0f, 70.0f);
+};
+
 class SkyDome
 {
 public:
@@ -34,98 +105,12 @@ public:
 	// change the render mode
 	void SetRenderMode(SKY_DOME_RENDER_MODE mode) { _RENDER_MODE = mode; }
 
-	// set skyColorProperties
-	// colors is declared in 0 - 255 range
-	// the layer fraction is set between 0 - 100 and is stored in the alpha channel
-	// ex 20, 60, 80 will set layer 1 color from 0 to 20 % on the skyDome
-	// layer 1 and 2 will blend between 20 - 60 % of the dome
-	// layer2 and 3 will blend between 60 - 80 % of the dome and layer 3 will cover the final 20%
-	void SetSkyColorLayers(XMFLOAT4 bottomColor, XMFLOAT4 midColor, XMFLOAT4 topColor) {
-		_skyColorLayers.bottomColor = bottomColor;
-		_skyColorLayers.midColor    = midColor;
-		_skyColorLayers.topColor    = topColor;
-	}
+	SunMoon* GetSoonMoonSettings() { return &_sunMoon; }
+	SkySettings* GetSkySettings()  { return &_dynamicSky; }
 
 private:
 
-	// hold all sun/moon specific settings
-	struct SkyObject
-	{
-		// billboarded 2D bitmap
-		Mesh* mesh;
-
-		XMFLOAT4X4 positionMatrix;
-		XMFLOAT3   distance;
-		XMFLOAT3   colorTint = XMFLOAT3(1, 1, 1);
-		XMFLOAT3   dayColorTint;
-		XMFLOAT3   sunsetColorTint;
-		XMFLOAT2   beginEndFade;
-		XMFLOAT2   minMaxDst;
-		XMFLOAT2   beginEndDstLerp;
-		XMFLOAT2   beginEndColorBlend;
-		float      relativeHeight;
-
-		Entity* entity;
-		TransformComponent* transform;
-	};
-
-	struct SunMoon
-	{
-		SkyObject sun;
-		SkyObject moon;
-	};
-
-	struct DynamicDomeSettings
-	{
-		// is this system enabled
-		bool isEnabled = true;
-
-		// only used from dev tools
-		float speedMultiplier = 1.0f;
-
-		// cycle values
-		float cycleInSec = 20.0f;
-		float cycleTimer = 0;
-
-		float switchToMoonLightThreshold = -0.1f;
-
-		// start/end blend values
-		XMFLOAT2 sunsetLightColorStartEndBlend  = XMFLOAT2(0.2f, 0.0f);
-		XMFLOAT2 nightLightColorStartEndBlend   = XMFLOAT2(0.0f, -0.1f);
-		XMFLOAT2 sunsetTopSkyColorStartEndBlend = XMFLOAT2(0.5f, 0.1f);
-		XMFLOAT2 nightTopSkyColorStartEndBlend  = XMFLOAT2(0.1f, -0.3f);
-		XMFLOAT2 sunsetMidSkyColorStartEndBlend = XMFLOAT2(0.45f, 0.0f);
-		XMFLOAT2 nightMidSkyColorStartEndBlend  = XMFLOAT2(0.0f, -0.25f);
-
-		// start == to beginning to fade out
-		XMFLOAT2 dayLightStartEndfade   = XMFLOAT2(0.0f, -0.1f);
-		XMFLOAT2 nightLightStartEndfade = XMFLOAT2(-0.2f, -0.1f);
-
-		// translation values for shadow rendering camera
-		XMFLOAT3 shadowMapDistance = XMFLOAT3(300, 300, 300);
-		XMFLOAT3 startRotation     = XMFLOAT3(0, 100.0f, 0);
-		XMFLOAT3 endRotation       = XMFLOAT3(360.0f, 100.0f, 0.0f);
-
-		// colors
-		XMFLOAT4 normalDirLightColor = XMFLOAT4(0.8f, 0.8f, 0.8f, 0.0f);
-		XMFLOAT4 sunsetDirLightColor = XMFLOAT4(0.9935f, 0.07211f, 0.08812f, 1.0f);
-		XMFLOAT4 nightDirLightColor  = XMFLOAT4(0.1f, 0.1f, 0.26f, 1.0f);
-		XMFLOAT4 topSkyColorDay      = XMFLOAT4(0.082f, 0.352f, 0.984f, 1.0f);
-		XMFLOAT4 topSkyColorSunSet   = XMFLOAT4(0.35f, 0.45f, 0.984f, 1.0f);
-		XMFLOAT4 topSkyColorNight    = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
-		XMFLOAT4 midSkyColorDay      = XMFLOAT4(0.62f, 0.6f, 0.30f, 1.0f);
-		XMFLOAT4 midSkyColorSunSet   = XMFLOAT4(0.9935f, 0.07211f, 0.08812f, 1.0f);
-		XMFLOAT4 midSkyColorNight    = XMFLOAT4(0.109f, 0.035f, 0.1f, 1.0f);
-	};
-
-	struct SkyColorLayers
-	{
-		XMFLOAT4 bottomColor;
-		XMFLOAT4 midColor;
-		XMFLOAT4 topColor;
-	};
-
-	// create mesh
+	// create meshes
 	void CreateMeshes();
 
 	// get the sunmatrix
@@ -180,13 +165,10 @@ private:
 	// sphere mesh
 	Mesh* _domeMesh;
 
-	// colors to use if renders in color mode
-	SkyColorLayers _skyColorLayers;
-
 	// sun data
 	SunMoon _sunMoon;
 
-	DynamicDomeSettings _dynamicSky;
+	SkySettings _dynamicSky;
 
 	SKY_DOME_RENDER_MODE _RENDER_MODE;
 
