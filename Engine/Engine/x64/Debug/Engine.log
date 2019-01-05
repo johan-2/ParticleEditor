@@ -1,7 +1,13 @@
 ﻿  SkyDomeWindow.cpp
-c:\users\nilss\desktop\enginedx11\engine\engine\code\editor\skydomewindow.cpp(134): warning C4305: 'argument': truncation from 'double' to 'float'
-c:\users\nilss\desktop\enginedx11\engine\engine\code\editor\skydomewindow.cpp(148): warning C4305: 'argument': truncation from 'double' to 'float'
-c:\users\nilss\desktop\enginedx11\engine\engine\code\editor\skydomewindow.cpp(156): warning C4305: 'argument': truncation from 'double' to 'float'
-c:\users\nilss\desktop\enginedx11\engine\engine\code\editor\skydomewindow.cpp(164): warning C4305: 'argument': truncation from 'double' to 'float'
-c:\users\nilss\desktop\enginedx11\engine\engine\code\editor\skydomewindow.cpp(172): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\objects\skydome.h(40): warning C4099: 'SunMoon': type name first seen using 'class' now seen using 'struct'
+  c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\objects\skydome.h(39): note: see declaration of 'SunMoon'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\objects\skydome.h(46): warning C4099: 'SkySettings': type name first seen using 'class' now seen using 'struct'
+  c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\objects\skydome.h(45): note: see declaration of 'SkySettings'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\gui.h(57): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\gui.h(73): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\gui.h(87): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\gui.h(95): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\gui.h(103): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\gui.h(111): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\gui.h(144): warning C4305: 'argument': truncation from 'double' to 'float'
   Engine.vcxproj -> C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\Engine.exe

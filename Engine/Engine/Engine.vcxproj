@@ -268,6 +268,8 @@
     <ClInclude Include="Code\System\Systems.h" />
     <ClInclude Include="Code\TestScenes\IslandTestScene.h" />
     <ClInclude Include="Code\TestScenes\SponzaTestScene.h" />
+    <ClInclude Include="Code\Utils\GUI.h" />
+    <ClInclude Include="Code\Utils\JsonHelpers.h" />
     <ClInclude Include="Code\Utils\MathHelpers.h" />
     <ClInclude Include="Code\Utils\ModelLoader.h" />
     <ClInclude Include="Code\Utils\ShaderHelpers.h" />

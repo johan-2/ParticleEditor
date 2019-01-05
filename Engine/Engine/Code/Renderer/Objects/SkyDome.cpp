@@ -14,14 +14,13 @@
 #include <algorithm>
 #include "MathHelpers.h"
 #include "Entity.h"
+#include "JsonHelpers.h"
 
-SkyDome::SkyDome(const wchar_t* textureFile, SKY_DOME_RENDER_MODE mode):
-	_isActive(true),
-	_RENDER_MODE(mode)
+SkyDome::SkyDome(const char* settingsFile):
+	_isActive(true)
 {
 	// create mesh and cubemap
 	CreateMeshes();
-	LoadCubemap(textureFile);
 
 	// create shaders
 	SHADER_HELPERS::CreateVertexShader(L"shaders/SkyDome/vertexSkyDomeCubemap.vs",      _vertexDomeCubeMapShader,      _vertexDomeCubeMapShaderByteCode);
@@ -38,7 +37,7 @@ SkyDome::SkyDome(const wchar_t* textureFile, SKY_DOME_RENDER_MODE mode):
 	SHADER_HELPERS::CreateConstantBuffer(_constantSunPixel);
 
 	// initialize sun/moon values
-	_sunMoon.sun.distance           = XMFLOAT3(5.0f, 5.0f, 5.0f);
+	/*_sunMoon.sun.distance           = XMFLOAT3(5.0f, 5.0f, 5.0f);
 	_sunMoon.sun.beginEndFade       = XMFLOAT2(-0.1f, -0.25f);
 	_sunMoon.sun.dayColorTint       = XMFLOAT3(1.0f, 1.0f, 1.0f);
 	_sunMoon.sun.sunsetColorTint    = XMFLOAT3(0.95f, 0.65f, 0.1f);
@@ -52,7 +51,7 @@ SkyDome::SkyDome(const wchar_t* textureFile, SKY_DOME_RENDER_MODE mode):
 	_sunMoon.moon.sunsetColorTint    = XMFLOAT3(0.5f, 0.5f, 0.5f);
 	_sunMoon.moon.minMaxDst          = XMFLOAT2(8.0f, 10.0f);
 	_sunMoon.moon.beginEndDstLerp    = XMFLOAT2(0.5f, -0.25f);
-	_sunMoon.moon.beginEndColorBlend = XMFLOAT2(0.5f, -0.15f);
+	_sunMoon.moon.beginEndColorBlend = XMFLOAT2(0.5f, -0.15f);*/
 	
 	_sunMoon.sun.entity = new Entity();	
  	_sunMoon.sun.transform = _sunMoon.sun.entity->AddComponent<TransformComponent>();
@@ -61,6 +60,9 @@ SkyDome::SkyDome(const wchar_t* textureFile, SKY_DOME_RENDER_MODE mode):
 	_sunMoon.moon.entity = new Entity();
 	_sunMoon.moon.transform = _sunMoon.moon.entity->AddComponent<TransformComponent>();
 	_sunMoon.moon.transform->Init();
+
+	ReadSettings(settingsFile);
+	LoadCubemap();
 }
 
 SkyDome::~SkyDome()
@@ -88,18 +90,20 @@ void SkyDome::CreateMeshes()
 	_sunMoon.moon.mesh = ModelLoader::CreateWorldSprite(0, L"Textures/moon2.dds", nullptr);
 }
 
-void SkyDome::LoadCubemap(const wchar_t* file) 
+void SkyDome::LoadCubemap() 
 {
 	// remove the old cubemap texture if one exist
-	if (_cubeMap != nullptr)
-		_cubeMap->Release();
+	if (_skySettings.cubeMap != nullptr)
+		_skySettings.cubeMap->Release();
+
+	std::wstring file(_skySettings.cubeMapName.begin(), _skySettings.cubeMapName.end());
 
 	// create cubemap from file
-	HRESULT result = DirectX::CreateDDSTextureFromFile(Systems::dxManager->GetDevice(), file, NULL, &_cubeMap);
+	HRESULT result = DirectX::CreateDDSTextureFromFile(Systems::dxManager->GetDevice(), file.c_str(), NULL, &_skySettings.cubeMap);
 
 	// get and print error message if failed
 	if (FAILED(result))						
-		DX_ERROR::PrintError(result, (std::string("failed to create cubemap with filename ") + DX_ERROR::ConvertFromWString(file)).c_str());
+		DX_ERROR::PrintError(result, (std::string("failed to create cubemap with filename ") + DX_ERROR::ConvertFromWString(file.c_str())).c_str());
 }
 
 void SkyDome::Render(bool noMask)
@@ -107,8 +111,8 @@ void SkyDome::Render(bool noMask)
 	if (!_isActive)
 		return;
 
-	if (_RENDER_MODE == SKY_DOME_RENDER_MODE::CUBEMAP) RenderCubeMap(noMask);
-	else                                                      RenderBlendedColors(noMask);
+	if (_skySettings.RENDER_MODE == SKY_DOME_RENDER_MODE::CUBEMAP) RenderCubeMap(noMask);
+	else                                                           RenderBlendedColors(noMask);
 	
 	RenderSunMoon(noMask);	
 }
@@ -134,7 +138,7 @@ void SkyDome::RenderCubeMap(bool noMask)
 	devCon->VSSetConstantBuffers(0, 1, &_constantBufferVertex);
 
 	// set texture
-	devCon->PSSetShaderResources(0, 1, &_cubeMap);
+	devCon->PSSetShaderResources(0, 1, &_skySettings.cubeMap);
 
 	// use no culling
 	DXM.RasterizerStates()->SetRasterizerState(RASTERIZER_STATE::NOCULL);
@@ -187,9 +191,9 @@ void SkyDome::RenderBlendedColors(bool noMask)
 	// set the colors, the percent fraction is stored in the w channel that specifies how
 	// low to high a color will be used on the skydome 
 	ConstantColorBlendPixel pixeldata;
-	pixeldata.bottom   = _dynamicSky.skyBottomColor;
-	pixeldata.mid      = _dynamicSky.skyMidColor;
-	pixeldata.top      = _dynamicSky.skyTopColor;
+	pixeldata.bottom   = _skySettings.skyBottomColor;
+	pixeldata.mid      = _skySettings.skyMidColor;
+	pixeldata.top      = _skySettings.skyTopColor;
 
 	// update constant buffers
 	SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(CBVertDome),          _constantBufferVertex);
@@ -303,25 +307,27 @@ void SkyDome::Update(const float& delta)
 	UpdateSunMoonColors(delta);
 	UpdateShadowLightTranslation(delta);
 	UpdateShadowLightColor(delta);
-	UpdateSkyColors(delta);
+
+	if (_skySettings.RENDER_MODE == THREE_LAYER_COLOR_BLEND) UpdateSkyColors(delta);
 }
 
 void SkyDome::UpdateSunMoonTranslation(const float& delta)
 {
 	// add to cycle timer and reset if we have passed one complete cycle
-	_dynamicSky.cycleTimer += delta * _dynamicSky.speedMultiplier;
-	if (_dynamicSky.cycleTimer > _dynamicSky.cycleInSec)
-		_dynamicSky.cycleTimer = 0.0f;
+	_skySettings.cycleTimer += delta * _skySettings.speedMultiplier;
+	if (_skySettings.cycleTimer > _skySettings.cycleInSec)
+		_skySettings.cycleTimer = 0.0f;
 
 	XMFLOAT3 sunRotation;
 	XMFLOAT3 moonRotation;
-	XMFLOAT3 moonOffset(_dynamicSky.startRotation.x + 180.0f, 0, 0);
+	XMFLOAT3 moonOffset(180.0f, 0, 0);
 
 	// get the current rotation of the sun bassed on cycle passed
+	_skySettings.endRotation.y = _skySettings.startRotation.y;
 	XMStoreFloat3(&sunRotation,
-		XMVectorLerp(XMLoadFloat3(&_dynamicSky.startRotation),
-			XMLoadFloat3(&_dynamicSky.endRotation),
-			_dynamicSky.cycleTimer / _dynamicSky.cycleInSec));
+		XMVectorLerp(XMLoadFloat3(&_skySettings.startRotation),
+			XMLoadFloat3(&_skySettings.endRotation),
+			_skySettings.cycleTimer / _skySettings.cycleInSec));
 
 	// add on 180 degress to moon rotation from sun rotation
 	XMStoreFloat3(&moonRotation, XMVectorAdd(XMLoadFloat3(&sunRotation), XMLoadFloat3(&moonOffset)));
@@ -372,7 +378,7 @@ void SkyDome::UpdateShadowLightTranslation(const float& delta)
 
 	// set new light rotation depending on the threshold if
 	// the sun or the moon is the light casting source
-	lightTransform->SetRotation(_sunMoon.sun.relativeHeight < _dynamicSky.switchToMoonLightThreshold ? _sunMoon.moon.transform->GetRotationVal() : _sunMoon.sun.transform->GetRotationVal());
+	lightTransform->SetRotation(_sunMoon.sun.relativeHeight < _skySettings.switchToMoonLightThreshold ? _sunMoon.moon.transform->GetRotationVal() : _sunMoon.sun.transform->GetRotationVal());
 	lightTransform->UpdateWorldMatrix();
 
 	// get the inverted forward of the current lightsource
@@ -382,7 +388,7 @@ void SkyDome::UpdateShadowLightTranslation(const float& delta)
 
 	// move the shadowmap camera 
 	XMFLOAT3 finalPosition;
-	XMStoreFloat3(&finalPosition, XMVectorMultiply(XMLoadFloat3(&invertedForwardLight), XMLoadFloat3(&_dynamicSky.shadowMapDistance)));
+	XMStoreFloat3(&finalPosition, XMVectorMultiply(XMLoadFloat3(&invertedForwardLight), XMLoadFloat3(&_skySettings.shadowMapDistance)));
 	lightTransform->SetPosition(finalPosition);
 	lightTransform->UpdateWorldMatrix();
 }
@@ -395,20 +401,20 @@ void SkyDome::UpdateShadowLightColor(const float& delta)
 	// final directional light color depending on the dot product
 	// day to sunset
 	XMFLOAT4 blendedLightColor;
-	LerpColorRGB(blendedLightColor, _dynamicSky.normalDirLightColor, _dynamicSky.sunsetDirLightColor,
-		_dynamicSky.sunsetLightColorStartEndBlend.x, _dynamicSky.sunsetLightColorStartEndBlend.y, _sunMoon.sun.relativeHeight);
+	LerpColorRGB(blendedLightColor, _skySettings.normalDirLightColor, _skySettings.sunsetDirLightColor,
+		_skySettings.sunsetLightColorStartEndBlend.x, _skySettings.sunsetLightColorStartEndBlend.y, _sunMoon.sun.relativeHeight);
 
 	// sunset to night
-	LerpColorRGB(blendedLightColor, blendedLightColor, _dynamicSky.nightDirLightColor,
-		_dynamicSky.nightLightColorStartEndBlend.x, _dynamicSky.nightLightColorStartEndBlend.y, _sunMoon.sun.relativeHeight);
+	LerpColorRGB(blendedLightColor, blendedLightColor, _skySettings.nightDirLightColor,
+		_skySettings.nightLightColorStartEndBlend.x, _skySettings.nightLightColorStartEndBlend.y, _sunMoon.sun.relativeHeight);
 
 	// get the light strength fraction depending on if night or day
 	// this makes the light completely fade out before we switch between
 	// the sun and moon light sources. After the switch the light strength is 
 	// then faded back in, this avoids a rough light transition
-	float ls = _sunMoon.sun.relativeHeight < _dynamicSky.switchToMoonLightThreshold ?
-		inverseLerp(_dynamicSky.nightLightStartEndfade.y, _dynamicSky.nightLightStartEndfade.x, _sunMoon.sun.relativeHeight) :
-		inverseLerp(_dynamicSky.dayLightStartEndfade.y,   _dynamicSky.dayLightStartEndfade.x,   _sunMoon.sun.relativeHeight);
+	float ls = _sunMoon.sun.relativeHeight < _skySettings.switchToMoonLightThreshold ?
+		inverseLerp(_skySettings.nightLightStartEndfade.y, _skySettings.nightLightStartEndfade.x, _sunMoon.sun.relativeHeight) :
+		inverseLerp(_skySettings.dayLightStartEndfade.y,   _skySettings.dayLightStartEndfade.x,   _sunMoon.sun.relativeHeight);
 
 	// mutiply light color by strenght
 	XMFLOAT4 lightStrength(ls, ls, ls, 1.0f);
@@ -423,20 +429,20 @@ void SkyDome::UpdateSkyColors(const float& delta)
 	// set the color of the top part of sky
 	// blend between day color to sunsetcolor and then to nightcolor
 	XMFLOAT4 topSkyColor;
-	LerpColorRGB(topSkyColor, _dynamicSky.topSkyColorDay, _dynamicSky.topSkyColorSunSet,
-		_dynamicSky.sunsetTopSkyColorStartEndBlend.x,     _dynamicSky.sunsetTopSkyColorStartEndBlend.y, _sunMoon.sun.relativeHeight);
+	LerpColorRGB(topSkyColor, _skySettings.topSkyColorDay, _skySettings.topSkyColorSunSet,
+		_skySettings.sunsetTopSkyColorStartEndBlend.x,     _skySettings.sunsetTopSkyColorStartEndBlend.y, _sunMoon.sun.relativeHeight);
 
-	LerpColorRGB(_dynamicSky.skyTopColor, topSkyColor, _dynamicSky.topSkyColorNight,
-		_dynamicSky.nightTopSkyColorStartEndBlend.x,    _dynamicSky.nightTopSkyColorStartEndBlend.y, _sunMoon.sun.relativeHeight);
+	LerpColorRGB(_skySettings.skyTopColor, topSkyColor, _skySettings.topSkyColorNight,
+		_skySettings.nightTopSkyColorStartEndBlend.x,    _skySettings.nightTopSkyColorStartEndBlend.y, _sunMoon.sun.relativeHeight);
 
 	// set the color of the mid part of sky
 	// blend between day color to sunsetcolor and then to nightcolor
 	XMFLOAT4 midSkyColor;
-	LerpColorRGB(midSkyColor, _dynamicSky.midSkyColorDay, _dynamicSky.midSkyColorSunSet,
-		_dynamicSky.sunsetMidSkyColorStartEndBlend.x, _dynamicSky.sunsetMidSkyColorStartEndBlend.y, _sunMoon.sun.relativeHeight);
+	LerpColorRGB(midSkyColor, _skySettings.midSkyColorDay, _skySettings.midSkyColorSunSet,
+		_skySettings.sunsetMidSkyColorStartEndBlend.x, _skySettings.sunsetMidSkyColorStartEndBlend.y, _sunMoon.sun.relativeHeight);
 
-	LerpColorRGB(_dynamicSky.skyMidColor, midSkyColor, _dynamicSky.midSkyColorNight,
-		_dynamicSky.nightMidSkyColorStartEndBlend.x, _dynamicSky.nightMidSkyColorStartEndBlend.y, _sunMoon.sun.relativeHeight);
+	LerpColorRGB(_skySettings.skyMidColor, midSkyColor, _skySettings.midSkyColorNight,
+		_skySettings.nightMidSkyColorStartEndBlend.x, _skySettings.nightMidSkyColorStartEndBlend.y, _sunMoon.sun.relativeHeight);
 }
 
 float SkyDome::inverseLerp(float a, float b, float t)
@@ -467,4 +473,66 @@ void SkyDome::LerpColorRGB(XMFLOAT3& result, XMFLOAT3 colorA, XMFLOAT3 colorB, f
 {
 	XMStoreFloat3(&result,
 		XMVectorLerp(XMLoadFloat3(&colorA), XMLoadFloat3(&colorB), inverseLerp(startBlend, endBlend, fraction)));
+}
+
+void SkyDome::ReadSettings(const char* file)
+{
+	FILE* fp; fopen_s(&fp, file, "rb");
+	char readBuffer[65536];
+	rapidjson::FileReadStream inStream(fp, readBuffer, sizeof(readBuffer));
+
+	rapidjson::Document d;
+	d.ParseStream(inStream);
+	fclose(fp);
+
+	assert(d.IsObject());
+
+	_skySettings.speedMultiplier            = JSON::ReadFloat(d, "speedMultiplier");
+	_skySettings.cycleTimer                 = JSON::ReadFloat(d, "cycleTimer");
+	_skySettings.switchToMoonLightThreshold = JSON::ReadFloat(d, "switchToMoonLightThreshold");
+
+	_skySettings.sunsetLightColorStartEndBlend  = JSON::ReadFloat2(d, "sunsetLightColorStartEndBlend");
+	_skySettings.nightLightColorStartEndBlend   = JSON::ReadFloat2(d, "nightLightColorStartEndBlend");
+	_skySettings.sunsetTopSkyColorStartEndBlend = JSON::ReadFloat2(d, "sunsetTopSkyColorStartEndBlend");
+	_skySettings.nightTopSkyColorStartEndBlend  = JSON::ReadFloat2(d, "nightTopSkyColorStartEndBlend");
+	_skySettings.sunsetMidSkyColorStartEndBlend = JSON::ReadFloat2(d, "sunsetMidSkyColorStartEndBlend");
+	_skySettings.nightMidSkyColorStartEndBlend  = JSON::ReadFloat2(d, "nightMidSkyColorStartEndBlend");
+
+	_skySettings.dayLightStartEndfade   = JSON::ReadFloat2(d, "dayLightStartEndfade");
+	_skySettings.nightLightStartEndfade = JSON::ReadFloat2(d, "nightLightStartEndfade");
+
+	_skySettings.shadowMapDistance = JSON::ReadFloat3(d, "shadowMapDistance");
+	_skySettings.startRotation     = JSON::ReadFloat3(d, "startRotation");
+	_skySettings.endRotation       = JSON::ReadFloat3(d, "endRotation");
+
+	_skySettings.normalDirLightColor = JSON::ReadFloat4(d, "normalDirLightColor");
+	_skySettings.sunsetDirLightColor = JSON::ReadFloat4(d, "sunsetDirLightColor");
+	_skySettings.nightDirLightColor  = JSON::ReadFloat4(d, "nightDirLightColor");
+	_skySettings.topSkyColorDay      = JSON::ReadFloat4(d, "topSkyColorDay");
+	_skySettings.topSkyColorSunSet   = JSON::ReadFloat4(d, "topSkyColorSunSet");
+	_skySettings.topSkyColorNight    = JSON::ReadFloat4(d, "topSkyColorNight");
+	_skySettings.midSkyColorDay      = JSON::ReadFloat4(d, "midSkyColorDay");
+	_skySettings.midSkyColorSunSet   = JSON::ReadFloat4(d, "midSkyColorSunSet");
+	_skySettings.midSkyColorNight    = JSON::ReadFloat4(d, "midSkyColorNight");
+	_skySettings.skyBottomColor      = JSON::ReadFloat4(d, "skyBottomColor");
+
+	_skySettings.RENDER_MODE = (SKY_DOME_RENDER_MODE)JSON::ReadInt(d, "RENDER_MODE");
+	_skySettings.cubeMapName = JSON::ReadString(d, "cubeMap");
+
+	_sunMoon.sun.dayColorTint     = JSON::ReadFloat3(d, "sunDayColorTint");
+	_sunMoon.moon.dayColorTint    = JSON::ReadFloat3(d, "moonDayColorTint");
+	_sunMoon.sun.sunsetColorTint  = JSON::ReadFloat3(d, "sunSunsetColorTint");
+	_sunMoon.moon.sunsetColorTint = JSON::ReadFloat3(d, "moonSunsetColorTint");
+
+	_sunMoon.sun.beginEndFade  = JSON::ReadFloat2(d, "sunBeginEndfade");
+	_sunMoon.moon.beginEndFade = JSON::ReadFloat2(d, "moonBeginEndfade");
+
+	_sunMoon.sun.minMaxDst  = JSON::ReadFloat2(d, "sunMinMaxDst");
+	_sunMoon.moon.minMaxDst = JSON::ReadFloat2(d, "moonMinMaxDst");
+
+	_sunMoon.sun.beginEndDstLerp  = JSON::ReadFloat2(d, "sunBeginEndDstLerp");
+	_sunMoon.moon.beginEndDstLerp = JSON::ReadFloat2(d, "moonBeginEndDstLerp");
+
+	_sunMoon.sun.beginEndColorBlend  = JSON::ReadFloat2(d, "sunBeginEndColorBlend");
+	_sunMoon.moon.beginEndColorBlend = JSON::ReadFloat2(d, "moonBeginEndColorBlend");
 }

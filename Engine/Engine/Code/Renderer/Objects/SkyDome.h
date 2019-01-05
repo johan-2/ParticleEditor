@@ -2,6 +2,7 @@
 #include <d3d11.h>
 #include <DirectXMath.h>
 #include "Color32.h"
+#include <string>
 
 using namespace DirectX;
 class Mesh;
@@ -10,8 +11,8 @@ class Entity;
 
 enum SKY_DOME_RENDER_MODE
 {
-	CUBEMAP,
 	THREE_LAYER_COLOR_BLEND,
+	CUBEMAP,
 };
 
 // hold all sun/moon specific settings
@@ -59,14 +60,14 @@ struct SkySettings
 	XMFLOAT2 sunsetMidSkyColorStartEndBlend = XMFLOAT2(0.45f, 0.0f);
 	XMFLOAT2 nightMidSkyColorStartEndBlend  = XMFLOAT2(0.0f, -0.25f);
 
-	// start                        == to beginning to fade out
+	// start == to beginning to fade out
 	XMFLOAT2 dayLightStartEndfade   = XMFLOAT2(0.0f, -0.1f);
 	XMFLOAT2 nightLightStartEndfade = XMFLOAT2(-0.2f, -0.1f);
 
 	// translation values for shadow rendering camera
-	XMFLOAT3 shadowMapDistance = XMFLOAT3(300, 300, 300);
-	XMFLOAT3 startRotation     = XMFLOAT3(0, 100.0f, 0);
-	XMFLOAT3 endRotation       = XMFLOAT3(360.0f, 100.0f, 0.0f);
+	XMFLOAT3 shadowMapDistance = XMFLOAT3(300.0f, 300.0f, 300.0f);
+	XMFLOAT3 startRotation     = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	XMFLOAT3 endRotation       = XMFLOAT3(360.0f, 0.0f, 0.0f);
 
 	// blend colors
 	XMFLOAT4 normalDirLightColor = XMFLOAT4(0.8f, 0.8f, 0.8f, 0.0f);
@@ -83,16 +84,20 @@ struct SkySettings
 	XMFLOAT4 skyBottomColor = XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f);
 	XMFLOAT4 skyMidColor    = XMFLOAT4(0.0f, 0.0f, 0.0f, 30.0f);
 	XMFLOAT4 skyTopColor    = XMFLOAT4(0.0f, 0.0f, 0.0f, 70.0f);
+
+	SKY_DOME_RENDER_MODE RENDER_MODE;
+	ID3D11ShaderResourceView* cubeMap;
+	std::string cubeMapName;
 };
 
 class SkyDome
 {
 public:
-	SkyDome(const wchar_t* textureFile, SKY_DOME_RENDER_MODE mode);
+	SkyDome(const char* settingsFile);
 	~SkyDome();
 
 	// load cubemap
-	void LoadCubemap(const wchar_t* file);
+	void LoadCubemap();
 
 	void Update(const float& delta);
 
@@ -102,11 +107,10 @@ public:
 	// set the skybox active/inactive
 	void setActive(bool active) { _isActive = active; }
 
-	// change the render mode
-	void SetRenderMode(SKY_DOME_RENDER_MODE mode) { _RENDER_MODE = mode; }
+	void ReadSettings(const char* file);
 
 	SunMoon* GetSoonMoonSettings() { return &_sunMoon; }
-	SkySettings* GetSkySettings()  { return &_dynamicSky; }
+	SkySettings* GetSkySettings()  { return &_skySettings; }
 
 private:
 
@@ -156,9 +160,6 @@ private:
 	ID3D10Blob* _vertexSunShaderByteCode;
 	ID3D10Blob* _pixelSunShaderByteCode;
 
-	// cubemap texture if renders in simple cubemap mode
-	ID3D11ShaderResourceView* _cubeMap;
-
 	// is skybox active
 	bool _isActive;
 
@@ -168,9 +169,7 @@ private:
 	// sun data
 	SunMoon _sunMoon;
 
-	SkySettings _dynamicSky;
-
-	SKY_DOME_RENDER_MODE _RENDER_MODE;
+	SkySettings _skySettings;
 
 	// vertex constant buffer
 	struct CBVertDome

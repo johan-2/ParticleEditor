@@ -6,6 +6,9 @@
 #include "Systems.h"
 #include "Renderer.h"
 #include "TexturePool.h"
+#include "GUI.h"
+#include "JsonHelpers.h"
+#include <fstream>
 
 SkyDomeWindow::SkyDomeWindow(MasterEditor* masterEditor) : IEditorWindow(masterEditor)
 {
@@ -20,155 +23,258 @@ void SkyDomeWindow::Render()
 	SkyDome* skyDome         = Systems::renderer->GetSkyDome();
 	SkySettings* skySettings = skyDome->GetSkySettings();
 	SunMoon* sunMoon         = skyDome->GetSoonMoonSettings();
-	ID3D11ShaderResourceView* previewTex = Systems::texturePool->GetTexture(L"Textures/domeMap.dds");
+	ID3D11ShaderResourceView* previewTex = Systems::texturePool->GetTexture(L"Textures/domeMap.dds", false);
 
-	// set properties of next window;
-	ImGui::SetNextWindowBgAlpha(0.6f);
-	ImGui::SetNextWindowSize(ImVec2(SCREEN_WIDTH * 0.20f, SCREEN_HEIGHT * 0.8f));
-	ImGui::SetNextWindowPos(ImVec2(0, 0), 0, ImVec2(0, 0));
+	GUI::BeginWindow("SkyDome Settings", 0.6f, SCREEN_WIDTH * 0.20f, SCREEN_HEIGHT * 0.9f , 0, 0, 0, 0);
 
-	// create window to display information
-	ImGui::Begin("Skydome Settings", nullptr);
+	// decription image
+	GUI::Image(previewTex, ImVec2(128, 128));
+
+	// mode
+	GUI::SetItemWidth(SCREEN_WIDTH * 0.10f);
+	GUI::ComboBox("0", "SkyDome Mode", "the renderering mode for the skydome", (int*)&skySettings->RENDER_MODE, "THREE LAYER COLOR\0CUBE MAP");
+	GUI::ClearItemWidth();
 
 	// speed 
-	ImGui::PushItemWidth(SCREEN_WIDTH * 0.10f);
-	FloatSlider("28", "Time Multiplier", "one cycle is set to 1 minute, alter the duration with this multiplier", 0.0f, 20.0f, &skySettings->speedMultiplier);
-	ImGui::Spacing(1);
-	ImGui::PopItemWidth();
+	GUI::SetItemWidth(SCREEN_WIDTH * 0.10f);
+	GUI::FloatSlider("1", "Time Multiplier", "one cycle is set to 1 minute, alter the duration with this multiplier", 0.0f, 20.0f, &skySettings->speedMultiplier);
 
-	// sky color layers percentage
-	ImGui::TextColored(ImVec4(1, 1, 1, 1), "SKY LAYERS USAGE PERCENT");
-	ImGui::PushItemWidth(SCREEN_WIDTH * 0.05f);
-	FloatSlider("1", "Bottom Layer Percent", "this color will be used from 0 to set value",   0.0f,                          skySettings->skyMidColor.w, &skySettings->skyBottomColor.w);
-	FloatSlider("2", "Mid Layer Percent", "this color will be used from bottom to set value", skySettings->skyBottomColor.w, skySettings->skyTopColor.w, &skySettings->skyMidColor.w);
-	FloatSlider("3", "Top Layer Percent", "this color will be used from mid to set value",    skySettings->skyMidColor.w,    100.0f,                     &skySettings->skyTopColor.w);
-	ImGui::PopItemWidth();
+	 // cycle progress
+	GUI::FloatSlider("2", "Cycle Progress", "Set the progress of the cycle, use this to controll where the cycle will start", 0.0f, 60.0f, &skySettings->cycleTimer);
+	GUI::ClearItemWidth();
 
-	// sky colors
-	ImGui::Spacing(10);
-	ImGui::TextColored(ImVec4(1, 1, 1, 1), "SKY COLORS");
-	ImGui::TextColored(ImVec4(0.9f, 0.9f, 0.9f, 1), "Top Colors:");
-	ImGui::SameLine();
-	ColorPickerNoAlpha("11", "Day",    "the color of the top part of skydome during day",    "pick4", &skySettings->topSkyColorDay);
-	ImGui::SameLine();
-	ColorPickerNoAlpha("12", "Sunset", "the color of the top part of skydome during Sunset", "pick5", &skySettings->topSkyColorSunSet);
-	ImGui::SameLine();
-	ColorPickerNoAlpha("13", "Night",  "the color of the top part of skydome during Night",  "pick6", &skySettings->topSkyColorNight);
+	GUI::Space(1);
+	if (skySettings->RENDER_MODE == SKY_DOME_RENDER_MODE::THREE_LAYER_COLOR_BLEND) RenderColorBlend(skySettings);
+	else                                                                           RenderCubeMap(skySettings);
 
-	ImGui::TextColored(ImVec4(0.9f, 0.9f, 0.9f, 1), "Mid Colors:");
-	ImGui::SameLine();
-	ColorPickerNoAlpha("14", "Day",    "the color of the mid part of skydome during day",    "pick7", &skySettings->midSkyColorDay);
-	ImGui::SameLine();
-	ColorPickerNoAlpha("15", "Sunset", "the color of the mid part of skydome during Sunset", "pick8", &skySettings->midSkyColorSunSet);
-	ImGui::SameLine();
-	ColorPickerNoAlpha("16", "Night",  "the color of the mid part of skydome during Night",  "pick9", &skySettings->midSkyColorNight);
-
-	ImGui::TextColored(ImVec4(0.9f, 0.9f, 0.9f, 1), "Cur Colors:");
-	ImGui::SameLine();
-	ColorPickerNoAlpha("4", "Bottom", "the color of the bottom part of skydome", "pick1", &skySettings->skyBottomColor);
-	ImGui::SameLine();
-	ColorPickerNoAlpha("5", "Mid", "the color of the middle part of skydome",    "pick2", &skySettings->skyMidColor);
-	ImGui::SameLine();
-	ColorPickerNoAlpha("6", "Top", "the color of the top part of skydome",       "pick3", &skySettings->skyTopColor);
-
-	// blend timings
-	ImGui::Spacing(10);
-	ImGui::TextColored(ImVec4(1, 1, 1, 1), "SKY COLORS BLEND TIMINGS");
-	ImGui::Image((void*)previewTex, ImVec2(128, 128), ImVec2(0, 0), ImVec2(1, 1), ImVec4(1, 1, 1, 1), ImVec4(1, 1, 1, 1));
-	ImGui::PushItemWidth(SCREEN_WIDTH * 0.06f);
-	FloatSlider2("7",  "Blend Top Sunset", "when the top sky color will start blending from day to sunset color",   -1.0f, 1.0f, &skySettings->sunsetTopSkyColorStartEndBlend.x);
-	FloatSlider2("8",  "Blend Top Night",  "when the top sky color will start blending from sunset to night color", -1.0f, 1.0f, &skySettings->nightTopSkyColorStartEndBlend.x);
-	FloatSlider2("9",  "Blend Mid Sunset", "when the Mid sky color will start blending from day to sunset color",   -1.0f, 1.0f, &skySettings->sunsetMidSkyColorStartEndBlend.x);
-	FloatSlider2("10", "Blend Mid Night",  "when the Mid sky color will start blending from sunset to night color", -1.0f, 1.0f, &skySettings->nightMidSkyColorStartEndBlend.x);
-	ImGui::PopItemWidth();
-
-	// lightning settings
-	ImGui::Spacing(10);
-	ImGui::TextColored(ImVec4(1, 1, 1, 1), "LIGHTNING SETTINGS");
-	ImGui::PushItemWidth(SCREEN_WIDTH * 0.05f);
-	FloatSlider("17",  "Switch to moonLight threshold", "at this sun height we will change to cast light from the moon", -1.0f, 0.0f, &skySettings->switchToMoonLightThreshold);
-
-	ImGui::Spacing(3);
-	FloatSlider2("23", "Blend Light Sunset", "when the dir light color will start to blend to sunset light color", -1.0f, 1.0f, &skySettings->sunsetLightColorStartEndBlend.x);
-	FloatSlider2("24", "Blend Light Night",  "when the dir light color will start to blend to night light color",  -1.0f, 1.0f, &skySettings->nightLightColorStartEndBlend.x);
-	FloatSlider2("18", "Day Light Fade",     "when the day light will start and finish to fadeout",                -1.0f, 1.0f, &skySettings->dayLightStartEndfade.x);
-	FloatSlider2("19", "Night Light Fade",   "when the night light will start and finish to fadeout",              -1.0f, 1.0f, &skySettings->nightLightStartEndfade.x);
-
-	ImGui::Spacing(3);
-	ColorPickerNoAlpha("20", "day dir light Color",    "the color of the directional light at day",    "pick10", &skySettings->normalDirLightColor);
-	ColorPickerNoAlpha("21", "sunset dir light Color", "the color of the directional light at sunset", "pick11", &skySettings->sunsetDirLightColor);
-	ColorPickerNoAlpha("22", "night dir light Color",  "the color of the directional light at night",  "pick12", &skySettings->nightDirLightColor);
-	ImGui::PopItemWidth();
-
-	ImGui::Spacing(3);
-	ImGui::PushItemWidth(SCREEN_WIDTH * 0.08f);
-	FloatInput3("25", "Start Rotation", "the rotation of the sun when application starts", &skySettings->startRotation.x);
-	FloatInput3("26", "End Rotation", "the rotation of the sun when one cycle is passed, the x rotation should always be at 360", &skySettings->endRotation.x);
-	float shadowDst = skySettings->shadowMapDistance.x;
-	FloatInput("27", "ShadowMap distance", "the distance from where the shadow camera is rendering", &shadowDst);
-	skySettings->shadowMapDistance = XMFLOAT3(shadowDst, shadowDst, shadowDst);
+	RenderLightning(skySettings);
+	RenderSunMoon(sunMoon, skySettings);
+	
+	if (ImGui::Button("Save Settings"))
+	{
+		std::string file = GUI::FindFileFromDirectory(".json\0*.json", "save SkyDome Settings as .json");
+		if (file != "")
+			SaveSettings(file.c_str(), skySettings, sunMoon);
+	}
+		
+	if (ImGui::Button("Load Settings"))
+	{
+		std::string file = GUI::FindFileFromDirectory(".json\0*.json", "load SkyDome Settings from .json");
+		if (file != "")
+			skyDome->ReadSettings(file.c_str());
+	}
 
 	if (ImGui::Button("Back"))
 		GoToMain();
 
 	// end rendering of this window
-	ImGui::End();
+	GUI::EndWindow();
 }
 
-void SkyDomeWindow::ShowToolTip(const char* tip)
+void SkyDomeWindow::RenderColorBlend(SkySettings* skySettings)
 {
-	if (ImGui::IsItemHovered())
+	// sky color layers percentage
+	GUI::Text(ImVec4(1, 1, 1, 1), "SKY LAYERS USAGE PERCENT");
+	GUI::SetItemWidth(SCREEN_WIDTH * 0.05f);
+	GUI::FloatSlider("3", "Bottom Layer Percent", "this color will be used from 0 to set value",      0.0f,                          skySettings->skyMidColor.w, &skySettings->skyBottomColor.w);
+	GUI::FloatSlider("4", "Mid Layer Percent",    "this color will be used from bottom to set value", skySettings->skyBottomColor.w, skySettings->skyTopColor.w, &skySettings->skyMidColor.w);
+	GUI::FloatSlider("5", "Top Layer Percent",    "this color will be used from mid to set value",    skySettings->skyMidColor.w,    100.0f,                     &skySettings->skyTopColor.w);
+	GUI::ClearItemWidth();
+
+	// sky colors
+	GUI::Space(10);
+	GUI::Text(ImVec4(1, 1, 1, 1), "SKY COLORS");
+	GUI::Text(ImVec4(0.9f, 0.9f, 0.9f, 1), "Top Colors:");
+	GUI::SameLine();
+	GUI::ColorPickerNoAlpha("6", "Day", "the color of the top part of skydome during day", "pick1", &skySettings->topSkyColorDay);
+	GUI::SameLine();
+	GUI::ColorPickerNoAlpha("7", "Sunset", "the color of the top part of skydome during Sunset", "pick2", &skySettings->topSkyColorSunSet);
+	GUI::SameLine();
+	GUI::ColorPickerNoAlpha("8", "Night", "the color of the top part of skydome during Night", "pick3", &skySettings->topSkyColorNight);
+
+	GUI::Text(ImVec4(0.9f, 0.9f, 0.9f, 1), "Mid Colors:");
+	GUI::SameLine();
+	GUI::ColorPickerNoAlpha("9", "Day", "the color of the mid part of skydome during day", "pick4", &skySettings->midSkyColorDay);
+	GUI::SameLine();
+	GUI::ColorPickerNoAlpha("10", "Sunset", "the color of the mid part of skydome during Sunset", "pick5", &skySettings->midSkyColorSunSet);
+	GUI::SameLine();
+	GUI::ColorPickerNoAlpha("11", "Night", "the color of the mid part of skydome during Night", "pick6", &skySettings->midSkyColorNight);
+
+	GUI::Text(ImVec4(0.9f, 0.9f, 0.9f, 1), "Cur Colors:");
+	GUI::SameLine();
+	GUI::ColorPickerNoAlpha("12", "Bottom", "the color of the bottom part of skydome", "pick7", &skySettings->skyBottomColor);
+	GUI::SameLine();
+	GUI::ColorPickerNoAlpha("13", "Mid", "the color of the middle part of skydome", "pick8", &skySettings->skyMidColor);
+	GUI::SameLine();
+	GUI::ColorPickerNoAlpha("14", "Top", "the color of the top part of skydome", "pick9", &skySettings->skyTopColor);
+
+	// blend timings
+	GUI::Space(10);
+	GUI::Text(ImVec4(1, 1, 1, 1), "SKY COLORS BLEND TIMINGS");
+	GUI::SetItemWidth(SCREEN_WIDTH * 0.06f);
+	GUI::FloatSlider2("15",  "Blend Top Sunset", "when the top sky color will start blending from day to sunset color",   -1.0f, 1.0f, &skySettings->sunsetTopSkyColorStartEndBlend.x);
+	GUI::FloatSlider2("16",  "Blend Top Night",  "when the top sky color will start blending from sunset to night color", -1.0f, 1.0f, &skySettings->nightTopSkyColorStartEndBlend.x);
+	GUI::FloatSlider2("17",  "Blend Mid Sunset", "when the Mid sky color will start blending from day to sunset color",   -1.0f, 1.0f, &skySettings->sunsetMidSkyColorStartEndBlend.x);
+	GUI::FloatSlider2("18",  "Blend Mid Night",  "when the Mid sky color will start blending from sunset to night color", -1.0f, 1.0f, &skySettings->nightMidSkyColorStartEndBlend.x);
+	GUI::ClearItemWidth();
+}
+
+void SkyDomeWindow::RenderCubeMap(SkySettings* skySettings)
+{
+	if (ImGui::Button("Load CubeMap"))
 	{
-		ImGui::BeginTooltip();
-		ImGui::SetTooltip(tip);
-		ImGui::EndTooltip();
+		std::string name = GUI::FindFileFromDirectory(".dds", "Load CubeMap");
+		// if a file was selected change the texture
+		if (name != "")
+		{
+			// get the offset where our last backslash is located
+			// we only want the name of the texture
+			size_t lastSlash = name.find_last_of("\\");
+
+			if (std::string::npos == lastSlash)
+				lastSlash = name.find_last_of("/");
+
+			// erease filepath
+			if (std::string::npos != lastSlash)
+				name.erase(0, lastSlash + 1);
+
+			// add our relative path to our textures
+			skySettings->cubeMapName = "SkyBoxes/";
+			skySettings->cubeMapName.append(name.c_str());
+
+			// set the new cubemap
+			Systems::renderer->GetSkyDome()->LoadCubemap();
+		}		
 	}
 }
 
-void SkyDomeWindow::ColorPickerNoAlpha(const char* ID, const char* header, const char* pickerName, const char* toolTip, XMFLOAT4* data)
+void SkyDomeWindow::RenderLightning(SkySettings* skySettings)
 {
-	if (ImGui::ColorButton(ID, ImVec4(data->x, data->y, data->z, 0), ImGuiColorEditFlags_NoAlpha))
-		ImGui::OpenPopup(pickerName);
+	// lightning settings
+	GUI::Space(10);
+	GUI::Text(ImVec4(1, 1, 1, 1), "LIGHTNING SETTINGS");
+	GUI::SetItemWidth(SCREEN_WIDTH * 0.05f);
+	GUI::FloatSlider("19", "Switch to moonLight threshold", "at this sun height we will change to cast light from the moon", -1.0f, 0.0f, &skySettings->switchToMoonLightThreshold);
 
-	ImGui::SameLine();
-	ImGui::TextColored(ImVec4(0.9, 0.9, 0.9, 1.0), header);
-	ShowToolTip(toolTip);
+	GUI::Space(3);
+	GUI::FloatSlider2("20", "Blend Light Sunset", "when the dir light color will start to blend to sunset light color", -1.0f, 1.0f, &skySettings->sunsetLightColorStartEndBlend.x);
+	GUI::FloatSlider2("21", "Blend Light Night",  "when the dir light color will start to blend to night light color",  -1.0f, 1.0f, &skySettings->nightLightColorStartEndBlend.x);
+	GUI::FloatSlider2("22", "Day Light Fade",     "when the day light will start and finish to fadeout",                -1.0f, 1.0f, &skySettings->dayLightStartEndfade.x);
+	GUI::FloatSlider2("23", "Night Light Fade",   "when the night light will start and finish to fadeout",              -1.0f, 1.0f, &skySettings->nightLightStartEndfade.x);
 
-	if (ImGui::BeginPopup(pickerName))
-	{
-		ImGui::ColorPicker4(pickerName, (float*)data, ImGuiColorEditFlags_NoAlpha);
-		ImGui::EndPopup();
-	}
+	GUI::Space(3);
+	GUI::ColorPickerNoAlpha("24", "day dir light Color",    "the color of the directional light at day",    "pick10", &skySettings->normalDirLightColor);
+	GUI::ColorPickerNoAlpha("25", "sunset dir light Color", "the color of the directional light at sunset", "pick11", &skySettings->sunsetDirLightColor);
+	GUI::ColorPickerNoAlpha("26", "night dir light Color",  "the color of the directional light at night",  "pick12", &skySettings->nightDirLightColor);
+	GUI::ClearItemWidth();	
 }
 
-void SkyDomeWindow::FloatSlider(const char* ID, const char* header, const char* toolTip, float min, float max, float* data)
+void SkyDomeWindow::RenderSunMoon(SunMoon* sunMoon, SkySettings* skySettings)
 {
-	ImGui::SliderFloat(ID, data, min, max, "%.2f");
-	ImGui::SameLine();
-	ImGui::TextColored(ImVec4(0.9, 0.9, 0.9, 1), header);
-	ShowToolTip(toolTip);
+	GUI::Space(10);
+	GUI::Text(ImVec4(1, 1, 1, 1), "SUN/MOON SETTINGS");
+	GUI::SetItemWidth(SCREEN_WIDTH * 0.08f);
+	GUI::FloatSlider("27", "Y-Rotation", "the rotation of the sun around the y axis", 0.0f, 360.0f, &skySettings->startRotation.y);
+	float shadowDst = skySettings->shadowMapDistance.x;
+	GUI::FloatInput("28", "ShadowMap distance", "the distance from where the shadow camera is rendering", &shadowDst);
+	skySettings->shadowMapDistance = XMFLOAT3(shadowDst, shadowDst, shadowDst);
+	GUI::ClearItemWidth();
+
+	GUI::Space(1);
+	GUI::Text(ImVec4(0.9f, 0.9f, 0.9f, 1.0f), "Sun Color Tints:");
+	GUI::SameLine();
+	GUI::ColorPickerNoAlpha("29", "Day", "color tint during day", "pick13", &sunMoon->sun.dayColorTint);
+	GUI::SameLine();
+	GUI::ColorPickerNoAlpha("30", "SunSet", "color tint during SunSet", "pick14", &sunMoon->sun.sunsetColorTint);
+
+	GUI::Text(ImVec4(0.9f, 0.9f, 0.9f, 1.0f), "Moon Color Tints:");
+	GUI::SameLine();
+	GUI::ColorPickerNoAlpha("31", "Night", "color tint during day", "pick15", &sunMoon->moon.dayColorTint);
+	GUI::SameLine();
+	GUI::ColorPickerNoAlpha("32", "SunSet", "color tint during SunSet", "pick16", &sunMoon->moon.sunsetColorTint);
+
+	GUI::Space(1);
+	GUI::SetItemWidth(SCREEN_WIDTH * 0.12f);
+	GUI::FloatSlider2("33", "Sun Color Blend",  "when the sun will start blending between day to sunset colors",     -1.0f, 1.0f, &sunMoon->sun.beginEndColorBlend.x);
+	GUI::FloatSlider2("34", "Moon Color Blend", "when the moon will start blending between night to sunrise colors", -1.0f, 1.0f, &sunMoon->moon.beginEndColorBlend.x);
+	GUI::FloatSlider2("35", "Sun Fade Out",     "when the sun will start and end in full transparancy",              -1.0f, 1.0f, &sunMoon->sun.beginEndFade.x);
+	GUI::FloatSlider2("36", "Moon fade Out",    "when the moon will start and end in full transparancy",             -1.0f, 1.0f, &sunMoon->moon.beginEndFade.x);
+
+	GUI::Space(1);
+	GUI::FloatSlider2("37", "Sun Min/Max dst",  "min and max distances of the sun",                   0.0f, 20.0f, &sunMoon->sun.minMaxDst.x);
+	GUI::FloatSlider2("38", "Moon Min/Max dst", "min and max distances of the moon",                  0.0f, 20.0f, &sunMoon->moon.minMaxDst.x);
+	GUI::FloatSlider2("39", "Sun Dst Blend",    "when sun will start blending from max to min dst",  -1.0f, 1.0f,  &sunMoon->sun.beginEndDstLerp.x);
+	GUI::FloatSlider2("40", "Moon Dst Blend",   "when moon will start blending from max to min dst", -1.0f, 1.0f,  &sunMoon->moon.beginEndDstLerp.x);
+
+	GUI::ClearItemWidth();
 }
 
-void SkyDomeWindow::FloatSlider2(const char* ID, const char* header, const char* toolTip, float min, float max, float* data)
+void SkyDomeWindow::SaveSettings(const char* file, SkySettings* skySettings, SunMoon* sunMoon)
 {
-	ImGui::SliderFloat2(ID, data, min, max, "%.2f");
-	ImGui::SameLine();
-	ImGui::TextColored(ImVec4(0.9, 0.9, 0.9, 1), header);
-	ShowToolTip(toolTip);
+	// create string buffer and json writer
+	rapidjson::StringBuffer sb;
+	rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(sb);
+
+	// start the write
+	writer.StartObject();
+
+	JSON::WriteFloat(&writer, "speedMultiplier",   skySettings->speedMultiplier);
+	JSON::WriteFloat(&writer, "cycleTimer",        skySettings->cycleTimer);
+	JSON::WriteFloat(&writer, "switchToMoonLightThreshold", skySettings->switchToMoonLightThreshold);
+
+	JSON::WriteFloat2(&writer, "sunsetLightColorStartEndBlend",  skySettings->sunsetLightColorStartEndBlend);
+	JSON::WriteFloat2(&writer, "nightLightColorStartEndBlend",   skySettings->nightLightColorStartEndBlend);
+	JSON::WriteFloat2(&writer, "sunsetTopSkyColorStartEndBlend", skySettings->sunsetTopSkyColorStartEndBlend);
+	JSON::WriteFloat2(&writer, "nightTopSkyColorStartEndBlend",  skySettings->nightTopSkyColorStartEndBlend);
+	JSON::WriteFloat2(&writer, "sunsetMidSkyColorStartEndBlend", skySettings->sunsetMidSkyColorStartEndBlend);
+	JSON::WriteFloat2(&writer, "nightMidSkyColorStartEndBlend",  skySettings->nightMidSkyColorStartEndBlend);
+
+	JSON::WriteFloat2(&writer, "dayLightStartEndfade",   skySettings->dayLightStartEndfade);
+	JSON::WriteFloat2(&writer, "nightLightStartEndfade", skySettings->nightLightStartEndfade);
+
+	JSON::WriteFloat3(&writer, "shadowMapDistance", skySettings->shadowMapDistance);
+	JSON::WriteFloat3(&writer, "startRotation",     skySettings->startRotation);
+	JSON::WriteFloat3(&writer, "endRotation",       skySettings->endRotation);
+
+	JSON::WriteFloat4(&writer, "normalDirLightColor", skySettings->normalDirLightColor);
+	JSON::WriteFloat4(&writer, "sunsetDirLightColor", skySettings->sunsetDirLightColor);
+	JSON::WriteFloat4(&writer, "nightDirLightColor",  skySettings->nightDirLightColor);
+	JSON::WriteFloat4(&writer, "topSkyColorDay",      skySettings->topSkyColorDay);
+	JSON::WriteFloat4(&writer, "topSkyColorSunSet",   skySettings->topSkyColorSunSet);
+	JSON::WriteFloat4(&writer, "topSkyColorNight",    skySettings->topSkyColorNight);
+	JSON::WriteFloat4(&writer, "midSkyColorDay",      skySettings->midSkyColorDay);
+	JSON::WriteFloat4(&writer, "midSkyColorSunSet",   skySettings->midSkyColorSunSet);
+	JSON::WriteFloat4(&writer, "midSkyColorNight",    skySettings->midSkyColorNight);
+	JSON::WriteFloat4(&writer, "skyBottomColor",      skySettings->skyBottomColor);
+
+	JSON::WriteInt(&writer,   "RENDER_MODE", skySettings->RENDER_MODE);
+	JSON::WriteString(&writer, "cubeMap",    skySettings->cubeMapName.c_str());
+
+	JSON::WriteFloat3(&writer, "sunDayColorTint",     sunMoon->sun.dayColorTint);
+	JSON::WriteFloat3(&writer, "moonDayColorTint",    sunMoon->moon.dayColorTint);
+	JSON::WriteFloat3(&writer, "sunSunsetColorTint",  sunMoon->sun.sunsetColorTint);
+	JSON::WriteFloat3(&writer, "moonSunsetColorTint", sunMoon->moon.sunsetColorTint);
+
+	JSON::WriteFloat2(&writer, "sunBeginEndfade",  sunMoon->sun.beginEndFade);
+	JSON::WriteFloat2(&writer, "moonBeginEndfade", sunMoon->moon.beginEndFade);
+
+	JSON::WriteFloat2(&writer, "sunMinMaxDst",  sunMoon->sun.minMaxDst);
+	JSON::WriteFloat2(&writer, "moonMinMaxDst", sunMoon->moon.minMaxDst);
+
+	JSON::WriteFloat2(&writer, "sunBeginEndDstLerp",  sunMoon->sun.beginEndDstLerp);
+	JSON::WriteFloat2(&writer, "moonBeginEndDstLerp", sunMoon->moon.beginEndDstLerp);
+
+	JSON::WriteFloat2(&writer, "sunBeginEndColorBlend",  sunMoon->sun.beginEndColorBlend);
+	JSON::WriteFloat2(&writer, "moonBeginEndColorBlend", sunMoon->moon.beginEndColorBlend);
+
+	// end object
+	writer.EndObject();
+
+	// create output file stream and write
+	// out the json stringBuilder object to the file
+	std::ofstream of(file);
+	of << sb.GetString();
+
+	of.close();
 }
 
-void SkyDomeWindow::FloatInput3(const char* ID, const char* header, const char* toolTip, float* data)
-{
-	ImGui::InputFloat3(ID, data, 2);
-	ImGui::SameLine();
-	ImGui::TextColored(ImVec4(0.9, 0.9, 0.9, 1), header);
-	ShowToolTip(toolTip);
-}
-
-void SkyDomeWindow::FloatInput(const char* ID, const char* header, const char* toolTip, float* data)
-{
-	ImGui::InputFloat(ID, data, 1.0f, 1.0f, 1);
-	ImGui::SameLine();
-	ImGui::TextColored(ImVec4(0.9, 0.9, 0.9, 1), header);
-	ShowToolTip(toolTip);
-}

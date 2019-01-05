@@ -72,7 +72,7 @@ public:
 
 	// create/ get skydome
 	SkyDome* GetSkyDome() { return _skyDome; }
-	SkyDome* CreateSkyDome(const wchar_t* cubeMap, SKY_DOME_RENDER_MODE mode);
+	SkyDome* CreateSkyDome(const char* file);
 
 	// create the shadowmap
 	Entity* CreateShadowMap(float orthoSize, float resolution, XMFLOAT3 position, XMFLOAT3 rotation);

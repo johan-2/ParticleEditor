@@ -115,10 +115,10 @@ Entity* Renderer::CreateShadowMap(float orthoSize, float resolution, XMFLOAT3 po
 	return _cameraDepth;
 }
 
-SkyDome* Renderer::CreateSkyDome(const wchar_t* cubeMap, SKY_DOME_RENDER_MODE mode)
+SkyDome* Renderer::CreateSkyDome(const char* file)
 {
 	// create skybox
-	_skyDome = new SkyDome(cubeMap, mode);
+	_skyDome = new SkyDome(file);
 
 	return _skyDome;
 }

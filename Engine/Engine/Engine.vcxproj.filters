@@ -395,5 +395,11 @@
     <ClInclude Include="Code\Editor\SkyDomeWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Code\Utils\GUI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Utils\JsonHelpers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
