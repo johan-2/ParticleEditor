@@ -25,15 +25,17 @@ void PostProcessWindow::Render()
 	GUI::FloatSlider("3", "Intensity", "How strong the bloom effect will be", 0.1f, 10.0f, &PostProcessing::BLOOM_INTENSITY);
 
 	GUI::FloatSlider("4", "Res Scale Down P1", "How much we will lower the res output blurred image on first pass",  1.0f, 10.0f, &PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_1);
-	GUI::SameLine(); if (GUI::Button("Apply1")) Systems::renderer->GetPostProcessShader()->CreateBlurRenderTextures();
+	GUI::SameLine(); if (GUI::Button("Apply1")) Systems::renderer->GetPostProcessShader()->CreateBloomBlurRenderTextures();
 	GUI::FloatSlider("5", "Res Scale Down P2", "How much we will lower the res output blurred image on second pass", 1.0f, 10.0f, &PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_2);
-	GUI::SameLine(); if (GUI::Button("Apply2")) Systems::renderer->GetPostProcessShader()->CreateBlurRenderTextures();
+	GUI::SameLine(); if (GUI::Button("Apply2")) Systems::renderer->GetPostProcessShader()->CreateBloomBlurRenderTextures();
 	GUI::ClearItemWidth();
 
-	// DEPTH OF FIELD
-	//
-	//
+	GUI::Space(2);
 
+	// DEPTH OF FIELD
+	GUI::Text(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "DEPTH OF FIELD");
+	GUI::CheckBox("6", "Apply Depth Of Field", "if Doof will be applied to final image", &PostProcessing::APPLY_DEPTH_OF_FIELD);
+	GUI::FloatSlider2("7", "Start End Focus", "when the focus will start being blurred to when completely blurred", 0.0f, 1000.0f, &PostProcessing::START_END_DOF_DST[0]);
 
 	// serialize settings
 	if (GUI::Button("Save Settings"))

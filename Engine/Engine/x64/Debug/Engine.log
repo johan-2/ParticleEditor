@@ -1,2 +1,35 @@
-﻿  Framework.cpp
+﻿  CameraComponent.cpp
+  FreeMoveComponent.cpp
+  QuadComponent.cpp
+  MainEditorWindow.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\gui.h(152): warning C4305: 'argument': truncation from 'double' to 'float'
+  MasterEditor.cpp
+  PostProcessWindow.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\gui.h(152): warning C4305: 'argument': truncation from 'double' to 'float'
+  SkyDomeWindow.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\gui.h(152): warning C4305: 'argument': truncation from 'double' to 'float'
+  Framework.cpp
+  DXManager.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\code\managers\dxmanager.cpp(197): warning C4244: 'argument': conversion from 'float' to 'UINT8', possible loss of data
+  GBuffer.cpp
+  Renderer.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\renderer.cpp(95): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+  PlanarReflectionShader.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\planarreflectionshader.cpp(95): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\planarreflectionshader.cpp(95): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
+  PostProcessingShader.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\postprocessingshader.cpp(53): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\postprocessingshader.cpp(54): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\postprocessingshader.cpp(55): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\postprocessingshader.cpp(56): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+  SimpleClipSceneShader.cpp
+  WaterShader.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\watershader.cpp(97): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\nilss\desktop\enginedx11\engine\engine\code\renderer\shaderprograms\watershader.cpp(97): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
+  IslandTestScene.cpp
+  SponzaTestScene.cpp
+  SystemDefs.cpp
+  Time.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\time.cpp(61): warning C4244: 'initializing': conversion from 'INT64' to 'int', possible loss of data
+  Generating Code...
   Engine.vcxproj -> C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\Engine.exe

@@ -15,19 +15,21 @@ public:
 	~PostProcessingShader();
 
 	// renders all meshes to the depth map
-	void Render(ScreenQuad* quad, ID3D11ShaderResourceView* SceneImage);
+	void Render(ScreenQuad* quad, ID3D11ShaderResourceView* SceneImage, ID3D11ShaderResourceView* sceneDepth);
 
 	// get byte code from shaders
 	ID3D10Blob*& GetVertexShaderByteCode() { return _vertexPostProcessingShaderByteCode; }
 	ID3D10Blob*& GetPixelShaderByteCode()  { return _pixelPostProcessingShaderByteCode; }
 
-	void CreateBlurRenderTextures();
+	void CreateBloomBlurRenderTextures();
+	void CreateBrightnessRenderTexture();
+	void createDofRenderTextures();
 
 private:
 
-	ID3D11ShaderResourceView* RenderBlurMaps(ID3D11ShaderResourceView* imageToBlur, bool twoPass, float scaleDown1, float scaleDown2);
+	ID3D11ShaderResourceView* RenderBlurMaps(ID3D11ShaderResourceView* imageToBlur, bool twoPass, float scaleDown1, float scaleDown2, RenderToTexture* h1, RenderToTexture* v1, RenderToTexture* h2, RenderToTexture* v2);
 	void RenderBrightnessMap(ID3D11ShaderResourceView* originalImage);
-	void RenderFinal(ID3D11ShaderResourceView* SceneImage);
+	void RenderFinal(ID3D11ShaderResourceView* SceneImage, ID3D11ShaderResourceView* sceneDepth);
 
 	// compiled shaders
 	ID3D11VertexShader* _vertexBlurShader;
@@ -50,14 +52,18 @@ private:
 	ID3D11Buffer* _finalPixelConstant;
 
 	// render textures 
-	RenderToTexture* _horizontalBlurPass1;
-	RenderToTexture* _verticalBlurPass1;
-	RenderToTexture* _horizontalBlurPass2;
-	RenderToTexture* _verticalBlurPass2;
+	// TODO: all of these can be generated with compute shaders instead
 	RenderToTexture* _brightnessMap;
+	RenderToTexture* _bloomHorizontalBlurPass1;
+	RenderToTexture* _bloomVerticalBlurPass1;
+	RenderToTexture* _bloomHorizontalBlurPass2;
+	RenderToTexture* _bloomVerticalBlurPass2;
+	RenderToTexture* _dofHorizontalBlurPass;
+	RenderToTexture* _dofVerticalBlurPass;
 
 	// final input maps to post processing shader
 	ID3D11ShaderResourceView* _bloomMap;
+	ID3D11ShaderResourceView* _dofMap;
 
 	struct ConstantBlurVertex
 	{
@@ -71,7 +77,10 @@ private:
 	{
 		int      applyBloom;
 		float    bloomIntensity;
-		XMFLOAT2 pad;
+		int      applyDof;
+		int      pad1;
+		XMFLOAT2 startEndDofdst;
+		XMFLOAT2 pad2;
 	};
 };
 

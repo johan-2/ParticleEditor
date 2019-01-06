@@ -197,7 +197,7 @@ void Renderer::Render()
 	_inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT2D);
 
 	// Render post processing 
-	_PostProcessingShader->Render(_fullScreenQuad, _mainRendertarget->GetRenderTargetSRV());
+	_PostProcessingShader->Render(_fullScreenQuad, _mainRendertarget->GetRenderTargetSRV(), _mainRendertarget->GetDepthStencilSRV());
 
 	// render UI
 	_quadShader->RenderQuadUI(_quads);

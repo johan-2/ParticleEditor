@@ -25,9 +25,9 @@ PostProcessingShader::PostProcessingShader()
 	SHADER_HELPERS::CreateConstantBuffer(_finalPixelConstant);
 
 	// create render textures
-	_brightnessMap       = new RenderToTexture(SCREEN_WIDTH, SCREEN_HEIGHT, false);
-	
-	CreateBlurRenderTextures();
+	CreateBrightnessRenderTexture();
+	CreateBloomBlurRenderTextures();
+	createDofRenderTextures();
 
 	Entity* reflectionQuad = new Entity();
 	reflectionQuad->AddComponent<QuadComponent>()->Init(XMFLOAT2(SCREEN_WIDTH * 0.78f, SCREEN_HEIGHT * 0.1f), XMFLOAT2(SCREEN_WIDTH * 0.1f, SCREEN_HEIGHT * 0.1f), L"");
@@ -43,20 +43,31 @@ PostProcessingShader::~PostProcessingShader()
 	_pixelPostProcessingShader->Release();
 }
 
-void PostProcessingShader::CreateBlurRenderTextures()
+void PostProcessingShader::CreateBloomBlurRenderTextures()
 {
-	if (_horizontalBlurPass1) delete _horizontalBlurPass1;
-	if (_verticalBlurPass1)   delete _verticalBlurPass1;
-	if (_horizontalBlurPass2) delete _horizontalBlurPass2;
-	if (_verticalBlurPass2)   delete _verticalBlurPass2;
+	if (_bloomHorizontalBlurPass1) delete _bloomHorizontalBlurPass1;
+	if (_bloomVerticalBlurPass1)   delete _bloomVerticalBlurPass1;
+	if (_bloomHorizontalBlurPass2) delete _bloomHorizontalBlurPass2;
+	if (_bloomVerticalBlurPass2)   delete _bloomVerticalBlurPass2;
 
-	_horizontalBlurPass1 = new RenderToTexture(SCREEN_WIDTH / PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_1, SCREEN_HEIGHT / PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_1, false);
-	_verticalBlurPass1   = new RenderToTexture(SCREEN_WIDTH / PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_1, SCREEN_HEIGHT / PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_1, false);
-	_horizontalBlurPass2 = new RenderToTexture(SCREEN_WIDTH / PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_2, SCREEN_HEIGHT / PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_2, false);
-	_verticalBlurPass2   = new RenderToTexture(SCREEN_WIDTH / PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_2, SCREEN_HEIGHT / PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_2, false);
+	_bloomHorizontalBlurPass1 = new RenderToTexture(SCREEN_WIDTH / PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_1, SCREEN_HEIGHT / PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_1, false);
+	_bloomVerticalBlurPass1   = new RenderToTexture(SCREEN_WIDTH / PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_1, SCREEN_HEIGHT / PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_1, false);
+	_bloomHorizontalBlurPass2 = new RenderToTexture(SCREEN_WIDTH / PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_2, SCREEN_HEIGHT / PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_2, false);
+	_bloomVerticalBlurPass2   = new RenderToTexture(SCREEN_WIDTH / PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_2, SCREEN_HEIGHT / PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_2, false);
 }
 
-void PostProcessingShader::Render(ScreenQuad* quad, ID3D11ShaderResourceView* SceneImage)
+void PostProcessingShader::CreateBrightnessRenderTexture()
+{
+	_brightnessMap = new RenderToTexture(SCREEN_WIDTH, SCREEN_HEIGHT, false);
+}
+
+void PostProcessingShader::createDofRenderTextures()
+{
+	_dofHorizontalBlurPass = new RenderToTexture(SCREEN_WIDTH, SCREEN_HEIGHT, false);
+	_dofVerticalBlurPass   = new RenderToTexture(SCREEN_WIDTH, SCREEN_HEIGHT, false);
+}
+
+void PostProcessingShader::Render(ScreenQuad* quad, ID3D11ShaderResourceView* SceneImage, ID3D11ShaderResourceView* sceneDepth)
 {
 	Systems::dxManager->BlendStates()->SetBlendState(BLEND_STATE::BLEND_OPAQUE);
 	quad->UploadBuffers();
@@ -66,13 +77,23 @@ void PostProcessingShader::Render(ScreenQuad* quad, ID3D11ShaderResourceView* Sc
 		RenderBrightnessMap(SceneImage);
 
 		// blur the brightness map
-		_bloomMap = RenderBlurMaps(_brightnessMap->GetRenderTargetSRV(), PostProcessing::BLOOM_USE_TWO_PASS_BLUR, PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_1, PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_2);
+		_bloomMap = RenderBlurMaps(_brightnessMap->GetRenderTargetSRV(), 
+			PostProcessing::BLOOM_USE_TWO_PASS_BLUR,
+			PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_1, 
+			PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_2,
+			_bloomHorizontalBlurPass1, 
+			_bloomVerticalBlurPass1,
+			_bloomHorizontalBlurPass2,
+			_bloomVerticalBlurPass2);
 	}
 
-	RenderFinal(SceneImage);
+	if (PostProcessing::APPLY_DEPTH_OF_FIELD)
+		_dofMap = RenderBlurMaps(SceneImage, false, 1, 1, _dofHorizontalBlurPass, _dofVerticalBlurPass, nullptr, nullptr);
+
+	RenderFinal(SceneImage, sceneDepth);
 }
 
-ID3D11ShaderResourceView* PostProcessingShader::RenderBlurMaps(ID3D11ShaderResourceView* imageToBlur, bool twoPass, float scaleDown1, float scaleDown2)
+ID3D11ShaderResourceView* PostProcessingShader::RenderBlurMaps(ID3D11ShaderResourceView* imageToBlur, bool twoPass, float scaleDown1, float scaleDown2, RenderToTexture* h1, RenderToTexture* v1, RenderToTexture* h2, RenderToTexture* v2)
 {
 	// get dx manager
 	DXManager& DXM = *Systems::dxManager;
@@ -85,9 +106,8 @@ ID3D11ShaderResourceView* PostProcessingShader::RenderBlurMaps(ID3D11ShaderResou
 	devCon->PSSetShader(_pixelBlurShader, NULL, 0);
 
 	// the textures we will use as input
-	ID3D11ShaderResourceView* hBlur1SRV = _horizontalBlurPass1->GetRenderTargetSRV();
-	ID3D11ShaderResourceView* hBlur2SRV = _horizontalBlurPass2->GetRenderTargetSRV();
-	ID3D11ShaderResourceView* vBlur1SRV = _verticalBlurPass1->GetRenderTargetSRV();
+	ID3D11ShaderResourceView* hBlur1SRV = h1->GetRenderTargetSRV();
+	ID3D11ShaderResourceView* vBlur1SRV = v1->GetRenderTargetSRV();
 	
 	// constantbuffer for vertex shader
 	ConstantBlurVertex constantVertex;
@@ -96,8 +116,8 @@ ID3D11ShaderResourceView* PostProcessingShader::RenderBlurMaps(ID3D11ShaderResou
 	////////////////////////////////////////////////////////// HORIZONTAL PASS 1
 
 	// set the horizontal blur render target 1
-	_horizontalBlurPass1->ClearRenderTarget(0, 0, 0, 1, false);
-	_horizontalBlurPass1->SetRendertarget(false, false);
+	h1->ClearRenderTarget(0, 0, 0, 1, false);
+	h1->SetRendertarget(false, false);
 
 	constantVertex.screenWidth    = SCREEN_WIDTH  / scaleDown1;
 	constantVertex.screenHeight   = SCREEN_HEIGHT / scaleDown1;
@@ -114,8 +134,8 @@ ID3D11ShaderResourceView* PostProcessingShader::RenderBlurMaps(ID3D11ShaderResou
 	////////////////////////////////////////////////////////// VERTICAL PASS 1
 
 	// set vertical blur render target 1
-	_verticalBlurPass1->ClearRenderTarget(0, 0, 0, 1, false);
-	_verticalBlurPass1->SetRendertarget(false, false);
+	v1->ClearRenderTarget(0, 0, 0, 1, false);
+	v1->SetRendertarget(false, false);
 
 	// change constant input
 	constantVertex.horizontalPass = 0;
@@ -129,13 +149,15 @@ ID3D11ShaderResourceView* PostProcessingShader::RenderBlurMaps(ID3D11ShaderResou
 
 	// if we only are doing one blur pass return the texture from the first vertical pass
 	if (!twoPass)
-		return _verticalBlurPass1->GetRenderTargetSRV();
+		return v1->GetRenderTargetSRV();
 
 	////////////////////////////////////////////////////////// HORIZONTAL PASS 2
 
+	ID3D11ShaderResourceView* hBlur2SRV = h2->GetRenderTargetSRV();
+
 	// set horizontal blur render target 2
-	_horizontalBlurPass2->ClearRenderTarget(0, 0, 0, 1, false);
-	_horizontalBlurPass2->SetRendertarget(false, false);
+	h2->ClearRenderTarget(0, 0, 0, 1, false);
+	h2->SetRendertarget(false, false);
 
 	// change constants for pass 2
 	constantVertex.horizontalPass = 1;
@@ -152,8 +174,8 @@ ID3D11ShaderResourceView* PostProcessingShader::RenderBlurMaps(ID3D11ShaderResou
 	////////////////////////////////////////////////////////// VERTICAL PASS 2
 
 	// set vertical blur render target 2
-	_verticalBlurPass2->ClearRenderTarget(0, 0, 0, 1, false);
-	_verticalBlurPass2->SetRendertarget(false, false);
+	v2->ClearRenderTarget(0, 0, 0, 1, false);
+	v2->SetRendertarget(false, false);
 
 	// change constants for vertical pass 2
 	constantVertex.horizontalPass = 0;
@@ -166,7 +188,7 @@ ID3D11ShaderResourceView* PostProcessingShader::RenderBlurMaps(ID3D11ShaderResou
 	devCon->DrawIndexed(6, 0, 0);
 
 	// return the final blurred image from vertical pass 2
-	return _verticalBlurPass2->GetRenderTargetSRV();
+	return v2->GetRenderTargetSRV();
 }
 
 void PostProcessingShader::RenderBrightnessMap(ID3D11ShaderResourceView* originalImage)
@@ -192,10 +214,10 @@ void PostProcessingShader::RenderBrightnessMap(ID3D11ShaderResourceView* origina
 	devCon->DrawIndexed(6, 0, 0);
 }
 
-void PostProcessingShader::RenderFinal(ID3D11ShaderResourceView* SceneImage)
+void PostProcessingShader::RenderFinal(ID3D11ShaderResourceView* SceneImage, ID3D11ShaderResourceView* sceneDepth)
 {
 	// get dx manager
-	DXManager& DXM   = *Systems::dxManager;
+	DXManager& DXM = *Systems::dxManager;
 
 	// set to defult backbuffer and render our final scene image
 	DXM.SetBackBuffer();
@@ -213,12 +235,14 @@ void PostProcessingShader::RenderFinal(ID3D11ShaderResourceView* SceneImage)
 	ConstantFinalPixel pixelConstant;
 	pixelConstant.applyBloom     = PostProcessing::APPLY_BLOOM;
 	pixelConstant.bloomIntensity = PostProcessing::BLOOM_INTENSITY;
+	pixelConstant.applyDof       = PostProcessing::APPLY_DEPTH_OF_FIELD;
+	pixelConstant.startEndDofdst = XMFLOAT2(PostProcessing::START_END_DOF_DST[0], PostProcessing::START_END_DOF_DST[1]);
 
 	SHADER_HELPERS::UpdateConstantBuffer((void*)&pixelConstant, sizeof(ConstantFinalPixel), _finalPixelConstant);
 
 	// set textures
-	ID3D11ShaderResourceView* texArray[2] = { SceneImage, _bloomMap };
-	devCon->PSSetShaderResources(0, 2, texArray);
+	ID3D11ShaderResourceView* texArray[4] = { SceneImage, _bloomMap, _dofMap, sceneDepth };
+	devCon->PSSetShaderResources(0, 4, texArray);
 
 	// draw
 	devCon->DrawIndexed(6, 0, 0);

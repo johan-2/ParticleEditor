@@ -1,7 +1,6 @@
 uniform float u_screenWidth;
 uniform float u_screenHeight;
 uniform int u_horizontalPass;
-uniform int u_kernelSize;
 
 struct VertexInputType
 {

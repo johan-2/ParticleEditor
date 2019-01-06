@@ -1,6 +1,6 @@
 {
-    "speedMultiplier": 0.10999999940395355,
-    "cycleTimer": 0.41030973196029665,
+    "speedMultiplier": 0.2199999988079071,
+    "cycleTimer": 0.5165398716926575,
     "switchToMoonLightThreshold": -0.10000000149011612,
     "sunsetLightColorStartEndBlend": [
         0.20000000298023225,
@@ -56,9 +56,9 @@
         0.0
     ],
     "sunsetDirLightColor": [
-        0.9934999942779541,
-        0.07210999727249146,
-        0.0881199985742569,
+        1.0,
+        0.1568627506494522,
+        0.1568627506494522,
         1.0
     ],
     "nightDirLightColor": [
@@ -122,9 +122,9 @@
         1.0
     ],
     "sunSunsetColorTint": [
-        0.9947569370269775,
         1.0,
-        0.5597826242446899
+        0.15760868787765504,
+        0.15760868787765504
     ],
     "moonSunsetColorTint": [
         0.0,
