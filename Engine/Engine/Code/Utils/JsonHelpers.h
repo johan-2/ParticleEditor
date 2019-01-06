@@ -17,6 +17,12 @@ namespace JSON
 		writer->Double(value);
 	}
 
+	static void WriteBool(rapidjson::PrettyWriter<rapidjson::StringBuffer>* writer, const char* key, bool value)
+	{
+		writer->Key(key);
+		writer->Bool(value);
+	}
+
 	static void WriteFloat2(rapidjson::PrettyWriter<rapidjson::StringBuffer>* writer, const char* key, XMFLOAT2 value)
 	{
 		writer->Key(key);
@@ -63,6 +69,12 @@ namespace JSON
 	{		
 		assert(document[key].IsFloat());
 		return document[key].GetFloat();
+	}
+
+	static bool ReadBool(rapidjson::Document& document, const char* key)
+	{
+		assert(document[key].IsBool());
+		return document[key].GetBool();
 	}
 
 	static int ReadInt(rapidjson::Document& document, const char* key)

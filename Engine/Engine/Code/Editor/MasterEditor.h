@@ -2,6 +2,7 @@
 #include "IEditorWindow.h"
 #include "MainEditorWindow.h"
 #include "SkyDomeWindow.h"
+#include "PostProcessWindow.h"
 
 class MasterEditor
 {
@@ -13,9 +14,10 @@ public:
 	void RenderStatsWindow();
 	void RenderEditorWindow();
 
-	IEditorWindow*    activeWindow;
-	MainEditorWindow* mainWindow;
-	SkyDomeWindow*    skyDomeWindow;
+	IEditorWindow*     activeWindow;
+	MainEditorWindow*  mainWindow;
+	SkyDomeWindow*     skyDomeWindow;
+	PostProcessWindow* postProcessWindow;
 
 private:
 

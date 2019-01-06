@@ -204,14 +204,16 @@ RenderToTexture::RenderToTexture(unsigned int width, unsigned int height, bool d
 
 RenderToTexture::~RenderToTexture()
 {
-	if (_renderTargetSRV)
-		_renderTargetSRV->Release();
+	Release();
+}
 
-	if (_textureView)
-		_textureView->Release();
-
-	if (_renderTargetView)
-		_renderTargetView->Release();
+void RenderToTexture::Release()
+{
+	if (_renderTargetView)          _renderTargetView->Release();
+	if (_depthStencilView)          _depthStencilView->Release();
+	if (_depthStencilViewReadOnly)  _depthStencilViewReadOnly->Release();
+	if (_renderTargetSRV)           _renderTargetSRV->Release();
+	if (_depthStencilSRV)           _depthStencilSRV->Release();
 }
 
 void RenderToTexture::SetRendertarget(bool depthOnly, bool depthReadOnly)

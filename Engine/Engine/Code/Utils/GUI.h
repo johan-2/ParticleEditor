@@ -1,6 +1,9 @@
 #pragma once
 #include "imgui.h"
+#include <d3d11.h>
 #include <DirectXMath.h>
+#include <Windows.h>
+#include <string>
 
 using namespace DirectX;
 
@@ -26,6 +29,11 @@ namespace GUI
 
 		// create window to display information
 		ImGui::Begin(name, nullptr, ImGuiWindowFlags_NoTitleBar);
+	}
+
+	static bool Button(const char* text)
+	{
+		return ImGui::Button(text);
 	}
 
 	static void EndWindow()
@@ -54,7 +62,7 @@ namespace GUI
 			ImGui::OpenPopup(pickerName);
 	
 		ImGui::SameLine();
-		ImGui::TextColored(ImVec4(0.9, 0.9, 0.9, 1.0), header);
+		ImGui::TextColored(ImVec4(0.9f, 0.9f, 0.9f, 1.0f), header);
 		ShowToolTip(toolTip);
 	
 		if (ImGui::BeginPopup(pickerName))
@@ -70,7 +78,7 @@ namespace GUI
 			ImGui::OpenPopup(pickerName);
 
 		ImGui::SameLine();
-		ImGui::TextColored(ImVec4(0.9, 0.9, 0.9, 1.0), header);
+		ImGui::TextColored(ImVec4(0.9f, 0.9f, 0.9f, 1.0f), header);
 		ShowToolTip(toolTip);
 
 		if (ImGui::BeginPopup(pickerName))
@@ -84,7 +92,7 @@ namespace GUI
 	{
 		ImGui::SliderFloat(ID, data, min, max, "%.2f");
 		ImGui::SameLine();
-		ImGui::TextColored(ImVec4(0.9, 0.9, 0.9, 1), header);
+		ImGui::TextColored(ImVec4(0.9f, 0.9f, 0.9f, 1.0f), header);
 		ShowToolTip(toolTip);
 	}
 	
@@ -92,7 +100,7 @@ namespace GUI
 	{
 		ImGui::SliderFloat2(ID, data, min, max, "%.2f");
 		ImGui::SameLine();
-		ImGui::TextColored(ImVec4(0.9, 0.9, 0.9, 1), header);
+		ImGui::TextColored(ImVec4(0.9f, 0.9f, 0.9f, 1.0f), header);
 		ShowToolTip(toolTip);
 	}
 	
@@ -100,7 +108,7 @@ namespace GUI
 	{
 		ImGui::InputFloat3(ID, data, 2);
 		ImGui::SameLine();
-		ImGui::TextColored(ImVec4(0.9, 0.9, 0.9, 1), header);
+		ImGui::TextColored(ImVec4(0.9f, 0.9f, 0.9f, 1.0f), header);
 		ShowToolTip(toolTip);
 	}
 	
@@ -108,7 +116,7 @@ namespace GUI
 	{
 		ImGui::InputFloat(ID, data, 1.0f, 1.0f, 1);
 		ImGui::SameLine();
-		ImGui::TextColored(ImVec4(0.9, 0.9, 0.9, 1), header);
+		ImGui::TextColored(ImVec4(0.9f, 0.9f, 0.9f, 1.0f), header);
 		ShowToolTip(toolTip);
 	}
 
@@ -142,6 +150,14 @@ namespace GUI
 		ImGui::Combo(ID, index, items);
 		ImGui::SameLine();
 		ImGui::TextColored(ImVec4(0.9, 0.9, 0.9, 1), header);
+		ShowToolTip(toolTip);
+	}
+
+	static void CheckBox(const char* ID, const char* header, const char* toolTip, bool* data)
+	{
+		ImGui::Checkbox(ID, data);
+		ImGui::SameLine();
+		ImGui::TextColored(ImVec4(0.9f, 0.9f, 0.9f, 1.0f), header);
 		ShowToolTip(toolTip);
 	}
 
@@ -180,5 +196,20 @@ namespace GUI
 		}
 
 		return "";
+	}
+
+	static std::string ReplaceWithRelativePath(std::string relPath, std::string path)
+	{
+		// get the offset where our last backslash or forwardslash is located
+		size_t lastSlash = path.find_last_of("\\");
+		if (std::string::npos == lastSlash)
+			lastSlash = path.find_last_of("/");
+
+		// erease filepath
+		if (std::string::npos != lastSlash)
+			path.erase(0, lastSlash + 1);
+
+		// add filename to relative path		
+		return relPath.append(path.c_str());
 	}
 }

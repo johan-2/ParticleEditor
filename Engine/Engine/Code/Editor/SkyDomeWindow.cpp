@@ -50,21 +50,21 @@ void SkyDomeWindow::Render()
 	RenderLightning(skySettings);
 	RenderSunMoon(sunMoon, skySettings);
 	
-	if (ImGui::Button("Save Settings"))
+	if (GUI::Button("Save Settings"))
 	{
 		std::string file = GUI::FindFileFromDirectory(".json\0*.json", "save SkyDome Settings as .json");
 		if (file != "")
 			SaveSettings(file.c_str(), skySettings, sunMoon);
 	}
 		
-	if (ImGui::Button("Load Settings"))
+	if (GUI::Button("Load Settings"))
 	{
 		std::string file = GUI::FindFileFromDirectory(".json\0*.json", "load SkyDome Settings from .json");
 		if (file != "")
 			skyDome->ReadSettings(file.c_str());
 	}
 
-	if (ImGui::Button("Back"))
+	if (GUI::Button("Back"))
 		GoToMain();
 
 	// end rendering of this window
@@ -123,25 +123,13 @@ void SkyDomeWindow::RenderCubeMap(SkySettings* skySettings)
 {
 	if (ImGui::Button("Load CubeMap"))
 	{
-		std::string name = GUI::FindFileFromDirectory(".dds", "Load CubeMap");
+		std::string path = GUI::FindFileFromDirectory(".dds", "Load CubeMap");
 		// if a file was selected change the texture
-		if (name != "")
+		if (path != "")
 		{
-			// get the offset where our last backslash is located
-			// we only want the name of the texture
-			size_t lastSlash = name.find_last_of("\\");
-
-			if (std::string::npos == lastSlash)
-				lastSlash = name.find_last_of("/");
-
-			// erease filepath
-			if (std::string::npos != lastSlash)
-				name.erase(0, lastSlash + 1);
-
-			// add our relative path to our textures
-			skySettings->cubeMapName = "SkyBoxes/";
-			skySettings->cubeMapName.append(name.c_str());
-
+			// add our relative path to our skyboxes
+			skySettings->cubeMapName = GUI::ReplaceWithRelativePath("SkyBoxes/", path);
+			
 			// set the new cubemap
 			Systems::renderer->GetSkyDome()->LoadCubemap();
 		}		

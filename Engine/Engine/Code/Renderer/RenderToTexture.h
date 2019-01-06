@@ -22,10 +22,9 @@ public:
 
 	// set this rendertarget
 	void SetRendertarget(bool depthOnly, bool depthReadOnly);
-
+	void Release();
 private:
 
-	ID3D11Texture2D*          _textureView;
 	ID3D11RenderTargetView*   _renderTargetView;
 	ID3D11DepthStencilView*   _depthStencilView;
 	ID3D11DepthStencilView*   _depthStencilViewReadOnly;

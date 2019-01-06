@@ -166,6 +166,7 @@
     <ClCompile Include="Code\Editor\IEditorWindow.cpp" />
     <ClCompile Include="Code\Editor\MainEditorWindow.cpp" />
     <ClCompile Include="Code\Editor\MasterEditor.cpp" />
+    <ClCompile Include="Code\Editor\PostProcessWindow.cpp" />
     <ClCompile Include="Code\Editor\SkyDomeWindow.cpp" />
     <ClCompile Include="Code\Framework.cpp" />
     <ClCompile Include="Code\ImGUI\imgui.cpp" />
@@ -203,6 +204,7 @@
     <ClCompile Include="Code\System\Systems.cpp" />
     <ClCompile Include="Code\TestScenes\IslandTestScene.cpp" />
     <ClCompile Include="Code\TestScenes\SponzaTestScene.cpp" />
+    <ClCompile Include="Code\Utils\SystemDefs.cpp" />
     <ClCompile Include="Code\Utils\TexturePool.cpp" />
     <ClCompile Include="Code\Utils\Time.cpp" />
     <ClCompile Include="Code\Utils\Window.cpp" />
@@ -228,6 +230,7 @@
     <ClInclude Include="Code\Editor\IEditorWindow.h" />
     <ClInclude Include="Code\Editor\MainEditorWindow.h" />
     <ClInclude Include="Code\Editor\MasterEditor.h" />
+    <ClInclude Include="Code\Editor\PostProcessWindow.h" />
     <ClInclude Include="Code\Editor\SkyDomeWindow.h" />
     <ClInclude Include="Code\Framework.h" />
     <ClInclude Include="Code\ImGUI\imconfig.h" />

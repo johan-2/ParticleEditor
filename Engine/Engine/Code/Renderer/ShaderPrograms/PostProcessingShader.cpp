@@ -17,8 +17,8 @@ PostProcessingShader::PostProcessingShader()
 	SHADER_HELPERS::CreatePixelShader(L"Shaders/PostProcess/pixelPostProcessing.ps",   _pixelPostProcessingShader,  _pixelPostProcessingShaderByteCode);
 	SHADER_HELPERS::CreateVertexShader(L"Shaders/PostProcess/vertexBlur.vs",           _vertexBlurShader,           _vertexBlurShaderByteCode);
 	SHADER_HELPERS::CreatePixelShader(L"Shaders/PostProcess/pixelBlur.ps",             _pixelBlurShader,            _pixelBlurShaderByteCode);
-	SHADER_HELPERS::CreateVertexShader(L"Shaders/PostProcess/vertexBrightness.vs", _vertexBrightnessShader, _vertexBrightnessShaderByteCode);
-	SHADER_HELPERS::CreatePixelShader(L"Shaders/PostProcess/pixelBrightness.ps", _pixelBrightnessShader, _pixelBrightnessShaderByteCode);
+	SHADER_HELPERS::CreateVertexShader(L"Shaders/PostProcess/vertexBrightness.vs",     _vertexBrightnessShader,     _vertexBrightnessShaderByteCode);
+	SHADER_HELPERS::CreatePixelShader(L"Shaders/PostProcess/pixelBrightness.ps",       _pixelBrightnessShader,      _pixelBrightnessShaderByteCode);
 
 	// create constant buffers
 	SHADER_HELPERS::CreateConstantBuffer(_blurVertexConstant);
@@ -26,10 +26,8 @@ PostProcessingShader::PostProcessingShader()
 
 	// create render textures
 	_brightnessMap       = new RenderToTexture(SCREEN_WIDTH, SCREEN_HEIGHT, false);
-	_horizontalBlurPass1 = new RenderToTexture(SCREEN_WIDTH / BLOOM_BLUR_SCALE_DOWN_PASS_1, SCREEN_HEIGHT / BLOOM_BLUR_SCALE_DOWN_PASS_1, false);
-	_verticalBlurPass1   = new RenderToTexture(SCREEN_WIDTH / BLOOM_BLUR_SCALE_DOWN_PASS_1, SCREEN_HEIGHT / BLOOM_BLUR_SCALE_DOWN_PASS_1, false);
-	_horizontalBlurPass2 = new RenderToTexture(SCREEN_WIDTH / BLOOM_BLUR_SCALE_DOWN_PASS_2, SCREEN_HEIGHT / BLOOM_BLUR_SCALE_DOWN_PASS_2, false);
-	_verticalBlurPass2   = new RenderToTexture(SCREEN_WIDTH / BLOOM_BLUR_SCALE_DOWN_PASS_2, SCREEN_HEIGHT / BLOOM_BLUR_SCALE_DOWN_PASS_2, false);
+	
+	CreateBlurRenderTextures();
 
 	Entity* reflectionQuad = new Entity();
 	reflectionQuad->AddComponent<QuadComponent>()->Init(XMFLOAT2(SCREEN_WIDTH * 0.78f, SCREEN_HEIGHT * 0.1f), XMFLOAT2(SCREEN_WIDTH * 0.1f, SCREEN_HEIGHT * 0.1f), L"");
@@ -45,17 +43,30 @@ PostProcessingShader::~PostProcessingShader()
 	_pixelPostProcessingShader->Release();
 }
 
+void PostProcessingShader::CreateBlurRenderTextures()
+{
+	if (_horizontalBlurPass1) delete _horizontalBlurPass1;
+	if (_verticalBlurPass1)   delete _verticalBlurPass1;
+	if (_horizontalBlurPass2) delete _horizontalBlurPass2;
+	if (_verticalBlurPass2)   delete _verticalBlurPass2;
+
+	_horizontalBlurPass1 = new RenderToTexture(SCREEN_WIDTH / PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_1, SCREEN_HEIGHT / PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_1, false);
+	_verticalBlurPass1   = new RenderToTexture(SCREEN_WIDTH / PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_1, SCREEN_HEIGHT / PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_1, false);
+	_horizontalBlurPass2 = new RenderToTexture(SCREEN_WIDTH / PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_2, SCREEN_HEIGHT / PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_2, false);
+	_verticalBlurPass2   = new RenderToTexture(SCREEN_WIDTH / PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_2, SCREEN_HEIGHT / PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_2, false);
+}
+
 void PostProcessingShader::Render(ScreenQuad* quad, ID3D11ShaderResourceView* SceneImage)
 {
 	Systems::dxManager->BlendStates()->SetBlendState(BLEND_STATE::BLEND_OPAQUE);
 	quad->UploadBuffers();
 
-	if (APPLY_BLOOM)
+	if (PostProcessing::APPLY_BLOOM)
 	{
 		RenderBrightnessMap(SceneImage);
 
 		// blur the brightness map
-		_bloomMap = RenderBlurMaps(_brightnessMap->GetRenderTargetSRV(), BLOOM_USE_TWO_PASS_BLUR, BLOOM_BLUR_SCALE_DOWN_PASS_1, BLOOM_BLUR_SCALE_DOWN_PASS_2);
+		_bloomMap = RenderBlurMaps(_brightnessMap->GetRenderTargetSRV(), PostProcessing::BLOOM_USE_TWO_PASS_BLUR, PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_1, PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_2);
 	}
 
 	RenderFinal(SceneImage);
@@ -200,8 +211,8 @@ void PostProcessingShader::RenderFinal(ID3D11ShaderResourceView* SceneImage)
 
 	// set pixel constants
 	ConstantFinalPixel pixelConstant;
-	pixelConstant.applyBloom     = APPLY_BLOOM;
-	pixelConstant.bloomIntensity = BLOOM_INTENSITY;
+	pixelConstant.applyBloom     = PostProcessing::APPLY_BLOOM;
+	pixelConstant.bloomIntensity = PostProcessing::BLOOM_INTENSITY;
 
 	SHADER_HELPERS::UpdateConstantBuffer((void*)&pixelConstant, sizeof(ConstantFinalPixel), _finalPixelConstant);
 

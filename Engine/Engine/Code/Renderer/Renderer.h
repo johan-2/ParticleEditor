@@ -68,7 +68,8 @@ public:
 	DXInputLayouts* GetInputLayouts() { return _inputLayouts; } 
 
 	// get shaders
-	ParticleShader* GetParticleShader() { return _particleShader; }
+	ParticleShader*       GetParticleShader()    { return _particleShader; }
+	PostProcessingShader* GetPostProcessShader() { return _PostProcessingShader; }
 
 	// create/ get skydome
 	SkyDome* GetSkyDome() { return _skyDome; }

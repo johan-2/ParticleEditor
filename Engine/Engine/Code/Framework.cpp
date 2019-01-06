@@ -37,6 +37,8 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM Lparam);
 
 Framework::Framework()
 {
+	PostProcessing::ReadSettings("Settings/PostProcessDefualt.json");
+
 	// create the window for the application
 	_window = new Window("Engine", 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, WndProc);
 	
