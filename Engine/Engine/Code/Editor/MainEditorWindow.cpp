@@ -14,7 +14,7 @@ MainEditorWindow::~MainEditorWindow()
 
 void MainEditorWindow::Render()
 {
-	GUI::BeginWindow("Editor", 0.6f, SCREEN_WIDTH * 0.15f, SCREEN_HEIGHT, 0, 0, 0, 0);
+	GUI::BeginWindow("Editor", 0.6f, SystemSettings::SCREEN_WIDTH * 0.15f, SystemSettings::SCREEN_HEIGHT, 0, 0, 0, 0);
 	
 	if (GUI::Button("SkyDome Settings"))
 		_masterEditor->activeWindow = _masterEditor->skyDomeWindow;

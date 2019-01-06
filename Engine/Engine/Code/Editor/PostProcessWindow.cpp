@@ -14,14 +14,14 @@ PostProcessWindow::~PostProcessWindow()
 
 void PostProcessWindow::Render()
 {
-	GUI::BeginWindow("Post Process Settings", 0.6f, SCREEN_WIDTH * 0.22f, SCREEN_HEIGHT * 0.5f, 0, 0, 0, 0);
+	GUI::BeginWindow("Post Process Settings", 0.6f, SystemSettings::SCREEN_WIDTH * 0.22f, SystemSettings::SCREEN_HEIGHT * 0.5f, 0, 0, 0, 0);
 
 	// BLOOM
 	GUI::Text(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "BLOOM");
 	GUI::CheckBox("1", "Apply Bloom",   "if bloom will be applied to final image",          &PostProcessing::APPLY_BLOOM);
 	GUI::CheckBox("2", "Two Pass Blur", "if we will do a two pass blur for better quality", &PostProcessing::BLOOM_USE_TWO_PASS_BLUR);
 
-	GUI::SetItemWidth(SCREEN_WIDTH * 0.10f);
+	GUI::SetItemWidth(SystemSettings::SCREEN_WIDTH * 0.10f);
 	GUI::FloatSlider("3", "Intensity", "How strong the bloom effect will be", 0.1f, 10.0f, &PostProcessing::BLOOM_INTENSITY);
 
 	GUI::FloatSlider("4", "Res Scale Down P1", "How much we will lower the res output blurred image on first pass",  1.0f, 10.0f, &PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_1);

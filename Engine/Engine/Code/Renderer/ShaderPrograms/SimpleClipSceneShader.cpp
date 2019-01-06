@@ -26,13 +26,13 @@ SimpleClipSceneShader::SimpleClipSceneShader(bool debugQuad, XMFLOAT2 pos)
 	SHADER_HELPERS::CreateConstantBuffer(_CBPixelPoint);
 
 	// create render texture
-	_renderTexture = new RenderToTexture(SCREEN_WIDTH, SCREEN_HEIGHT, false);
+	_renderTexture = new RenderToTexture(SystemSettings::SCREEN_WIDTH, SystemSettings::SCREEN_HEIGHT, false, SystemSettings::USE_HDR);
 
 	if (debugQuad)
 	{
 		// create debug quad
 		Entity* reflectionQuad = new Entity();
-		reflectionQuad->AddComponent<QuadComponent>()->Init(XMFLOAT2(SCREEN_WIDTH * 0.66f, SCREEN_HEIGHT * 0.1f), XMFLOAT2(SCREEN_WIDTH * 0.1f, SCREEN_HEIGHT * 0.1f), L"");
+		reflectionQuad->AddComponent<QuadComponent>()->Init(XMFLOAT2(SystemSettings::SCREEN_WIDTH * 0.66f, SystemSettings::SCREEN_HEIGHT * 0.1f), XMFLOAT2(SystemSettings::SCREEN_WIDTH * 0.1f, SystemSettings::SCREEN_HEIGHT * 0.1f), L"");
 		reflectionQuad->GetComponent<QuadComponent>()->SetTexture(_renderTexture->GetRenderTargetSRV());
 	}
 }

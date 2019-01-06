@@ -30,7 +30,7 @@ PostProcessingShader::PostProcessingShader()
 	createDofRenderTextures();
 
 	Entity* reflectionQuad = new Entity();
-	reflectionQuad->AddComponent<QuadComponent>()->Init(XMFLOAT2(SCREEN_WIDTH * 0.78f, SCREEN_HEIGHT * 0.1f), XMFLOAT2(SCREEN_WIDTH * 0.1f, SCREEN_HEIGHT * 0.1f), L"");
+	reflectionQuad->AddComponent<QuadComponent>()->Init(XMFLOAT2(SystemSettings::SCREEN_WIDTH * 0.78f, SystemSettings::SCREEN_HEIGHT * 0.1f), XMFLOAT2(SystemSettings::SCREEN_WIDTH * 0.1f, SystemSettings::SCREEN_HEIGHT * 0.1f), L"");
 	reflectionQuad->GetComponent<QuadComponent>()->SetTexture(_brightnessMap->GetRenderTargetSRV());
 }
 
@@ -50,21 +50,21 @@ void PostProcessingShader::CreateBloomBlurRenderTextures()
 	if (_bloomHorizontalBlurPass2) delete _bloomHorizontalBlurPass2;
 	if (_bloomVerticalBlurPass2)   delete _bloomVerticalBlurPass2;
 
-	_bloomHorizontalBlurPass1 = new RenderToTexture(SCREEN_WIDTH / PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_1, SCREEN_HEIGHT / PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_1, false);
-	_bloomVerticalBlurPass1   = new RenderToTexture(SCREEN_WIDTH / PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_1, SCREEN_HEIGHT / PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_1, false);
-	_bloomHorizontalBlurPass2 = new RenderToTexture(SCREEN_WIDTH / PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_2, SCREEN_HEIGHT / PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_2, false);
-	_bloomVerticalBlurPass2   = new RenderToTexture(SCREEN_WIDTH / PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_2, SCREEN_HEIGHT / PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_2, false);
+	_bloomHorizontalBlurPass1 = new RenderToTexture(SystemSettings::SCREEN_WIDTH / PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_1, SystemSettings::SCREEN_HEIGHT / PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_1, false, SystemSettings::USE_HDR);
+	_bloomVerticalBlurPass1   = new RenderToTexture(SystemSettings::SCREEN_WIDTH / PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_1, SystemSettings::SCREEN_HEIGHT / PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_1, false, SystemSettings::USE_HDR);
+	_bloomHorizontalBlurPass2 = new RenderToTexture(SystemSettings::SCREEN_WIDTH / PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_2, SystemSettings::SCREEN_HEIGHT / PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_2, false, SystemSettings::USE_HDR);
+	_bloomVerticalBlurPass2   = new RenderToTexture(SystemSettings::SCREEN_WIDTH / PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_2, SystemSettings::SCREEN_HEIGHT / PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_2, false, SystemSettings::USE_HDR);
 }
 
 void PostProcessingShader::CreateBrightnessRenderTexture()
 {
-	_brightnessMap = new RenderToTexture(SCREEN_WIDTH, SCREEN_HEIGHT, false);
+	_brightnessMap = new RenderToTexture(SystemSettings::SCREEN_WIDTH, SystemSettings::SCREEN_HEIGHT, false, SystemSettings::USE_HDR);
 }
 
 void PostProcessingShader::createDofRenderTextures()
 {
-	_dofHorizontalBlurPass = new RenderToTexture(SCREEN_WIDTH, SCREEN_HEIGHT, false);
-	_dofVerticalBlurPass   = new RenderToTexture(SCREEN_WIDTH, SCREEN_HEIGHT, false);
+	_dofHorizontalBlurPass = new RenderToTexture(SystemSettings::SCREEN_WIDTH, SystemSettings::SCREEN_HEIGHT, false, SystemSettings::USE_HDR);
+	_dofVerticalBlurPass   = new RenderToTexture(SystemSettings::SCREEN_WIDTH, SystemSettings::SCREEN_HEIGHT, false, SystemSettings::USE_HDR);
 }
 
 void PostProcessingShader::Render(ScreenQuad* quad, ID3D11ShaderResourceView* SceneImage, ID3D11ShaderResourceView* sceneDepth)
@@ -119,8 +119,8 @@ ID3D11ShaderResourceView* PostProcessingShader::RenderBlurMaps(ID3D11ShaderResou
 	h1->ClearRenderTarget(0, 0, 0, 1, false);
 	h1->SetRendertarget(false, false);
 
-	constantVertex.screenWidth    = SCREEN_WIDTH  / scaleDown1;
-	constantVertex.screenHeight   = SCREEN_HEIGHT / scaleDown1;
+	constantVertex.screenWidth    = SystemSettings::SCREEN_WIDTH  / scaleDown1;
+	constantVertex.screenHeight   = SystemSettings::SCREEN_HEIGHT / scaleDown1;
 	constantVertex.horizontalPass = 1;
 
 	SHADER_HELPERS::UpdateConstantBuffer((void*)&constantVertex, sizeof(ConstantBlurVertex), _blurVertexConstant);
@@ -161,8 +161,8 @@ ID3D11ShaderResourceView* PostProcessingShader::RenderBlurMaps(ID3D11ShaderResou
 
 	// change constants for pass 2
 	constantVertex.horizontalPass = 1;
-	constantVertex.screenWidth    = SCREEN_WIDTH  / scaleDown2;
-	constantVertex.screenHeight   = SCREEN_HEIGHT / scaleDown2;
+	constantVertex.screenWidth    = SystemSettings::SCREEN_WIDTH  / scaleDown2;
+	constantVertex.screenHeight   = SystemSettings::SCREEN_HEIGHT / scaleDown2;
 	SHADER_HELPERS::UpdateConstantBuffer((void*)&constantVertex, sizeof(ConstantBlurVertex), _blurVertexConstant);
 
 	// get the horizontal blured texture from pass 1

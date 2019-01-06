@@ -4,7 +4,7 @@
 #include "Systems.h"
 #include "DXErrorHandler.h"
 
-RenderToTexture::RenderToTexture(unsigned int width, unsigned int height, bool depthOnly) 	
+RenderToTexture::RenderToTexture(unsigned int width, unsigned int height, bool depthOnly, bool HDR)
 {
 	ID3D11Device* device = Systems::dxManager->GetDevice();
 	HRESULT result;
@@ -94,7 +94,7 @@ RenderToTexture::RenderToTexture(unsigned int width, unsigned int height, bool d
 		RenderTargetTexDesc.Height           = height;
 		RenderTargetTexDesc.MipLevels        = 1;
 		RenderTargetTexDesc.ArraySize        = 1;
-		RenderTargetTexDesc.Format           = DXGI_FORMAT_R32G32B32A32_FLOAT;
+		RenderTargetTexDesc.Format           = HDR ? DXGI_FORMAT_R16G16B16A16_FLOAT : DXGI_FORMAT_R8G8B8A8_UNORM;
 		RenderTargetTexDesc.SampleDesc.Count = 1;
 		RenderTargetTexDesc.Usage            = D3D11_USAGE_DEFAULT;
 		RenderTargetTexDesc.BindFlags        = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;

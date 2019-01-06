@@ -182,7 +182,7 @@ void ParticleSystemComponent::CreateBuffers(XMFLOAT2 size, unsigned int index)
 	D3D11_SUBRESOURCE_DATA vertexData, indexData, instanceData;
 
 	// Set up the description of the vertex buffer.
-	vertexBufferDesc.Usage               = D3D11_USAGE_DEFAULT;
+	vertexBufferDesc.Usage               = D3D11_USAGE_IMMUTABLE;
 	vertexBufferDesc.ByteWidth           = sizeof(ParticleVertexType) * 4;
 	vertexBufferDesc.BindFlags           = D3D11_BIND_VERTEX_BUFFER;
 	vertexBufferDesc.CPUAccessFlags      = 0;
@@ -190,7 +190,7 @@ void ParticleSystemComponent::CreateBuffers(XMFLOAT2 size, unsigned int index)
 	vertexBufferDesc.StructureByteStride = 0;
 
 	// Set up the description of the index buffer.
-	indexBufferDesc.Usage               = D3D11_USAGE_DEFAULT;
+	indexBufferDesc.Usage               = D3D11_USAGE_IMMUTABLE;
 	indexBufferDesc.ByteWidth           = sizeof(unsigned long) * 6;
 	indexBufferDesc.BindFlags           = D3D11_BIND_INDEX_BUFFER;
 	indexBufferDesc.CPUAccessFlags      = 0;

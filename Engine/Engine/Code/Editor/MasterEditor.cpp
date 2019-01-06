@@ -69,8 +69,8 @@ void MasterEditor::RenderStatsWindow()
 
 	// set properties of next window
 	ImGui::SetNextWindowBgAlpha(0.3f);
-	ImGui::SetNextWindowSize(ImVec2(SCREEN_WIDTH * 0.15f, SCREEN_HEIGHT * 0.15f));
-	ImGui::SetNextWindowPos(ImVec2(SCREEN_WIDTH * 0.99f, SCREEN_HEIGHT * 0.01f), 0, ImVec2(1, 0));
+	ImGui::SetNextWindowSize(ImVec2(SystemSettings::SCREEN_WIDTH * 0.15f, SystemSettings::SCREEN_HEIGHT * 0.15f));
+	ImGui::SetNextWindowPos(ImVec2(SystemSettings::SCREEN_WIDTH * 0.99f, SystemSettings::SCREEN_HEIGHT * 0.01f), 0, ImVec2(1, 0));
 
 	// create window to display information
 	ImGui::Begin("test", nullptr, ImGuiWindowFlags_NoTitleBar);

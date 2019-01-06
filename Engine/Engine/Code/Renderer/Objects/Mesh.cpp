@@ -64,7 +64,7 @@ void Mesh::CreateBuffers(VertexData* verticesData, unsigned long* indicesData, u
 	D3D11_SUBRESOURCE_DATA vertexData, indexData;
 
 	// Set up the description of the vertex buffer.
-	vertexBufferDesc.Usage               = D3D11_USAGE_DEFAULT;
+	vertexBufferDesc.Usage               = D3D11_USAGE_IMMUTABLE;
 	vertexBufferDesc.ByteWidth           = sizeof(VertexData) * numVertices;
 	vertexBufferDesc.BindFlags           = D3D11_BIND_VERTEX_BUFFER;
 	vertexBufferDesc.CPUAccessFlags      = 0;
@@ -72,7 +72,7 @@ void Mesh::CreateBuffers(VertexData* verticesData, unsigned long* indicesData, u
 	vertexBufferDesc.StructureByteStride = 0;
 
 	// Set up the description of the index buffer.
-	indexBufferDesc.Usage               = D3D11_USAGE_DEFAULT;
+	indexBufferDesc.Usage               = D3D11_USAGE_IMMUTABLE;
 	indexBufferDesc.ByteWidth           = sizeof(unsigned long) * numIndices;
 	indexBufferDesc.BindFlags           = D3D11_BIND_INDEX_BUFFER;
 	indexBufferDesc.CPUAccessFlags      = 0;

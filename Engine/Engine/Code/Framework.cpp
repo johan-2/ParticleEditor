@@ -40,10 +40,10 @@ Framework::Framework()
 	PostProcessing::ReadSettings("Settings/PostProcessDefualt.json");
 
 	// create the window for the application
-	_window = new Window("Engine", 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, WndProc);
+	_window = new Window("Engine", 0, 0, SystemSettings::SCREEN_WIDTH, SystemSettings::SCREEN_HEIGHT, WndProc);
 	
 	// init all systems
-	Systems::InitSystems(_window, SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN, V_SYNC);
+	Systems::InitSystems(_window, SystemSettings::SCREEN_WIDTH, SystemSettings::SCREEN_HEIGHT, SystemSettings::FULLSCREEN, SystemSettings::V_SYNC);
 
 	// start and run
 	Start();
@@ -58,8 +58,8 @@ Framework::~Framework()
 
 void Framework::Start()
 {
-	//_islandTestScene = new IslandTestScene();
-	_testScene = new SponzaTestScene();
+	_islandTestScene = new IslandTestScene();
+	//_testScene = new SponzaTestScene();
 
 	_editor = new MasterEditor();
 }
@@ -67,8 +67,8 @@ void Framework::Start()
 void Framework::Update()
 {
 	Systems::world->Update();
-	//_islandTestScene->Update(Systems::time->GetDeltaTime());
-	_testScene->Update();
+	_islandTestScene->Update(Systems::time->GetDeltaTime());
+	//_testScene->Update();
 
 	_editor->Update();
 }

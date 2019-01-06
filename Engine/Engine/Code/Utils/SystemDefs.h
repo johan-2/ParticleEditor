@@ -2,13 +2,24 @@
 #include <DirectXMath.h>
 #include <d3d11.h>
 
-#define SCREEN_WIDTH  1920
-#define SCREEN_HEIGHT 1080
-#define V_SYNC     false
-#define FULLSCREEN false
+//////////////////////////////////////////////// SYSTEM SETTINGS
+class SystemSettings
+{
+public:
+	SystemSettings();
+	~SystemSettings();
 
-//////////////////////////////////////////////
-// POST PROCESSING
+	static float SCREEN_WIDTH;
+	static float SCREEN_HEIGHT;
+	static bool  V_SYNC;
+	static bool  FULLSCREEN;
+	static bool  USE_HDR;
+
+	static void ReadSettings(const char* file);
+	static void WriteSettings(const char* file);
+};
+
+//////////////////////////////////////////////// POST PROCESSING
 class PostProcessing	
 {
 public:

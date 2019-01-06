@@ -2,6 +2,62 @@
 #include "JsonHelpers.h"
 #include <fstream>
 
+/////////////////////////////////////////////////////////////////// SYSTEM SETTINGS
+float SystemSettings::SCREEN_WIDTH  = 1920.0f;
+float SystemSettings::SCREEN_HEIGHT = 1080.0f;
+bool SystemSettings::V_SYNC         = false;
+bool SystemSettings::FULLSCREEN     = false;
+bool SystemSettings::USE_HDR        = true;
+
+SystemSettings::SystemSettings(){}
+SystemSettings::~SystemSettings(){}
+
+void SystemSettings::ReadSettings(const char* file)
+{
+	FILE* fp; fopen_s(&fp, file, "rb");
+	char readBuffer[65536];
+	rapidjson::FileReadStream inStream(fp, readBuffer, sizeof(readBuffer));
+
+	rapidjson::Document d;
+	d.ParseStream(inStream);
+	fclose(fp);
+
+	assert(d.IsObject());
+
+	SCREEN_WIDTH  = JSON::ReadFloat(d, "SCREEN_WIDTH");
+	SCREEN_HEIGHT = JSON::ReadFloat(d, "SCREEN_HEIGHT");
+	V_SYNC        = JSON::ReadBool(d,  "V_SYNC");
+	FULLSCREEN    = JSON::ReadBool(d,  "FULLSCREEN");
+	USE_HDR       = JSON::ReadBool(d,  "USE_HDR");	
+}
+
+void SystemSettings::WriteSettings(const char* file)
+{
+	// create string buffer and json writer
+	rapidjson::StringBuffer sb;
+	rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(sb);
+
+	// start the write
+	writer.StartObject();
+
+	JSON::WriteFloat(&writer, "SCREEN_WIDTH",  SCREEN_WIDTH);
+	JSON::WriteFloat(&writer, "SCREEN_HEIGHT", SCREEN_HEIGHT);
+	JSON::WriteBool(&writer,  "V_SYNC",        V_SYNC);
+	JSON::WriteBool(&writer,  "FULLSCREEN",    FULLSCREEN);
+	JSON::WriteBool(&writer,  "USE_HDR",       USE_HDR);
+	
+	// end object
+	writer.EndObject();
+
+	// create output file stream and write
+	// out the json stringBuilder object to the file
+	std::ofstream of(file);
+	of << sb.GetString();
+
+	of.close();
+}
+
+/////////////////////////////////////////////////////////////////// POST PROCESSING
 bool  PostProcessing::APPLY_BLOOM                  = true;
 bool  PostProcessing::BLOOM_USE_TWO_PASS_BLUR      = true;
 float PostProcessing::BLOOM_INTENSITY              = 1.0f;

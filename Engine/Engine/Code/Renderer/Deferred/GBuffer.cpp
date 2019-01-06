@@ -53,8 +53,8 @@ void GBuffer::CreateRenderTargets()
 	// some of this data will change depending on the render target we are creating
 	D3D11_TEXTURE2D_DESC RenderTargetTexDesc;
 	ZeroMemory(&RenderTargetTexDesc, sizeof(D3D11_TEXTURE2D_DESC));
-	RenderTargetTexDesc.Width            = SCREEN_WIDTH;
-	RenderTargetTexDesc.Height           = SCREEN_HEIGHT;
+	RenderTargetTexDesc.Width            = SystemSettings::SCREEN_WIDTH;
+	RenderTargetTexDesc.Height           = SystemSettings::SCREEN_HEIGHT;
 	RenderTargetTexDesc.MipLevels        = 1;
 	RenderTargetTexDesc.ArraySize        = 1;
 	RenderTargetTexDesc.Format           = DXGI_FORMAT_R32G32B32A32_FLOAT;

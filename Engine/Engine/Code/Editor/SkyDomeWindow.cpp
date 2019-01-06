@@ -25,18 +25,18 @@ void SkyDomeWindow::Render()
 	SunMoon* sunMoon         = skyDome->GetSoonMoonSettings();
 	ID3D11ShaderResourceView* previewTex = Systems::texturePool->GetTexture(L"Textures/domeMap.dds", false);
 
-	GUI::BeginWindow("SkyDome Settings", 0.6f, SCREEN_WIDTH * 0.20f, SCREEN_HEIGHT * 0.9f , 0, 0, 0, 0);
+	GUI::BeginWindow("SkyDome Settings", 0.6f, SystemSettings::SCREEN_WIDTH * 0.20f, SystemSettings::SCREEN_HEIGHT * 0.9f , 0, 0, 0, 0);
 
 	// decription image
 	GUI::Image(previewTex, ImVec2(128, 128));
 
 	// mode
-	GUI::SetItemWidth(SCREEN_WIDTH * 0.10f);
+	GUI::SetItemWidth(SystemSettings::SCREEN_WIDTH * 0.10f);
 	GUI::ComboBox("0", "SkyDome Mode", "the renderering mode for the skydome", (int*)&skySettings->RENDER_MODE, "THREE LAYER COLOR\0CUBE MAP");
 	GUI::ClearItemWidth();
 
 	// speed 
-	GUI::SetItemWidth(SCREEN_WIDTH * 0.10f);
+	GUI::SetItemWidth(SystemSettings::SCREEN_WIDTH * 0.10f);
 	GUI::FloatSlider("1", "Time Multiplier", "one cycle is set to 1 minute, alter the duration with this multiplier", 0.0f, 20.0f, &skySettings->speedMultiplier);
 
 	 // cycle progress
@@ -75,7 +75,7 @@ void SkyDomeWindow::RenderColorBlend(SkySettings* skySettings)
 {
 	// sky color layers percentage
 	GUI::Text(ImVec4(1, 1, 1, 1), "SKY LAYERS USAGE PERCENT");
-	GUI::SetItemWidth(SCREEN_WIDTH * 0.05f);
+	GUI::SetItemWidth(SystemSettings::SCREEN_WIDTH * 0.05f);
 	GUI::FloatSlider("3", "Bottom Layer Percent", "this color will be used from 0 to set value",      0.0f,                          skySettings->skyMidColor.w, &skySettings->skyBottomColor.w);
 	GUI::FloatSlider("4", "Mid Layer Percent",    "this color will be used from bottom to set value", skySettings->skyBottomColor.w, skySettings->skyTopColor.w, &skySettings->skyMidColor.w);
 	GUI::FloatSlider("5", "Top Layer Percent",    "this color will be used from mid to set value",    skySettings->skyMidColor.w,    100.0f,                     &skySettings->skyTopColor.w);
@@ -111,7 +111,7 @@ void SkyDomeWindow::RenderColorBlend(SkySettings* skySettings)
 	// blend timings
 	GUI::Space(10);
 	GUI::Text(ImVec4(1, 1, 1, 1), "SKY COLORS BLEND TIMINGS");
-	GUI::SetItemWidth(SCREEN_WIDTH * 0.06f);
+	GUI::SetItemWidth(SystemSettings::SCREEN_WIDTH * 0.06f);
 	GUI::FloatSlider2("15",  "Blend Top Sunset", "when the top sky color will start blending from day to sunset color",   -1.0f, 1.0f, &skySettings->sunsetTopSkyColorStartEndBlend.x);
 	GUI::FloatSlider2("16",  "Blend Top Night",  "when the top sky color will start blending from sunset to night color", -1.0f, 1.0f, &skySettings->nightTopSkyColorStartEndBlend.x);
 	GUI::FloatSlider2("17",  "Blend Mid Sunset", "when the Mid sky color will start blending from day to sunset color",   -1.0f, 1.0f, &skySettings->sunsetMidSkyColorStartEndBlend.x);
@@ -141,7 +141,7 @@ void SkyDomeWindow::RenderLightning(SkySettings* skySettings)
 	// lightning settings
 	GUI::Space(10);
 	GUI::Text(ImVec4(1, 1, 1, 1), "LIGHTNING SETTINGS");
-	GUI::SetItemWidth(SCREEN_WIDTH * 0.05f);
+	GUI::SetItemWidth(SystemSettings::SCREEN_WIDTH * 0.05f);
 	GUI::FloatSlider("19", "Switch to moonLight threshold", "at this sun height we will change to cast light from the moon", -1.0f, 0.0f, &skySettings->switchToMoonLightThreshold);
 
 	GUI::Space(3);
@@ -161,7 +161,7 @@ void SkyDomeWindow::RenderSunMoon(SunMoon* sunMoon, SkySettings* skySettings)
 {
 	GUI::Space(10);
 	GUI::Text(ImVec4(1, 1, 1, 1), "SUN/MOON SETTINGS");
-	GUI::SetItemWidth(SCREEN_WIDTH * 0.08f);
+	GUI::SetItemWidth(SystemSettings::SCREEN_WIDTH * 0.08f);
 	GUI::FloatSlider("27", "Y-Rotation", "the rotation of the sun around the y axis", 0.0f, 360.0f, &skySettings->startRotation.y);
 	float shadowDst = skySettings->shadowMapDistance.x;
 	GUI::FloatInput("28", "ShadowMap distance", "the distance from where the shadow camera is rendering", &shadowDst);
@@ -180,9 +180,9 @@ void SkyDomeWindow::RenderSunMoon(SunMoon* sunMoon, SkySettings* skySettings)
 	GUI::ColorPickerNoAlpha("31", "Night", "color tint during day", "pick15", &sunMoon->moon.dayColorTint);
 	GUI::SameLine();
 	GUI::ColorPickerNoAlpha("32", "SunSet", "color tint during SunSet", "pick16", &sunMoon->moon.sunsetColorTint);
-
+	
 	GUI::Space(1);
-	GUI::SetItemWidth(SCREEN_WIDTH * 0.12f);
+	GUI::SetItemWidth(SystemSettings::SCREEN_WIDTH * 0.12f);
 	GUI::FloatSlider2("33", "Sun Color Blend",  "when the sun will start blending between day to sunset colors",     -1.0f, 1.0f, &sunMoon->sun.beginEndColorBlend.x);
 	GUI::FloatSlider2("34", "Moon Color Blend", "when the moon will start blending between night to sunrise colors", -1.0f, 1.0f, &sunMoon->moon.beginEndColorBlend.x);
 	GUI::FloatSlider2("35", "Sun Fade Out",     "when the sun will start and end in full transparancy",              -1.0f, 1.0f, &sunMoon->sun.beginEndFade.x);
