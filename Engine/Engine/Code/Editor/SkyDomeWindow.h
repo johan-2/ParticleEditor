@@ -5,8 +5,8 @@
 
 using namespace DirectX;
 class MasterEditor;
-class SkySettings;
-class SunMoon;
+struct SkySettings;
+struct SunMoon;
 
 class SkyDomeWindow : public IEditorWindow
 {

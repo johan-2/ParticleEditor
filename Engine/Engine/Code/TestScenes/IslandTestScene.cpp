@@ -50,12 +50,12 @@ IslandTestScene::IslandTestScene()
 	directionalLight->AddComponent<LightDirectionComponent>()->Init(XMFLOAT4(0.8f, 0.8f, 0.8f, 1), shadowMapRenderer->GetComponent<TransformComponent>());
 
 	Entity* lake = new Entity();
-	lake->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(0.5f, 0.5f, 0.5f));
-	lake->AddComponent<ModelComponent>()->InitModel("Models/terrain.fbx", STANDARD | CAST_SHADOW_DIR | CAST_REFLECTION | REFRACT, L"Textures/Dirt_21_Diffuse.dds", L"Textures/Dirt_21_Normal.dds", L"Textures/Dirt_21_Specular.dds", L"", false, 6);
+	lake->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(800.0f, 1.0f, 800.0f));
+	lake->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::PLANE, STANDARD | REFRACT, L"Textures/poolTile.dds", L"Textures/poolTileNormal.dds", L"Textures/FlatHighSpecular.dds", L"", 200);
 
 	Entity* water = new Entity();
-	water->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 5.0f, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(50, 1, 50));
-	water->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::PLANE, ALPHA_WATER, L"", L"Textures/waterNormal.dds", L"Textures/FlatHighSpecular.dds", L"", 10.0f);
+	water->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 5.0f, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(800, 1, 800));
+	water->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::PLANE, ALPHA_WATER, L"", L"Textures/waterNormal.dds", L"Textures/FlatHighSpecular.dds", L"", 250.0f);
 	water->AddComponent<UVScrollComponent>()->Init(XMFLOAT2(0.02f, -0.01f));
 	water->GetComponent<ModelComponent>()->SetUVDVMap(L"Textures/waterDuDv.dds");
 
@@ -69,7 +69,7 @@ IslandTestScene::IslandTestScene()
 	sphere->AddComponent<LightPointComponent>()->Init(20, 20, XMFLOAT3(0.1f, 1.0f, 0), 0.0f, 1.0f, 0.2f);
 
 	Entity* tree1 = new Entity();
-	tree1->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 7.0f, 65), XMFLOAT3(0, 0, 0), XMFLOAT3(1.0f, 1.0f, 1.0f));
+	tree1->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 5.0f, 65), XMFLOAT3(0, 0, 0), XMFLOAT3(1.0f, 1.0f, 1.0f));
 	tree1->AddComponent<ModelComponent>()->InitModel("Models/Palm_01.obj", STANDARD | CAST_REFLECTION | CAST_SHADOW_DIR);
 }
 
