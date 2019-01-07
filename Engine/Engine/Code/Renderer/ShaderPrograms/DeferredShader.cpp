@@ -74,7 +74,7 @@ void DeferredShader::RenderGeometry(std::vector<Mesh*>& meshes)
 	ConstantGeometryVertex vertexData;
 
 	// stuff that need to be set per mesh
-	unsigned int size = meshes.size();
+	size_t size = meshes.size();
 	for (int i = 0; i < size; i++)
 	{
 		// upload vertex and indexbuffers

@@ -37,7 +37,7 @@ void LightManager::RemoveDirectionalLight()
 void LightManager::UpdateLightBuffers()
 {
 	// set the pointlight data
-	const int size = _pointLights.size();
+	size_t size = _pointLights.size();
 	for (int i = 0; i < size; i++)
 	{
 		_pointCBBuffer[i].color          = _pointLights[i]->GetLightColor();

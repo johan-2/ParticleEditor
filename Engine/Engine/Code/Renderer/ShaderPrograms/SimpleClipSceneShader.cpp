@@ -26,7 +26,7 @@ SimpleClipSceneShader::SimpleClipSceneShader(bool debugQuad, XMFLOAT2 pos)
 	SHADER_HELPERS::CreateConstantBuffer(_CBPixelPoint);
 
 	// create render texture
-	_renderTexture = new RenderToTexture(SystemSettings::SCREEN_WIDTH, SystemSettings::SCREEN_HEIGHT, false, SystemSettings::USE_HDR);
+	_renderTexture = new RenderToTexture((unsigned int)SystemSettings::SCREEN_WIDTH, (unsigned int)SystemSettings::SCREEN_HEIGHT, false, SystemSettings::USE_HDR);
 
 	if (debugQuad)
 	{
@@ -102,7 +102,8 @@ void SimpleClipSceneShader::RenderScene(std::vector<Mesh*>& opaqueMeshes, std::v
 	devCon->PSSetConstantBuffers(1, 1, &_CBPixelPoint);
 
 	// loop over all opaque meshes that is set to cast reflections
-	for (int y = 0; y < opaqueMeshes.size(); y++)
+	size_t size = opaqueMeshes.size();
+	for (int y = 0; y < size; y++)
 	{
 		// get world matrix of mesh and update the buffer
 		XMStoreFloat4x4(&constantVertex.world, XMLoadFloat4x4(&opaqueMeshes[y]->GetWorldMatrixTrans()));
@@ -125,14 +126,15 @@ void SimpleClipSceneShader::RenderScene(std::vector<Mesh*>& opaqueMeshes, std::v
 	// set shader and blend state if we have any alpha meshes
 	// that is being reflected, also sort these from the pos
 	// of the camera reflection matrix
-	if (alphaMeshes.size() > 0)
+	size = alphaMeshes.size();
+	if (size > 0)
 	{
 		DXM.BlendStates()->SetBlendState(BLEND_STATE::BLEND_ALPHA);
 		SHADER_HELPERS::MeshSort(alphaMeshes, camera->GetComponent<TransformComponent>()->GetPositionVal(), true);
 	}
 
 	// loop over all alpha meshes that is set to cast reflections
-	for (int y = 0; y < alphaMeshes.size(); y++)
+	for (int y = 0; y < size; y++)
 	{
 		// get world matrix of mesh and update the buffer
 		XMStoreFloat4x4(&constantVertex.world,         XMLoadFloat4x4(&alphaMeshes[y]->GetWorldMatrixTrans()));

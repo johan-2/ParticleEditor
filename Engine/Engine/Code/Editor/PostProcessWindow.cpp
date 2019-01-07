@@ -16,6 +16,8 @@ void PostProcessWindow::Render()
 {
 	GUI::BeginWindow("Post Process Settings", 0.6f, SystemSettings::SCREEN_WIDTH * 0.22f, SystemSettings::SCREEN_HEIGHT * 0.5f, 0, 0, 0, 0);
 
+	GUI::Space(1);
+
 	// BLOOM
 	GUI::Text(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "BLOOM");
 	GUI::CheckBox("1", "Apply Bloom",   "if bloom will be applied to final image",          &PostProcessing::APPLY_BLOOM);
@@ -37,6 +39,8 @@ void PostProcessWindow::Render()
 	GUI::CheckBox("6", "Apply Depth Of Field", "if Doof will be applied to final image", &PostProcessing::APPLY_DEPTH_OF_FIELD);
 	GUI::FloatSlider2("7", "Start End Focus", "when the focus will start being blurred to when completely blurred", 0.0f, 1000.0f, &PostProcessing::START_END_DOF_DST[0]);
 
+	GUI::Space(1);
+
 	// serialize settings
 	if (GUI::Button("Save Settings"))
 	{
@@ -53,6 +57,7 @@ void PostProcessWindow::Render()
 			PostProcessing::ReadSettings(file.c_str());
 	}
 
+	GUI::Space(1);
 	if (GUI::Button("Back"))
 		GoToMain();
 

@@ -25,10 +25,10 @@ void ModelComponent::InitModel(char* model, unsigned int flags, wchar_t* diffuse
 	Assimp::Importer importer;
 
 	// get the scene object from the file
-	const aiScene* scene = importer.ReadFile(model, aiProcess_Triangulate | aiProcess_ConvertToLeftHanded | aiProcess_CalcTangentSpace);
+	const aiScene* scene = importer.ReadFile(model, aiProcess_Triangulate | aiProcess_ConvertToLeftHanded | aiProcess_CalcTangentSpace | aiProcess_JoinIdenticalVertices);
 
 	// assert if scene failed to be created
-	assert(scene != nullptr, "Failed to load aiScene from file");
+	assert(scene != nullptr);
 
 	// send the root node and recurivly create all meshes
 	ProcessNode(scene->mRootNode, scene, diffuseMap, normalMap, specularMap, emissiveMap, useMaterial, tiling);

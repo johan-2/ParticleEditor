@@ -1,6 +1,7 @@
 #pragma once
 #include <DirectXMath.h>
 #include <d3d11.h>
+#include "SystemSettingsWindow.h"
 
 //////////////////////////////////////////////// SYSTEM SETTINGS
 class SystemSettings
@@ -16,7 +17,7 @@ public:
 	static bool  USE_HDR;
 
 	static void ReadSettings(const char* file);
-	static void WriteSettings(const char* file);
+	static void WriteSettings(const char* file, SystemSettingsWindow::Settings settings);
 };
 
 //////////////////////////////////////////////// POST PROCESSING

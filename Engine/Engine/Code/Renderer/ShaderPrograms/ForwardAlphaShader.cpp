@@ -91,8 +91,8 @@ void ForwardAlphaShader::RenderForward(std::vector<Mesh*>& meshes)
 	// sort alpha meshes to render back to front
 	SHADER_HELPERS::MeshSort(meshes, cameraPos, true);
 
-	const int numMeshes = meshes.size();
-	for (int i =0; i < numMeshes; i++)
+	size_t numMeshes = meshes.size();
+	for (int i = 0; i < numMeshes; i++)
 	{
 		// get mesh
 		Mesh* mesh = meshes[i];

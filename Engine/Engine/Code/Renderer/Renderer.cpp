@@ -86,13 +86,13 @@ void Renderer::Initialize()
 	// create the main rendertarget we will use
 	// this will hold our final scene up till we apply post processing
 	// and render to the backbuffer
-	_mainRendertarget = new RenderToTexture(SystemSettings::SCREEN_WIDTH, SystemSettings::SCREEN_HEIGHT, false, SystemSettings::USE_HDR);
+	_mainRendertarget = new RenderToTexture((unsigned int)SystemSettings::SCREEN_WIDTH, (unsigned int)SystemSettings::SCREEN_HEIGHT, false, SystemSettings::USE_HDR);
 }
 
 Entity* Renderer::CreateShadowMap(float orthoSize, float resolution, XMFLOAT3 position, XMFLOAT3 rotation)
 {
 	// create depthmap render texture
-	_depthMap = new RenderToTexture(resolution, resolution, true, false);
+	_depthMap = new RenderToTexture((unsigned int)resolution, (unsigned int)resolution, true, false);
 
 	// create camera entity with orthographic view for shadowmap rendering
 	_cameraDepth = new Entity();

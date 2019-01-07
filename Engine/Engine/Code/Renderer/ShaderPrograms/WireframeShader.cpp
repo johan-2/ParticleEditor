@@ -56,7 +56,7 @@ void WireframeShader::RenderWireFrame(std::vector<Mesh*>& meshes)
 
 	DXM.RasterizerStates()->SetRasterizerState(RASTERIZER_STATE::WIREFRAME);
 
-	unsigned int size = meshes.size();
+	size_t size = meshes.size();
 	for (int i = 0; i < size; i++)
 	{
 		// set world matrix

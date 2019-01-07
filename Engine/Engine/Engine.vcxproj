@@ -91,7 +91,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level1</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG</PreprocessorDefinitions>
@@ -104,7 +104,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level1</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG</PreprocessorDefinitions>
@@ -117,7 +117,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level1</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -133,7 +133,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level1</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -168,6 +168,7 @@
     <ClCompile Include="Code\Editor\MasterEditor.cpp" />
     <ClCompile Include="Code\Editor\PostProcessWindow.cpp" />
     <ClCompile Include="Code\Editor\SkyDomeWindow.cpp" />
+    <ClCompile Include="Code\Editor\SystemSettingsWindow.cpp" />
     <ClCompile Include="Code\Framework.cpp" />
     <ClCompile Include="Code\ImGUI\imgui.cpp" />
     <ClCompile Include="Code\ImGUI\imgui_demo.cpp" />
@@ -232,6 +233,7 @@
     <ClInclude Include="Code\Editor\MasterEditor.h" />
     <ClInclude Include="Code\Editor\PostProcessWindow.h" />
     <ClInclude Include="Code\Editor\SkyDomeWindow.h" />
+    <ClInclude Include="Code\Editor\SystemSettingsWindow.h" />
     <ClInclude Include="Code\Framework.h" />
     <ClInclude Include="Code\ImGUI\imconfig.h" />
     <ClInclude Include="Code\ImGUI\imgui.h" />

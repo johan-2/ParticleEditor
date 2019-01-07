@@ -58,7 +58,7 @@ void Time::CalculateDelta()
 	QueryPerformanceCounter((LARGE_INTEGER*)&currentTime);
 
 	// get number of ticks from last frame to this frame
-	int difference = currentTime - _startTimeDelta;
+	INT64 difference = currentTime - _startTimeDelta;
 
 	// divide elapsed ticks with tickrate per second 
 	_delta = difference / _ticksPerSecond;

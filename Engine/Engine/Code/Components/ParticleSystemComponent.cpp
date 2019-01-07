@@ -490,7 +490,7 @@ void ParticleSystemComponent::SortParticles(unsigned int index)
 
 float ParticleSystemComponent::GetRandomFloat(float min, float max)
 {
-	unsigned int seed = std::chrono::system_clock::now().time_since_epoch().count();
+	unsigned int seed = (unsigned int)std::chrono::system_clock::now().time_since_epoch().count();
 	std::mt19937 generator(seed);
 	std::uniform_real_distribution<float> distribution(min, max);
 

@@ -31,7 +31,7 @@ void SystemSettings::ReadSettings(const char* file)
 	USE_HDR       = JSON::ReadBool(d,  "USE_HDR");	
 }
 
-void SystemSettings::WriteSettings(const char* file)
+void SystemSettings::WriteSettings(const char* file, SystemSettingsWindow::Settings settings)
 {
 	// create string buffer and json writer
 	rapidjson::StringBuffer sb;
@@ -40,11 +40,11 @@ void SystemSettings::WriteSettings(const char* file)
 	// start the write
 	writer.StartObject();
 
-	JSON::WriteFloat(&writer, "SCREEN_WIDTH",  SCREEN_WIDTH);
-	JSON::WriteFloat(&writer, "SCREEN_HEIGHT", SCREEN_HEIGHT);
-	JSON::WriteBool(&writer,  "V_SYNC",        V_SYNC);
-	JSON::WriteBool(&writer,  "FULLSCREEN",    FULLSCREEN);
-	JSON::WriteBool(&writer,  "USE_HDR",       USE_HDR);
+	JSON::WriteFloat(&writer, "SCREEN_WIDTH",  (float)settings.screenSize[0]);
+	JSON::WriteFloat(&writer, "SCREEN_HEIGHT", (float)settings.screenSize[1]);
+	JSON::WriteBool(&writer,  "V_SYNC",        settings.vSync);
+	JSON::WriteBool(&writer,  "FULLSCREEN",    settings.fullScreen);
+	JSON::WriteBool(&writer,  "USE_HDR",       settings.HDR);
 	
 	// end object
 	writer.EndObject();

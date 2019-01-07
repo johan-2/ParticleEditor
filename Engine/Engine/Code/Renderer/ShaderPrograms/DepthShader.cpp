@@ -53,7 +53,7 @@ void DepthShader::RenderDepth(std::vector<Mesh*>& meshes)
 	// set the vertex constant buffer
 	devCon->VSSetConstantBuffers(0, 1, &_constantBufferVertex);
 
-	unsigned int size = meshes.size();
+	size_t size = meshes.size();
 	for (int i = 0; i < size; i++)
 	{
 		// set world matrix of mesh

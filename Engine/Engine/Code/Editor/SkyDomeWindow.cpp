@@ -50,6 +50,7 @@ void SkyDomeWindow::Render()
 	RenderLightning(skySettings);
 	RenderSunMoon(sunMoon, skySettings);
 	
+	GUI::Space(1);
 	if (GUI::Button("Save Settings"))
 	{
 		std::string file = GUI::FindFileFromDirectory(".json\0*.json", "save SkyDome Settings as .json");
@@ -64,6 +65,7 @@ void SkyDomeWindow::Render()
 			skyDome->ReadSettings(file.c_str());
 	}
 
+	GUI::Space(1);
 	if (GUI::Button("Back"))
 		GoToMain();
 

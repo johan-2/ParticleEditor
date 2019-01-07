@@ -13,9 +13,10 @@ MasterEditor::MasterEditor() :
 	_showEditorWindow(false),
 	_showStatsWindow(true)
 {
-	mainWindow        = new MainEditorWindow(this);
-	skyDomeWindow     = new SkyDomeWindow(this);
-	postProcessWindow = new PostProcessWindow(this);
+	mainWindow           = new MainEditorWindow(this);
+	skyDomeWindow        = new SkyDomeWindow(this);
+	postProcessWindow    = new PostProcessWindow(this);
+	systemSettingsWindow = new SystemSettingsWindow(this);
 
 	activeWindow = mainWindow;
 }

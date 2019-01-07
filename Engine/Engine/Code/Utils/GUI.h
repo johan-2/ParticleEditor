@@ -111,6 +111,14 @@ namespace GUI
 		ImGui::TextColored(ImVec4(0.9f, 0.9f, 0.9f, 1.0f), header);
 		ShowToolTip(toolTip);
 	}
+
+	static void IntInput2(const char* ID, const char* header, const char* toolTip, int* data)
+	{
+		ImGui::InputInt2(ID, data);
+		ImGui::SameLine();
+		ImGui::TextColored(ImVec4(0.9f, 0.9f, 0.9f, 1.0f), header);
+		ShowToolTip(toolTip);
+	}
 	
 	static void FloatInput(const char* ID, const char* header, const char* toolTip, float* data)
 	{
@@ -149,7 +157,7 @@ namespace GUI
 	{
 		ImGui::Combo(ID, index, items);
 		ImGui::SameLine();
-		ImGui::TextColored(ImVec4(0.9, 0.9, 0.9, 1), header);
+		ImGui::TextColored(ImVec4(0.9f, 0.9f, 0.9f, 1.0f), header);
 		ShowToolTip(toolTip);
 	}
 

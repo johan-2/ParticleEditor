@@ -94,7 +94,7 @@ void WaterShader::Render(std::vector<Mesh*>& waterMeshes)
 	SHADER_HELPERS::UpdateConstantBuffer((void*)&constantAmbDirPixel, sizeof(CBAmbDirPixelWater), _CBPixelAmbDir);
 
 	// loop over all meshes that will project reflections onto itself
-	const int numMeshes = waterMeshes.size();
+	size_t numMeshes = waterMeshes.size();
 	for (int i = 0; i < numMeshes; i++)
 	{
 		// get the mesh that will project the reflections

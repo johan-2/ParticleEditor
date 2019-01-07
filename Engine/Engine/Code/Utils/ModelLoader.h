@@ -489,7 +489,7 @@ public:
 		const aiScene* scene = importer.ReadFile("Models/sphere.obj", aiProcess_Triangulate | aiProcess_ConvertToLeftHanded | aiProcess_CalcTangentSpace);
 
 		// assert if scene failed to be created
-		assert(scene != nullptr, "Failed to load aiScene for sphere");
+		assert(scene != nullptr);
 
 		return CreateMesh(scene->mMeshes[scene->mRootNode->mChildren[0]->mMeshes[0]], scene, flags, diffuseMap, normalMap, specularMap, emissiveMap, tiling, false, parent);
 	}

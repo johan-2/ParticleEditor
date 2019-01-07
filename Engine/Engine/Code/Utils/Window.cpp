@@ -1,7 +1,7 @@
 #include "Window.h"
 #include "FrameWork.h"
 
-Window::Window(const char* title, int x, int y, int width, int height, WNDPROC wndProc)
+Window::Window(const char* title, unsigned int x, unsigned int y, unsigned int width, unsigned int height, WNDPROC wndProc)
 {
 	CreateApplicationWindow(title, x, y, width, height, wndProc);
 }

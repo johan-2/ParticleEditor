@@ -27,7 +27,7 @@ DXManager::~DXManager()
 	_swapChain->Release();
 }
 
-void DXManager::Initialize(HWND hwnd,int screenWidth, int screenHeight, bool vsync, bool fullscreen)
+void DXManager::Initialize(HWND hwnd, int screenWidth, int screenHeight, bool vsync, bool fullscreen)
 {		
 	//store vsync setting
 	_vsyncEnabled = vsync;
@@ -111,7 +111,7 @@ void DXManager::CreateSwapchainAndRenderTarget(HWND hwnd, bool fullscreen, int s
 	if (FAILED(result))
 		DX_ERROR::PrintError(result, "failed to get back buffer from swapchain");
 
-	// create the main rendertarget and set it active
+	// create the main backbuffer rendertarget
 	result = _device->CreateRenderTargetView(backBufferPtr, NULL, &_renderTargetView);
 	if (FAILED(result))
 		DX_ERROR::PrintError(result, "failed to create Render target from back buffer ptr");
@@ -194,20 +194,16 @@ void DXManager::ClearRenderTarget(float r, float g, float b, float a)
 
 	// clear rendertarget and depth
 	_devCon->ClearRenderTargetView(_renderTargetView, color);
-	_devCon->ClearDepthStencilView(_depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 1.0f);
+	_devCon->ClearDepthStencilView(_depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1, 1);
 
 }
 void DXManager::PresentScene()
 {
 	//present depending on vsync
-	if (_vsyncEnabled)
-		_swapChain->Present(1, 0);
-	else
-		_swapChain->Present(0, 0);
+	if (_vsyncEnabled) _swapChain->Present(1, 0);
+	else               _swapChain->Present(0, 0);
 }
 
-// set render target and/or depthstencil
-// NOTE: null can be sent in as render target if we only care about having a depth stencil view bound
 void DXManager::SetBackBuffer()
 {
 	_devCon->RSSetViewports(1, &_viewport);
