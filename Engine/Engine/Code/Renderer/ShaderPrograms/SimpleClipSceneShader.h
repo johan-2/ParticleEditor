@@ -39,7 +39,6 @@ private:
 	// constant buffers
 	ID3D11Buffer* _CBVertex;
 	ID3D11Buffer* _CBPixelAmbDir;
-	ID3D11Buffer* _CBPixelPoint;
 
 	struct CBVertex
 	{

@@ -26,7 +26,6 @@ PlanarReflectionShader::PlanarReflectionShader()
 	// create constant buffers
 	SHADER_HELPERS::CreateConstantBuffer(_CBVertex);
 	SHADER_HELPERS::CreateConstantBuffer(_CBPixelAmbDir);
-	SHADER_HELPERS::CreateConstantBuffer(_CBPixelPoint);
 
 	_simpleClipShaderReflection = new SimpleClipSceneShader();
 }
@@ -40,7 +39,6 @@ PlanarReflectionShader::~PlanarReflectionShader()
 	_planarPixelShaderByteCode->Release();
 
 	_CBPixelAmbDir->Release();
-	_CBPixelPoint->Release();
 	_CBVertex->Release();
 
 	delete _simpleClipShaderReflection;
@@ -88,7 +86,6 @@ void PlanarReflectionShader::Render(std::vector<Mesh*>& reflectionMeshes)
 	ID3D11ShaderResourceView* shadowMap = cameraLight->GetSRV();
 
 	// update pixel shader constant buffer fro point lights
-	SHADER_HELPERS::UpdateConstantBuffer((void*)LM.GetCBPointBuffer(), sizeof(CBPoint) * LM.GetNumPointLights(), _CBPixelPoint);
 	SHADER_HELPERS::UpdateConstantBuffer((void*)&constantAmbDirPixel, sizeof(CBAmbDirPixelPlanar), _CBPixelAmbDir);
 
 	// loop over all meshes that will project reflections onto itself
@@ -130,10 +127,12 @@ void PlanarReflectionShader::Render(std::vector<Mesh*>& reflectionMeshes)
 		devCon->VSSetShader(_planarVertexShader, NULL, 0);
 		devCon->PSSetShader(_planarPixelShader, NULL, 0);
 
+		ID3D11Buffer* pointBuffer = LM.GetPointLightCBBuffer();
+
 		// set the vertex constant buffer, the pixel ones is already set
 		devCon->VSSetConstantBuffers(0, 1, &_CBVertex);
 		devCon->PSSetConstantBuffers(0, 1, &_CBPixelAmbDir);
-		devCon->PSSetConstantBuffers(1, 1, &_CBPixelPoint);
+		devCon->PSSetConstantBuffers(1, 1, &pointBuffer);
 
 		// set to alpha blending
 		DXM.BlendStates()->SetBlendState(BLEND_STATE::BLEND_ALPHA);

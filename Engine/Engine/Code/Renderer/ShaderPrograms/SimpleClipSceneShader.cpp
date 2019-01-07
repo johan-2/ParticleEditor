@@ -23,7 +23,6 @@ SimpleClipSceneShader::SimpleClipSceneShader(bool debugQuad, XMFLOAT2 pos)
 	// create constant buffers
 	SHADER_HELPERS::CreateConstantBuffer(_CBVertex);
 	SHADER_HELPERS::CreateConstantBuffer(_CBPixelAmbDir);
-	SHADER_HELPERS::CreateConstantBuffer(_CBPixelPoint);
 
 	// create render texture
 	_renderTexture = new RenderToTexture((unsigned int)SystemSettings::SCREEN_WIDTH, (unsigned int)SystemSettings::SCREEN_HEIGHT, false, SystemSettings::USE_HDR);
@@ -75,7 +74,6 @@ void SimpleClipSceneShader::RenderScene(std::vector<Mesh*>& opaqueMeshes, std::v
 	XMStoreFloat3(&constantAmbDirPixel.lightDir,        XMLoadFloat3(&directionalLight->GetLightDirectionInv()));
 
 	// update pixel shader constant buffer fro point lights
-	SHADER_HELPERS::UpdateConstantBuffer((void*)LM.GetCBPointBuffer(), sizeof(CBPoint) * LM.GetNumPointLights(), _CBPixelPoint);
 	SHADER_HELPERS::UpdateConstantBuffer((void*)&constantAmbDirPixel, sizeof(CBAmbDirPixel), _CBPixelAmbDir);
 
 	// set vertex data that all meshes share
@@ -96,10 +94,12 @@ void SimpleClipSceneShader::RenderScene(std::vector<Mesh*>& opaqueMeshes, std::v
 	devCon->VSSetShader(_vertexShader, NULL, 0);
 	devCon->PSSetShader(_pixelShader, NULL, 0);
 
+	ID3D11Buffer* pointBuffer = LM.GetPointLightCBBuffer();
+
 	// set constant buffer for the vertex and pixel shader
 	devCon->VSSetConstantBuffers(0, 1, &_CBVertex);
 	devCon->PSSetConstantBuffers(0, 1, &_CBPixelAmbDir);
-	devCon->PSSetConstantBuffers(1, 1, &_CBPixelPoint);
+	devCon->PSSetConstantBuffers(1, 1, &pointBuffer);
 
 	// loop over all opaque meshes that is set to cast reflections
 	size_t size = opaqueMeshes.size();

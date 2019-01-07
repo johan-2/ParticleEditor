@@ -1,6 +1,8 @@
 #include "LightManager.h"
+#include "ShaderHelpers.h"
 
-LightManager::LightManager()
+LightManager::LightManager():
+	_CBPointBuffer(nullptr)
 {	
 }
 
@@ -36,19 +38,24 @@ void LightManager::RemoveDirectionalLight()
 
 void LightManager::UpdateLightBuffers()
 {
+	if (!_CBPointBuffer)
+		SHADER_HELPERS::CreateConstantBuffer(_CBPointBuffer);
+
 	// set the pointlight data
 	size_t size = _pointLights.size();
 	for (int i = 0; i < size; i++)
 	{
-		_pointCBBuffer[i].color          = _pointLights[i]->GetLightColor();
-		_pointCBBuffer[i].intensity      = _pointLights[i]->GetIntensity();
-		_pointCBBuffer[i].radius         = _pointLights[i]->GetRadius();
-		_pointCBBuffer[i].lightPosition  = _pointLights[i]->GetComponent<TransformComponent>()->GetPositionRef();
-		_pointCBBuffer[i].attConstant    = _pointLights[i]->GetAttConstant();
-		_pointCBBuffer[i].attLinear      = _pointLights[i]->GetAttLinear();
-		_pointCBBuffer[i].attExponential = _pointLights[i]->GetAttExponential();
-		_pointCBBuffer[i].numLights      = size;
+		_pointData[i].color          = _pointLights[i]->GetLightColor();
+		_pointData[i].intensity      = _pointLights[i]->GetIntensity();
+		_pointData[i].radius         = _pointLights[i]->GetRadius();
+		_pointData[i].lightPosition  = _pointLights[i]->GetComponent<TransformComponent>()->GetPositionRef();
+		_pointData[i].attConstant    = _pointLights[i]->GetAttConstant();
+		_pointData[i].attLinear      = _pointLights[i]->GetAttLinear();
+		_pointData[i].attExponential = _pointLights[i]->GetAttExponential();
+		_pointData[i].numLights      = size;
 	}
+
+	SHADER_HELPERS::UpdateConstantBuffer(&_pointData, sizeof(CBPoint) * size, _CBPointBuffer);	
 }
 
 

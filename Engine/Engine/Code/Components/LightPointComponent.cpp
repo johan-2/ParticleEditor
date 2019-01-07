@@ -5,7 +5,6 @@
 
 LightPointComponent::LightPointComponent() : IComponent(POINT_LIGHT_COMPONENT)
 {
-	Systems::lightManager->AddPointLight(this);
 }
 
 LightPointComponent::~LightPointComponent()
@@ -21,6 +20,8 @@ void LightPointComponent::Init(float radius, float intensity, XMFLOAT3 color, fl
 	_attConstant    = attConstant;
 	_attLinear      = attLinear;
 	_attExponential = attExponential;
+
+	Systems::lightManager->AddPointLight(this);
 }
 
 void LightPointComponent::Update(const float& delta)

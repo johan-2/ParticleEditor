@@ -18,7 +18,6 @@ ForwardAlphaShader::ForwardAlphaShader()
 	// create constant buffers
 	SHADER_HELPERS::CreateConstantBuffer(_CBVertex);
 	SHADER_HELPERS::CreateConstantBuffer(_CBPixelAmbDir);
-	SHADER_HELPERS::CreateConstantBuffer(_CBPixelPoint);
 }
 
 ForwardAlphaShader::~ForwardAlphaShader()
@@ -30,7 +29,6 @@ ForwardAlphaShader::~ForwardAlphaShader()
 	_pixelShaderByteCode->Release();
 
 	_CBPixelAmbDir->Release();
-	_CBPixelPoint->Release();
 	_CBVertex->Release();
 }
 
@@ -61,10 +59,12 @@ void ForwardAlphaShader::RenderForward(std::vector<Mesh*>& meshes)
 	devCon->VSSetShader(_vertexShader, NULL, 0);
 	devCon->PSSetShader(_pixelShader, NULL, 0);
 
+	ID3D11Buffer* pointBuffer = LM.GetPointLightCBBuffer();
+
 	// set constant buffers
 	devCon->VSSetConstantBuffers(0, 1, &_CBVertex);
 	devCon->PSSetConstantBuffers(0, 1, &_CBPixelAmbDir);
-	devCon->PSSetConstantBuffers(1, 1, &_CBPixelPoint);
+	devCon->PSSetConstantBuffers(1, 1, &pointBuffer);
 
 	// set to alpha blending
 	DXM.BlendStates()->SetBlendState(BLEND_STATE::BLEND_ALPHA);
@@ -86,7 +86,6 @@ void ForwardAlphaShader::RenderForward(std::vector<Mesh*>& meshes)
 
 	// update pixel shader constant buffers
 	SHADER_HELPERS::UpdateConstantBuffer((void*)&constantAmbDirPixel, sizeof(CBAmbDir), _CBPixelAmbDir);
-	SHADER_HELPERS::UpdateConstantBuffer((void*)LM.GetCBPointBuffer(),sizeof(CBPoint) * LM.GetNumPointLights(), _CBPixelPoint);
 
 	// sort alpha meshes to render back to front
 	SHADER_HELPERS::MeshSort(meshes, cameraPos, true);

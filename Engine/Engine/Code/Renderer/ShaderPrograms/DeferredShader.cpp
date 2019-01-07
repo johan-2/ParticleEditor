@@ -25,7 +25,6 @@ DeferredShader::DeferredShader()
 	SHADER_HELPERS::CreateConstantBuffer(_constantBufferGeometry);
 	SHADER_HELPERS::CreateConstantBuffer(_constantBufferDefAmbient);
 	SHADER_HELPERS::CreateConstantBuffer(_constantBufferDefDirectional);
-	SHADER_HELPERS::CreateConstantBuffer(_constantBufferDefPoint);
 }
 
 DeferredShader::~DeferredShader()
@@ -45,7 +44,6 @@ DeferredShader::~DeferredShader()
 	_constantBufferGeometry->Release();
 	_constantBufferDefAmbient->Release();
 	_constantBufferDefDirectional->Release();
-	_constantBufferDefPoint->Release();
 }
 
 void DeferredShader::RenderGeometry(std::vector<Mesh*>& meshes)
@@ -138,7 +136,6 @@ void DeferredShader::RenderLightning(GBuffer*& gBuffer)
 	// update constantbuffers
 	SHADER_HELPERS::UpdateConstantBuffer((void*)&ambLightData,         sizeof(CBDefAmb), _constantBufferDefAmbient);
 	SHADER_HELPERS::UpdateConstantBuffer((void*)&dirLightData,         sizeof(CBDefDir), _constantBufferDefDirectional);
-	SHADER_HELPERS::UpdateConstantBuffer((void*)LM.GetCBPointBuffer(), sizeof(CBPoint) * LM.GetNumPointLights(), _constantBufferDefPoint);
 
 	// get Gbuffer textures and depthmap
 	ID3D11ShaderResourceView**& gBufferTextures = gBuffer->GetSrvArray();
@@ -150,10 +147,12 @@ void DeferredShader::RenderLightning(GBuffer*& gBuffer)
 	// set the textures
 	devCon->PSSetShaderResources(0, 5, textureArray);
 
+	ID3D11Buffer* pointBuffer = LM.GetPointLightCBBuffer();
+
 	// set all constant buffers
 	devCon->PSSetConstantBuffers(0, 1, &_constantBufferDefAmbient);
 	devCon->PSSetConstantBuffers(1, 1, &_constantBufferDefDirectional);
-	devCon->PSSetConstantBuffers(2, 1, &_constantBufferDefPoint);
+	devCon->PSSetConstantBuffers(2, 1, &pointBuffer);
 
 	// draw
 	devCon->DrawIndexed(6, 0, 0);

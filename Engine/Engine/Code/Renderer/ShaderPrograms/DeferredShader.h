@@ -36,7 +36,6 @@ private:
 
 	// constant buffers
 	ID3D11Buffer* _constantBufferGeometry;
-	ID3D11Buffer* _constantBufferDefPoint;
 	ID3D11Buffer* _constantBufferDefAmbient;
 	ID3D11Buffer* _constantBufferDefDirectional;
 

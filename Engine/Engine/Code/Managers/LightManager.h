@@ -1,4 +1,5 @@
 #pragma once
+#include <d3d11.h>
 #include <DirectXMath.h>
 #include "LightDirectionComponent.h"
 #include "LightPointComponent.h"
@@ -46,8 +47,7 @@ public:
 	// updates the data for light constant buffers
 	void UpdateLightBuffers();
 
-	// get pointer to point light data
-	CBPoint* GetCBPointBuffer() { return _pointCBBuffer; }
+	ID3D11Buffer* GetPointLightCBBuffer() { return _CBPointBuffer; }
 
 	// get num of pointlights active
 	int GetNumPointLights() { return (int)_pointLights.size(); }
@@ -64,6 +64,7 @@ private:
 	std::vector<LightPointComponent*> _pointLights;
 
 	// holds the properties of all point lights
-	CBPoint _pointCBBuffer[MAX_POINT_LIGHTS];
+	CBPoint       _pointData[MAX_POINT_LIGHTS];
+	ID3D11Buffer* _CBPointBuffer;
 };
 

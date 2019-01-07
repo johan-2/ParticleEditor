@@ -26,7 +26,6 @@ WaterShader::WaterShader()
 	// create constant buffers
 	SHADER_HELPERS::CreateConstantBuffer(_CBVertex);
 	SHADER_HELPERS::CreateConstantBuffer(_CBPixelAmbDir);
-	SHADER_HELPERS::CreateConstantBuffer(_CBPixelPoint);
 
 	_simpleClipShaderReflection = new SimpleClipSceneShader();
 	_simpleClipShaderRefraction = new SimpleClipSceneShader(true);
@@ -41,7 +40,6 @@ WaterShader::~WaterShader()
 	_waterPixelShaderByteCode->Release();
 
 	_CBPixelAmbDir->Release();
-	_CBPixelPoint->Release();
 	_CBVertex->Release();
 
 	delete _simpleClipShaderReflection;
@@ -90,7 +88,6 @@ void WaterShader::Render(std::vector<Mesh*>& waterMeshes)
 	ID3D11ShaderResourceView* shadowMap = cameraLight->GetSRV();
 
 	// update pixel shader constant buffer fro point lights
-	SHADER_HELPERS::UpdateConstantBuffer((void*)LM.GetCBPointBuffer(), sizeof(CBPoint) * LM.GetNumPointLights(), _CBPixelPoint);
 	SHADER_HELPERS::UpdateConstantBuffer((void*)&constantAmbDirPixel, sizeof(CBAmbDirPixelWater), _CBPixelAmbDir);
 
 	// loop over all meshes that will project reflections onto itself
@@ -138,10 +135,12 @@ void WaterShader::Render(std::vector<Mesh*>& waterMeshes)
 		devCon->VSSetShader(_waterVertexShader, NULL, 0);
 		devCon->PSSetShader(_waterPixelShader, NULL, 0);
 
+		ID3D11Buffer* pointBuffer = LM.GetPointLightCBBuffer();
+
 		// set the vertex constant buffer, the pixel ones is already set
 		devCon->VSSetConstantBuffers(0, 1, &_CBVertex);
 		devCon->PSSetConstantBuffers(0, 1, &_CBPixelAmbDir);
-		devCon->PSSetConstantBuffers(1, 1, &_CBPixelPoint);
+		devCon->PSSetConstantBuffers(1, 1, &pointBuffer);
 
 		// set to alpha blending
 		DXM.BlendStates()->SetBlendState(BLEND_STATE::BLEND_ALPHA);
