@@ -18,13 +18,17 @@ cbuffer AmbientDirectionalBuffer : register(b0)
 	float4 ambientColor;
 	float4 dirDiffuseColor;
 	float3 dirLightDirection;
-	float  reflectiveFraction;
 }
 
 cbuffer PointLightBuffer : register(b1)
 {
 	PointLight pointLights[1024];
 };
+
+cbuffer ReflectionBuffer : register(b2)
+{
+	float reflectiveFraction;
+}
 
 struct PixelInputType
 {

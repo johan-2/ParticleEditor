@@ -69,7 +69,8 @@ void QuadShader::RenderQuadUI(const std::vector<QuadComponent*>& quads)
 	for (int i = 0; i < quads.size(); i++)
 	{
 		// set the color of this quad in the constant pixel buffer
-		pixelData.color = quads[i]->GetColor();
+		pixelData.color       = quads[i]->GetColor();
+		pixelData.ignoreAlpha = quads[i]->IgnoreAlpha();
 
 		// update the buffer for each quad
 		SHADER_HELPERS::UpdateConstantBuffer((void*)&pixelData, sizeof(ConstantQuadUIPixel), _constantBufferPixel);

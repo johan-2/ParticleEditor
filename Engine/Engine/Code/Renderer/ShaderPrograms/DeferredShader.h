@@ -36,8 +36,7 @@ private:
 
 	// constant buffers
 	ID3D11Buffer* _constantBufferGeometry;
-	ID3D11Buffer* _constantBufferDefAmbient;
-	ID3D11Buffer* _constantBufferDefDirectional;
+	ID3D11Buffer* _CBMisc;
 
 	// the shader bytecode
 	ID3D10Blob* _vertexGeometryShaderByteCode;
@@ -55,22 +54,10 @@ private:
 		XMFLOAT2   pad;
 	};
 
-	// constant data for ambient lightning in the lightning pass
-	// put the camera world pos here aswell for the moment
-	struct CBDefAmb
-	{
-		XMFLOAT4 ambientColor;
-		XMFLOAT4 cameraPosition;
-	};
-
-	// constant data for directional lightning in the lightning pass
-	struct CBDefDir
+	struct CBMiscPixel
 	{
 		XMFLOAT4X4 lightViewProj;
-		XMFLOAT4   lightColor;
-
-		XMFLOAT3   lightDirection;
-		float      padding;
+		XMFLOAT4   cameraPosition;
 	};
 };
 

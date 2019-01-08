@@ -18,13 +18,14 @@ QuadComponent::~QuadComponent()
 	Systems::renderer->RemoveQuadFromRenderer(this);
 }
 
-void QuadComponent::Init(XMFLOAT2 position, XMFLOAT2 size, wchar_t* texturePath, XMFLOAT4 color)
+void QuadComponent::Init(XMFLOAT2 position, XMFLOAT2 size, wchar_t* texturePath, XMFLOAT4 color, bool ignoreAlpha)
 {
 	_size         = size;
 	_position     = position;
 	_color        = color;
 	_prevSize     = size;
 	_PrevPosition = position;
+	_ignoreAlpha  = ignoreAlpha;
 
 	CreateBuffers();
 	_texture = Systems::texturePool->GetTexture(texturePath);

@@ -25,7 +25,6 @@ WaterShader::WaterShader()
 
 	// create constant buffers
 	SHADER_HELPERS::CreateConstantBuffer(_CBVertex);
-	SHADER_HELPERS::CreateConstantBuffer(_CBPixelAmbDir);
 
 	_simpleClipShaderReflection = new SimpleClipSceneShader();
 	_simpleClipShaderRefraction = new SimpleClipSceneShader(true);
@@ -39,7 +38,6 @@ WaterShader::~WaterShader()
 	_waterVertexShaderByteCode->Release();
 	_waterPixelShaderByteCode->Release();
 
-	_CBPixelAmbDir->Release();
 	_CBVertex->Release();
 
 	delete _simpleClipShaderReflection;
@@ -70,25 +68,12 @@ void WaterShader::Render(std::vector<Mesh*>& waterMeshes)
 	XMFLOAT3 cameraPos = camTrans->GetPositionVal();
 	XMFLOAT3 cameraRot = camTrans->GetRotationVal();
 
-	// get directional light
-	LightDirectionComponent*& directionalLight = LM.GetDirectionalLight();
-
 	// create constant buffer structures
-	CBVertexWater      constantVertex;
-	CBAmbDirPixelWater constantAmbDirPixel;
-
-	// set ambient and directional light properties for pixel shader
-	XMStoreFloat4(&constantAmbDirPixel.ambientColor,    XMLoadFloat4(&LM.GetAmbientColor()));
-	XMStoreFloat4(&constantAmbDirPixel.dirDiffuseColor, XMLoadFloat4(&directionalLight->GetLightColor()));
-	XMStoreFloat3(&constantAmbDirPixel.lightDir,        XMLoadFloat3(&directionalLight->GetLightDirectionInv()));
-
+	CBVertexWater constantVertex;
 	XMStoreFloat3(&constantVertex.camPos, XMLoadFloat3(&cameraPos));
 
 	// get shadow map
 	ID3D11ShaderResourceView* shadowMap = cameraLight->GetSRV();
-
-	// update pixel shader constant buffer fro point lights
-	SHADER_HELPERS::UpdateConstantBuffer((void*)&constantAmbDirPixel, sizeof(CBAmbDirPixelWater), _CBPixelAmbDir);
 
 	// loop over all meshes that will project reflections onto itself
 	size_t numMeshes = waterMeshes.size();
@@ -135,11 +120,12 @@ void WaterShader::Render(std::vector<Mesh*>& waterMeshes)
 		devCon->VSSetShader(_waterVertexShader, NULL, 0);
 		devCon->PSSetShader(_waterPixelShader, NULL, 0);
 
-		ID3D11Buffer* pointBuffer = LM.GetPointLightCBBuffer();
+		ID3D11Buffer* pointBuffer = LM.GetPointLightCB();
+		ID3D11Buffer* ambDirBuffer = LM.GetAmbDirLightCB();
 
 		// set the vertex constant buffer, the pixel ones is already set
 		devCon->VSSetConstantBuffers(0, 1, &_CBVertex);
-		devCon->PSSetConstantBuffers(0, 1, &_CBPixelAmbDir);
+		devCon->PSSetConstantBuffers(0, 1, &ambDirBuffer);
 		devCon->PSSetConstantBuffers(1, 1, &pointBuffer);
 
 		// set to alpha blending
@@ -154,12 +140,8 @@ void WaterShader::Render(std::vector<Mesh*>& waterMeshes)
 		XMStoreFloat4x4(&constantVertex.worldViewProjReflect, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&worldMat, &reflectMat)));
 		XMStoreFloat2(&constantVertex.uvOffset,               XMLoadFloat2(&mesh->GetUvOffset()));
 
-		// set the fraction of the reflection blending with the texture color
-		constantAmbDirPixel.reflectiveFraction = mesh->GetReflectiveData().reflectiveFraction;
-
 		// update vertex constant buffer
-		SHADER_HELPERS::UpdateConstantBuffer((void*)&constantVertex,      sizeof(CBVertexWater),      _CBVertex);
-		SHADER_HELPERS::UpdateConstantBuffer((void*)&constantAmbDirPixel, sizeof(CBAmbDirPixelWater), _CBPixelAmbDir);
+		SHADER_HELPERS::UpdateConstantBuffer((void*)&constantVertex, sizeof(CBVertexWater), _CBVertex);
 
 		// get the texture array of mesh
 		ID3D11ShaderResourceView** meshTextures = mesh->GetTextureArray();

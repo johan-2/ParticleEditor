@@ -1,44 +1,6 @@
-﻿  Entity.cpp
-  IComponent.cpp
-  World.cpp
-  FreeMoveComponent.cpp
-  LightDirectionComponent.cpp
-  LightPointComponent.cpp
-  ParticleSystemComponent.cpp
-  QuadComponent.cpp
-  RotationComponent.cpp
-  UVScrollComponent.cpp
-  MasterEditor.cpp
-  PostProcessWindow.cpp
-  SkyDomeWindow.cpp
-  Framework.cpp
-  GuiManager.cpp
-  LightManager.cpp
-  GBuffer.cpp
-  ScreenQuad.cpp
-  Mesh.cpp
-  SkyDome.cpp
-  Compiling...
-  RenderToTexture.cpp
-  Renderer.cpp
-  DeferredShader.cpp
-  DepthShader.cpp
-  ForwardAlphaShader.cpp
-  ImGUIShader.cpp
-  ParticleShader.cpp
-  PlanarReflectionShader.cpp
-  PostProcessingShader.cpp
-  QuadShader.cpp
-  SimpleClipSceneShader.cpp
-  WaterShader.cpp
-  WireframeShader.cpp
-  DXInputLayouts.cpp
-  Systems.cpp
-  IslandTestScene.cpp
-  SponzaTestScene.cpp
-  TexturePool.cpp
+﻿  Renderer.cpp
   Generating code
-  6 of 3169 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
+  8 of 3170 functions ( 0.3%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
     4 functions had inline decision re-evaluated but remain unchanged
   Finished generating code

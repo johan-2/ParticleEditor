@@ -14,7 +14,7 @@
 #include "SkyDome.h"
 #include "MathHelpers.h"
 
-SimpleClipSceneShader::SimpleClipSceneShader(bool debugQuad, XMFLOAT2 pos)
+SimpleClipSceneShader::SimpleClipSceneShader(bool debugQuad)
 {
 	// create shaders
 	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexSimpleClip.vs", _vertexShader, _vertexShaderByteCode);
@@ -22,7 +22,6 @@ SimpleClipSceneShader::SimpleClipSceneShader(bool debugQuad, XMFLOAT2 pos)
 
 	// create constant buffers
 	SHADER_HELPERS::CreateConstantBuffer(_CBVertex);
-	SHADER_HELPERS::CreateConstantBuffer(_CBPixelAmbDir);
 
 	// create render texture
 	_renderTexture = new RenderToTexture((unsigned int)SystemSettings::SCREEN_WIDTH, (unsigned int)SystemSettings::SCREEN_HEIGHT, false, SystemSettings::USE_HDR);
@@ -59,24 +58,9 @@ void SimpleClipSceneShader::RenderScene(std::vector<Mesh*>& opaqueMeshes, std::v
 
 	// get game camera and shadow camera
 	CameraComponent*& camera      = CM.GetCurrentCameraGame();
-	CameraComponent*& cameraLight = CM.GetCurrentCameraDepthMap();
-
-	// get direction light
-	LightDirectionComponent*& directionalLight = LM.GetDirectionalLight();
-
-	// create constant buffer structures
-	CBAmbDirPixel constantAmbDirPixel;
-	CBVertex      constantVertex;
-
-	// set ambient and directional light properties for pixel shader
-	XMStoreFloat4(&constantAmbDirPixel.ambientColor,    XMLoadFloat4(&LM.GetAmbientColor()));
-	XMStoreFloat4(&constantAmbDirPixel.dirDiffuseColor, XMLoadFloat4(&directionalLight->GetLightColor()));
-	XMStoreFloat3(&constantAmbDirPixel.lightDir,        XMLoadFloat3(&directionalLight->GetLightDirectionInv()));
-
-	// update pixel shader constant buffer fro point lights
-	SHADER_HELPERS::UpdateConstantBuffer((void*)&constantAmbDirPixel, sizeof(CBAmbDirPixel), _CBPixelAmbDir);
 
 	// set vertex data that all meshes share
+	CBVertex constantVertex;
 	XMStoreFloat4(&constantVertex.clipingPlane, XMLoadFloat4(&clipPlane));
 	
 	// clear our reflection map render texture and set it to active
@@ -94,11 +78,12 @@ void SimpleClipSceneShader::RenderScene(std::vector<Mesh*>& opaqueMeshes, std::v
 	devCon->VSSetShader(_vertexShader, NULL, 0);
 	devCon->PSSetShader(_pixelShader, NULL, 0);
 
-	ID3D11Buffer* pointBuffer = LM.GetPointLightCBBuffer();
+	ID3D11Buffer* pointBuffer = LM.GetPointLightCB();
+	ID3D11Buffer* ambDirBuffer = LM.GetAmbDirLightCB();
 
 	// set constant buffer for the vertex and pixel shader
 	devCon->VSSetConstantBuffers(0, 1, &_CBVertex);
-	devCon->PSSetConstantBuffers(0, 1, &_CBPixelAmbDir);
+	devCon->PSSetConstantBuffers(0, 1, &ambDirBuffer);
 	devCon->PSSetConstantBuffers(1, 1, &pointBuffer);
 
 	// loop over all opaque meshes that is set to cast reflections

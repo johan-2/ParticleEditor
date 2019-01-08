@@ -23,8 +23,7 @@ DeferredShader::DeferredShader()
 
 	// create constant buffers for the deferred passes
 	SHADER_HELPERS::CreateConstantBuffer(_constantBufferGeometry);
-	SHADER_HELPERS::CreateConstantBuffer(_constantBufferDefAmbient);
-	SHADER_HELPERS::CreateConstantBuffer(_constantBufferDefDirectional);
+	SHADER_HELPERS::CreateConstantBuffer(_CBMisc);
 }
 
 DeferredShader::~DeferredShader()
@@ -42,8 +41,7 @@ DeferredShader::~DeferredShader()
 	_pixelLightShader->Release();
 
 	_constantBufferGeometry->Release();
-	_constantBufferDefAmbient->Release();
-	_constantBufferDefDirectional->Release();
+	_CBMisc->Release();
 }
 
 void DeferredShader::RenderGeometry(std::vector<Mesh*>& meshes)
@@ -107,6 +105,7 @@ void DeferredShader::RenderLightning(GBuffer*& gBuffer)
 	// get cameras
 	CameraComponent*& camera      = CM.GetCurrentCameraGame();
 	CameraComponent*& cameraLight = CM.GetCurrentCameraDepthMap();
+	const XMFLOAT3& camPos        = camera->GetComponent<TransformComponent>()->GetPositionRef();
 
 	// set shaders
 	devCon->VSSetShader(_vertexLightShader, NULL, 0);
@@ -115,27 +114,13 @@ void DeferredShader::RenderLightning(GBuffer*& gBuffer)
 	// render with mask so we dont preform lighting calculations on non geometry pixels
 	DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::MASKED_LIGHTNING);
 
-	// constantbuffer structures
-	CBDefAmb ambLightData;
-	CBDefDir dirLightData;
+	// fill misc buffer with camera position and light worldviewproj
+	CBMiscPixel miscPixel;
+	miscPixel.cameraPosition = XMFLOAT4(camPos.x, camPos.y, camPos.z, 1.0f);	
+	XMStoreFloat4x4(&miscPixel.lightViewProj, XMLoadFloat4x4(&cameraLight->GetViewProjMatrixTrans()));
 
-	// set ambientdata(camerapos is in this buffer aswell)
-	ambLightData.ambientColor = LM.GetAmbientColor();
-
-	const XMFLOAT3& camPos = camera->GetComponent<TransformComponent>()->GetPositionRef();
-	ambLightData.cameraPosition = XMFLOAT4(camPos.x, camPos.y, camPos.z, 1.0f);
-
-	// get directional light
-	LightDirectionComponent*& directionalLight = LM.GetDirectionalLight();
-
-	// get directional light data
-	XMStoreFloat4x4(&dirLightData.lightViewProj,   XMLoadFloat4x4(&cameraLight->GetViewProjMatrixTrans()));
-	XMStoreFloat4(&dirLightData.lightColor,        XMLoadFloat4(&directionalLight->GetLightColor()));
-	XMStoreFloat3(&dirLightData.lightDirection,    XMLoadFloat3(&directionalLight->GetLightDirectionInv()));
-
-	// update constantbuffers
-	SHADER_HELPERS::UpdateConstantBuffer((void*)&ambLightData,         sizeof(CBDefAmb), _constantBufferDefAmbient);
-	SHADER_HELPERS::UpdateConstantBuffer((void*)&dirLightData,         sizeof(CBDefDir), _constantBufferDefDirectional);
+	// update buffer
+	SHADER_HELPERS::UpdateConstantBuffer((void*)&miscPixel, sizeof(CBMiscPixel), _CBMisc);
 
 	// get Gbuffer textures and depthmap
 	ID3D11ShaderResourceView**& gBufferTextures = gBuffer->GetSrvArray();
@@ -147,12 +132,13 @@ void DeferredShader::RenderLightning(GBuffer*& gBuffer)
 	// set the textures
 	devCon->PSSetShaderResources(0, 5, textureArray);
 
-	ID3D11Buffer* pointBuffer = LM.GetPointLightCBBuffer();
+	ID3D11Buffer* pointBuffer  = LM.GetPointLightCB();
+	ID3D11Buffer* ambDirBuffer = LM.GetAmbDirLightCB();
 
 	// set all constant buffers
-	devCon->PSSetConstantBuffers(0, 1, &_constantBufferDefAmbient);
-	devCon->PSSetConstantBuffers(1, 1, &_constantBufferDefDirectional);
-	devCon->PSSetConstantBuffers(2, 1, &pointBuffer);
+	devCon->PSSetConstantBuffers(0, 1, &ambDirBuffer);
+	devCon->PSSetConstantBuffers(1, 1, &pointBuffer);
+	devCon->PSSetConstantBuffers(2, 1, &_CBMisc);
 
 	// draw
 	devCon->DrawIndexed(6, 0, 0);

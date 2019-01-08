@@ -3,6 +3,7 @@ uniform float4x4 u_worldViewProj;
 uniform float4x4 u_worldViewProjLight;
 uniform float4x4 u_worldViewProjReflect;
 uniform float3 	 u_cameraPosition;
+uniform float pad;
 uniform float2   u_uvOffset;
 
 struct VertexInputType

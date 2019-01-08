@@ -23,7 +23,6 @@ private:
 
 	// constant buffers
 	ID3D11Buffer* _CBVertex;
-	ID3D11Buffer* _CBPixelAmbDir;
 	
 	// the shader bytecode
 	ID3D10Blob* _vertexShaderByteCode;
@@ -39,14 +38,6 @@ private:
 		float    pad1;
 		XMFLOAT2 uvOffset;
 		XMFLOAT2 pad2;
-	};
-
-	struct CBAmbDir
-	{
-		XMFLOAT4 ambientColor;
-		XMFLOAT4 dirDiffuseColor;
-		XMFLOAT3 lightDir;
-		float    padding;
 	};
 };
 

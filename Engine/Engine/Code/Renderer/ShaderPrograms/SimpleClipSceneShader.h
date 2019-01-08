@@ -14,7 +14,7 @@ class DXInputLayouts;
 class SimpleClipSceneShader
 {
 public:
-	SimpleClipSceneShader(bool debugQuad = false, XMFLOAT2 pos = XMFLOAT2(0,0));
+	SimpleClipSceneShader(bool debugQuad = false);
 	~SimpleClipSceneShader();
 
 	void RenderScene(std::vector<Mesh*>& opaqueMeshes, std::vector<Mesh*>& alphaMeshes, XMFLOAT4 clipPlane, bool includeSkyBox = true, bool includeParticles = true);
@@ -38,7 +38,6 @@ private:
 
 	// constant buffers
 	ID3D11Buffer* _CBVertex;
-	ID3D11Buffer* _CBPixelAmbDir;
 
 	struct CBVertex
 	{
@@ -47,11 +46,4 @@ private:
 		XMFLOAT4   clipingPlane;
 	};
 
-	struct CBAmbDirPixel
-	{
-		XMFLOAT4 ambientColor;
-		XMFLOAT4 dirDiffuseColor;
-		XMFLOAT3 lightDir;
-		float    pad;
-	};
 };

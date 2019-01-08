@@ -43,6 +43,8 @@ private:
 	struct ConstantQuadUIPixel
 	{
 		XMFLOAT4 color;
+		int ignoreAlpha;
+		XMFLOAT3 pad;
 	};
 };
 

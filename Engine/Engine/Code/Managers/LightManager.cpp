@@ -2,8 +2,11 @@
 #include "ShaderHelpers.h"
 
 LightManager::LightManager():
-	_CBPointBuffer(nullptr)
+	_CBPoint(nullptr),
+	_CBAmbDir(nullptr)
 {	
+	SHADER_HELPERS::CreateConstantBuffer(_CBPoint);
+	SHADER_HELPERS::CreateConstantBuffer(_CBAmbDir);
 }
 
 LightManager::~LightManager()
@@ -38,9 +41,6 @@ void LightManager::RemoveDirectionalLight()
 
 void LightManager::UpdateLightBuffers()
 {
-	if (!_CBPointBuffer)
-		SHADER_HELPERS::CreateConstantBuffer(_CBPointBuffer);
-
 	// set the pointlight data
 	size_t size = _pointLights.size();
 	for (int i = 0; i < size; i++)
@@ -55,7 +55,12 @@ void LightManager::UpdateLightBuffers()
 		_pointData[i].numLights      = size;
 	}
 
-	SHADER_HELPERS::UpdateConstantBuffer(&_pointData, sizeof(CBPoint) * size, _CBPointBuffer);	
+	XMStoreFloat4(&_ambDirData.ambientColor, XMLoadFloat4(&_ambientColor));
+	XMStoreFloat4(&_ambDirData.dirColor,     XMLoadFloat4(&_directionalLight->GetLightColor()));
+	XMStoreFloat3(&_ambDirData.lightDir,     XMLoadFloat3(&_directionalLight->GetLightDirectionInv()));
+
+	SHADER_HELPERS::UpdateConstantBuffer(&_pointData,  sizeof(CBPoint) * size, _CBPoint);
+	SHADER_HELPERS::UpdateConstantBuffer(&_ambDirData, sizeof(CBAmbDir),       _CBAmbDir);
 }
 
 

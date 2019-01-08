@@ -14,7 +14,7 @@ public:
 	QuadComponent();
 	~QuadComponent();
 
-	void Init(XMFLOAT2 position, XMFLOAT2 size, wchar_t* texturePath = L"", XMFLOAT4 color = XMFLOAT4(1, 1, 1, 1));
+	void Init(XMFLOAT2 position, XMFLOAT2 size, wchar_t* texturePath = L"", XMFLOAT4 color = XMFLOAT4(1, 1, 1, 1), bool ignoreAlpha = false);
 	void Update(const float& delta);
 
 	// set quad properties
@@ -27,6 +27,7 @@ public:
 	XMFLOAT2 GetPosition()                 { return _position; }
 	XMFLOAT2 GetSize()                     { return _size; }
 	XMFLOAT4 GetColor()                    { return _color; }
+	bool IgnoreAlpha() { return _ignoreAlpha; }
 	ID3D11ShaderResourceView* GetTexture() { return _texture; }
 	
 	void UploadBuffers();
@@ -53,6 +54,7 @@ private:
 
 	// color
 	XMFLOAT4 _color;
+	bool     _ignoreAlpha;
 
 	// vertex inputs
 	struct VertexType

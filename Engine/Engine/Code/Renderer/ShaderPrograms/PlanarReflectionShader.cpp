@@ -25,9 +25,9 @@ PlanarReflectionShader::PlanarReflectionShader()
 
 	// create constant buffers
 	SHADER_HELPERS::CreateConstantBuffer(_CBVertex);
-	SHADER_HELPERS::CreateConstantBuffer(_CBPixelAmbDir);
+	SHADER_HELPERS::CreateConstantBuffer(_CBReflect);
 
-	_simpleClipShaderReflection = new SimpleClipSceneShader();
+	_simpleClipShaderReflection = new SimpleClipSceneShader(true);
 }
 
 PlanarReflectionShader::~PlanarReflectionShader()
@@ -38,7 +38,7 @@ PlanarReflectionShader::~PlanarReflectionShader()
 	_planarVertexShaderByteCode->Release();
 	_planarPixelShaderByteCode->Release();
 
-	_CBPixelAmbDir->Release();
+	_CBReflect->Release();
 	_CBVertex->Release();
 
 	delete _simpleClipShaderReflection;
@@ -68,25 +68,14 @@ void PlanarReflectionShader::Render(std::vector<Mesh*>& reflectionMeshes)
 	XMFLOAT3 cameraPos = camTrans->GetPositionVal();
 	XMFLOAT3 cameraRot = camTrans->GetRotationVal();
 
-	// get directional light
-	LightDirectionComponent*& directionalLight = LM.GetDirectionalLight();
-
 	// create constant buffer structures
-	CBVertexPlanar      constantVertex;
-	CBAmbDirPixelPlanar constantAmbDirPixel;
+	CBVertex  cbVertex;
+	CBReflect cbReflect;
 
-	// set ambient and directional light properties for pixel shader
-	XMStoreFloat4(&constantAmbDirPixel.ambientColor,    XMLoadFloat4(&LM.GetAmbientColor()));
-	XMStoreFloat4(&constantAmbDirPixel.dirDiffuseColor, XMLoadFloat4(&directionalLight->GetLightColor()));
-	XMStoreFloat3(&constantAmbDirPixel.lightDir,        XMLoadFloat3(&directionalLight->GetLightDirectionInv()));
-
-	XMStoreFloat3(&constantVertex.camPos, XMLoadFloat3(&cameraPos));
+	XMStoreFloat3(&cbVertex.camPos, XMLoadFloat3(&cameraPos));
 
 	// get shadow map
-	ID3D11ShaderResourceView* shadowMap = cameraLight->GetSRV();
-
-	// update pixel shader constant buffer fro point lights
-	SHADER_HELPERS::UpdateConstantBuffer((void*)&constantAmbDirPixel, sizeof(CBAmbDirPixelPlanar), _CBPixelAmbDir);
+	ID3D11ShaderResourceView* shadowMap = cameraLight->GetSRV();	
 
 	// loop over all meshes that will project reflections onto itself
 	size_t numMeshes = reflectionMeshes.size();
@@ -127,12 +116,14 @@ void PlanarReflectionShader::Render(std::vector<Mesh*>& reflectionMeshes)
 		devCon->VSSetShader(_planarVertexShader, NULL, 0);
 		devCon->PSSetShader(_planarPixelShader, NULL, 0);
 
-		ID3D11Buffer* pointBuffer = LM.GetPointLightCBBuffer();
+		ID3D11Buffer* pointBuffer  = LM.GetPointLightCB();
+		ID3D11Buffer* ambDirBuffer = LM.GetAmbDirLightCB();
 
 		// set the vertex constant buffer, the pixel ones is already set
 		devCon->VSSetConstantBuffers(0, 1, &_CBVertex);
-		devCon->PSSetConstantBuffers(0, 1, &_CBPixelAmbDir);
+		devCon->PSSetConstantBuffers(0, 1, &ambDirBuffer);
 		devCon->PSSetConstantBuffers(1, 1, &pointBuffer);
+		devCon->PSSetConstantBuffers(2, 1, &_CBReflect);
 
 		// set to alpha blending
 		DXM.BlendStates()->SetBlendState(BLEND_STATE::BLEND_ALPHA);
@@ -140,18 +131,18 @@ void PlanarReflectionShader::Render(std::vector<Mesh*>& reflectionMeshes)
 		// set vertex constant values
 		const XMFLOAT4X4& worldMat = mesh->GetWorldMatrix();
 
-		XMStoreFloat4x4(&constantVertex.world,                XMLoadFloat4x4(&mesh->GetWorldMatrixTrans()));
-		XMStoreFloat4x4(&constantVertex.worldViewProj,        XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&worldMat, &camera->GetViewProjMatrix())));
-		XMStoreFloat4x4(&constantVertex.worldViewProjLight,   XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&worldMat, &cameraLight->GetViewProjMatrix())));
-		XMStoreFloat4x4(&constantVertex.worldViewProjReflect, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&worldMat, &reflectMat)));
-		XMStoreFloat2(&constantVertex.uvOffset,               XMLoadFloat2(&mesh->GetUvOffset()));
+		XMStoreFloat4x4(&cbVertex.world,                XMLoadFloat4x4(&mesh->GetWorldMatrixTrans()));
+		XMStoreFloat4x4(&cbVertex.worldViewProj,        XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&worldMat, &camera->GetViewProjMatrix())));
+		XMStoreFloat4x4(&cbVertex.worldViewProjLight,   XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&worldMat, &cameraLight->GetViewProjMatrix())));
+		XMStoreFloat4x4(&cbVertex.worldViewProjReflect, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&worldMat, &reflectMat)));
+		XMStoreFloat2(&cbVertex.uvOffset,               XMLoadFloat2(&mesh->GetUvOffset()));
 
 		// set the fraction of the reflection blending with the texture color
-		constantAmbDirPixel.reflectiveFraction = mesh->GetReflectiveData().reflectiveFraction;
+		cbReflect.reflectiveFraction = mesh->GetReflectiveData().reflectiveFraction;
 
 		// update vertex constant buffer
-		SHADER_HELPERS::UpdateConstantBuffer((void*)&constantVertex,      sizeof(CBVertexPlanar),      _CBVertex);
-		SHADER_HELPERS::UpdateConstantBuffer((void*)&constantAmbDirPixel, sizeof(CBAmbDirPixelPlanar), _CBPixelAmbDir);
+		SHADER_HELPERS::UpdateConstantBuffer((void*)&cbVertex,  sizeof(CBVertex),  _CBVertex);
+		SHADER_HELPERS::UpdateConstantBuffer((void*)&cbReflect, sizeof(CBReflect), _CBReflect);
 
 		// get the texture array of mesh
 		ID3D11ShaderResourceView** meshTextures = mesh->GetTextureArray();

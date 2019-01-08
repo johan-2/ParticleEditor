@@ -127,23 +127,23 @@ void Renderer::CreateDebugImages()
 {
 	// create debug images to show each texture in the G buffer and the depth map
 	Entity* shadowMapQuad = new Entity();
-	shadowMapQuad->AddComponent<QuadComponent>()->Init(XMFLOAT2(SystemSettings::SCREEN_WIDTH * 0.06f, SystemSettings::SCREEN_HEIGHT * 0.1f), XMFLOAT2(SystemSettings::SCREEN_WIDTH * 0.08f, SystemSettings::SCREEN_WIDTH * 0.08f), L"");
+	shadowMapQuad->AddComponent<QuadComponent>()->Init(XMFLOAT2(SystemSettings::SCREEN_WIDTH * 0.06f, SystemSettings::SCREEN_HEIGHT * 0.1f), XMFLOAT2(SystemSettings::SCREEN_WIDTH * 0.08f, SystemSettings::SCREEN_WIDTH * 0.08f), L"", XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), true);
 	shadowMapQuad->GetComponent<QuadComponent>()->SetTexture(_depthMap->GetDepthStencilSRV());
 
 	Entity* positionQuad = new Entity();
-	positionQuad->AddComponent<QuadComponent>()->Init(XMFLOAT2(SystemSettings::SCREEN_WIDTH * 0.18f, SystemSettings::SCREEN_HEIGHT * 0.1f), XMFLOAT2(SystemSettings::SCREEN_WIDTH * 0.1f, SystemSettings::SCREEN_HEIGHT * 0.1f), L"");
+	positionQuad->AddComponent<QuadComponent>()->Init(XMFLOAT2(SystemSettings::SCREEN_WIDTH * 0.18f, SystemSettings::SCREEN_HEIGHT * 0.1f), XMFLOAT2(SystemSettings::SCREEN_WIDTH * 0.1f, SystemSettings::SCREEN_HEIGHT * 0.1f), L"", XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), true);
 	positionQuad->GetComponent<QuadComponent>()->SetTexture(_gBuffer->GetSrvArray()[0]);
 
 	Entity* normalQuad = new Entity();
-	normalQuad->AddComponent<QuadComponent>()->Init(XMFLOAT2(SystemSettings::SCREEN_WIDTH * 0.30f, SystemSettings::SCREEN_HEIGHT * 0.1f), XMFLOAT2(SystemSettings::SCREEN_WIDTH * 0.1f, SystemSettings::SCREEN_HEIGHT * 0.1f), L"");
+	normalQuad->AddComponent<QuadComponent>()->Init(XMFLOAT2(SystemSettings::SCREEN_WIDTH * 0.30f, SystemSettings::SCREEN_HEIGHT * 0.1f), XMFLOAT2(SystemSettings::SCREEN_WIDTH * 0.1f, SystemSettings::SCREEN_HEIGHT * 0.1f), L"", XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), true);
 	normalQuad->GetComponent<QuadComponent>()->SetTexture(_gBuffer->GetSrvArray()[1]);
 
 	Entity* DiffuseQuad = new Entity();
-	DiffuseQuad->AddComponent<QuadComponent>()->Init(XMFLOAT2(SystemSettings::SCREEN_WIDTH * 0.42f, SystemSettings::SCREEN_HEIGHT * 0.1f), XMFLOAT2(SystemSettings::SCREEN_WIDTH * 0.1f, SystemSettings::SCREEN_HEIGHT * 0.1f), L"");
+	DiffuseQuad->AddComponent<QuadComponent>()->Init(XMFLOAT2(SystemSettings::SCREEN_WIDTH * 0.42f, SystemSettings::SCREEN_HEIGHT * 0.1f), XMFLOAT2(SystemSettings::SCREEN_WIDTH * 0.1f, SystemSettings::SCREEN_HEIGHT * 0.1f), L"", XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), true);
 	DiffuseQuad->GetComponent<QuadComponent>()->SetTexture(_gBuffer->GetSrvArray()[2]);
 
 	Entity* specularQuad = new Entity();
-	specularQuad->AddComponent<QuadComponent>()->Init(XMFLOAT2(SystemSettings::SCREEN_WIDTH * 0.54f, SystemSettings::SCREEN_HEIGHT * 0.1f), XMFLOAT2(SystemSettings::SCREEN_WIDTH * 0.1f, SystemSettings::SCREEN_HEIGHT * 0.1f), L"");
+	specularQuad->AddComponent<QuadComponent>()->Init(XMFLOAT2(SystemSettings::SCREEN_WIDTH * 0.54f, SystemSettings::SCREEN_HEIGHT * 0.1f), XMFLOAT2(SystemSettings::SCREEN_WIDTH * 0.1f, SystemSettings::SCREEN_HEIGHT * 0.1f), L"", XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), true);
 	specularQuad->GetComponent<QuadComponent>()->SetTexture(_gBuffer->GetSrvArray()[3]);
 }
 

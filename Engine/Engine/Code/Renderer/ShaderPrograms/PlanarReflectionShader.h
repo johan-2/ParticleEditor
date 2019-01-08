@@ -29,13 +29,13 @@ private:
 
 	// constant buffers
 	ID3D11Buffer* _CBVertex;
-	ID3D11Buffer* _CBPixelAmbDir;
+	ID3D11Buffer* _CBReflect;
 
 	// the shader bytecode
 	ID3D10Blob* _planarVertexShaderByteCode;
 	ID3D10Blob* _planarPixelShaderByteCode;
 
-	struct CBVertexPlanar
+	struct CBVertex
 	{
 		XMFLOAT4X4 world;
 		XMFLOAT4X4 worldViewProj;
@@ -48,12 +48,10 @@ private:
 		XMFLOAT2 pad2;
 	};
 
-	struct CBAmbDirPixelPlanar
+	struct CBReflect
 	{
-		XMFLOAT4 ambientColor;
-		XMFLOAT4 dirDiffuseColor;
-		XMFLOAT3 lightDir;
 		float    reflectiveFraction;
+		XMFLOAT3 pad;
 	};
 };
 

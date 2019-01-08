@@ -14,23 +14,23 @@ SamplerState SampleType[2]; // wrap,clamp
 	int numLights;
 };
 
-cbuffer AmbientBuffer : register(b0)
+cbuffer AmbientDirectionalBuffer : register(b0)
 {
 	float4 ambientColor;
-	float4 cameraPosition;
-};
+	float4 lightColorDir;
+	float3 lightDirectionDir;
+}
 
-cbuffer DirectionalBuffer : register(b1)
-{
-	float4x4 lightViewProj;
-	float4 lightColorDir;		
-	float3 lightDirectionDir;		
-};
-
-cbuffer PointLightBuffer : register(b2)
+cbuffer PointLightBuffer : register(b1)
 {
 	PointLight pointLights[1024];
 };
+
+cbuffer MiscBuffer : register(b2)
+{
+	float4x4 lightViewProj;
+	float4   cameraPosition;
+}
 
 struct PixelInputType
 {
@@ -157,16 +157,16 @@ float4 GetPointColor(float4 position, float4 diffuse, float4 normal, float4 spec
 
 float4 Main(PixelInputType input) : SV_TARGET
 {            
-	float4 position = Texture[1].Load(int3(input.position.xy,0));
-	float4 normal   = Texture[2].Load(int3(input.position.xy,0));
-	float4 diffuse  = Texture[3].Load(int3(input.position.xy,0));
-	float4 specular = Texture[4].Load(int3(input.position.xy,0));
-
-	// alpha channel is flagged as 0 if this is a emissive pixel
+	// alpha channel is flagged as 0 in the diffusemap if this is an emissive pixel
 	// dont do any lightning calculations and only return the emissive
 	// color that is stored in the diffuse map
+	float4 diffuse  = Texture[3].Load(int3(input.position.xy,0));
 	if (diffuse.a == 0)	
-		return float4(diffuse.rgb, 1);		
+		return diffuse;
+		
+	float4 position = Texture[1].Load(int3(input.position.xy,0));
+	float4 normal   = Texture[2].Load(int3(input.position.xy,0));
+	float4 specular = Texture[4].Load(int3(input.position.xy,0));		
 		
 	float4 finalColor = float4(0,0,0,1);
 

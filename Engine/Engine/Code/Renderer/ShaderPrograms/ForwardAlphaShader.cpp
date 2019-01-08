@@ -17,7 +17,6 @@ ForwardAlphaShader::ForwardAlphaShader()
 
 	// create constant buffers
 	SHADER_HELPERS::CreateConstantBuffer(_CBVertex);
-	SHADER_HELPERS::CreateConstantBuffer(_CBPixelAmbDir);
 }
 
 ForwardAlphaShader::~ForwardAlphaShader()
@@ -28,7 +27,6 @@ ForwardAlphaShader::~ForwardAlphaShader()
 	_vertexShaderByteCode->Release();
 	_pixelShaderByteCode->Release();
 
-	_CBPixelAmbDir->Release();
 	_CBVertex->Release();
 }
 
@@ -52,18 +50,16 @@ void ForwardAlphaShader::RenderForward(std::vector<Mesh*>& meshes)
 	// get camera position
 	const XMFLOAT3& cameraPos = camera->GetComponent<TransformComponent>()->GetPositionRef();
 
-	// get directional light
-	LightDirectionComponent*& directionalLight = LM.GetDirectionalLight();
-
 	// set shaders
 	devCon->VSSetShader(_vertexShader, NULL, 0);
 	devCon->PSSetShader(_pixelShader, NULL, 0);
 
-	ID3D11Buffer* pointBuffer = LM.GetPointLightCBBuffer();
+	ID3D11Buffer* pointBuffer  = LM.GetPointLightCB();
+	ID3D11Buffer* ambDirBuffer = LM.GetAmbDirLightCB();
 
 	// set constant buffers
 	devCon->VSSetConstantBuffers(0, 1, &_CBVertex);
-	devCon->PSSetConstantBuffers(0, 1, &_CBPixelAmbDir);
+	devCon->PSSetConstantBuffers(0, 1, &ambDirBuffer);
 	devCon->PSSetConstantBuffers(1, 1, &pointBuffer);
 
 	// set to alpha blending
@@ -71,21 +67,12 @@ void ForwardAlphaShader::RenderForward(std::vector<Mesh*>& meshes)
 
 	// create constant buffer structures
 	CBVertex constantVertex;
-	CBAmbDir constantAmbDirPixel;
-
-	// set ambient and directional light properties for pixel shader
-	XMStoreFloat4(&constantAmbDirPixel.ambientColor,    XMLoadFloat4(&LM.GetAmbientColor()));
-	XMStoreFloat4(&constantAmbDirPixel.dirDiffuseColor, XMLoadFloat4(&directionalLight->GetLightColor()));
-	XMStoreFloat3(&constantAmbDirPixel.lightDir,        XMLoadFloat3(&directionalLight->GetLightDirectionInv()));
 
 	// set camera matrices
 	XMStoreFloat3(&constantVertex.camPos, XMLoadFloat3(&cameraPos));
 
 	// get shadow map
 	ID3D11ShaderResourceView* shadowMap = cameraLight->GetSRV();
-
-	// update pixel shader constant buffers
-	SHADER_HELPERS::UpdateConstantBuffer((void*)&constantAmbDirPixel, sizeof(CBAmbDir), _CBPixelAmbDir);
 
 	// sort alpha meshes to render back to front
 	SHADER_HELPERS::MeshSort(meshes, cameraPos, true);
