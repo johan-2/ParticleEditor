@@ -1,6 +1,6 @@
 {
-    "speedMultiplier": 0.2199999988079071,
-    "cycleTimer": 0.5165398716926575,
+    "speedMultiplier": 0.44999998807907107,
+    "cycleTimer": 0.994256854057312,
     "switchToMoonLightThreshold": -0.10000000149011612,
     "sunsetLightColorStartEndBlend": [
         0.20000000298023225,
@@ -57,8 +57,8 @@
     ],
     "sunsetDirLightColor": [
         1.0,
-        0.1568627506494522,
-        0.1568627506494522,
+        0.3218243718147278,
+        0.15686273574829102,
         1.0
     ],
     "nightDirLightColor": [
@@ -110,11 +110,11 @@
         10.979999542236329
     ],
     "RENDER_MODE": 0,
-    "cubeMap": "SkyBoxes/ThickCloudsWater.dds",
+    "cubeMap": "SkyBoxes/DarkCloudy.dds",
     "sunDayColorTint": [
+        0.9959220290184021,
         1.0,
-        1.0,
-        1.0
+        0.657608687877655
     ],
     "moonDayColorTint": [
         1.0,
@@ -123,8 +123,8 @@
     ],
     "sunSunsetColorTint": [
         1.0,
-        0.15760868787765504,
-        0.15760868787765504
+        0.4005197286605835,
+        0.06521737575531006
     ],
     "moonSunsetColorTint": [
         0.0,
