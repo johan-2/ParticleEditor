@@ -1,5 +1,4 @@
 #pragma once
-
 #include "ComponentTypes.h"
 #include <vector>
 
@@ -79,13 +78,13 @@ private:
 													   
 		if (std::is_same<T, UVScrollComponent>::value)        { return UVSCROLL_COMPONENT; }
 
-		if (std::is_same<T, ParticleSystemComponent>::value) { return PARTICLE_COMPONENT; }
+		if (std::is_same<T, ParticleSystemComponent>::value)  { return PARTICLE_COMPONENT; }
 
 
 		printf("Failed to get Component enum ID from T template\n");
 
 		// just return this in case nothing matched the T
-		// should only get here if a newly creared component type have not been added to this function
+		// should only get here if a newly created component type have not been added to this function
 		return NUM_COMPONENT_TYPES;		
 	}
 

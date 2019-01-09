@@ -12,6 +12,7 @@
 #include "CameraComponent.h"
 #include "FreeMoveComponent.h"
 #include "RotationComponent.h"
+#include "ShaderHelpers.h"
 
 SponzaTestScene::SponzaTestScene()
 {
@@ -57,7 +58,6 @@ SponzaTestScene::SponzaTestScene()
 	sphere->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 5, 1), XMFLOAT3(0, 0, 0), XMFLOAT3(2, 2, 2));
 	sphere->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::SPHERE, STANDARD | CAST_SHADOW_DIR | CAST_REFLECTION, L"", L"", L"", L"Textures/emissiveTest.dds");
 	sphere->AddComponent<LightPointComponent>()->Init(20, 20, XMFLOAT3(0.1f, 1.0f, 0), 0.0f, 1.0f, 0.2f);
-	sphere->AddComponent<RotationComponent>()->Init(XMFLOAT3(2, 1.5f, 0), 40);
 
 	Entity* sphere6 = new Entity();
 	sphere6->AddComponent<TransformComponent>()->Init(XMFLOAT3(-40, 5, 1), XMFLOAT3(0, 0, 0), XMFLOAT3(4, 1.0f, 1.0f));

@@ -55,13 +55,12 @@ void LightManager::UpdateLightBuffers()
 		_pointData[i].numLights      = size;
 	}
 
+	// set the ambient/directional light data
 	XMStoreFloat4(&_ambDirData.ambientColor, XMLoadFloat4(&_ambientColor));
 	XMStoreFloat4(&_ambDirData.dirColor,     XMLoadFloat4(&_directionalLight->GetLightColor()));
 	XMStoreFloat3(&_ambDirData.lightDir,     XMLoadFloat3(&_directionalLight->GetLightDirectionInv()));
 
-	SHADER_HELPERS::UpdateConstantBuffer(&_pointData,  sizeof(CBPoint) * size, _CBPoint);
+	// update the buffers
 	SHADER_HELPERS::UpdateConstantBuffer(&_ambDirData, sizeof(CBAmbDir),       _CBAmbDir);
+	SHADER_HELPERS::UpdateConstantBuffer(&_pointData,  sizeof(CBPoint) * size, _CBPoint);
 }
-
-
-

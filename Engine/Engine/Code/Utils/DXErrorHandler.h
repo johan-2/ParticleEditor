@@ -6,11 +6,13 @@
 namespace DX_ERROR
 {
 	// prints an error message from HRESULT with a message from the user
-	static void PrintError(HRESULT result, const char* userMessage)
+	static void PrintError(HRESULT result, const char* userMessage, ID3D10Blob* extraMsgData = nullptr)
 	{
 		_com_error err(result);
 		LPCTSTR msg = err.ErrorMessage();
-		printf("****************\nWARNING DIRECT X ERROR:\nUser message  - %s\nError message - %s\n*****************\n", userMessage, msg);
+
+		char* extraMsg = extraMsgData != nullptr ? (char*)extraMsgData->GetBufferPointer() : "";
+		printf("****************\nWARNING DIRECT X ERROR:\nUser message  - %s\nError message - %s\n%s\n*****************\n", userMessage, msg, extraMsg);
 	}
 
 	// convert from wide string to string

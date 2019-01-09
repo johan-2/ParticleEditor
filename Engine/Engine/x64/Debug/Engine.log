@@ -1,2 +1,32 @@
-﻿  SponzaTestScene.cpp
+﻿  ParticleSystemComponent.cpp
+  DXManager.cpp
+  GuiManager.cpp
+  LightManager.cpp
+  GBuffer.cpp
+  ScreenQuad.cpp
+  Mesh.cpp
+  SkyDome.cpp
+  RenderToTexture.cpp
+  DeferredShader.cpp
+  DepthShader.cpp
+  ForwardAlphaShader.cpp
+  ImGUIShader.cpp
+  ParticleShader.cpp
+  PlanarReflectionShader.cpp
+  PostProcessingShader.cpp
+  QuadShader.cpp
+  SimpleClipSceneShader.cpp
+  WaterShader.cpp
+  WireframeShader.cpp
+  Generating Code...
+  Compiling...
+  DXBlendStates.cpp
+  DXDepthStencilStates.cpp
+  DXInputLayouts.cpp
+  DXRasterizerStates.cpp
+  DXSamplerStates.cpp
+  HardwareProperties.cpp
+  SponzaTestScene.cpp
+  TexturePool.cpp
+  Generating Code...
   Engine.vcxproj -> C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\Engine.exe
