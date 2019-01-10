@@ -126,6 +126,49 @@ namespace SHADER_HELPERS
 			DX_ERROR::PrintError(result, "failed to create SRV for structured buffer");
 	}
 
+	static void CreateTexture2DUAVSRV(int width, int height, ID3D11Texture2D*& texture, ID3D11ShaderResourceView*& texSRV, ID3D11UnorderedAccessView*& texUAV)
+	{
+		ID3D11Device* device = Systems::dxManager->GetDevice();
+
+		D3D11_TEXTURE2D_DESC texDesc;
+		ZeroMemory(&texDesc, sizeof(texDesc));
+		texDesc.Width              = width;
+		texDesc.Height             = height;
+		texDesc.MipLevels          = 1;
+		texDesc.ArraySize          = 1;
+		texDesc.SampleDesc.Count   = 1;
+		texDesc.SampleDesc.Quality = 0;
+		texDesc.Usage              = D3D11_USAGE_DEFAULT;
+		texDesc.BindFlags          = D3D11_BIND_UNORDERED_ACCESS | D3D11_BIND_SHADER_RESOURCE;
+		texDesc.Format             = DXGI_FORMAT_R16G16B16A16_FLOAT;
+
+		D3D11_UNORDERED_ACCESS_VIEW_DESC uavDesc;
+		ZeroMemory(&uavDesc, sizeof(uavDesc));
+		uavDesc.Format             = DXGI_FORMAT_R16G16B16A16_FLOAT;
+		uavDesc.ViewDimension      = D3D11_UAV_DIMENSION_TEXTURE2D;
+		uavDesc.Texture2D.MipSlice = 0;
+
+		//the getSRV function after dispatch.
+		D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+		ZeroMemory(&srvDesc, sizeof(srvDesc));
+		srvDesc.Format              = DXGI_FORMAT_R16G16B16A16_FLOAT;
+		srvDesc.ViewDimension       = D3D11_SRV_DIMENSION_TEXTURE2D;
+		srvDesc.Texture2D.MipLevels = 1;
+
+		HRESULT result;
+		result = device->CreateTexture2D(&texDesc, NULL, &texture);
+		if (FAILED(result))
+			DX_ERROR::PrintError(result, "failed to create new structured buffer");
+
+		result = device->CreateUnorderedAccessView(texture, &uavDesc, &texUAV);
+		if (FAILED(result))
+			DX_ERROR::PrintError(result, "failed to create new structured buffer");
+
+		result = device->CreateShaderResourceView(texture, &srvDesc, &texSRV);
+		if (FAILED(result))
+			DX_ERROR::PrintError(result, "failed to create new structured buffer");
+	}
+
 	static void UpdateConstantBuffer(void* data, unsigned int size, ID3D11Buffer*& buffer)
 	{
 		ID3D11DeviceContext* devCon = Systems::dxManager->GetDeviceCon();

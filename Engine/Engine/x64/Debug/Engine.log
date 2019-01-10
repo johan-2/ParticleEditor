@@ -1,12 +1,29 @@
-﻿  ParticleSystemComponent.cpp
+﻿  Entity.cpp
+  IComponent.cpp
+  World.cpp
+  FreeMoveComponent.cpp
+  LightDirectionComponent.cpp
+  LightPointComponent.cpp
+  ParticleSystemComponent.cpp
+  QuadComponent.cpp
+  RotationComponent.cpp
+  UVScrollComponent.cpp
+  MasterEditor.cpp
+  PostProcessWindow.cpp
+  SkyDomeWindow.cpp
+  Framework.cpp
+  Input.cpp
   DXManager.cpp
   GuiManager.cpp
   LightManager.cpp
   GBuffer.cpp
   ScreenQuad.cpp
+  Generating Code...
+  Compiling...
   Mesh.cpp
   SkyDome.cpp
   RenderToTexture.cpp
+  Renderer.cpp
   DeferredShader.cpp
   DepthShader.cpp
   ForwardAlphaShader.cpp
@@ -18,14 +35,9 @@
   SimpleClipSceneShader.cpp
   WaterShader.cpp
   WireframeShader.cpp
-  Generating Code...
-  Compiling...
-  DXBlendStates.cpp
-  DXDepthStencilStates.cpp
   DXInputLayouts.cpp
-  DXRasterizerStates.cpp
-  DXSamplerStates.cpp
-  HardwareProperties.cpp
+  Systems.cpp
+  IslandTestScene.cpp
   SponzaTestScene.cpp
   TexturePool.cpp
   Generating Code...

@@ -19,6 +19,7 @@ public:
 
 	void SetViewport(D3D11_VIEWPORT* viewport, bool setDefault = false);
 	void SetBackBuffer();
+	void SetNullRenderTarget();
 
 	void SetFullscreen(bool fullscreen, bool toggle = false);
 

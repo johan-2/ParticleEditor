@@ -17,30 +17,36 @@ PostProcessingShader::PostProcessingShader()
 	SHADER_HELPERS::CreatePixelShader(L"Shaders/PostProcess/pixelPostProcessing.ps",   _pixelPostProcessingShader,  _pixelPostProcessingShaderByteCode);
 	SHADER_HELPERS::CreateVertexShader(L"Shaders/PostProcess/vertexBlur.vs",           _vertexBlurShader,           _vertexBlurShaderByteCode);
 	SHADER_HELPERS::CreatePixelShader(L"Shaders/PostProcess/pixelBlur.ps",             _pixelBlurShader,            _pixelBlurShaderByteCode);
-	SHADER_HELPERS::CreateVertexShader(L"Shaders/PostProcess/vertexBrightness.vs",     _vertexBrightnessShader,     _vertexBrightnessShaderByteCode);
-	SHADER_HELPERS::CreatePixelShader(L"Shaders/PostProcess/pixelBrightness.ps",       _pixelBrightnessShader,      _pixelBrightnessShaderByteCode);
+	SHADER_HELPERS::CreateComputeShader(L"Shaders/PostProcess/computeBrightness.cs",   _computeBrightnessShader,    _computeBrightnessShaderByteCode);
 
 	// create constant buffers
 	SHADER_HELPERS::CreateConstantBuffer(_blurVertexConstant);
 	SHADER_HELPERS::CreateConstantBuffer(_finalPixelConstant);
 
 	// create render textures
-	CreateBrightnessRenderTexture();
 	CreateBloomBlurRenderTextures();
 	createDofRenderTextures();
 
+	SHADER_HELPERS::CreateTexture2DUAVSRV(SystemSettings::SCREEN_WIDTH, SystemSettings::SCREEN_HEIGHT, _brigtnessTex, _brigthnessSRV, _brightnessUAV);
+
 	Entity* reflectionQuad = new Entity();
 	reflectionQuad->AddComponent<QuadComponent>()->Init(XMFLOAT2(SystemSettings::SCREEN_WIDTH * 0.78f, SystemSettings::SCREEN_HEIGHT * 0.1f), XMFLOAT2(SystemSettings::SCREEN_WIDTH * 0.1f, SystemSettings::SCREEN_HEIGHT * 0.1f), L"");
-	reflectionQuad->GetComponent<QuadComponent>()->SetTexture(_brightnessMap->GetRenderTargetSRV());
+	reflectionQuad->GetComponent<QuadComponent>()->SetTexture(_brigthnessSRV);
 }
 
 PostProcessingShader::~PostProcessingShader()
 {
-	_vertexPostProcessingShaderByteCode->Release();
-	_pixelPostProcessingShaderByteCode->Release();
-
 	_vertexPostProcessingShader->Release();
 	_pixelPostProcessingShader->Release();
+	_vertexBlurShader->Release();
+	_pixelBlurShader->Release();
+	_computeBrightnessShader->Release();
+
+	_vertexPostProcessingShaderByteCode->Release();
+	_pixelPostProcessingShaderByteCode->Release();
+	_vertexBlurShaderByteCode->Release();
+	_pixelBlurShaderByteCode->Release();
+	_computeBrightnessShaderByteCode->Release();
 }
 
 void PostProcessingShader::CreateBloomBlurRenderTextures()
@@ -56,11 +62,6 @@ void PostProcessingShader::CreateBloomBlurRenderTextures()
 	_bloomVerticalBlurPass2   = new RenderToTexture(SystemSettings::SCREEN_WIDTH / PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_2, SystemSettings::SCREEN_HEIGHT / PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_2, false, SystemSettings::USE_HDR);
 }
 
-void PostProcessingShader::CreateBrightnessRenderTexture()
-{
-	_brightnessMap = new RenderToTexture(SystemSettings::SCREEN_WIDTH, SystemSettings::SCREEN_HEIGHT, false, SystemSettings::USE_HDR);
-}
-
 void PostProcessingShader::createDofRenderTextures()
 {
 	_dofHorizontalBlurPass = new RenderToTexture(SystemSettings::SCREEN_WIDTH, SystemSettings::SCREEN_HEIGHT, false, SystemSettings::USE_HDR);
@@ -69,15 +70,21 @@ void PostProcessingShader::createDofRenderTextures()
 
 void PostProcessingShader::Render(ScreenQuad* quad, ID3D11ShaderResourceView* SceneImage, ID3D11ShaderResourceView* sceneDepth)
 {
-	Systems::dxManager->BlendStates()->SetBlendState(BLEND_STATE::BLEND_OPAQUE);
+	DXManager& DXM = *Systems::dxManager;
+	DXM.BlendStates()->SetBlendState(BLEND_STATE::BLEND_OPAQUE);
 	quad->UploadBuffers();
 
+	// unbind our main rendertarget so we can use the SRV as input 
+	// when generating our post process scene filters
+	DXM.SetNullRenderTarget();
+
 	if (PostProcessing::APPLY_BLOOM)
-	{
-		RenderBrightnessMap(SceneImage);
+	{		
+		// compute brightness map
+		ComputeBrightnessMap(SceneImage);
 
 		// blur the brightness map
-		_bloomMap = RenderBlurMaps(_brightnessMap->GetRenderTargetSRV(), 
+		_bloomMap = RenderBlurMaps(_brigthnessSRV, 
 			PostProcessing::BLOOM_USE_TWO_PASS_BLUR,
 			PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_1, 
 			PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_2,
@@ -91,6 +98,30 @@ void PostProcessingShader::Render(ScreenQuad* quad, ID3D11ShaderResourceView* Sc
 		_dofMap = RenderBlurMaps(SceneImage, false, 1, 1, _dofHorizontalBlurPass, _dofVerticalBlurPass, nullptr, nullptr);
 
 	RenderFinal(SceneImage, sceneDepth);
+}
+
+void PostProcessingShader::ComputeBrightnessMap(ID3D11ShaderResourceView* originalImage)
+{
+	// get devicecontext
+	ID3D11DeviceContext* devCon = Systems::dxManager->GetDeviceCon();
+
+	devCon->CSSetShader(_computeBrightnessShader, NULL, 0);
+	devCon->CSSetShaderResources(0, 1, &originalImage);
+	devCon->CSSetUnorderedAccessViews(0, 1, &_brightnessUAV, 0);
+
+	// shader is set to [32, 32, 1] threads per group meaning we have 32 * 32 = 1024 threads per group
+	// if our screen is 1920 * 1080 we need 2073600 threads to cover all pixels
+	// 1920 / 32 will result in 60 thread groups, 1080 / 32 will result in 33.75 thread groups, 60 * 33.75 = 2025 thread groups
+	// 2025 groups * 1024 threads = 2073600 threads
+	// in case of a 2d texture like this we should just think (width / declared therads.x, height / declared threads.y) and we will and up with the correct amount of threads to use	
+	devCon->Dispatch(SystemSettings::SCREEN_WIDTH / 32, SystemSettings::SCREEN_HEIGHT / 32, 1);
+
+	// unbind so we can use resources as input in next stages
+	ID3D11ShaderResourceView* nullSRV[] = { NULL };
+	devCon->CSSetShaderResources(0, 1, nullSRV);
+
+	ID3D11UnorderedAccessView* nullUAV[] = { NULL };
+	devCon->CSSetUnorderedAccessViews(0, 1, nullUAV, 0);
 }
 
 ID3D11ShaderResourceView* PostProcessingShader::RenderBlurMaps(ID3D11ShaderResourceView* imageToBlur, bool twoPass, float scaleDown1, float scaleDown2, RenderToTexture* h1, RenderToTexture* v1, RenderToTexture* h2, RenderToTexture* v2)
@@ -189,29 +220,6 @@ ID3D11ShaderResourceView* PostProcessingShader::RenderBlurMaps(ID3D11ShaderResou
 
 	// return the final blurred image from vertical pass 2
 	return v2->GetRenderTargetSRV();
-}
-
-void PostProcessingShader::RenderBrightnessMap(ID3D11ShaderResourceView* originalImage)
-{
-	// get dx manager
-	DXManager& DXM = *Systems::dxManager;
-
-	// get devicecontext
-	ID3D11DeviceContext* devCon = DXM.GetDeviceCon();
-
-	// set the render target to output the brighnessmap
-	_brightnessMap->ClearRenderTarget(0, 0, 0, 1, false);
-	_brightnessMap->SetRendertarget(false, false);
-
-	// set our shaders
-	devCon->VSSetShader(_vertexBrightnessShader, NULL, 0);
-	devCon->PSSetShader(_pixelBrightnessShader, NULL, 0);
-
-	// set textures
-	devCon->PSSetShaderResources(0, 1, &originalImage);
-
-	// draw
-	devCon->DrawIndexed(6, 0, 0);
 }
 
 void PostProcessingShader::RenderFinal(ID3D11ShaderResourceView* SceneImage, ID3D11ShaderResourceView* sceneDepth)

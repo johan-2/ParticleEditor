@@ -210,6 +210,13 @@ void DXManager::SetBackBuffer()
 	_devCon->OMSetRenderTargets(1, &_renderTargetView, _depthStencilView);
 }
 
+void DXManager::SetNullRenderTarget()
+{
+	ID3D11RenderTargetView* rtv = nullptr;
+	ID3D11DepthStencilView* dsv = nullptr;
+	_devCon->OMSetRenderTargets(1, &rtv, dsv);
+}
+
 // set a viewport
 void DXManager::SetViewport(D3D11_VIEWPORT* viewport, bool setDefault)
 {
