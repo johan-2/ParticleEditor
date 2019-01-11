@@ -26,8 +26,7 @@ public:
 
 private:
 
-	ID3D11ShaderResourceView* RenderBlurMaps(ID3D11ShaderResourceView* imageToBlur, bool twoPass, float scaleDown1, float scaleDown2, RenderToTexture* h1, RenderToTexture* v1, RenderToTexture* h2, RenderToTexture* v2);
-	void RenderBrightnessMap(ID3D11ShaderResourceView* originalImage);
+	ID3D11ShaderResourceView* RenderBlurMap(ID3D11ShaderResourceView* imageToBlur, float scaleDown1, RenderToTexture* h1, RenderToTexture* v1);
 	void ComputeBrightnessMap(ID3D11ShaderResourceView* originalImage);
 	void RenderFinal(ID3D11ShaderResourceView* SceneImage, ID3D11ShaderResourceView* sceneDepth);
 

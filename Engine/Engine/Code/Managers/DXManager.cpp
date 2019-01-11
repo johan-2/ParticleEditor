@@ -7,6 +7,9 @@
 #include "DXSamplerStates.h"
 #include "HardwareProperties.h"
 #include "DXErrorHandler.h"
+#include <wrl/client.h>
+
+//#define DEBUG_LAYER
 
 DXManager::DXManager()
 {
@@ -98,9 +101,14 @@ void DXManager::CreateSwapchainAndRenderTarget(HWND hwnd, bool fullscreen, int s
 	swapChainDesc.Flags                       = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH; 
 	featureLevel                              = D3D_FEATURE_LEVEL_11_1;
 	
+	UINT flags = 0;
+#ifdef DEBUG_LAYER
+	flags = D3D11_CREATE_DEVICE_DEBUG;
+#endif // _DEBUG
+
 	// create the swapchain and d3d interfaces
 	result = D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL,
-		                                   0, &featureLevel, 1, D3D11_SDK_VERSION,
+		                                   flags, &featureLevel, 1, D3D11_SDK_VERSION,
 		                                   &swapChainDesc, &_swapChain, &_device, NULL, &_devCon);
 
 	if (FAILED(result))
@@ -121,6 +129,38 @@ void DXManager::CreateSwapchainAndRenderTarget(HWND hwnd, bool fullscreen, int s
 
 	// set topology
 	_devCon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+#ifdef DEBUG_LAYER
+	SetDebugLayerIgnores();
+#endif // DEBUG_LAYER
+}
+
+void DXManager::SetDebugLayerIgnores()
+{
+	ID3D11Debug *d3dDebug = nullptr;
+	if (SUCCEEDED(_device->QueryInterface(__uuidof(ID3D11Debug), (void**)&d3dDebug)))
+	{
+		ID3D11InfoQueue *d3dInfoQueue = nullptr;
+		if (SUCCEEDED(d3dDebug->QueryInterface(__uuidof(ID3D11InfoQueue), (void**)&d3dInfoQueue)))
+		{
+			d3dInfoQueue->SetBreakOnSeverity(D3D11_MESSAGE_SEVERITY_CORRUPTION, true);
+			d3dInfoQueue->SetBreakOnSeverity(D3D11_MESSAGE_SEVERITY_ERROR, true);
+
+			D3D11_MESSAGE_ID hide[] =
+			{
+				D3D11_MESSAGE_ID_DEVICE_DRAW_CONSTANT_BUFFER_TOO_SMALL,
+
+			};
+
+			D3D11_INFO_QUEUE_FILTER filter;
+			memset(&filter, 0, sizeof(filter));
+			filter.DenyList.NumIDs  = _countof(hide);
+			filter.DenyList.pIDList = hide;
+			d3dInfoQueue->AddStorageFilterEntries(&filter);
+			d3dInfoQueue->Release();
+		}
+		d3dDebug->Release();
+	}
 }
 
 void DXManager::CreateDepthStencilViews(int screenWidth, int screenHeight) 

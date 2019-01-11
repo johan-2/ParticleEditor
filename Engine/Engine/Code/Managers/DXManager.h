@@ -45,6 +45,7 @@ private:
 	// create swapchain and devices
 	void CreateSwapchainAndRenderTarget(HWND hwnd, bool fullscreen, int screenWidth, int screenHeight);
 	void CreateDepthStencilViews(int screenWidth, int screenHeight);
+	void SetDebugLayerIgnores();
 
 	// DX modules
 	DXBlendStates*        _DXBlendStates;

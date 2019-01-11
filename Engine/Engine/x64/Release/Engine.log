@@ -1,47 +1,9 @@
-﻿  Entity.cpp
-  IComponent.cpp
-  World.cpp
-  FreeMoveComponent.cpp
-  LightDirectionComponent.cpp
-  LightPointComponent.cpp
-  ParticleSystemComponent.cpp
-  QuadComponent.cpp
-  RotationComponent.cpp
-  UVScrollComponent.cpp
-  MasterEditor.cpp
-  PostProcessWindow.cpp
-  SkyDomeWindow.cpp
-  Framework.cpp
-  Input.cpp
-  DXManager.cpp
-  GuiManager.cpp
-  LightManager.cpp
-  GBuffer.cpp
-  ScreenQuad.cpp
-  Compiling...
-  Mesh.cpp
-  SkyDome.cpp
-  RenderToTexture.cpp
+﻿  PostProcessWindow.cpp
   Renderer.cpp
-  DeferredShader.cpp
-  DepthShader.cpp
-  ForwardAlphaShader.cpp
-  ImGUIShader.cpp
-  ParticleShader.cpp
-  PlanarReflectionShader.cpp
   PostProcessingShader.cpp
-  QuadShader.cpp
-  SimpleClipSceneShader.cpp
-  WaterShader.cpp
-  WireframeShader.cpp
-  DXInputLayouts.cpp
-  Systems.cpp
-  IslandTestScene.cpp
-  SponzaTestScene.cpp
-  TexturePool.cpp
   Generating code
-  20 of 3176 functions ( 0.6%) were compiled, the rest were copied from previous compilation.
-    4 functions were new in current compilation
-    16 functions had inline decision re-evaluated but remain unchanged
+  2 of 3176 functions (<0.1%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    3 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   Engine.vcxproj -> C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\Engine.exe

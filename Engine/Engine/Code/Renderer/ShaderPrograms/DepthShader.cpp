@@ -71,4 +71,8 @@ void DepthShader::RenderDepth(std::vector<Mesh*>& meshes)
 		// draw
 		devCon->DrawIndexed(meshes[i]->GetNumIndices(), 0, 0);
 	}
+
+	// unbind so we can use resources as input in next stages
+	ID3D11ShaderResourceView* nullSRV[1] = { NULL };
+	devCon->PSSetShaderResources(0, 1, nullSRV);
 }

@@ -103,8 +103,6 @@ void GuiManager::CreateTexture()
 	
 	// Store our identifier
 	io.Fonts->TexID = (void *)_texture;
-
-	texture->Release();
 }
 
 void GuiManager::CreateBuffers()

@@ -155,6 +155,9 @@ void SkyDome::RenderCubeMap(bool noMask)
 	// upload and draw dome mesh
 	_domeMesh->UploadBuffers();
 	devCon->DrawIndexed(_domeMesh->GetNumIndices(), 0, 0);
+
+	ID3D11ShaderResourceView* nullSRV[1] = { NULL };
+	devCon->PSSetShaderResources(0, 1, nullSRV);
 }
 
 void SkyDome::RenderBlendedColors(bool noMask)
@@ -196,7 +199,7 @@ void SkyDome::RenderBlendedColors(bool noMask)
 	pixeldata.top      = _skySettings.skyTopColor;
 
 	// update constant buffers
-	SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(CBVertDome),          _constantBufferVertex);
+	SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(CBVertDome),              _constantBufferVertex);
 	SHADER_HELPERS::UpdateConstantBuffer((void*)&pixeldata,  sizeof(ConstantColorBlendPixel), _constantBufferColorBlendPixel);
 
 	// upload and draw dome mesh
@@ -277,6 +280,9 @@ void SkyDome::RenderSunMoon(bool noMask)
 
 	// set back to backcull
 	DXM.RasterizerStates()->SetRasterizerState(RASTERIZER_STATE::BACKCULL);
+
+	ID3D11ShaderResourceView* nullSRV[1] = { NULL };
+	devCon->PSSetShaderResources(0, 1, nullSRV);
 }
 
 void SkyDome::CaluclateSunMoonMatrix(XMFLOAT3 cameraPosition)

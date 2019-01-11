@@ -86,7 +86,9 @@ void ParticleShader::RenderParticles(const std::vector<ParticleSystemComponent*>
 			devCon->DrawIndexedInstanced(6, systems[i]->GetNumParticles(y), 0, 0, 0);
 		}
 	}
-
+	// unbind so we can use resources as input in next stages
+	ID3D11ShaderResourceView* nullSRV[1] = { NULL};
+	devCon->PSSetShaderResources(0, 1, nullSRV);
 	// enable depth writing
 	DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::ENABLED);
 }

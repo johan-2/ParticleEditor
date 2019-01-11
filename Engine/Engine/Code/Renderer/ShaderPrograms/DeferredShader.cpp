@@ -90,6 +90,10 @@ void DeferredShader::RenderGeometry(std::vector<Mesh*>& meshes)
 		// draw
 		devCon->DrawIndexed(meshes[i]->GetNumIndices(), 0, 0);
 	}
+
+	// unbind so we can use resources as input in next stages
+	ID3D11ShaderResourceView* nullSRV[4] = { NULL, NULL, NULL, NULL };
+	devCon->PSSetShaderResources(0, 4, nullSRV);
 }
 
 void DeferredShader::RenderLightning(GBuffer*& gBuffer)

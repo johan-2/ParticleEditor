@@ -157,4 +157,8 @@ void PlanarReflectionShader::Render(std::vector<Mesh*>& reflectionMeshes)
 
 		devCon->DrawIndexed(mesh->GetNumIndices(), 0, 0);
 	}
+
+	// unbind so we can use resources as input in next stages
+	ID3D11ShaderResourceView* nullSRV[6] = { NULL, NULL, NULL, NULL, NULL, NULL };
+	devCon->PSSetShaderResources(0, 6, nullSRV);
 }

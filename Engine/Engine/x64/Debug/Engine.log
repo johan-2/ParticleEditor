@@ -1,44 +1,4 @@
-﻿  Entity.cpp
-  IComponent.cpp
-  World.cpp
-  FreeMoveComponent.cpp
-  LightDirectionComponent.cpp
-  LightPointComponent.cpp
-  ParticleSystemComponent.cpp
-  QuadComponent.cpp
-  RotationComponent.cpp
-  UVScrollComponent.cpp
-  MasterEditor.cpp
-  PostProcessWindow.cpp
-  SkyDomeWindow.cpp
-  Framework.cpp
-  Input.cpp
-  DXManager.cpp
-  GuiManager.cpp
-  LightManager.cpp
-  GBuffer.cpp
-  ScreenQuad.cpp
-  Generating Code...
-  Compiling...
-  Mesh.cpp
-  SkyDome.cpp
-  RenderToTexture.cpp
-  Renderer.cpp
-  DeferredShader.cpp
-  DepthShader.cpp
-  ForwardAlphaShader.cpp
-  ImGUIShader.cpp
-  ParticleShader.cpp
-  PlanarReflectionShader.cpp
-  PostProcessingShader.cpp
-  QuadShader.cpp
+﻿  PostProcessingShader.cpp
   SimpleClipSceneShader.cpp
-  WaterShader.cpp
-  WireframeShader.cpp
-  DXInputLayouts.cpp
-  Systems.cpp
-  IslandTestScene.cpp
-  SponzaTestScene.cpp
-  TexturePool.cpp
   Generating Code...
   Engine.vcxproj -> C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\Engine.exe

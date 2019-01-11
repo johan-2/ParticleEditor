@@ -108,6 +108,10 @@ void SimpleClipSceneShader::RenderScene(std::vector<Mesh*>& opaqueMeshes, std::v
 		devCon->DrawIndexed(opaqueMeshes[y]->GetNumIndices(), 0, 0);
 	}
 
+	// unbind so we can use resources as input in next stages
+	ID3D11ShaderResourceView* nullSRV[3] = { NULL, NULL, NULL };
+	devCon->PSSetShaderResources(0, 3, nullSRV);
+
 	// set shader and blend state if we have any alpha meshes
 	// that is being reflected, also sort these from the pos
 	// of the camera reflection matrix
@@ -138,6 +142,8 @@ void SimpleClipSceneShader::RenderScene(std::vector<Mesh*>& opaqueMeshes, std::v
 
 		devCon->DrawIndexed(alphaMeshes[y]->GetNumIndices(), 0, 0);
 	}
+
+	devCon->PSSetShaderResources(0, 3, nullSRV);
 
 	// render all particles to the texture 
 	if (includeParticles)
