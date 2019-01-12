@@ -1,7 +1,9 @@
-﻿  Framework.cpp
+﻿  PostProcessWindow.cpp
+  Renderer.cpp
+  PostProcessingShader.cpp
   Generating code
-  86 of 3176 functions ( 2.7%) were compiled, the rest were copied from previous compilation.
-    1 functions were new in current compilation
-    21 functions had inline decision re-evaluated but remain unchanged
+  0 of 3176 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   Engine.vcxproj -> C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\Engine.exe

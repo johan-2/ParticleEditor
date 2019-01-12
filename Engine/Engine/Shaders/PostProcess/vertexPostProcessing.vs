@@ -15,7 +15,7 @@ PixelInputType Main(VertexInputType input)
 {
     PixelInputType output;   
        	   	
-	output.position = input.position;
+    output.position = input.position;
     output.texCoord = input.texCoord;
 	   
     return output;

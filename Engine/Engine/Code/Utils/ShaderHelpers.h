@@ -246,13 +246,13 @@ namespace SHADER_HELPERS
 		devCon->Unmap(buffer, 0);
 	}
 
-	static void CreateVertexShader(LPCWSTR filePath, ID3D11VertexShader*& shader, ID3D10Blob*& buffer)
+	static void CreateVertexShader(LPCWSTR filePath, ID3D11VertexShader*& shader, ID3D10Blob*& buffer, char* entryPoint = "Main")
 	{
 		ID3D11Device* device = Systems::dxManager->GetDevice();
 		ID3D10Blob* errorMessage;
 
 		// compile the vertex shader code from the text file into temporal buffers
-		HRESULT result = D3DCompileFromFile(filePath, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "Main", "vs_5_0", 0, 0, &buffer, &errorMessage);
+		HRESULT result = D3DCompileFromFile(filePath, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, entryPoint, "vs_5_0", 0, 0, &buffer, &errorMessage);
 		if (FAILED(result))	DX_ERROR::PrintError(result, (std::string("failed to compile Vertex shader : ") + DX_ERROR::ConvertFromWString((wchar_t*)filePath)).c_str(), errorMessage);
 	
 		// once the code have been compiled into the buffer we can create the shader objects themselfs from the blob objects
@@ -260,13 +260,13 @@ namespace SHADER_HELPERS
 		if (FAILED(result)) DX_ERROR::PrintError(result, (std::string("failed to create vertex shader from ID3D10Blob, shader file = : ") + DX_ERROR::ConvertFromWString((wchar_t*)filePath)).c_str());
 	}
 
-	static void CreatePixelShader(LPCWSTR filePath, ID3D11PixelShader*& shader, ID3D10Blob*& buffer)
+	static void CreatePixelShader(LPCWSTR filePath, ID3D11PixelShader*& shader, ID3D10Blob*& buffer, char* entryPoint = "Main")
 	{
 		ID3D11Device* device = Systems::dxManager->GetDevice();
 		ID3D10Blob* errorMessage;
 
 		// compile the pixel shader code from the text file into temporal buffers
-		HRESULT result = D3DCompileFromFile(filePath, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "Main", "ps_5_0", 0, 0, &buffer, &errorMessage);
+		HRESULT result = D3DCompileFromFile(filePath, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, entryPoint, "ps_5_0", 0, 0, &buffer, &errorMessage);
 		if (FAILED(result)) DX_ERROR::PrintError(result, (std::string("failed to compile Pixel shader : ") + DX_ERROR::ConvertFromWString((wchar_t*)filePath)).c_str(), errorMessage);
 					
 		// create shader from blob
@@ -274,13 +274,13 @@ namespace SHADER_HELPERS
 		if (FAILED(result)) DX_ERROR::PrintError(result, (std::string("failed to create pixel shader from ID3D10Blob, shader file = : ") + DX_ERROR::ConvertFromWString((wchar_t*)filePath)).c_str());
 	}
 
-	static void CreateComputeShader(LPCWSTR filePath, ID3D11ComputeShader*& shader, ID3D10Blob*& buffer)
+	static void CreateComputeShader(LPCWSTR filePath, ID3D11ComputeShader*& shader, ID3D10Blob*& buffer, char* entryPoint = "Main")
 	{
 		ID3D11Device* device = Systems::dxManager->GetDevice();
 		ID3D10Blob* errorMessage;
 
 		// compile the compute shader code into blob
-		HRESULT result = D3DCompileFromFile(filePath, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "Main", "cs_5_0", 0, 0, &buffer, &errorMessage);
+		HRESULT result = D3DCompileFromFile(filePath, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, entryPoint, "cs_5_0", 0, 0, &buffer, &errorMessage);
 		if (FAILED(result)) DX_ERROR::PrintError(result, (std::string("failed to compile compute shader : ") + DX_ERROR::ConvertFromWString((wchar_t*)filePath)).c_str(), errorMessage);		
 
 		// create shader from blob

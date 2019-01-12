@@ -9,6 +9,7 @@
 #include "SystemDefs.h"
 #include "Entity.h"
 #include "QuadComponent.h"
+#include <math.h>
 
 PostProcessingShader::PostProcessingShader()
 {
@@ -17,7 +18,7 @@ PostProcessingShader::PostProcessingShader()
 	SHADER_HELPERS::CreatePixelShader(L"Shaders/PostProcess/pixelPostProcessing.ps",   _pixelPostProcessingShader,  _pixelPostProcessingShaderByteCode);
 	SHADER_HELPERS::CreateVertexShader(L"Shaders/PostProcess/vertexBlur.vs",           _vertexBlurShader,           _vertexBlurShaderByteCode);
 	SHADER_HELPERS::CreatePixelShader(L"Shaders/PostProcess/pixelBlur.ps",             _pixelBlurShader,            _pixelBlurShaderByteCode);
-	SHADER_HELPERS::CreateComputeShader(L"Shaders/PostProcess/computeBrightness.cs",   _computeBrightnessShader,    _computeBrightnessShaderByteCode);
+	SHADER_HELPERS::CreateComputeShader(L"Shaders/PostProcess/computeBrightness.cs",   _computeBrightnessShader,    _computeBrightnessShaderByteCode);	
 
 	// create constant buffers
 	SHADER_HELPERS::CreateConstantBuffer(_blurVertexConstant);
@@ -27,11 +28,11 @@ PostProcessingShader::PostProcessingShader()
 	CreateBloomBlurRenderTextures();
 	createDofRenderTextures();
 
-	SHADER_HELPERS::CreateTexture2DUAVSRV(SystemSettings::SCREEN_WIDTH, SystemSettings::SCREEN_HEIGHT, _brigtnessTex, _brigthnessSRV, _brightnessUAV);
+	SHADER_HELPERS::CreateTexture2DUAVSRV(SystemSettings::SCREEN_WIDTH, SystemSettings::SCREEN_HEIGHT, _brightnessResources.Tex, _brightnessResources.SRV, _brightnessResources.UAV);
 
 	Entity* reflectionQuad = new Entity();
 	reflectionQuad->AddComponent<QuadComponent>()->Init(XMFLOAT2(SystemSettings::SCREEN_WIDTH * 0.78f, SystemSettings::SCREEN_HEIGHT * 0.1f), XMFLOAT2(SystemSettings::SCREEN_WIDTH * 0.1f, SystemSettings::SCREEN_HEIGHT * 0.1f), L"");
-	reflectionQuad->GetComponent<QuadComponent>()->SetTexture(_brigthnessSRV);
+	reflectionQuad->GetComponent<QuadComponent>()->SetTexture(_brightnessResources.SRV);
 }
 
 PostProcessingShader::~PostProcessingShader()
@@ -84,7 +85,7 @@ void PostProcessingShader::Render(ScreenQuad* quad, ID3D11ShaderResourceView* Sc
 		ComputeBrightnessMap(SceneImage);
 
 		// blur the brightness map
-		_bloomMap = RenderBlurMap(_brigthnessSRV, PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_1, _bloomHorizontalBlurPass1, _bloomVerticalBlurPass1);
+		_bloomMap = RenderBlurMap(_brightnessResources.SRV, PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_1, _bloomHorizontalBlurPass1, _bloomVerticalBlurPass1);
 		if (PostProcessing::BLOOM_USE_TWO_PASS_BLUR)
 			_bloomMap = RenderBlurMap(_bloomVerticalBlurPass1->GetRenderTargetSRV(), PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_2, _bloomHorizontalBlurPass2, _bloomVerticalBlurPass2);
 	}
@@ -102,14 +103,17 @@ void PostProcessingShader::ComputeBrightnessMap(ID3D11ShaderResourceView* origin
 
 	devCon->CSSetShader(_computeBrightnessShader, NULL, 0);
 	devCon->CSSetShaderResources(0, 1, &originalImage);
-	devCon->CSSetUnorderedAccessViews(0, 1, &_brightnessUAV, 0);
+	devCon->CSSetUnorderedAccessViews(0, 1, &_brightnessResources.UAV, 0);
+
+	UINT threadsX = std::ceil(SystemSettings::SCREEN_WIDTH  / 32);
+	UINT threadsY = std::ceil(SystemSettings::SCREEN_HEIGHT / 32);
 
 	// shader is set to [32, 32, 1] threads per group meaning we have 32 * 32 = 1024 threads per group
 	// if our screen is 1920 * 1080 we need 2073600 threads to cover all pixels
 	// 1920 / 32 will result in 60 thread groups, 1080 / 32 will result in 33.75 thread groups, 60 * 33.75 = 2025 thread groups
 	// 2025 groups * 1024 threads = 2073600 threads
 	// in case of a 2d texture like this we should just think (width / declared therads.x, height / declared threads.y) and we will and up with the correct amount of threads to use	
-	devCon->Dispatch(SystemSettings::SCREEN_WIDTH / 32, SystemSettings::SCREEN_HEIGHT / 32, 1);
+	devCon->Dispatch(threadsX, threadsY, 1);
 
 	// unbind so we can use resources as input in next stages
 	ID3D11ShaderResourceView* nullSRV[] = { NULL };

@@ -29,12 +29,7 @@ PixelInputType Main(VertexInputType input)
     PixelInputType output;   
        	   	
 	output.position = input.position;
-    float2 offset;
-   
-    if (u_horizontalPass == 1)
-	    offset = float2(1 / u_screenWidth, 0);
-	else
-		offset = float2(0, 1 / u_screenHeight);	
+    float2 offset = u_horizontalPass ? float2(1 / u_screenWidth, 0) : float2(0, 1 / u_screenHeight);	
 
 	output.tex1  = input.tex + (offset * - 5);
 	output.tex2  = input.tex + (offset * - 4);
