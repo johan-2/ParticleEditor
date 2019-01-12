@@ -1,0 +1,72 @@
+float2 GetProjectiveTexCoords(float4 clipPosition)
+{
+	float2 result;
+	result.x =  clipPosition.x / clipPosition.w / 2.0f + 0.5f;
+    result.y = -clipPosition.y / clipPosition.w / 2.0f + 0.5f;
+	
+	return result;
+}
+
+float InverseLerp(float a, float b, float t)
+{
+	return saturate((t - a) / (b - a));
+}
+
+float ConvertToLinearDepth(float nearPlane, float farPlane, float depth)
+{
+	return 2.0 * nearPlane * farPlane / (farPlane + nearPlane - (2.0 * depth - 1.0) * (farPlane - nearPlane));
+}
+
+float4 GetSpecularColorPhong(float3 cameraPosition, float3 worldPosition, float3 lightDirection, float4 lightColor, float lightIntensity, float3 normal, float4 specularMap)
+{		
+	float3 vertexToCamera   = normalize(cameraPosition - worldPosition);				
+	float3 reflection       = normalize(2 * lightIntensity * normal - lightDirection);		
+	float specularIntensity = pow(saturate(dot(reflection, vertexToCamera)), specularMap.a * 255.0);
+	
+	return (lightColor * specularIntensity) * specularMap;			
+}
+
+float4 GetSpecularColorPhong(float3 vertexToCamera, float3 lightDirection, float4 lightColor, float lightIntensity, float3 normal, float4 specularMap)
+{
+		float3 reflection       = normalize(2 * lightIntensity * normal - lightDirection);		
+		float specularIntensity = pow(saturate(dot(reflection, vertexToCamera)), specularMap.a * 255.0);
+		
+		return  (lightColor * specularIntensity) * specularMap;		
+}
+
+float GetShadowLightFraction(Texture2D shadowMap, SamplerState s, float4 posLightClipSpace, float bias)
+{
+	// if pixel is outside the range of the shadow map we will fallback that it is just lit
+	float numInLight   = 9;
+	
+	// get the projected texture coordinates based on the position in eye of the light
+	float2 smTexCoord = GetProjectiveTexCoords(posLightClipSpace);
+	
+	if((saturate(smTexCoord.x) == smTexCoord.x) && (saturate(smTexCoord.y) == smTexCoord.y))
+	{
+		// if whithin the shadow map initialize num in light to 0
+		numInLight = 0;
+		
+		float neighbour = 1 / 8192.0;	// hardcoded for now, dont forget to change if depthmap res change	
+		float depthMapValues[9];
+		
+		depthMapValues[0] = shadowMap.Sample(s, float2(smTexCoord.x, smTexCoord.y)).r;                         // middle
+		depthMapValues[1] = shadowMap.Sample(s, float2(smTexCoord.x - neighbour, smTexCoord.y)).r;             // left
+		depthMapValues[2] = shadowMap.Sample(s, float2(smTexCoord.x - neighbour, smTexCoord.y - neighbour)).r; // top left
+		depthMapValues[3] = shadowMap.Sample(s, float2(smTexCoord.x, smTexCoord.y - neighbour)).r;             // top
+		depthMapValues[4] = shadowMap.Sample(s, float2(smTexCoord.x + neighbour, smTexCoord.y - neighbour)).r; // top right
+		depthMapValues[5] = shadowMap.Sample(s, float2(smTexCoord.x + neighbour, smTexCoord.y)).r;             // right
+		depthMapValues[6] = shadowMap.Sample(s, float2(smTexCoord.x + neighbour, smTexCoord.y + neighbour)).r; // bottom right
+		depthMapValues[7] = shadowMap.Sample(s, float2(smTexCoord.x, smTexCoord.y + neighbour)).r;             // bottom 
+		depthMapValues[8] = shadowMap.Sample(s, float2(smTexCoord.x - neighbour, smTexCoord.y + neighbour)).r; // bottom left
+		
+		float lightDepthValue = (posLightClipSpace.z / posLightClipSpace.w) - bias;
+		
+		for(int i =0; i < 9; i++)		
+			if( lightDepthValue <= depthMapValues[i])
+				numInLight++;		
+	}
+	
+	return numInLight / 9.0;
+}
+

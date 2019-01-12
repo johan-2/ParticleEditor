@@ -1,20 +1,22 @@
+#include "CommonPixel.ps"
+
 Texture2D Texture[7];	    // normal, specular, UVDVMap, shadowMap, reflectionMap, refractionMap, refractionDepth
 SamplerState SampleType[2]; // wrap,clamp 	
 
 static float darkenOcludedPercent = 0.4;
-static float highlightStrength = 2.0;
-static float4 waterColorTint = float4(0.0, 0.3, 0.1, 1.0);
-static float tintStrength = 0.2;
-static float distortionDamping = 0.012;
-static float reflectivePower = 0.9;
-static float nearPlane = 0.1;
-static float farPlane = 5000.0;
-static float fadeToDepth = 3.0f;
+static float highlightStrength    = 2.0;
+static float4 waterColorTint      = float4(0.0, 0.3, 0.1, 1.0);
+static float tintStrength         = 0.2;
+static float distortionDamping    = 0.012;
+static float reflectivePower      = 0.9;
+static float nearPlane            = 0.1;
+static float farPlane             = 5000.0;
+static float fadeToDepth          = 3.0f;
 static float normalScrollStrength = - 0.2;
-static bool applyFoam = false;
-static float4 foamColor = float4(1,1,1,0.2);
-static float foamToDepth = 1.0;
-static float foamDistortStrength = 0.7;
+static bool applyFoam             = false;
+static float4 foamColor           = float4(0.6, 0.6, 1.0, 0.1);
+static float foamToDepth          = 0.5;
+static float foamDistortStrength  = 0.4;
 
 struct PointLight
 {
@@ -56,78 +58,25 @@ struct PixelInputType
 	float2 texCoordOffset      : TEXCOORD6;
 };
 
-float GetLightPercent(PixelInputType input)
-{
-	float bias         = 0.00001;
-	float numInLight   = 9;
-	float lightPercent = 0;
-	
-	// get the projected texture coordinates based on the position in eye of the light
-	float2 smTexCoord;
-	smTexCoord.x = ((input.positionLightSpace.x / input.positionLightSpace.w) / 2.0) + 0.5;
-	smTexCoord.y = ((-input.positionLightSpace.y / input.positionLightSpace.w) / 2.0) + 0.5;
-		
-	if((saturate(smTexCoord.x) == smTexCoord.x) && (saturate(smTexCoord.y) == smTexCoord.y))
-	{
-		numInLight = 0;
-	
-		float neighbour = 1 / 8192.0; // hardcoded for now, dont forget to change if depthmap res change	
-		float depthMapValues[9];
-		
-		depthMapValues[0] = Texture[3].Sample(SampleType[1], float2(smTexCoord.x, smTexCoord.y)).r; // middle
-		depthMapValues[1] = Texture[3].Sample(SampleType[1], float2(smTexCoord.x - neighbour, smTexCoord.y)).r; // left
-		depthMapValues[2] = Texture[3].Sample(SampleType[1], float2(smTexCoord.x - neighbour, smTexCoord.y - neighbour)).r; // top left
-		depthMapValues[3] = Texture[3].Sample(SampleType[1], float2(smTexCoord.x, smTexCoord.y - neighbour)).r; // top
-		depthMapValues[4] = Texture[3].Sample(SampleType[1], float2(smTexCoord.x + neighbour, smTexCoord.y - neighbour)).r; // top right
-		depthMapValues[5] = Texture[3].Sample(SampleType[1], float2(smTexCoord.x + neighbour, smTexCoord.y)).r; // right
-		depthMapValues[6] = Texture[3].Sample(SampleType[1], float2(smTexCoord.x + neighbour, smTexCoord.y + neighbour)).r; // bottom right
-		depthMapValues[7] = Texture[3].Sample(SampleType[1], float2(smTexCoord.x, smTexCoord.y + neighbour)).r; // bottom 
-		depthMapValues[8] = Texture[3].Sample(SampleType[1], float2(smTexCoord.x - neighbour, smTexCoord.y + neighbour)).r; // bottom left
-		
-		float lightDepthValue = (input.positionLightSpace.z / input.positionLightSpace.w) - bias;
-		
-		for (int i =0; i < 9; i++)
-		{
-			if (lightDepthValue <= depthMapValues[i])
-				numInLight++;
-		}
-		
-		if (numInLight == 0)
-			return float3(0,0,0);	
-	}
-	
-	// get how many pixels that not was ocluded in range 0-1 
-	return numInLight / 9.0;
-}
-
-float3 GetDirectionalColor(PixelInputType input, float3 baseColor, float3 normalMap, float4 specularMap)
-{	
-	float3x3 tangentSpaceMatrix = float3x3(input.tangent, input.binormal, input.normal);
-	float3 bumpNormal           = normalize(mul(normalMap, tangentSpaceMatrix));   	
-			    		  					   		
+float3 GetDirectionalColor(PixelInputType input, float3 baseColor, float3 bumpNormal, float4 specularMap)
+{			    		  					   		
     float lightIntensity = saturate(dot(bumpNormal.xyz, dirLightDirection)); 
-	
-	// get color based on texture, intensity and color of light
-    float3 color = (baseColor * dirDiffuseColor.rgb) * lightIntensity; 
-	saturate(color);
-	float3 specular = float3(0,0,0);
+    float3 color         = (baseColor * dirDiffuseColor.rgb) * lightIntensity; 
+	float3 specular      = float3(0,0,0);
 	
 	// add specular effect if the light is affecting the pixel
 	if (lightIntensity > 0)
 	{					
-		// normalize vertex to camera direction vector
-		float3 vtc = normalize(input.vertexToCamera);
-		
-		// phong
-		float3 reflection = normalize(2 * lightIntensity * bumpNormal - dirLightDirection);		
+		float3 vtc              = normalize(input.vertexToCamera);
+		float3 reflection       = normalize(2 * lightIntensity * bumpNormal - dirLightDirection);		
 		float specularIntensity = pow(saturate(dot(reflection, vtc)), specularMap.a * 255.0);
-		specular = (dirDiffuseColor * specularIntensity) * specularMap.rgb ;	
+		specular                = (dirDiffuseColor * specularIntensity) * specularMap.rgb ;	
 	} 
 			
 	return color + ((dirDiffuseColor * specular) * highlightStrength); 
 }
 
-float3 GetPointColor(PixelInputType input, float3 baseColor, float3 bumpValues, float4 specularMap)
+float3 GetPointColor(PixelInputType input, float3 baseColor, float3 bumpNormal, float4 specularMap)
 {   
 	float3 finalColor = float3(0,0,0);
 	int numLights     = pointLights[0].numLights;
@@ -135,39 +84,27 @@ float3 GetPointColor(PixelInputType input, float3 baseColor, float3 bumpValues, 
 	for (int i =0; i < numLights; i++)
 	{	
 		// get light direction and distance from light	
-		float3 lightDir = -normalize(input.worldPos - pointLights[i].position);	
-		float dst       = length(input.worldPos - pointLights[i].position);
-		
-		// calculate attuniation	
-		float fallOff     = 1 - ((dst / pointLights[i].radius) * 0.5);	// make the falloff 50% slower then the radius to give more control of result depending of attuniation settings
+		float3 lightDir   = -normalize(input.worldPos - pointLights[i].position);	
+		float dst         = length(input.worldPos - pointLights[i].position);
+		float fallOff     = 1 - ((dst / pointLights[i].radius) * 0.5);
 		float attuniation = 1 / (pointLights[i].attConstant + pointLights[i].attLinear * dst + pointLights[i].attExponential * dst * dst);
 		attuniation       = (attuniation * pointLights[i].intensity) * fallOff;
 		
 		if (fallOff >= 0)
-		{	
-			// get tangentSpaceMatrix for normalmapping and multiply with normalmapsample to get the bumpnormal
-			float3x3 tangentSpaceMatrix = float3x3(input.tangent,input.binormal,input.normal);	
-			float3 bumpNormal           = normalize(mul(bumpValues, tangentSpaceMatrix));   
-				
+		{				
 			// get intensity from the normal from normalmap and lightdirection
 			float lightIntensity = saturate(dot(bumpNormal, lightDir)); 
+			float3 color         = (baseColor * pointLights[i].color.rgb) * lightIntensity; 
+			float3 specular      = float3(0,0,0);	
 			
-			// get color based on texture, intensity and color of light
-			float3 color = (baseColor * pointLights[i].color.rgb) * lightIntensity; 
-			
-			// add specular effect if the light is affecting the pixel, dont add specular effect if dst is more then radius
-			float3 specular = float3(0,0,0);		
 			if (lightIntensity > 0 && dst < pointLights[i].radius)
 			{		
-				// normalize vertex to camera direction vector
-				float3 vtc = normalize(input.vertexToCamera);
-							
-				// phong
-				float3 reflection = normalize(2 * lightIntensity * bumpNormal - lightDir);		
+				float3 vtc              = normalize(input.vertexToCamera);
+				float3 reflection       = normalize(2 * lightIntensity * bumpNormal - lightDir);		
 				float specularIntensity = pow(saturate(dot(reflection, vtc)), specularMap.a * 255.0);
-				specular.rgb = (pointLights[i].color.rgb * specularIntensity) * specularMap.rgb;	
+				specular.rgb            = (pointLights[i].color.rgb * specularIntensity) * specularMap.rgb;	
 			} 
-						
+
 			color      += (specular * highlightStrength);	
 			finalColor += (color * attuniation);
 		}
@@ -178,44 +115,23 @@ float3 GetPointColor(PixelInputType input, float3 baseColor, float3 bumpValues, 
 
 float4 GetReflectionColor(PixelInputType input, float2 distortion)
 {
-	float2 reflectionTexCoords;
-	
-	// get the projected texture coordinates in the space of the reflection projection 
-	reflectionTexCoords.x =  input.reflectionPosition.x / input.reflectionPosition.w / 2.0f + 0.5f;
-    reflectionTexCoords.y = -input.reflectionPosition.y / input.reflectionPosition.w / 2.0f + 0.5f;
-	
-	return Texture[4].Sample(SampleType[1], clamp(reflectionTexCoords + distortion, 0.001, 0.999));
+	return Texture[4].Sample(SampleType[1], clamp(GetProjectiveTexCoords(input.reflectionPosition) + distortion, 0.001, 0.999));
 }
 
 float4 GetRefractionColor(PixelInputType input, float2 distortion)
 {
-	float2 refractionTexCoords;
-	
-	// get the projected texture coordinates in the standard camera projection space
-	refractionTexCoords.x =  input.positionCameraSpace.x / input.positionCameraSpace.w / 2.0f + 0.5f;
-    refractionTexCoords.y = -input.positionCameraSpace.y / input.positionCameraSpace.w / 2.0f + 0.5f;
-	
-	return Texture[5].Sample(SampleType[1], clamp(refractionTexCoords + distortion, 0.001, 0.999));
+	return Texture[5].Sample(SampleType[1], clamp(GetProjectiveTexCoords(input.positionCameraSpace) + distortion, 0.001, 0.999));
 }
 
 float GetWaterDepth(PixelInputType input, float2 sampleOffset)
 {	
-	float2 texCoords;
-
-	texCoords.x =  input.positionCameraSpace.x / input.positionCameraSpace.w / 2.0f + 0.5f;
-    texCoords.y = -input.positionCameraSpace.y / input.positionCameraSpace.w / 2.0f + 0.5f;
-	float bottomDepth  = Texture[6].Sample(SampleType[1], texCoords + sampleOffset).r;
+	float bottomDepth  = Texture[6].Sample(SampleType[1], GetProjectiveTexCoords(input.positionCameraSpace) + sampleOffset).r;
 
 	// convert depth values to linear distances
-	float bottomDistance  = 2.0 * nearPlane * farPlane / (farPlane + nearPlane - (2.0 * bottomDepth - 1.0) * (farPlane - nearPlane));
-	float surfaceDistance = 2.0 * nearPlane * farPlane / (farPlane + nearPlane - (2.0 * input.position.z - 1.0) * (farPlane - nearPlane));
+	float bottomDistance   = ConvertToLinearDepth(nearPlane, farPlane, bottomDepth);
+	float surfaceDistance  = ConvertToLinearDepth(nearPlane, farPlane, input.position.z);
 
 	return bottomDistance - surfaceDistance;
-}
-
-float InverseLerp(float a, float b, float t)
-{
-	return saturate((t - a) / (b - a));
 }
 
 float4 Main(PixelInputType input) : SV_TARGET
@@ -228,8 +144,10 @@ float4 Main(PixelInputType input) : SV_TARGET
 	float4 normalMap    = Texture[0].Sample(SampleType[0], distortedTexCoords + (input.texCoordOffset * normalScrollStrength));
 	float4 specularMap  = Texture[1].Sample(SampleType[0], distortedTexCoords + (input.texCoordOffset * normalScrollStrength));
 	
-	// convert normalmap sample to range -1 to 1
-	normalMap = (normalMap * 2.0) -1.0;
+	// convert normalmap sample to range -1 to 1 and convert to worldspace
+	normalMap                   = (normalMap * 2.0) -1.0;
+	float3x3 tangentSpaceMatrix = float3x3(input.tangent,input.binormal,input.normal);	
+	float3 bumpNormal           = normalize(mul(normalMap, tangentSpaceMatrix));  
 
 	// get the colors from the projected reflection and distortion maps
 	float4 reflectionColor = GetReflectionColor(input, distortionMap);
@@ -244,7 +162,7 @@ float4 Main(PixelInputType input) : SV_TARGET
 	colorMix = lerp (colorMix, waterColorTint, tintStrength);
 
 	// get how much this pixel is ocluded
-	float lightPercent = GetLightPercent(input);
+	float lightPercent = GetShadowLightFraction(Texture[3], SampleType[1], input.positionLightSpace, 0.00001);
 	
 	// get the minimum color value if the pixel is 100% ocluded
 	// and the leftover color that will represent if the pixel is fully luminated
@@ -252,8 +170,8 @@ float4 Main(PixelInputType input) : SV_TARGET
 	float3 fullLightColor = (colorMix * darkenOcludedPercent) * lightPercent;
 	
 	// get the specular highlights for the water surface
-	float3 directionalColor = GetDirectionalColor(input, fullLightColor, normalMap.rgb, specularMap) * lightPercent;
-	float3 pointColor       = GetPointColor(input, fullLightColor, normalMap.rgb, specularMap);
+	float3 directionalColor = GetDirectionalColor(input, fullLightColor, bumpNormal, specularMap) * lightPercent;
+	float3 pointColor       = GetPointColor(input, fullLightColor, bumpNormal, specularMap);
 	
 	float4 finalColor = float4(0,0,0,1);
 	finalColor.rgb = ocludedColor + directionalColor + pointColor; 
