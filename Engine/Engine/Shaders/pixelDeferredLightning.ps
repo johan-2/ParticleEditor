@@ -1,18 +1,8 @@
 
+#include "CommonPixel.ps"
+
 Texture2D    Texture[5]; // shadowmap, position, normal, diffuse, specular	
 SamplerState SampleType[2]; // wrap,clamp 	
- 
- struct PointLight
-{
-	float3 position;
-	float radius;
-	float3 color;
-	float intensity;	
-	float attConstant;
-	float attLinear;
-	float attExponential;
-	int numLights;
-};
 
 cbuffer AmbientDirectionalBuffer : register(b0)
 {
@@ -43,115 +33,34 @@ float4 GetAmbientColor(float4 diffuseMap)
 }
 
 float4 GetDirectionalColor(float4 position, float4 diffuse, float4 normal, float4 specularMap)
-{
-	// do all shadow calculations first to decide if the pixel should be lit or not
-	float bias         = 0.00001;
-	float numInLight   = 9;
-	float lightPercent = 0;
-	
+{	
+	// calculate the position in clip space of light
 	float4 positionLightSpace = mul(position, lightViewProj);
 	
-	// get the projected texture coordinates based on the position in eye of the light
-	float2 smTexCoord;
-	smTexCoord.x = ((positionLightSpace.x  / positionLightSpace.w) / 2.0) + 0.5;
-	smTexCoord.y = ((-positionLightSpace.y / positionLightSpace.w) / 2.0) + 0.5;
+	// get how much this pixel is luminated or in shadow
+	float lightPercent = GetShadowLightFraction(Texture[0], SampleType[1], positionLightSpace, 0.00001);
 	
-	if((saturate(smTexCoord.x) == smTexCoord.x) && (saturate(smTexCoord.y) == smTexCoord.y))
-	{
-		numInLight = 0;
-		
-		float neighbour = 1 / 8192.0;	// hardcoded for now, dont forget to change if depthmap res change	
-		float depthMapValues[9];
-		
-		depthMapValues[0] = Texture[0].Sample(SampleType[1], float2(smTexCoord.x, smTexCoord.y)).r; // middle
-		depthMapValues[1] = Texture[0].Sample(SampleType[1], float2(smTexCoord.x - neighbour, smTexCoord.y)).r; // left
-		depthMapValues[2] = Texture[0].Sample(SampleType[1], float2(smTexCoord.x - neighbour, smTexCoord.y - neighbour)).r; // top left
-		depthMapValues[3] = Texture[0].Sample(SampleType[1], float2(smTexCoord.x, smTexCoord.y - neighbour)).r; // top
-		depthMapValues[4] = Texture[0].Sample(SampleType[1], float2(smTexCoord.x + neighbour, smTexCoord.y - neighbour)).r; // top right
-		depthMapValues[5] = Texture[0].Sample(SampleType[1], float2(smTexCoord.x + neighbour, smTexCoord.y)).r; // right
-		depthMapValues[6] = Texture[0].Sample(SampleType[1], float2(smTexCoord.x + neighbour, smTexCoord.y + neighbour)).r; // bottom right
-		depthMapValues[7] = Texture[0].Sample(SampleType[1], float2(smTexCoord.x, smTexCoord.y + neighbour)).r; // bottom 
-		depthMapValues[8] = Texture[0].Sample(SampleType[1], float2(smTexCoord.x - neighbour, smTexCoord.y + neighbour)).r; // bottom left
-		
-		float lightDepthValue = (positionLightSpace.z / positionLightSpace.w) - bias;
-		
-		for(int i =0; i < 9; i++)
-		{
-			if( lightDepthValue <= depthMapValues[i])
-				numInLight++;
-		}
-		
-		if(numInLight == 0)
-			return float4(0,0,0,0);	
-	}
-	
-	// get how many pixels that not was ocluded in range 0-1 
-	lightPercent = numInLight / 9;
+	// return no light if completely occluded
+	if(lightPercent == 0)
+		return float4(0,0,0,0);
 										  
-	// sample from textures, multiply texturecolor with light percent to get blured shadow edges		
+	// get strength of texture color depending on how this pixel is occluded		
 	float4 textureColor = diffuse * lightPercent;
-			    		  					   		
+			   
+    // get how hard the light hits the surface			   
     float lightIntensity = saturate(dot(normal.xyz, lightDirectionDir)); 
 	
 	// get color based on texture, intensity and color of light
-    float4 color = textureColor * lightIntensity * lightColorDir; 
-	saturate(color);
-	float4 specular = float4(0,0,0,0);
-	
-	// add specular effect if the light is affecting the pixel
-	if(lightIntensity > 0)
-	{		
-		float3 vertexToCamera = normalize(cameraPosition.xyz - position.xyz);				
-		
-		//phong
-		float3 reflection = normalize(2 * lightIntensity * normal - lightDirectionDir);		
-		float specularIntensity = pow(saturate(dot(reflection, vertexToCamera)), 100.0);
-		specular = (lightColorDir * specularIntensity) * specularMap;		
-	} 
-			
-	return (color += specular); 
+    return (textureColor * lightIntensity * lightColorDir) + GetSpecularColorPhong(cameraPosition.xyz, position.xyz, lightDirectionDir, lightColorDir, lightIntensity, normal.xyz, specularMap); 
 }
 
 float4 GetPointColor(float4 position, float4 diffuse, float4 normal, float4 specularMap)
 {
 	float4 finalColor = float4(0,0,0,1);
-	for (int i =0; i < pointLights[0].numLights; i++)
-	{	
-		// get light direction and distance from light	
-		float3 lightDir = -normalize(position - pointLights[i].position);	
-		float dst = length(position - pointLights[i].position);
-		
-		// calculate attuniation	
-		float fallOff = 1 - ((dst / pointLights[i].radius) * 0.5);	// make the falloff 50% slower then the radius to give more control of result depending of attuniation settings
-		float attuniation = 1 / (pointLights[i].attConstant + pointLights[i].attLinear * dst + pointLights[i].attExponential * dst * dst);
-		attuniation = (attuniation * pointLights[i].intensity) * fallOff;
-		
-		if (fallOff >= 0)
-		{	
-				
-			// get intensity from the normal from normalmap and lightdirection
-			float lightIntensity = saturate(dot(normal.xyz, lightDir)); 
-			
-			// get color based on texture, intensity and color of light
-			float4 color = diffuse * lightIntensity * float4(pointLights[i].color,1); 
-			
-			// add specular effect if the light is affecting the pixel, dont add specular effect if dst is more then radius
-			float4 specular = float4(0,0,0,0);		
-			if(lightIntensity > 0 && dst < pointLights[i].radius)
-			{						
-				float3 vertexToCamera = normalize(cameraPosition.xyz - position.xyz);
-							
-				//phong
-				float3 reflection = normalize(2 * lightIntensity * normal - lightDir);		
-				float specularIntensity = pow(saturate(dot(reflection, vertexToCamera)), specularMap.a * 255.0);
-				specular.rgb = (pointLights[i].color * specularIntensity) * specularMap.rgb;
-			} 
-						
-			color += specular;	
-			finalColor += (color * attuniation);
-		}
-	}
-     
+	int numLights = pointLights[0].numLights;
+	for (int i =0; i < numLights; i++)		
+		finalColor += GetPointLightColor(pointLights[i], position.xyz, cameraPosition, diffuse, normal.xyz, specularMap, true);
+	    
     return finalColor;
 }
 

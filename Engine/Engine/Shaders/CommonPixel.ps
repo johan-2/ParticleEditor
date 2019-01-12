@@ -1,0 +1,147 @@
+
+struct PointLight
+{
+	float3 position;
+	float radius;
+	float3 color;
+	float intensity;	
+	float attConstant;
+	float attLinear;
+	float attExponential;
+	int numLights;
+};
+
+float2 GetProjectiveTexCoords(float4 clipPosition)
+{
+	float2 result;
+	result.x =  clipPosition.x / clipPosition.w / 2.0f + 0.5f;
+    result.y = -clipPosition.y / clipPosition.w / 2.0f + 0.5f;
+	
+	return result;
+}
+
+float4 GetSpecularColorPhong(float3 cameraPosition, float3 worldPosition, float3 lightDirection, float4 lightColor, float lightIntensity, float3 normal, float4 specularMap)
+{
+	float4 specular = float4(0,0,0,0);	
+	if(lightIntensity > 0)
+	{		
+		float3 vertexToCamera = normalize(cameraPosition - worldPosition);				
+		
+		//phong
+		float3 reflection = normalize(2 * lightIntensity * normal - lightDirection);		
+		float specularIntensity = pow(saturate(dot(reflection, vertexToCamera)), specularMap.a * 255.0);
+		specular = (lightColor * specularIntensity) * specularMap;		
+	} 
+	
+	return specular;
+}
+
+float4 GetSpecularColorPhong(float3 vertexToCamera, float3 lightDirection, float4 lightColor, float lightIntensity, float3 normal, float4 specularMap)
+{
+	float4 specular = float4(0,0,0,0);	
+	if(lightIntensity > 0)
+	{		
+		//phong
+		float3 reflection = normalize(2 * lightIntensity * normal - lightDirection);		
+		float specularIntensity = pow(saturate(dot(reflection, vertexToCamera)), specularMap.a * 255.0);
+		specular = (lightColor * specularIntensity) * specularMap;		
+	} 
+	
+	return specular;
+}
+
+float GetShadowLightFraction(Texture2D shadowMap, SamplerState s, float4 posLightClipSpace, float bias)
+{
+	// if pixel is outside the range of the shadow map we will fallback that it is just lit
+	float numInLight   = 9;
+	
+	// get the projected texture coordinates based on the position in eye of the light
+	float2 smTexCoord = GetProjectiveTexCoords(posLightClipSpace);
+	
+	if((saturate(smTexCoord.x) == smTexCoord.x) && (saturate(smTexCoord.y) == smTexCoord.y))
+	{
+		// if whithin the shadow map initialize num in light to 0
+		numInLight = 0;
+		
+		float neighbour = 1 / 8192.0;	// hardcoded for now, dont forget to change if depthmap res change	
+		float depthMapValues[9];
+		
+		depthMapValues[0] = shadowMap.Sample(s, float2(smTexCoord.x, smTexCoord.y)).r;                         // middle
+		depthMapValues[1] = shadowMap.Sample(s, float2(smTexCoord.x - neighbour, smTexCoord.y)).r;             // left
+		depthMapValues[2] = shadowMap.Sample(s, float2(smTexCoord.x - neighbour, smTexCoord.y - neighbour)).r; // top left
+		depthMapValues[3] = shadowMap.Sample(s, float2(smTexCoord.x, smTexCoord.y - neighbour)).r;             // top
+		depthMapValues[4] = shadowMap.Sample(s, float2(smTexCoord.x + neighbour, smTexCoord.y - neighbour)).r; // top right
+		depthMapValues[5] = shadowMap.Sample(s, float2(smTexCoord.x + neighbour, smTexCoord.y)).r;             // right
+		depthMapValues[6] = shadowMap.Sample(s, float2(smTexCoord.x + neighbour, smTexCoord.y + neighbour)).r; // bottom right
+		depthMapValues[7] = shadowMap.Sample(s, float2(smTexCoord.x, smTexCoord.y + neighbour)).r;             // bottom 
+		depthMapValues[8] = shadowMap.Sample(s, float2(smTexCoord.x - neighbour, smTexCoord.y + neighbour)).r; // bottom left
+		
+		float lightDepthValue = (posLightClipSpace.z / posLightClipSpace.w) - bias;
+		
+		for(int i =0; i < 9; i++)		
+			if( lightDepthValue <= depthMapValues[i])
+				numInLight++;		
+	}
+	
+	return numInLight / 9.0;
+}
+
+float4 GetPointLightColor(PointLight pointLight, float3 worldPosition, float3 cameraPosition, float4 diffuse, float3 normal, float4 specularMap, bool includeSpecular)
+{
+	// get light direction and distance from light	
+		float3 lightDir = -normalize(worldPosition - pointLight.position);	
+		float dst = length(worldPosition - pointLight.position);
+		
+		// calculate attuniation	
+		float fallOff = 1 - ((dst / pointLight.radius) * 0.5);	// make the falloff 50% slower then the radius to give more control of result depending of attuniation settings
+		float attuniation = 1 / (pointLight.attConstant + pointLight.attLinear * dst + pointLight.attExponential * dst * dst);
+		attuniation = (attuniation * pointLight.intensity) * fallOff;
+		
+		if (fallOff >= 0)
+		{		
+			// get intensity from the normal from normalmap and lightdirection
+			float lightIntensity = saturate(dot(normal, lightDir)); 
+			
+			// get color based on texture, intensity and color of light
+			float4 color = diffuse * lightIntensity * float4(pointLight.color, 1); 
+			
+			// add specular effect if the light is affecting the pixel, dont add specular effect if dst is more then radius
+			float4 specular = float4(0,0,0,0);	
+			if( includeSpecular && lightIntensity > 0 && dst < pointLight.radius)
+				specular = GetSpecularColorPhong(cameraPosition, worldPosition, lightDir, float4(pointLight.color.rgb, 1.0), lightIntensity, normal, specularMap);
+				
+			return (color + specular) * attuniation;	
+		}
+		
+		return float4(0,0,0,0);
+}
+
+float4 GetPointLightColor2(PointLight pointLight, float3 worldPosition, float3 vertexToCamera, float4 diffuse, float3 normal, float4 specularMap, bool includeSpecular)
+{
+	// get light direction and distance from light	
+		float3 lightDir = -normalize(worldPosition - pointLight.position);	
+		float dst = length(worldPosition - pointLight.position);
+		
+		// calculate attuniation	
+		float fallOff = 1 - ((dst / pointLight.radius) * 0.5);	// make the falloff 50% slower then the radius to give more control of result depending of attuniation settings
+		float attuniation = 1 / (pointLight.attConstant + pointLight.attLinear * dst + pointLight.attExponential * dst * dst);
+		attuniation = (attuniation * pointLight.intensity) * fallOff;
+		
+		if (fallOff >= 0)
+		{		
+			// get intensity from the normal from normalmap and lightdirection
+			float lightIntensity = saturate(dot(normal, lightDir)); 
+			
+			// get color based on texture, intensity and color of light
+			float4 color = diffuse * lightIntensity * float4(pointLight.color, 1); 
+			
+			// add specular effect if the light is affecting the pixel, dont add specular effect if dst is more then radius
+			float4 specular = float4(0,0,0,0);	
+			if( includeSpecular && lightIntensity > 0 && dst < pointLight.radius)
+				specular = GetSpecularColorPhong(vertexToCamera, lightDir, float4(pointLight.color.rgb, 1.0), lightIntensity, normal, specularMap);
+				
+			return (color + specular) * attuniation;	
+		}
+		
+		return float4(0,0,0,0);
+}

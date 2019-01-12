@@ -1,9 +1,20 @@
-﻿  PostProcessWindow.cpp
-  Renderer.cpp
+﻿  LightManager.cpp
+  SkyDome.cpp
+  DeferredShader.cpp
+  DepthShader.cpp
+  ForwardAlphaShader.cpp
+  ImGUIShader.cpp
+  ParticleShader.cpp
+  PlanarReflectionShader.cpp
   PostProcessingShader.cpp
+  QuadShader.cpp
+  SimpleClipSceneShader.cpp
+  WaterShader.cpp
+  WireframeShader.cpp
+  SponzaTestScene.cpp
   Generating code
-  2 of 3176 functions (<0.1%) were compiled, the rest were copied from previous compilation.
+  28 of 3176 functions ( 0.9%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    3 functions had inline decision re-evaluated but remain unchanged
+    4 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   Engine.vcxproj -> C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\Engine.exe
