@@ -24,6 +24,12 @@ public:
 	void CreateBloomBlurRenderTextures();
 	void createDofRenderTextures();
 
+	void ShowAllDebugQuads();
+	void ShowBrightnessMapDebugQuad();
+	void ShowBloomBlurP1DebugQuad();
+	void ShowBloomBlurP2DebugQuad();
+	void ShowDofMapDebugQuad();
+
 private:
 
 	struct ComputeResources

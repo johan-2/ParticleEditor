@@ -205,6 +205,7 @@
     <ClCompile Include="Code\System\Systems.cpp" />
     <ClCompile Include="Code\TestScenes\IslandTestScene.cpp" />
     <ClCompile Include="Code\TestScenes\SponzaTestScene.cpp" />
+    <ClCompile Include="Code\Utils\DebugQuadHandler.cpp" />
     <ClCompile Include="Code\Utils\SystemDefs.cpp" />
     <ClCompile Include="Code\Utils\TexturePool.cpp" />
     <ClCompile Include="Code\Utils\Time.cpp" />
@@ -273,6 +274,7 @@
     <ClInclude Include="Code\System\Systems.h" />
     <ClInclude Include="Code\TestScenes\IslandTestScene.h" />
     <ClInclude Include="Code\TestScenes\SponzaTestScene.h" />
+    <ClInclude Include="Code\Utils\DebugQuadHandler.h" />
     <ClInclude Include="Code\Utils\GUI.h" />
     <ClInclude Include="Code\Utils\JsonHelpers.h" />
     <ClInclude Include="Code\Utils\MathHelpers.h" />

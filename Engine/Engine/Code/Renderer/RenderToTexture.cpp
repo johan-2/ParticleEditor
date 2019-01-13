@@ -3,8 +3,9 @@
 #include <iostream>
 #include "Systems.h"
 #include "DXErrorHandler.h"
+#include "DebugQuadHandler.h"
 
-RenderToTexture::RenderToTexture(unsigned int width, unsigned int height, bool depthOnly, bool HDR)
+RenderToTexture::RenderToTexture(unsigned int width, unsigned int height, bool depthOnly, bool HDR, bool addRenderDebugQuad, bool addDepthDebugQuad)
 {
 	ID3D11Device* device = Systems::dxManager->GetDevice();
 	HRESULT result;
@@ -80,7 +81,9 @@ RenderToTexture::RenderToTexture(unsigned int width, unsigned int height, bool d
 		_viewport.TopLeftX = 0.0f;
 		_viewport.TopLeftY = 0.0f;
 
-		depthTex2D->Release();		
+		depthTex2D->Release();	
+
+		if (addDepthDebugQuad) Systems::renderer->GetDebugQuadHandler()->AddDebugQuad(_depthStencilSRV);
 	}
 	else // create both a render target view and a depth stencil view
 	{		
@@ -199,6 +202,9 @@ RenderToTexture::RenderToTexture(unsigned int width, unsigned int height, bool d
 
 		depthTex2D->Release();
 		renderTex2D->Release();		
+
+		if (addDepthDebugQuad)  Systems::renderer->GetDebugQuadHandler()->AddDebugQuad(_depthStencilSRV);
+		if (addRenderDebugQuad) Systems::renderer->GetDebugQuadHandler()->AddDebugQuad(_renderTargetSRV);
 	}	
 }
 

@@ -16,6 +16,7 @@
 #include "SimpleClipSceneShader.h"
 #include "MathHelpers.h"
 #include "Renderer.h"
+#include "DebugQuadHandler.h"
 
 WaterShader::WaterShader()
 {
@@ -27,7 +28,7 @@ WaterShader::WaterShader()
 	SHADER_HELPERS::CreateConstantBuffer(_CBVertex);
 
 	_simpleClipShaderReflection = new SimpleClipSceneShader();
-	_simpleClipShaderRefraction = new SimpleClipSceneShader(true);
+	_simpleClipShaderRefraction = new SimpleClipSceneShader();
 }
 
 WaterShader::~WaterShader()
@@ -42,6 +43,13 @@ WaterShader::~WaterShader()
 
 	delete _simpleClipShaderReflection;
 	delete _simpleClipShaderRefraction;
+}
+
+void WaterShader::ShowDebugQuads()
+{
+	DebugQuadHandler* quadHandler = Systems::renderer->GetDebugQuadHandler(); 
+	quadHandler->AddDebugQuad(_simpleClipShaderReflection->GetRenderSRV());
+	quadHandler->AddDebugQuad(_simpleClipShaderRefraction->GetRenderSRV());
 }
 
 void WaterShader::Render(std::vector<Mesh*>& waterMeshes)

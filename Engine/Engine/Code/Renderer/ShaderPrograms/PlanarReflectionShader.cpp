@@ -16,6 +16,7 @@
 #include "SimpleClipSceneShader.h"
 #include "MathHelpers.h"
 #include "Renderer.h"
+#include "DebugQuadHandler.h"
 
 PlanarReflectionShader::PlanarReflectionShader()
 {
@@ -27,7 +28,7 @@ PlanarReflectionShader::PlanarReflectionShader()
 	SHADER_HELPERS::CreateConstantBuffer(_CBVertex);
 	SHADER_HELPERS::CreateConstantBuffer(_CBReflect);
 
-	_simpleClipShaderReflection = new SimpleClipSceneShader(true);
+	_simpleClipShaderReflection = new SimpleClipSceneShader();
 }
 
 PlanarReflectionShader::~PlanarReflectionShader()
@@ -42,6 +43,11 @@ PlanarReflectionShader::~PlanarReflectionShader()
 	_CBVertex->Release();
 
 	delete _simpleClipShaderReflection;
+}
+
+void PlanarReflectionShader::ShowDebugQuads()
+{
+	Systems::renderer->GetDebugQuadHandler()->AddDebugQuad(_simpleClipShaderReflection->GetRenderSRV());
 }
 
 void PlanarReflectionShader::Render(std::vector<Mesh*>& reflectionMeshes)

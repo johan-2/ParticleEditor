@@ -12,6 +12,8 @@
 #include "CameraComponent.h"
 #include "FreeMoveComponent.h"
 #include "UVScrollComponent.h"
+#include "WaterShader.h"
+#include "PostProcessingShader.h"
 
 IslandTestScene::IslandTestScene()
 {
@@ -21,12 +23,14 @@ IslandTestScene::IslandTestScene()
 	Renderer& renderer = *Systems::renderer;
 
 	// create shadowMap
-	Entity* shadowMapRenderer = renderer.CreateShadowMap(250.0f, 8192.0f, XMFLOAT3(-6, 325, 9), XMFLOAT3(85.0f, -90.0f, 0));
+	Entity* shadowMapRenderer = renderer.CreateShadowMap(250.0f, 8192.0f, XMFLOAT3(-6, 325, 9), XMFLOAT3(85.0f, -90.0f, 0), true);
 
 	// create skybox
 	_skyDome = renderer.CreateSkyDome("Settings/SkyDomeDefault.json");
 
-	renderer.CreateDebugImages();
+	renderer.ShowGBufferDebugImages();
+	renderer.GetWaterShader()->ShowDebugQuads();
+	renderer.GetPostProcessShader()->ShowBloomBlurP2DebugQuad();
 
 	// create game camera
 	Entity* cameraGame = new Entity();

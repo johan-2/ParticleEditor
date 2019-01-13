@@ -13,6 +13,8 @@
 #include "FreeMoveComponent.h"
 #include "RotationComponent.h"
 #include "ShaderHelpers.h"
+#include "PlanarReflectionShader.h"
+#include "PostProcessingShader.h"
 
 SponzaTestScene::SponzaTestScene()
 {
@@ -22,12 +24,14 @@ SponzaTestScene::SponzaTestScene()
 	Renderer& renderer = *Systems::renderer;
 
 	// create shadowMap
-	Entity* shadowMapRenderer = renderer.CreateShadowMap(250.0f, 8192.0f, XMFLOAT3(-6, 325, 9), XMFLOAT3(85.0f, -90.0f, 0));
+	Entity* shadowMapRenderer = renderer.CreateShadowMap(250.0f, 8192.0f, XMFLOAT3(-6, 325, 9), XMFLOAT3(85.0f, -90.0f, 0), true);
 
 	// create skybox
 	_skyDome = renderer.CreateSkyDome("Settings/SkyDomeDefault.json");
 
-	renderer.CreateDebugImages();
+	renderer.ShowGBufferDebugImages();
+	renderer.GetPlanarShader()->ShowDebugQuads();
+	renderer.GetPostProcessShader()->ShowBloomBlurP2DebugQuad();
 
 	// create game camera
 	Entity* cameraGame = new Entity();

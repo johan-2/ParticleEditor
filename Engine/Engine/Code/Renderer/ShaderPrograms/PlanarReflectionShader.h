@@ -19,6 +19,7 @@ public:
 	~PlanarReflectionShader();
 
 	void Render(std::vector<Mesh*>& reflectionMeshes);
+	void ShowDebugQuads();
 
 private:
 	

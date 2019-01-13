@@ -10,6 +10,7 @@
 #include "Entity.h"
 #include "QuadComponent.h"
 #include <math.h>
+#include "DebugQuadHandler.h"
 
 PostProcessingShader::PostProcessingShader()
 {
@@ -28,11 +29,8 @@ PostProcessingShader::PostProcessingShader()
 	CreateBloomBlurRenderTextures();
 	createDofRenderTextures();
 
+	// create compute shader resources for calculating the brigthness map
 	SHADER_HELPERS::CreateTexture2DUAVSRV(SystemSettings::SCREEN_WIDTH, SystemSettings::SCREEN_HEIGHT, _brightnessResources.Tex, _brightnessResources.SRV, _brightnessResources.UAV);
-
-	Entity* reflectionQuad = new Entity();
-	reflectionQuad->AddComponent<QuadComponent>()->Init(XMFLOAT2(SystemSettings::SCREEN_WIDTH * 0.78f, SystemSettings::SCREEN_HEIGHT * 0.1f), XMFLOAT2(SystemSettings::SCREEN_WIDTH * 0.1f, SystemSettings::SCREEN_HEIGHT * 0.1f), L"");
-	reflectionQuad->GetComponent<QuadComponent>()->SetTexture(_brightnessResources.SRV);
 }
 
 PostProcessingShader::~PostProcessingShader()
@@ -48,25 +46,42 @@ PostProcessingShader::~PostProcessingShader()
 	_vertexBlurShaderByteCode->Release();
 	_pixelBlurShaderByteCode->Release();
 	_computeBrightnessShaderByteCode->Release();
+
+	_brightnessResources.SRV->Release();
+	_brightnessResources.UAV->Release();
+	_brightnessResources.Tex->Release();
 }
 
 void PostProcessingShader::CreateBloomBlurRenderTextures()
 {
-	if (_bloomHorizontalBlurPass1) delete _bloomHorizontalBlurPass1;
-	if (_bloomVerticalBlurPass1)   delete _bloomVerticalBlurPass1;
-	if (_bloomHorizontalBlurPass2) delete _bloomHorizontalBlurPass2;
-	if (_bloomVerticalBlurPass2)   delete _bloomVerticalBlurPass2;
+	ID3D11ShaderResourceView* oldp1 = nullptr;
+	ID3D11ShaderResourceView* oldp2 = nullptr; 
 
-	_bloomHorizontalBlurPass1 = new RenderToTexture(SystemSettings::SCREEN_WIDTH / PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_1, SystemSettings::SCREEN_HEIGHT / PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_1, false, SystemSettings::USE_HDR);
-	_bloomVerticalBlurPass1   = new RenderToTexture(SystemSettings::SCREEN_WIDTH / PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_1, SystemSettings::SCREEN_HEIGHT / PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_1, false, SystemSettings::USE_HDR);
-	_bloomHorizontalBlurPass2 = new RenderToTexture(SystemSettings::SCREEN_WIDTH / PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_2, SystemSettings::SCREEN_HEIGHT / PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_2, false, SystemSettings::USE_HDR);
-	_bloomVerticalBlurPass2   = new RenderToTexture(SystemSettings::SCREEN_WIDTH / PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_2, SystemSettings::SCREEN_HEIGHT / PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_2, false, SystemSettings::USE_HDR);
+	// the resolution of these maps can be updated from in game editor
+	// delete old ones if exist and also get ptrs to the textures that 
+	// could be used displaying debug quads
+	if (_bloomHorizontalBlurPass1)   delete _bloomHorizontalBlurPass1;
+	if (_bloomVerticalBlurPass1)   { oldp1 = _bloomVerticalBlurPass1->GetRenderTargetSRV(); delete _bloomVerticalBlurPass1;}
+	if (_bloomHorizontalBlurPass2) { oldp2 = _bloomVerticalBlurPass2->GetRenderTargetSRV(); delete _bloomHorizontalBlurPass2;}
+	if (_bloomVerticalBlurPass2)     delete _bloomVerticalBlurPass2;
+
+	// create new render textures
+	_bloomHorizontalBlurPass1 = new RenderToTexture(SystemSettings::SCREEN_WIDTH / PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_1, SystemSettings::SCREEN_HEIGHT / PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_1, false, SystemSettings::USE_HDR, false);
+	_bloomVerticalBlurPass1   = new RenderToTexture(SystemSettings::SCREEN_WIDTH / PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_1, SystemSettings::SCREEN_HEIGHT / PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_1, false, SystemSettings::USE_HDR, false);
+	_bloomHorizontalBlurPass2 = new RenderToTexture(SystemSettings::SCREEN_WIDTH / PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_2, SystemSettings::SCREEN_HEIGHT / PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_2, false, SystemSettings::USE_HDR, false);
+	_bloomVerticalBlurPass2   = new RenderToTexture(SystemSettings::SCREEN_WIDTH / PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_2, SystemSettings::SCREEN_HEIGHT / PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_2, false, SystemSettings::USE_HDR, false);
+
+	// check if some of the old textures was used in the debug quads
+	// if a match is found it will give it a ptr to the new texture instead
+	Systems::renderer->GetDebugQuadHandler()->ReplaceTexture(oldp1, _bloomVerticalBlurPass1->GetRenderTargetSRV());
+	Systems::renderer->GetDebugQuadHandler()->ReplaceTexture(oldp2, _bloomVerticalBlurPass2->GetRenderTargetSRV());
 }
 
 void PostProcessingShader::createDofRenderTextures()
 {
-	_dofHorizontalBlurPass = new RenderToTexture(SystemSettings::SCREEN_WIDTH, SystemSettings::SCREEN_HEIGHT, false, SystemSettings::USE_HDR);
-	_dofVerticalBlurPass   = new RenderToTexture(SystemSettings::SCREEN_WIDTH, SystemSettings::SCREEN_HEIGHT, false, SystemSettings::USE_HDR);
+	// render textures for the dof blur
+	_dofHorizontalBlurPass = new RenderToTexture(SystemSettings::SCREEN_WIDTH, SystemSettings::SCREEN_HEIGHT, false, SystemSettings::USE_HDR, false);
+	_dofVerticalBlurPass   = new RenderToTexture(SystemSettings::SCREEN_WIDTH, SystemSettings::SCREEN_HEIGHT, false, SystemSettings::USE_HDR, false);
 }
 
 void PostProcessingShader::Render(ScreenQuad* quad, ID3D11ShaderResourceView* SceneImage, ID3D11ShaderResourceView* sceneDepth)
@@ -216,3 +231,16 @@ void PostProcessingShader::RenderFinal(ID3D11ShaderResourceView* SceneImage, ID3
 	devCon->PSSetShaderResources(0, 4, nullSRV);
 }
 
+// ENABLE DEBUG QUADS FOR VERIOUS MAPS
+void PostProcessingShader::ShowAllDebugQuads()
+{
+	ShowBrightnessMapDebugQuad();
+	ShowBloomBlurP1DebugQuad();
+	ShowBloomBlurP2DebugQuad();
+	ShowDofMapDebugQuad();
+}
+
+void PostProcessingShader::ShowBrightnessMapDebugQuad() { Systems::renderer->GetDebugQuadHandler()->AddDebugQuad(_brightnessResources.SRV); }
+void PostProcessingShader::ShowBloomBlurP1DebugQuad()   { Systems::renderer->GetDebugQuadHandler()->AddDebugQuad(_bloomVerticalBlurPass1->GetRenderTargetSRV()); }
+void PostProcessingShader::ShowBloomBlurP2DebugQuad()   { Systems::renderer->GetDebugQuadHandler()->AddDebugQuad(_bloomVerticalBlurPass2->GetRenderTargetSRV()); }
+void PostProcessingShader::ShowDofMapDebugQuad()        { Systems::renderer->GetDebugQuadHandler()->AddDebugQuad(_dofVerticalBlurPass->GetRenderTargetSRV()); }

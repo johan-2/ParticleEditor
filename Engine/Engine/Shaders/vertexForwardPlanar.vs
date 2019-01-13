@@ -34,14 +34,9 @@ PixelInputType Main(VertexInputType input)
 {
     PixelInputType output;
 	
-	// send texcoords to pixelshader
-	output.texCoord = input.texCoord + u_uvOffset;
-	  
-    // set the w component of position
+	output.texCoord  = input.texCoord + u_uvOffset; 
     input.position.w = 1.0f;
-	
-	// get position in the worldViewProjection
-    output.position = mul(input.position,  u_worldViewProj); 	
+    output.position  = mul(input.position,  u_worldViewProj); 	
     	   	
 	// transform normals to worldSpace
 	output.normal   = normalize(mul(input.normal,   (float3x3)u_worldMatrix));	     	
@@ -49,7 +44,7 @@ PixelInputType Main(VertexInputType input)
 	output.binormal = normalize(mul(input.binormal, (float3x3)u_worldMatrix));
 	
 	// transform position into the space of the directional light that will calculate the shadows
-	output.positionLightSpace = mul(input.position,            u_worldViewProjLight); 	
+	output.positionLightSpace = mul(input.position, u_worldViewProjLight); 	
    
 	// get the direction from vertex to camera for specular calculations	
 	float4 worldPosition  = mul(input.position, u_worldMatrix);		

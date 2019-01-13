@@ -14,7 +14,7 @@ class DXInputLayouts;
 class SimpleClipSceneShader
 {
 public:
-	SimpleClipSceneShader(bool debugQuad = false);
+	SimpleClipSceneShader();
 	~SimpleClipSceneShader();
 
 	void RenderScene(std::vector<Mesh*>& opaqueMeshes, std::vector<Mesh*>& alphaMeshes, XMFLOAT4 clipPlane, bool includeSkyBox = true, bool includeParticles = true);

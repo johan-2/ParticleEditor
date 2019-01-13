@@ -19,6 +19,7 @@ public:
 	~WaterShader();
 
 	void Render(std::vector<Mesh*>& waterMeshes);
+	void ShowDebugQuads();
 
 private:
 	

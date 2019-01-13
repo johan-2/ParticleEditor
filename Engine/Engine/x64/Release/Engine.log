@@ -1,9 +1,49 @@
-﻿  PostProcessWindow.cpp
+﻿  Entity.cpp
+  IComponent.cpp
+  World.cpp
+  FreeMoveComponent.cpp
+  LightDirectionComponent.cpp
+  LightPointComponent.cpp
+  ParticleSystemComponent.cpp
+  QuadComponent.cpp
+  RotationComponent.cpp
+  UVScrollComponent.cpp
+  MasterEditor.cpp
+  PostProcessWindow.cpp
+  SkyDomeWindow.cpp
+  Framework.cpp
+  GuiManager.cpp
+  LightManager.cpp
+  GBuffer.cpp
+  ScreenQuad.cpp
+  Mesh.cpp
+  SkyDome.cpp
+  Compiling...
+  RenderToTexture.cpp
   Renderer.cpp
+  DeferredShader.cpp
+  DepthShader.cpp
+  ForwardAlphaShader.cpp
+  ImGUIShader.cpp
+  ParticleShader.cpp
+  PlanarReflectionShader.cpp
   PostProcessingShader.cpp
+  QuadShader.cpp
+  SimpleClipSceneShader.cpp
+  WaterShader.cpp
+  WireframeShader.cpp
+  DXInputLayouts.cpp
+  Systems.cpp
+  IslandTestScene.cpp
+  SponzaTestScene.cpp
+  DebugQuadHandler.cpp
+c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\debugquadhandler.cpp(2): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\debugquadhandler.cpp(4): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+c:\users\nilss\desktop\enginedx11\engine\engine\code\utils\debugquadhandler.cpp(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+  TexturePool.cpp
   Generating code
-  0 of 3176 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+  14 of 3186 functions ( 0.4%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    0 functions had inline decision re-evaluated but remain unchanged
+    16 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   Engine.vcxproj -> C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\Engine.exe

@@ -1,9 +1,8 @@
-
 Texture2D shaderTexture;	
 SamplerState SampleType;	
  
 uniform float4 u_color;
-uniform int u_ignoreAlpha;
+uniform int    u_ignoreAlpha;
 
 struct PixelInputType
 {
@@ -13,14 +12,9 @@ struct PixelInputType
 
 float4 Main(PixelInputType input) : SV_TARGET
 { 
-    float4 textureColor; 
-	float4 finalColor;	
-    
-    textureColor = shaderTexture.Sample(SampleType, input.tex);    
-    finalColor   = textureColor * u_color;
+    float4 color = shaderTexture.Sample(SampleType, input.tex) * u_color;
 	
-	if (u_ignoreAlpha) finalColor.a = 1.0f;
+	if (u_ignoreAlpha) color.a = 1.0f;
 		
-	return finalColor;	
-	    
+	return color;		    
 }

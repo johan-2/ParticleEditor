@@ -27,6 +27,7 @@
 #include "PostProcessingShader.h"
 #include "SimpleClipSceneShader.h"
 #include "WaterShader.h"
+#include "DebugQuadHandler.h"
 
 using namespace DirectX;
 
@@ -50,10 +51,15 @@ Renderer::~Renderer()
 	delete _planarReflectionShader;
 	delete _PostProcessingShader;
 	delete _waterShader;
+	delete _debugQuadHandler;
 }
 
 void Renderer::Initialize()
 {
+	// system for handeling creating and displaying
+	// debug UI quads of render targets
+	_debugQuadHandler = new DebugQuadHandler();
+
 	// set clear color
 	SetClearColor(0, 0, 0, 1);
 
@@ -86,13 +92,13 @@ void Renderer::Initialize()
 	// create the main rendertarget we will use
 	// this will hold our final scene up till we apply post processing
 	// and render to the backbuffer
-	_mainRendertarget = new RenderToTexture((unsigned int)SystemSettings::SCREEN_WIDTH, (unsigned int)SystemSettings::SCREEN_HEIGHT, false, SystemSettings::USE_HDR);
+	_mainRendertarget = new RenderToTexture((unsigned int)SystemSettings::SCREEN_WIDTH, (unsigned int)SystemSettings::SCREEN_HEIGHT, false, SystemSettings::USE_HDR, false);
 }
 
-Entity* Renderer::CreateShadowMap(float orthoSize, float resolution, XMFLOAT3 position, XMFLOAT3 rotation)
+Entity* Renderer::CreateShadowMap(float orthoSize, float resolution, XMFLOAT3 position, XMFLOAT3 rotation, bool debugQuad)
 {
 	// create depthmap render texture
-	_depthMap = new RenderToTexture((unsigned int)resolution, (unsigned int)resolution, true, false);
+	_depthMap = new RenderToTexture((unsigned int)resolution, (unsigned int)resolution, true, false, false, debugQuad);
 
 	// create camera entity with orthographic view for shadowmap rendering
 	_cameraDepth = new Entity();
@@ -100,7 +106,7 @@ Entity* Renderer::CreateShadowMap(float orthoSize, float resolution, XMFLOAT3 po
 	_cameraDepth->AddComponent<CameraComponent>()->Init2D(XMFLOAT2(orthoSize, orthoSize), XMFLOAT2(0.01f, 5000.0f));
 	_cameraDepth->AddComponent<FreeMoveComponent>()->init(80, 0.1f);
 
-	// start the free moce component of shadow camera inactive
+	// start the free move component of shadow camera inactive
 	_cameraDepth->GetComponent<FreeMoveComponent>()->SetActive(false);
 
 	// get pointer to camera component
@@ -117,34 +123,16 @@ Entity* Renderer::CreateShadowMap(float orthoSize, float resolution, XMFLOAT3 po
 
 SkyDome* Renderer::CreateSkyDome(const char* file)
 {
-	// create skybox
 	_skyDome = new SkyDome(file);
-
 	return _skyDome;
 }
 
-void Renderer::CreateDebugImages()
+void Renderer::ShowGBufferDebugImages()
 {
-	// create debug images to show each texture in the G buffer and the depth map
-	Entity* shadowMapQuad = new Entity();
-	shadowMapQuad->AddComponent<QuadComponent>()->Init(XMFLOAT2(SystemSettings::SCREEN_WIDTH * 0.06f, SystemSettings::SCREEN_HEIGHT * 0.1f), XMFLOAT2(SystemSettings::SCREEN_WIDTH * 0.08f, SystemSettings::SCREEN_WIDTH * 0.08f), L"", XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), true);
-	shadowMapQuad->GetComponent<QuadComponent>()->SetTexture(_depthMap->GetDepthStencilSRV());
-
-	Entity* positionQuad = new Entity();
-	positionQuad->AddComponent<QuadComponent>()->Init(XMFLOAT2(SystemSettings::SCREEN_WIDTH * 0.18f, SystemSettings::SCREEN_HEIGHT * 0.1f), XMFLOAT2(SystemSettings::SCREEN_WIDTH * 0.1f, SystemSettings::SCREEN_HEIGHT * 0.1f), L"", XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), true);
-	positionQuad->GetComponent<QuadComponent>()->SetTexture(_gBuffer->GetSrvArray()[0]);
-
-	Entity* normalQuad = new Entity();
-	normalQuad->AddComponent<QuadComponent>()->Init(XMFLOAT2(SystemSettings::SCREEN_WIDTH * 0.30f, SystemSettings::SCREEN_HEIGHT * 0.1f), XMFLOAT2(SystemSettings::SCREEN_WIDTH * 0.1f, SystemSettings::SCREEN_HEIGHT * 0.1f), L"", XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), true);
-	normalQuad->GetComponent<QuadComponent>()->SetTexture(_gBuffer->GetSrvArray()[1]);
-
-	Entity* DiffuseQuad = new Entity();
-	DiffuseQuad->AddComponent<QuadComponent>()->Init(XMFLOAT2(SystemSettings::SCREEN_WIDTH * 0.42f, SystemSettings::SCREEN_HEIGHT * 0.1f), XMFLOAT2(SystemSettings::SCREEN_WIDTH * 0.1f, SystemSettings::SCREEN_HEIGHT * 0.1f), L"", XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), true);
-	DiffuseQuad->GetComponent<QuadComponent>()->SetTexture(_gBuffer->GetSrvArray()[2]);
-
-	Entity* specularQuad = new Entity();
-	specularQuad->AddComponent<QuadComponent>()->Init(XMFLOAT2(SystemSettings::SCREEN_WIDTH * 0.54f, SystemSettings::SCREEN_HEIGHT * 0.1f), XMFLOAT2(SystemSettings::SCREEN_WIDTH * 0.1f, SystemSettings::SCREEN_HEIGHT * 0.1f), L"", XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), true);
-	specularQuad->GetComponent<QuadComponent>()->SetTexture(_gBuffer->GetSrvArray()[3]);
+	_debugQuadHandler->AddDebugQuad(_gBuffer->GetSrvArray()[0]);
+	_debugQuadHandler->AddDebugQuad(_gBuffer->GetSrvArray()[1]);
+	_debugQuadHandler->AddDebugQuad(_gBuffer->GetSrvArray()[2]);
+	_debugQuadHandler->AddDebugQuad(_gBuffer->GetSrvArray()[3]);
 }
 
 void Renderer::Render() 
@@ -183,10 +171,7 @@ void Renderer::Render()
 	// render reflective/refractive water
 	_waterShader->Render(_meshes[S_ALPHA_WATER]);
 
-	// TODO: alpha meshes and particles is not sorted against each other
-	// either sort them and send one object at a time to the shaders (feels like a bad brutforce way) or
-	// research to see if there are a more elegant solution to this problem
-	// right now particles is not visable throught alpha meshes
+	// render alpha meshes
 	_forwardAlphaShader->RenderForward(_meshes[S_FORWARD_ALPHA]);
 
 	// render particles

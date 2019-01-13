@@ -32,14 +32,9 @@ PixelInputType Main(VertexInputType input)
 {
     PixelInputType output;
 	
-	// send texcoords to pixelshader
-	output.texCoord = input.texCoord + u_uvOffset;
-	  
-    // Change the position vector to be 4 units for proper matrix calculations.
-    input.position.w = 1.0f;
-	
-	// get position acording to worldViewProjection
-    output.position = mul(input.position, u_worldViewProj); 	
+	output.texCoord  = input.texCoord + u_uvOffset;	
+	input.position.w = 1.0f;
+    output.position  = mul(input.position, u_worldViewProj); 	
     	   	
 	// transform normals to worldSpace
 	output.normal   = normalize(mul(input.normal,   (float3x3)u_worldMatrix));	     	

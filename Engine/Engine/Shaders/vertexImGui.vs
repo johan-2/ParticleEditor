@@ -1,6 +1,4 @@
-
 uniform float4x4 u_projectionMatrix;
-
 
 struct VS_INPUT
 {

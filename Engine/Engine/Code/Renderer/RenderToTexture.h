@@ -4,7 +4,7 @@
 class RenderToTexture
 {
 public:
-	RenderToTexture(unsigned int width, unsigned int height, bool depthOnly, bool HDR);
+	RenderToTexture(unsigned int width, unsigned int height, bool depthOnly, bool HDR, bool addRenderDebugQuad = false, bool addDepthDebugQuad = false);
 	~RenderToTexture();
 
 	// get render texture properties

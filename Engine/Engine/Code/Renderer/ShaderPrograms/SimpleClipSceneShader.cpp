@@ -14,7 +14,7 @@
 #include "SkyDome.h"
 #include "MathHelpers.h"
 
-SimpleClipSceneShader::SimpleClipSceneShader(bool debugQuad)
+SimpleClipSceneShader::SimpleClipSceneShader()
 {
 	// create shaders
 	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexSimpleClip.vs", _vertexShader, _vertexShaderByteCode);
@@ -24,15 +24,7 @@ SimpleClipSceneShader::SimpleClipSceneShader(bool debugQuad)
 	SHADER_HELPERS::CreateConstantBuffer(_CBVertex);
 
 	// create render texture
-	_renderTexture = new RenderToTexture((unsigned int)SystemSettings::SCREEN_WIDTH, (unsigned int)SystemSettings::SCREEN_HEIGHT, false, SystemSettings::USE_HDR);
-
-	if (debugQuad)
-	{
-		// create debug quad
-		Entity* reflectionQuad = new Entity();
-		reflectionQuad->AddComponent<QuadComponent>()->Init(XMFLOAT2(SystemSettings::SCREEN_WIDTH * 0.66f, SystemSettings::SCREEN_HEIGHT * 0.1f), XMFLOAT2(SystemSettings::SCREEN_WIDTH * 0.1f, SystemSettings::SCREEN_HEIGHT * 0.1f), L"");
-		reflectionQuad->GetComponent<QuadComponent>()->SetTexture(_renderTexture->GetRenderTargetSRV());
-	}
+	_renderTexture = new RenderToTexture((unsigned int)SystemSettings::SCREEN_WIDTH, (unsigned int)SystemSettings::SCREEN_HEIGHT, false, SystemSettings::USE_HDR, false);
 }
 
 SimpleClipSceneShader::~SimpleClipSceneShader()

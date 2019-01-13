@@ -25,6 +25,7 @@ class PlanarReflectionShader;
 class PostProcessingShader;
 class SimpleClipSceneShader;
 class WaterShader;
+class DebugQuadHandler;
 
 // the different render lists we have
 enum SHADER_TYPE
@@ -60,29 +61,34 @@ public:
 	void RemoveQuadFromRenderer(QuadComponent* quad)                        { VECTOR_HELPERS::RemoveItemFromVector(_quads, quad); }
 	void RemoveParticleSystemFromRenderer(ParticleSystemComponent* emitter) { VECTOR_HELPERS::RemoveItemFromVector(_particleSystems, emitter); }
 	
-	// get meshes
+	// get meshes and particles
 	std::vector<Mesh*>& GetMeshes(SHADER_TYPE type)       { return _meshes[type]; }
 	std::vector<ParticleSystemComponent*>& GetParticles() { return _particleSystems; }
 
 	// get input layouts
-	DXInputLayouts* GetInputLayouts() { return _inputLayouts; } 
+	DXInputLayouts* GetInputLayouts()       { return _inputLayouts; } 
+
+	// get the debug quad handler
+	DebugQuadHandler* GetDebugQuadHandler() { return _debugQuadHandler; }
 
 	// get shaders
-	ParticleShader*       GetParticleShader()    { return _particleShader; }
-	PostProcessingShader* GetPostProcessShader() { return _PostProcessingShader; }
+	ParticleShader*         GetParticleShader()    { return _particleShader; }
+	PostProcessingShader*   GetPostProcessShader() { return _PostProcessingShader; }
+	WaterShader*            GetWaterShader()       { return _waterShader; }
+	PlanarReflectionShader* GetPlanarShader()      { return _planarReflectionShader; }
 
 	// create/ get skydome
 	SkyDome* GetSkyDome() { return _skyDome; }
 	SkyDome* CreateSkyDome(const char* file);
 
 	// create the shadowmap
-	Entity* CreateShadowMap(float orthoSize, float resolution, XMFLOAT3 position, XMFLOAT3 rotation);
+	Entity* CreateShadowMap(float orthoSize, float resolution, XMFLOAT3 position, XMFLOAT3 rotation, bool debugQuad);
 
 	// create debug images that show each component of the G-Buffer
-	void CreateDebugImages();
+	void ShowGBufferDebugImages();
 
 	// set the clear color
-	void SetClearColor(float r, float g, float b, float a) { _clearColor[0] = r; _clearColor[1] = g; _clearColor[2] = b; _clearColor[3] = a;  }
+	void SetClearColor(float r, float g, float b, float a) { _clearColor[0] = r; _clearColor[1] = g; _clearColor[2] = b; _clearColor[3] = a; }
 
 	// set the main render target active
 	void SetMainRenderTarget(); 
@@ -131,9 +137,12 @@ private:
 	// the camera entity that renders the depth map for shadows
 	Entity* _cameraDepth;
 
-	// the render texure that the depth camera renders to
+	// render targets
 	RenderToTexture* _depthMap;
 	RenderToTexture* _mainRendertarget;
+
+	// class that handles creating and aligning debug render quads
+	DebugQuadHandler* _debugQuadHandler;
 
 	// the Gbuffer for deferred rendering
 	// and the fullscreen quad where we will 
