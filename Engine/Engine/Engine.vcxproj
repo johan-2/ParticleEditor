@@ -181,6 +181,7 @@
     <ClCompile Include="Code\Managers\LightManager.cpp" />
     <ClCompile Include="Code\Renderer\Deferred\GBuffer.cpp" />
     <ClCompile Include="Code\Renderer\Deferred\ScreenQuad.cpp" />
+    <ClCompile Include="Code\Renderer\Objects\InstancedModel.cpp" />
     <ClCompile Include="Code\Renderer\Objects\Mesh.cpp" />
     <ClCompile Include="Code\Renderer\Objects\SkyDome.cpp" />
     <ClCompile Include="Code\Renderer\Renderer.cpp" />
@@ -250,6 +251,7 @@
     <ClInclude Include="Code\Managers\LightManager.h" />
     <ClInclude Include="Code\Renderer\Deferred\GBuffer.h" />
     <ClInclude Include="Code\Renderer\Deferred\ScreenQuad.h" />
+    <ClInclude Include="Code\Renderer\Objects\InstancedModel.h" />
     <ClInclude Include="Code\Renderer\Objects\Mesh.h" />
     <ClInclude Include="Code\Renderer\Objects\SkyDome.h" />
     <ClInclude Include="Code\Renderer\Renderer.h" />

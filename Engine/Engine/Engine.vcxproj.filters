@@ -204,6 +204,9 @@
     <ClCompile Include="Code\Utils\DebugQuadHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Code\Renderer\Objects\InstancedModel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\Utils\SystemDefs.h">
@@ -420,6 +423,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Code\Utils\DebugQuadHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Renderer\Objects\InstancedModel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

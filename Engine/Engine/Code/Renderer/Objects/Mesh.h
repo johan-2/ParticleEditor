@@ -4,13 +4,17 @@
 #include "TransformComponent.h"
 #include "Color32.h"
 
-#define STANDARD               1 << 0
-#define CAST_SHADOW_DIR        1 << 1
-#define CAST_REFLECTION        1 << 2
-#define WIREFRAME_COLOR        1 << 3
-#define ALPHA_REFLECTION       1 << 4
-#define ALPHA_WATER            1 << 5
-#define REFRACT                1 << 6
+#define STANDARD                  1 << 0
+#define CAST_SHADOW_DIR           1 << 1
+#define CAST_REFLECTION           1 << 2
+#define WIREFRAME_COLOR           1 << 3
+#define ALPHA_REFLECTION          1 << 4
+#define ALPHA_WATER               1 << 5
+#define REFRACT                   1 << 6
+#define INSTANCED_OPAQUE          1 << 7
+#define INSTANCED_CAST_SHADOW_DIR 1 << 8
+#define INSTANCED_CAST_REFLECTION 1 << 9
+#define INSTANCED_REFRACT         1 << 10
 
 using namespace DirectX;
 
@@ -59,6 +63,9 @@ public:
 	// get number of vertices and indices
 	unsigned int GetNumVertices() { return _numVertices; }
 	unsigned int GetNumIndices()  { return _numIndices; }
+
+	ID3D11Buffer* GetVertexBuffer() { return _vertexBuffer; }
+	ID3D11Buffer* GetIndexBuffer()  { return _indexBuffer; }
 
 	// get all textures this mesh uses
 	ID3D11ShaderResourceView** GetTextureArray() { return _textures; }

@@ -228,9 +228,6 @@ void Renderer::RenderDepth()
 
 	_depthMap->SetRendertarget(true, false);
 
-	// set the viewport of the camera that renders the depth
-	dXM.SetViewport(_depthMap->GetViewport(), false);
-
 	// render all meshes 
 	_depthShader->RenderDepth(_meshes[S_DEPTH]);
 }

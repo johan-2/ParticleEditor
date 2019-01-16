@@ -48,15 +48,6 @@ void ModelComponent::InitPrimitive(PRIMITIVE_TYPE primitive, unsigned int flags,
 	else if (primitive == PRIMITIVE_TYPE::SPHERE) _meshes.push_back(ModelLoader::CreateSphere(flags, diffuseMap, normalMap, specularMap, emissiveMap, tiling, _parent));
 }
 
-void ModelComponent::InitGrid(unsigned int size, float cellSize, Color32 gridColor, unsigned int flags, wchar_t* diffuseMap, wchar_t* normalMap, wchar_t* specularMap, wchar_t* emissiveMap, float tiling)
-{	
-	// grid only use one mesh
-	_numMeshes = 1;
-	_FLAGS     = flags;
-
-	_meshes.push_back(ModelLoader::CreateGrid(size, cellSize, gridColor, flags, diffuseMap, normalMap, specularMap, emissiveMap, tiling, _parent));
-}
-
 void ModelComponent::Update(const float& delta)
 {	
 }
