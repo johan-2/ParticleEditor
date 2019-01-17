@@ -78,6 +78,7 @@ void Renderer::Initialize()
 	// create input layouts
 	_inputLayouts = new DXInputLayouts();
 	_inputLayouts->CreateInputLayout3D(_deferredShader->GetVertexGeometryShaderByteCode());
+	_inputLayouts->CreateInputLayout3DInstanced(_deferredShader->GetVertexGeometryShaderByteCodeInstanced());
 	_inputLayouts->CreateInputLayout2D(_quadShader->GetVertexShaderByteCode());
 	_inputLayouts->CreateInputLayoutParticle(_particleShader->GetVertexShaderByteCode());
 	_inputLayouts->CreateInputLayoutGUI(_imGUIShader->GetVertexShaderByteCode());
@@ -146,20 +147,15 @@ void Renderer::Render()
 	// clear the backbuffer and main rendertarget buffers
 	dXM.ClearRenderTarget(_clearColor[0], _clearColor[1], _clearColor[2], _clearColor[3]);
 	_mainRendertarget->ClearRenderTarget(_clearColor[0], _clearColor[1], _clearColor[2], _clearColor[3], false);
-
-	// set input layout for 3dmeshes
-	_inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT3D);
 	
 	// render shadowmap
 	RenderDepth();
 
 	// render all geometry and then fullscreen quad with lightcalculations
-	RenderDeferred();
-
-	// set back to 3d layout after the deferred 2d lightning pass
-	_inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT3D);	
+	RenderDeferred();		
 
 	// render skybox, will mask out all pixels that contains geometry in the fullscreen quad, leaving only the skybox rendered on "empty" pixels
+	_inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT_3D);
 	_skyDome->Render();
 
 	// render debug wireframe meshes, these are forward rendered
@@ -175,11 +171,11 @@ void Renderer::Render()
 	_forwardAlphaShader->RenderForward(_meshes[S_FORWARD_ALPHA]);
 
 	// render particles
-	_inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUTPARTICLE);
+	_inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT_PARTICLE);
 	_particleShader->RenderParticles(_particleSystems);
 
 	// render the final 2d stuff 
-	_inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT2D);
+	_inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT_2D);
 
 	// Render post processing 
 	_PostProcessingShader->Render(_fullScreenQuad, _mainRendertarget->GetRenderTargetSRV(), _mainRendertarget->GetDepthStencilSRV());
@@ -188,7 +184,7 @@ void Renderer::Render()
 	_quadShader->RenderQuadUI(_quads);
 	
 	// render IM GUI
-	_inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUTGUI);
+	_inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT_GUI);
 	_imGUIShader->RenderGUI();
 }
 
@@ -200,10 +196,14 @@ void Renderer::RenderDeferred()
 	_gBuffer->SetRenderTargets(_mainRendertarget->GetDepthStencil());		
 
 	// render all geometry info to the render targets
+	_inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT_3D);
 	_deferredShader->RenderGeometry(_meshes[S_DEFERRED]);
 
+	_inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT_3D_INSTANCED);
+	_deferredShader->renderGeometryInstanced(_instancedModels[S_INSTANCED_DEFERRED]);
+
 	// set to 2D input Layout
-	_inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT2D);
+	_inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT_2D);
 
 	// set to defualt rendertarget 
 	_mainRendertarget->SetRendertarget(false, false);
@@ -229,7 +229,11 @@ void Renderer::RenderDepth()
 	_depthMap->SetRendertarget(true, false);
 
 	// render all meshes 
+	_inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT_3D);
 	_depthShader->RenderDepth(_meshes[S_DEPTH]);
+
+	_inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT_3D_INSTANCED);
+	_depthShader->RenderDepthInstanced(_instancedModels[S_INSTANCED_DEPTH]);
 }
 
 void Renderer::SetMainRenderTarget()

@@ -49,13 +49,13 @@ void InstancedModel::BuildInstanceBuffer()
 		instanceBufferDesc.StructureByteStride = 0;
 
 		// Give the subresource structure a pointer to the instance data.
-		instanceData.pSysMem          = &_instances;
+		instanceData.pSysMem          = &_instances[0];
 		instanceData.SysMemPitch      = 0;
 		instanceData.SysMemSlicePitch = 0;
 
 		HRESULT result = Systems::dxManager->GetDevice()->CreateBuffer(&instanceBufferDesc, &instanceData, &_instanceBuffer);
 		if (FAILED(result))
-			DX_ERROR::PrintError(result, "failed to create instance buffer for particle emitter");
+			DX_ERROR::PrintError(result, "failed to create instance buffer for instanced model");
 
 		return;
 	}
@@ -81,8 +81,7 @@ void InstancedModel::RenderInstances()
 
 	unsigned int strides[2];
 	unsigned int offsets[2];
-	ID3D11Buffer* bufferptrs[2];
-
+	
 	// Set vertex buffer stride and offset.
 	strides[0] = sizeof(Mesh::VertexData);
 	strides[1] = sizeof(InstanceType);
@@ -90,14 +89,15 @@ void InstancedModel::RenderInstances()
 	offsets[0] = 0;
 	offsets[1] = 0;
 
-	bufferptrs[1] = _instanceBuffer;
+	// set the instance buffer in slot 1
+	devCon->IASetVertexBuffers(1, 1, &_instanceBuffer, &strides[1], &offsets[1]);
 
 	for (int i = 0; i < _numMeshes; i++)
 	{
-		bufferptrs[0] = _meshes[i]->GetVertexBuffer();
+		ID3D11Buffer* vertexBuffer = _meshes[i]->GetVertexBuffer();
 
-		// Set the vertex buffer and instance buffer
-		devCon->IASetVertexBuffers(0, 2, bufferptrs, strides, offsets);
+		// Set the vertex buffer in slot 0
+		devCon->IASetVertexBuffers(0, 1, &vertexBuffer, &strides[0], &offsets[0]);
 
 		// Set the index buffer 
 		devCon->IASetIndexBuffer(_meshes[i]->GetIndexBuffer(), DXGI_FORMAT_R32_UINT, 0);

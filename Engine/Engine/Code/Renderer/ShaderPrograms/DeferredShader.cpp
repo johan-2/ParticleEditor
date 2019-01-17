@@ -10,11 +10,13 @@
 #include "GBuffer.h"
 #include "Systems.h"
 #include "MathHelpers.h"
+#include "InstancedModel.h"
 
 DeferredShader::DeferredShader()
 {
 	//create deferred geometry shaders
 	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexDeferredGeometry.vs", _vertexGeometryShader, _vertexGeometryShaderByteCode);
+	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexDeferredGeometryInstanced.vs", _vertexGeometryShaderInstanced, _vertexGeometryShaderByteCodeInstanced);
 	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelDeferredGeometry.ps",   _pixelGeometryShader,  _pixelGeometryShaderByteCode);
 
 	//create deferred lightning shaders
@@ -22,7 +24,8 @@ DeferredShader::DeferredShader()
 	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelDeferredLightning.ps",   _pixelLightShader,    _pixelLightningShaderByteCode);
 
 	// create constant buffers for the deferred passes
-	SHADER_HELPERS::CreateConstantBuffer(_constantBufferGeometry);
+	SHADER_HELPERS::CreateConstantBuffer(_CBGeometryVertex);
+	SHADER_HELPERS::CreateConstantBuffer(_CBGeometryVertexInstanced);
 	SHADER_HELPERS::CreateConstantBuffer(_CBMisc);
 }
 
@@ -40,7 +43,7 @@ DeferredShader::~DeferredShader()
 	_vertexLightShader->Release();
 	_pixelLightShader->Release();
 
-	_constantBufferGeometry->Release();
+	_CBGeometryVertex->Release();
 	_CBMisc->Release();
 }
 
@@ -64,10 +67,10 @@ void DeferredShader::RenderGeometry(std::vector<Mesh*>& meshes)
 	devCon->PSSetShader(_pixelGeometryShader,  NULL, 0);
 
 	// set the vertex constant buffer
-	devCon->VSSetConstantBuffers(0, 1, &_constantBufferGeometry);
+	devCon->VSSetConstantBuffers(0, 1, &_CBGeometryVertex);
 
 	// constantbuffer structure
-	ConstantGeometryVertex vertexData;
+	CBGeometryVertex vertexData;
 
 	// stuff that need to be set per mesh
 	size_t size = meshes.size();
@@ -82,7 +85,7 @@ void DeferredShader::RenderGeometry(std::vector<Mesh*>& meshes)
 		XMStoreFloat2(&vertexData.uvOffset,        XMLoadFloat2(&meshes[i]->GetUvOffset()));
 
 		// update the constant buffer with the mesh data
-		SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(ConstantGeometryVertex), _constantBufferGeometry);
+		SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(CBGeometryVertex), _CBGeometryVertex);
 
 		// set textures
 		devCon->PSSetShaderResources(0, 4, meshes[i]->GetTextureArray());
@@ -90,6 +93,43 @@ void DeferredShader::RenderGeometry(std::vector<Mesh*>& meshes)
 		// draw
 		devCon->DrawIndexed(meshes[i]->GetNumIndices(), 0, 0);
 	}
+
+	// unbind so we can use resources as input in next stages
+	ID3D11ShaderResourceView* nullSRV[4] = { NULL, NULL, NULL, NULL };
+	devCon->PSSetShaderResources(0, 4, nullSRV);
+}
+
+void DeferredShader::renderGeometryInstanced(std::vector<InstancedModel*> models)
+{
+	// get DXManager
+	DXManager& DXM = *Systems::dxManager;
+	CameraManager& CM = *Systems::cameraManager;
+
+	// render opaque objects here only
+	DXM.BlendStates()->SetBlendState(BLEND_STATE::BLEND_OPAQUE);
+
+	// get devicecontext
+	ID3D11DeviceContext* devCon = DXM.GetDeviceCon();
+
+	// get the game camera
+	CameraComponent* camera = CM.GetCurrentCameraGame();
+
+	// set shaders
+	devCon->VSSetShader(_vertexGeometryShaderInstanced, NULL, 0);
+	devCon->PSSetShader(_pixelGeometryShader, NULL, 0);
+
+	// set the vertex constant buffer
+	devCon->VSSetConstantBuffers(0, 1, &_CBGeometryVertexInstanced);
+
+	// constantbuffer structure
+	CBGeometryVertexInstanced vertexData;	
+	XMStoreFloat4x4(&vertexData.ViewProj, XMLoadFloat4x4(&camera->GetViewProjMatrixTrans()));
+	SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(CBGeometryVertexInstanced), _CBGeometryVertexInstanced);
+
+	// stuff that need to be set per mesh
+	size_t size = models.size();
+	for (int i = 0; i < size; i++)	
+		models[i]->RenderInstances();							
 
 	// unbind so we can use resources as input in next stages
 	ID3D11ShaderResourceView* nullSRV[4] = { NULL, NULL, NULL, NULL };

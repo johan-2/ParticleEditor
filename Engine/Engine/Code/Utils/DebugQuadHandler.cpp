@@ -1,8 +1,8 @@
 #include "DebugQuadHandler.h"
-#include "Entity.h";
+#include "Entity.h"
 #include "QuadComponent.h"
-#include "Systems.h";
-#include "SystemDefs.h";
+#include "Systems.h"
+#include "SystemDefs.h"
 #include "VectorHelpers.h"
 
 DebugQuadHandler::DebugQuadHandler()

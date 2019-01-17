@@ -15,6 +15,8 @@
 #include "ShaderHelpers.h"
 #include "PlanarReflectionShader.h"
 #include "PostProcessingShader.h"
+#include "InstancedModel.h"
+#include "MathHelpers.h"
 
 SponzaTestScene::SponzaTestScene()
 {
@@ -141,6 +143,15 @@ SponzaTestScene::SponzaTestScene()
 	fire6->AddComponent<TransformComponent>()->Init(XMFLOAT3(-31.0f, 5.5f, 11.0f));
 	fire6->AddComponent<ParticleSystemComponent>()->Init("Particles/fire.json");
 	fire6->AddComponent<LightPointComponent>()->Init(9, 10, XMFLOAT3(0.8f, 0.4f, 0.0f), 0.0f, 1.0f, 0.0f);
+
+	InstancedModel* instancedModel = new InstancedModel("Models/Palm_01.obj", INSTANCED_OPAQUE | INSTANCED_CAST_SHADOW_DIR);
+
+	float spacing = 20.0f;
+	for (int i = 0; i < 20; i++)
+		for (int y = 0; y < 20; y++)		
+			instancedModel->AddInstance(MATH_HELPERS::CreateWorldMatrixTrans(XMFLOAT3(100 + (i * spacing), 0, 100 + (y * spacing)), XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1)));
+		
+	instancedModel->BuildInstanceBuffer();
 }
 
 SponzaTestScene::~SponzaTestScene()

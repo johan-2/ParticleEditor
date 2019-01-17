@@ -145,9 +145,9 @@ void SimpleClipSceneShader::RenderScene(std::vector<Mesh*>& opaqueMeshes, std::v
 
 		if (particles.size() > 0)
 		{
-			renderer.GetInputLayouts()->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUTPARTICLE);
+			renderer.GetInputLayouts()->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT_PARTICLE);
 			renderer.GetParticleShader()->RenderParticles(particles);
-			renderer.GetInputLayouts()->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT3D);
+			renderer.GetInputLayouts()->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT_3D);
 		}
 	}
 }
