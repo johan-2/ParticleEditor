@@ -107,7 +107,7 @@ void PlanarReflectionShader::Render(std::vector<Mesh*>& reflectionMeshes)
 		XMFLOAT4X4 reflectMat = camera->GetViewProjMatrix();
 
 		// render the reflectionmap
-		_simpleClipShaderReflection->RenderScene(renderer.GetMeshes(SHADER_TYPE::S_CAST_REFLECTION_OPAQUE), renderer.GetMeshes(SHADER_TYPE::S_CAST_REFLECTION_ALPHA), clipPlane, true);
+		_simpleClipShaderReflection->RenderScene(renderer.GetMeshes(SHADER_TYPE::S_CAST_REFLECTION_OPAQUE), renderer.GetMeshes(SHADER_TYPE::S_CAST_REFLECTION_ALPHA), renderer.GetInstancedModels(INSTANCED_SHADER_TYPE::S_INSTANCED_CAST_REFLECTION), clipPlane, true);
 
 		// change back to original camera position/rotation
 		camTrans->SetRotation(cameraRot);

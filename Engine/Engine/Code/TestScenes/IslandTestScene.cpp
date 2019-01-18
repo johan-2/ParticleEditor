@@ -14,6 +14,8 @@
 #include "UVScrollComponent.h"
 #include "WaterShader.h"
 #include "PostProcessingShader.h"
+#include "InstancedModel.h"
+#include "MathHelpers.h"
 
 IslandTestScene::IslandTestScene()
 {
@@ -55,13 +57,13 @@ IslandTestScene::IslandTestScene()
 
 	Entity* lake = new Entity();
 	lake->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(800.0f, 1.0f, 800.0f));
-	lake->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::PLANE, STANDARD | REFRACT, L"Textures/poolTile.dds", L"Textures/poolTileNormal.dds", L"Textures/FlatHighSpecular.dds", L"", 200);
+	lake->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::PLANE, STANDARD | REFRACT, L"Textures/sand.dds", L"Textures/sandNormal.dds", L"Textures/sandSpecular.dds", L"", 400);
 
 	Entity* water = new Entity();
 	water->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 5.0f, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(800, 1, 800));
-	water->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::PLANE, ALPHA_WATER, L"", L"Textures/waterNormal.dds", L"Textures/FlatHighSpecular.dds", L"", 250.0f);
-	water->AddComponent<UVScrollComponent>()->Init(XMFLOAT2(0.02f, -0.01f));
-	water->GetComponent<ModelComponent>()->SetUVDVMap(L"Textures/waterDuDv.dds");
+	water->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::PLANE, ALPHA_WATER, L"", L"Textures/waterNormal.dds", L"Textures/FlatHighSpecular.dds", L"", 200.0f);
+	water->AddComponent<UVScrollComponent>()->Init(XMFLOAT2(0.015f, -0.01f));
+	water->GetComponent<ModelComponent>()->SetUVDVMap(L"Textures/waterDUDV.dds");
 
 	Entity* tree = new Entity();
 	tree->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0.0f, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(0.1f, 0.1f, 0.1f));
@@ -75,6 +77,16 @@ IslandTestScene::IslandTestScene()
 	Entity* tree1 = new Entity();
 	tree1->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 5.0f, 65), XMFLOAT3(0, 0, 0), XMFLOAT3(1.0f, 1.0f, 1.0f));
 	tree1->AddComponent<ModelComponent>()->InitModel("Models/Palm_01.obj", STANDARD | CAST_REFLECTION | CAST_SHADOW_DIR);
+
+	InstancedModel* instancedModel = new InstancedModel("Models/Sphere.obj", INSTANCED_OPAQUE | INSTANCED_CAST_SHADOW_DIR | INSTANCED_CAST_REFLECTION | INSTANCED_REFRACT, L"Textures/Dirt_21_Diffuse.dds", L"Textures/Dirt_21_Normal.dds", L"Textures/Dirt_21_Specular.dds", L"", false);
+
+	std::vector<ModelInstance> instances;
+	float spacing = 20.0f;
+	for (int i = 0; i < 32; i++)
+		for (int y = 0; y < 32; y++)
+			instances.emplace_back((ModelInstance(MATH_HELPERS::CreateWorldMatrix(XMFLOAT3(100 + (i * spacing), 5, 100 + (y * spacing)), XMFLOAT3(0, 0, 0), XMFLOAT3(5, 5, 5)))));
+
+	instancedModel->BuildInstanceBuffer(instances);
 }
 
 IslandTestScene::~IslandTestScene()

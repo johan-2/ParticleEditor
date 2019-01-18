@@ -33,11 +33,8 @@ PixelInputType Main(VertexInputType input)
 	output.vertexColor = input.color;
 	output.texCoord    = input.texCoord + u_uvOffset;
 	
-    // Change the position vector to be 4 units for proper matrix calculations.
     input.position.w = 1.0f;
-   
-    // get the worldviewproj and multiply with position
-    output.position = mul(input.position, u_worldViewProj);
+    output.position  = mul(input.position, u_worldViewProj);
 	
 	// transform normals to worldSpace
 	output.normal   = normalize(mul(input.normal,   (float3x3)u_worldMatrix));

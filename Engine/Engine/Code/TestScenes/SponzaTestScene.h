@@ -1,8 +1,9 @@
 #pragma once
+#include <vector>
 
 class SkyDome;
-
 class SponzaTestScene
+
 {
 public:
 	SponzaTestScene();

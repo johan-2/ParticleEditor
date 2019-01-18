@@ -74,8 +74,9 @@ public:
 	void RemoveParticleSystemFromRenderer(ParticleSystemComponent* emitter)                  { VECTOR_HELPERS::RemoveItemFromVector(_particleSystems, emitter); }
 	
 	// get meshes and particles
-	std::vector<Mesh*>& GetMeshes(SHADER_TYPE type)       { return _meshes[type]; }
-	std::vector<ParticleSystemComponent*>& GetParticles() { return _particleSystems; }
+	std::vector<Mesh*>& GetMeshes(SHADER_TYPE type)                              { return _meshes[type]; }
+	std::vector<InstancedModel*>& GetInstancedModels(INSTANCED_SHADER_TYPE type) { return _instancedModels[type]; }
+	std::vector<ParticleSystemComponent*>& GetParticles()                        { return _particleSystems; }
 
 	// get input layouts
 	DXInputLayouts* GetInputLayouts()       { return _inputLayouts; } 

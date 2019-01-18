@@ -144,14 +144,15 @@ SponzaTestScene::SponzaTestScene()
 	fire6->AddComponent<ParticleSystemComponent>()->Init("Particles/fire.json");
 	fire6->AddComponent<LightPointComponent>()->Init(9, 10, XMFLOAT3(0.8f, 0.4f, 0.0f), 0.0f, 1.0f, 0.0f);
 
-	InstancedModel* instancedModel = new InstancedModel("Models/Palm_01.obj", INSTANCED_OPAQUE | INSTANCED_CAST_SHADOW_DIR);
+	InstancedModel* instancedModel = new InstancedModel("Models/Sphere.obj", INSTANCED_OPAQUE | INSTANCED_CAST_SHADOW_DIR | INSTANCED_CAST_REFLECTION, L"Textures/Dirt_21_Diffuse.dds", L"Textures/Dirt_21_Normal.dds", L"Textures/Dirt_21_Specular.dds", L"", false);
 
+	std::vector<ModelInstance> instances;
 	float spacing = 20.0f;
-	for (int i = 0; i < 20; i++)
-		for (int y = 0; y < 20; y++)		
-			instancedModel->AddInstance(MATH_HELPERS::CreateWorldMatrixTrans(XMFLOAT3(100 + (i * spacing), 0, 100 + (y * spacing)), XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1)));
+	for (int i = 0; i < 30; i++)
+		for (int y = 0; y < 30; y++)		
+			instances.emplace_back((ModelInstance(MATH_HELPERS::CreateWorldMatrix(XMFLOAT3(100 + (i * spacing), 5, 100 + (y * spacing)), XMFLOAT3(0, 0, 0), XMFLOAT3(5, 5, 5)))));
 		
-	instancedModel->BuildInstanceBuffer();
+	instancedModel->BuildInstanceBuffer(instances);	
 }
 
 SponzaTestScene::~SponzaTestScene()
@@ -160,5 +161,5 @@ SponzaTestScene::~SponzaTestScene()
 
 void SponzaTestScene::Update()
 {
-	_skyDome->Update(Systems::time->GetDeltaTime());
+	_skyDome->Update(Systems::time->GetDeltaTime());	
 }

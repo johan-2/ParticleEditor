@@ -28,12 +28,6 @@ void UVScrollComponent::Update(const float& delta)
 	_uvOffset.x += _scrollSpeed.x * delta;
 	_uvOffset.y += _scrollSpeed.y * delta;
 
-	if (_uvOffset.x > 1) _uvOffset.x -= 1;
-	if (_uvOffset.y > 1) _uvOffset.y -= 1;
-
-	if (_uvOffset.x < 0) _uvOffset.x += 1;
-	if (_uvOffset.y < 0) _uvOffset.y += 1;
-
 	// get all meshes in model
 	const std::vector<Mesh*>& meshes = _modelComponent->GetMeshes(); 
 

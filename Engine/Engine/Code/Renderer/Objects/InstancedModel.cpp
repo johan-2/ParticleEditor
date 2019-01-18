@@ -32,44 +32,58 @@ InstancedModel::~InstancedModel()
 {
 }
 
-void InstancedModel::BuildInstanceBuffer()
+void InstancedModel::BuildInstanceBuffer(std::vector<ModelInstance>& instances)
 {
+	D3D11_MAPPED_SUBRESOURCE data;
+	ID3D11DeviceContext* devCon = Systems::dxManager->GetDeviceCon();
+	_numInstances               = instances.size();
+
 	if (_instanceBuffer == nullptr)
 	{
 		// create the descriptions and resource data to buffers
 		D3D11_BUFFER_DESC instanceBufferDesc;
-		D3D11_SUBRESOURCE_DATA instanceData;
 
 		// Set up the description of the instance buffer.
 		instanceBufferDesc.Usage               = D3D11_USAGE_DYNAMIC;
-		instanceBufferDesc.ByteWidth           = sizeof(InstanceType) * _instances.size();
+		instanceBufferDesc.ByteWidth           = sizeof(ModelInstance) * _numInstances;
 		instanceBufferDesc.BindFlags           = D3D11_BIND_VERTEX_BUFFER;
 		instanceBufferDesc.CPUAccessFlags      = D3D11_CPU_ACCESS_WRITE;
 		instanceBufferDesc.MiscFlags           = 0;
 		instanceBufferDesc.StructureByteStride = 0;
 
-		// Give the subresource structure a pointer to the instance data.
-		instanceData.pSysMem          = &_instances[0];
-		instanceData.SysMemPitch      = 0;
-		instanceData.SysMemSlicePitch = 0;
+		HRESULT result = Systems::dxManager->GetDevice()->CreateBuffer(&instanceBufferDesc, NULL, &_instanceBuffer);
+		if (FAILED(result)) DX_ERROR::PrintError(result, "failed to create instance buffer for instanced model");
+	}
+	else
+	{
+		D3D11_BUFFER_DESC old;
+		_instanceBuffer->GetDesc(&old);
 
-		HRESULT result = Systems::dxManager->GetDevice()->CreateBuffer(&instanceBufferDesc, &instanceData, &_instanceBuffer);
-		if (FAILED(result))
-			DX_ERROR::PrintError(result, "failed to create instance buffer for instanced model");
+		if (old.ByteWidth < sizeof(ModelInstance) * _numInstances)
+		{
+			// realease old buffer, is now to small
+			_instanceBuffer->Release();
 
-		return;
+			// create new buffer with increased size so we have room to expand
+			D3D11_BUFFER_DESC instanceBufferDesc;
+			instanceBufferDesc.Usage               = D3D11_USAGE_DYNAMIC;
+			instanceBufferDesc.ByteWidth           = (sizeof(ModelInstance) * _numInstances) * 1.5f;
+			instanceBufferDesc.BindFlags           = D3D11_BIND_VERTEX_BUFFER;
+			instanceBufferDesc.CPUAccessFlags      = D3D11_CPU_ACCESS_WRITE;
+			instanceBufferDesc.MiscFlags           = 0;
+			instanceBufferDesc.StructureByteStride = 0;
+
+			HRESULT result = Systems::dxManager->GetDevice()->CreateBuffer(&instanceBufferDesc, NULL, &_instanceBuffer);
+			if (FAILED(result)) DX_ERROR::PrintError(result, "failed to create instance buffer for instanced model");
+		}		
 	}
 	
-	ID3D11DeviceContext* devCon = Systems::dxManager->GetDeviceCon();
-	D3D11_MAPPED_SUBRESOURCE data;
-
 	// map instancebuffer
 	HRESULT result = devCon->Map(_instanceBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &data);
-	if (FAILED(result))
-		DX_ERROR::PrintError(result, "failed to map instance buffer for instanced model");
+	if (FAILED(result)) DX_ERROR::PrintError(result, "failed to map instance buffer for instanced model");
 
 	// copy the instancedata over to the instancebuffer
-	memcpy(data.pData, (void*)&_instances, sizeof(InstanceType) * _instances.size());
+	memcpy(data.pData, (void*)&instances[0], sizeof(ModelInstance) * instances.size());
 
 	//unmap
 	devCon->Unmap(_instanceBuffer, 0);
@@ -84,7 +98,7 @@ void InstancedModel::RenderInstances()
 	
 	// Set vertex buffer stride and offset.
 	strides[0] = sizeof(Mesh::VertexData);
-	strides[1] = sizeof(InstanceType);
+	strides[1] = sizeof(ModelInstance);
 
 	offsets[0] = 0;
 	offsets[1] = 0;
@@ -109,13 +123,8 @@ void InstancedModel::RenderInstances()
 		devCon->PSSetShaderResources(0, 4, texture);
 
 		// draw all instances of this mesh
-		devCon->DrawIndexedInstanced(_meshes[i]->GetNumIndices(), _instances.size(), 0, 0, 0);
+		devCon->DrawIndexedInstanced(_meshes[i]->GetNumIndices(), _numInstances, 0, 0, 0);
 	}
-}
-
-void InstancedModel::AddInstance(XMFLOAT4X4 worldMatrix)
-{
-	_instances.emplace_back(InstanceType(worldMatrix));
 }
 
 void InstancedModel::ProcessNode(aiNode* node, const aiScene* scene, wchar_t* diffuseMap, wchar_t* normalMap, wchar_t* specularMap, wchar_t* emissiveMap, bool useMaterial, float tiling)

@@ -13,15 +13,18 @@
 #include "ParticleShader.h"
 #include "SkyDome.h"
 #include "MathHelpers.h"
+#include "InstancedModel.h"
 
 SimpleClipSceneShader::SimpleClipSceneShader()
 {
 	// create shaders
 	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexSimpleClip.vs", _vertexShader, _vertexShaderByteCode);
-	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelSimpleClip.ps",   _pixelShader,  _pixelShaderByteCodeOpaque);
+	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexSimpleClipInstanced.vs", _vertexShaderInstanced, _vertexShaderByteCodeInstanced);
+	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelSimpleClip.ps",   _pixelShader,  _pixelShaderByteCode);
 
 	// create constant buffers
 	SHADER_HELPERS::CreateConstantBuffer(_CBVertex);
+	SHADER_HELPERS::CreateConstantBuffer(_CBVertexInstanced);
 
 	// create render texture
 	_renderTexture = new RenderToTexture((unsigned int)SystemSettings::SCREEN_WIDTH, (unsigned int)SystemSettings::SCREEN_HEIGHT, false, SystemSettings::USE_HDR, false);
@@ -30,15 +33,17 @@ SimpleClipSceneShader::SimpleClipSceneShader()
 SimpleClipSceneShader::~SimpleClipSceneShader()
 {
 	_vertexShader->Release();
+	_vertexShaderInstanced->Release();
 	_pixelShader->Release();
 
 	_vertexShaderByteCode->Release();
-	_pixelShaderByteCodeOpaque->Release();
+	_vertexShaderByteCodeInstanced->Release();
+	_pixelShaderByteCode->Release();
 
 	_CBVertex->Release();
 }
 
-void SimpleClipSceneShader::RenderScene(std::vector<Mesh*>& opaqueMeshes, std::vector<Mesh*>& alphaMeshes, XMFLOAT4 clipPlane, bool includeSkyBox, bool includeParticles)
+void SimpleClipSceneShader::RenderScene(std::vector<Mesh*>& opaqueMeshes, std::vector<Mesh*>& alphaMeshes, std::vector<InstancedModel*>& instancedModels, XMFLOAT4 clipPlane, bool includeSkyBox, bool includeParticles)
 {
 	// get systems
 	DXManager&     DXM = *Systems::dxManager;
@@ -78,6 +83,7 @@ void SimpleClipSceneShader::RenderScene(std::vector<Mesh*>& opaqueMeshes, std::v
 	devCon->PSSetConstantBuffers(0, 1, &ambDirBuffer);
 	devCon->PSSetConstantBuffers(1, 1, &pointBuffer);
 
+	//-------------------------------------------------------------------------------------------- OPAQUE
 	// loop over all opaque meshes that is set to cast reflections
 	size_t size = opaqueMeshes.size();
 	for (int y = 0; y < size; y++)
@@ -103,6 +109,29 @@ void SimpleClipSceneShader::RenderScene(std::vector<Mesh*>& opaqueMeshes, std::v
 	// unbind so we can use resources as input in next stages
 	ID3D11ShaderResourceView* nullSRV[3] = { NULL, NULL, NULL };
 	devCon->PSSetShaderResources(0, 3, nullSRV);
+
+	//-------------------------------------------------------------------------------------------- INSTANCED OPAQUE
+	// change to instanced shader and constant buffer
+	devCon->VSSetShader(_vertexShaderInstanced, NULL, 0);
+	devCon->VSSetConstantBuffers(0, 1, &_CBVertexInstanced);
+	Systems::renderer->GetInputLayouts()->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT_3D_INSTANCED);
+
+	// uppdate constant buffer
+	CBVertexInstanced vertexInstanced;
+	XMStoreFloat4x4(&vertexInstanced.viewProj, XMLoadFloat4x4(&camera->GetViewProjMatrixTrans()));
+	XMStoreFloat4(&vertexInstanced.clipingPlane, XMLoadFloat4(&clipPlane));
+	SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexInstanced, sizeof(CBVertexInstanced), _CBVertexInstanced);
+
+	size = instancedModels.size();
+	for (int i = 0; i < size; i++)
+		instancedModels[i]->RenderInstances();
+
+	// -------------------------------------------------------------------------------------------- ALPHA
+
+	// set back the vertex shader and constant buffer that all but instanced meshes use
+	devCon->VSSetShader(_vertexShader, NULL, 0);
+	devCon->VSSetConstantBuffers(0, 1, &_CBVertex);
+	Systems::renderer->GetInputLayouts()->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT_3D);
 
 	// set shader and blend state if we have any alpha meshes
 	// that is being reflected, also sort these from the pos
@@ -137,6 +166,7 @@ void SimpleClipSceneShader::RenderScene(std::vector<Mesh*>& opaqueMeshes, std::v
 
 	devCon->PSSetShaderResources(0, 3, nullSRV);
 
+	//-------------------------------------------------------------------------------------------- PARTICLES
 	// render all particles to the texture 
 	if (includeParticles)
 	{
