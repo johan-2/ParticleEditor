@@ -78,12 +78,12 @@ IslandTestScene::IslandTestScene()
 	tree1->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 5.0f, 65), XMFLOAT3(0, 0, 0), XMFLOAT3(1.0f, 1.0f, 1.0f));
 	tree1->AddComponent<ModelComponent>()->InitModel("Models/Palm_01.obj", STANDARD | CAST_REFLECTION | CAST_SHADOW_DIR);
 
-	InstancedModel* instancedModel = new InstancedModel("Models/Sphere.obj", INSTANCED_OPAQUE | INSTANCED_CAST_SHADOW_DIR | INSTANCED_CAST_REFLECTION | INSTANCED_REFRACT, L"Textures/Dirt_21_Diffuse.dds", L"Textures/Dirt_21_Normal.dds", L"Textures/Dirt_21_Specular.dds", L"", false);
+	InstancedModel* instancedModel = new InstancedModel("Models/cube.obj", INSTANCED_OPAQUE | INSTANCED_CAST_SHADOW_DIR | INSTANCED_CAST_REFLECTION | INSTANCED_REFRACT, L"Textures/bricks.dds", L"Textures/bricksNormal.dds", L"Textures/bricksSpecular.dds", L"", false, 3.0f);
 
 	std::vector<ModelInstance> instances;
 	float spacing = 20.0f;
-	for (int i = 0; i < 32; i++)
-		for (int y = 0; y < 32; y++)
+	for (int i = 0; i < 64; i++)
+		for (int y = 0; y < 64; y++)
 			instances.emplace_back((ModelInstance(MATH_HELPERS::CreateWorldMatrix(XMFLOAT3(100 + (i * spacing), 5, 100 + (y * spacing)), XMFLOAT3(0, 0, 0), XMFLOAT3(5, 5, 5)))));
 
 	instancedModel->BuildInstanceBuffer(instances);

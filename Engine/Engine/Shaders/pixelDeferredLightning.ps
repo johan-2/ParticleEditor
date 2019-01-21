@@ -63,7 +63,7 @@ float4 GetDirectionalColor(float4 position, float4 diffuse, float4 normal, float
 	
 	float4 specular = float4(0,0,0,0);		
 	if (lightIntensity > 0)
-		GetSpecularColorPhong(cameraPosition, position.rgb, lightDirectionDir, lightColorDir, lightIntensity, normal, specularMap);
+		specular = GetSpecularColorPhong(cameraPosition, position.rgb, lightDirectionDir, lightColorDir, lightIntensity, normal, specularMap);
 			
 	return color + specular; 
 }
