@@ -25,7 +25,7 @@ IslandTestScene::IslandTestScene()
 	Renderer& renderer = *Systems::renderer;
 
 	// create shadowMap
-	Entity* shadowMapRenderer = renderer.CreateShadowMap(250.0f, 8192.0f, XMFLOAT3(-6, 325, 9), XMFLOAT3(85.0f, -90.0f, 0), true);
+	Entity* shadowMapRenderer = renderer.CreateShadowMap(100.0f, 8192.0f, XMFLOAT3(-6, 325, 9), XMFLOAT3(85.0f, -90.0f, 0), true);
 
 	// create skybox
 	_skyDome = renderer.CreateSkyDome("Settings/SkyDomeDefault.json");
@@ -38,7 +38,7 @@ IslandTestScene::IslandTestScene()
 	Entity* cameraGame = new Entity();
 	cameraGame->AddComponent<TransformComponent>()->Init(XMFLOAT3(-64.28f, 12.22f, 0.41f), XMFLOAT3(13.0f, 89.5f, 0.0f));
 	cameraGame->AddComponent<CameraComponent>()->Init3D(70);
-	cameraGame->AddComponent<FreeMoveComponent>()->init(30.0f, 0.25f);
+	cameraGame->AddComponent<FreeMoveComponent>()->init(12.0f, 0.25f, 4.0f);
 	CM.SetCurrentCameraGame(cameraGame->GetComponent<CameraComponent>());
 
 	// create UIcamera
@@ -56,35 +56,35 @@ IslandTestScene::IslandTestScene()
 	directionalLight->AddComponent<LightDirectionComponent>()->Init(XMFLOAT4(0.8f, 0.8f, 0.8f, 1), shadowMapRenderer->GetComponent<TransformComponent>());
 
 	Entity* lake = new Entity();
-	lake->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(800.0f, 1.0f, 800.0f));
-	lake->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::PLANE, STANDARD | REFRACT, L"Textures/sand.dds", L"Textures/sandNormal.dds", L"Textures/sandSpecular.dds", L"", 400);
+	lake->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(400.0f, 1.0f, 400.0f));
+	lake->AddComponent<ModelComponent>()->InitModel("models/plane.obj", STANDARD | REFRACT, L"Textures/sand.dds", L"Textures/sandNormal.dds", L"Textures/sandSpecular.dds", L"", false, 800);
 
 	Entity* water = new Entity();
-	water->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 5.0f, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(800, 1, 800));
-	water->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::PLANE, ALPHA_WATER, L"", L"Textures/waterNormal.dds", L"Textures/FlatHighSpecular.dds", L"", 200.0f);
+	water->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 2.0f, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(400, 1, 400));
+	water->AddComponent<ModelComponent>()->InitModel("models/plane.obj", ALPHA_WATER, L"", L"Textures/waterNormal.dds", L"Textures/FlatHighSpecular.dds", L"", false, 800.0f);
 	water->AddComponent<UVScrollComponent>()->Init(XMFLOAT2(0.015f, -0.01f));
 	water->GetComponent<ModelComponent>()->SetUVDVMap(L"Textures/waterDUDV.dds");
 
 	Entity* tree = new Entity();
-	tree->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0.0f, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(0.1f, 0.1f, 0.1f));
+	tree->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0.0f, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(0.05f, 0.05f, 0.05f));
 	tree->AddComponent<ModelComponent>()->InitModel("Models/white_oak.obj", STANDARD | CAST_REFLECTION | CAST_SHADOW_DIR | REFRACT);
 
 	Entity* sphere = new Entity();
-	sphere->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 10, 10), XMFLOAT3(0, 0, 0), XMFLOAT3(2, 2, 2));
-	sphere->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::SPHERE, STANDARD | CAST_SHADOW_DIR | CAST_REFLECTION, L"", L"", L"", L"Textures/emissiveTest.dds");
-	sphere->AddComponent<LightPointComponent>()->Init(20, 20, XMFLOAT3(0.1f, 1.0f, 0), 0.0f, 1.0f, 0.2f);
+	sphere->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 4, 3), XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1));
+	sphere->AddComponent<ModelComponent>()->InitModel("Models/Sphere.obj", STANDARD | CAST_SHADOW_DIR | CAST_REFLECTION, L"", L"", L"", L"Textures/emissiveTest.dds", false);
+	sphere->AddComponent<LightPointComponent>()->Init(5, 5, XMFLOAT3(0.1f, 1.0f, 0), 0.0f, 1.0f, 0.2f);
 
 	Entity* tree1 = new Entity();
-	tree1->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 5.0f, 65), XMFLOAT3(0, 0, 0), XMFLOAT3(1.0f, 1.0f, 1.0f));
+	tree1->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 2.0f, 30), XMFLOAT3(0, 0, 0), XMFLOAT3(0.2f, 0.2f, 0.2f));
 	tree1->AddComponent<ModelComponent>()->InitModel("Models/Palm_01.obj", STANDARD | CAST_REFLECTION | CAST_SHADOW_DIR);
 
-	InstancedModel* instancedModel = new InstancedModel("Models/cube.obj", INSTANCED_OPAQUE | INSTANCED_CAST_SHADOW_DIR | INSTANCED_CAST_REFLECTION | INSTANCED_REFRACT, L"Textures/bricks.dds", L"Textures/bricksNormal.dds", L"Textures/bricksSpecular.dds", L"", false, 3.0f);
+	InstancedModel* instancedModel = new InstancedModel("Models/cube.obj", INSTANCED_OPAQUE | INSTANCED_CAST_SHADOW_DIR | INSTANCED_CAST_REFLECTION | INSTANCED_REFRACT, L"Textures/bricks.dds", L"Textures/bricksNormal.dds", L"Textures/bricksSpecular.dds", L"", false, 2.0f);
 
 	std::vector<ModelInstance> instances;
-	float spacing = 20.0f;
+	float spacing = 2.0f;
 	for (int i = 0; i < 64; i++)
 		for (int y = 0; y < 64; y++)
-			instances.emplace_back((ModelInstance(MATH_HELPERS::CreateWorldMatrix(XMFLOAT3(100 + (i * spacing), 5, 100 + (y * spacing)), XMFLOAT3(0, 0, 0), XMFLOAT3(5, 5, 5)))));
+			instances.emplace_back((ModelInstance(MATH_HELPERS::CreateWorldMatrix(XMFLOAT3(20 + (i * spacing), 2.0f, 20 + (y * spacing)), XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1)))));
 
 	instancedModel->BuildInstanceBuffer(instances);
 }

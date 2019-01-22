@@ -15,11 +15,12 @@ FreeMoveComponent::~FreeMoveComponent()
 {
 }
 
-void FreeMoveComponent::init(float movementSpeed, float rotationSpeed)
+void FreeMoveComponent::init(float movementSpeed, float rotationSpeed, float shiftSpeedMultiplier)
 {	
-	_moveSpeed     = movementSpeed;
-	_rotationSpeed = rotationSpeed;
-	_transform     = GetComponent<TransformComponent>();
+	_moveSpeed            = movementSpeed;
+	_rotationSpeed        = rotationSpeed;
+	_shiftSpeedMultiplier = shiftSpeedMultiplier;
+	_transform            = GetComponent<TransformComponent>();
 }
 
 void FreeMoveComponent::Update(const float& delta)
@@ -41,7 +42,7 @@ void FreeMoveComponent::UpdateMovement(const float& deltaTime)
 	float speedMultiplier = 1.0f;
 
 	if (input.IsKeyHeld(DIK_LSHIFT))
-		speedMultiplier = 2.0f;
+		speedMultiplier = _shiftSpeedMultiplier;
 
 	// get how much we should move
 	float moveAmount = _moveSpeed * speedMultiplier * deltaTime;

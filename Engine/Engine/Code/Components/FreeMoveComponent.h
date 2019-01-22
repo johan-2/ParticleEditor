@@ -13,7 +13,7 @@ public:
 	FreeMoveComponent();
 	~FreeMoveComponent();
 
-	void init(float movementSpeed, float rotationSpeed);
+	void init(float movementSpeed, float rotationSpeed, float shiftSpeedMultiplier = 2.0f);
 	void Update(const float& delta);
 	
 private:
@@ -26,5 +26,6 @@ private:
 
 	float _moveSpeed;
 	float _rotationSpeed;
+	float _shiftSpeedMultiplier;
 };
 
