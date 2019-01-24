@@ -92,6 +92,12 @@ public:
 	void CreateUVDVMap(const wchar_t* texture);
 	ID3D11ShaderResourceView* GetDUDVMap() { return _DUDVMap; }
 
+	void CreateFoamMap(const wchar_t* texture);
+	ID3D11ShaderResourceView* GetFoamMap() { return _foamMap; }
+
+	void CreateNoiseMap(const wchar_t* texture);
+	ID3D11ShaderResourceView* GetNoiseMap() { return _noiseMap; }
+
 private:
 
 	// pointers to the vertex/index buffers
@@ -106,6 +112,9 @@ private:
 	ID3D11ShaderResourceView* _textures[4];
 
 	ID3D11ShaderResourceView* _DUDVMap;
+	ID3D11ShaderResourceView* _foamMap;
+	ID3D11ShaderResourceView* _noiseMap;
+
 	// uv offset
 	XMFLOAT2 _uvOffset;
 	

@@ -17,6 +17,7 @@
 #include "PostProcessingShader.h"
 #include "InstancedModel.h"
 #include "MathHelpers.h"
+#include "UVScrollComponent.h"
 
 SponzaTestScene::SponzaTestScene()
 {
@@ -37,7 +38,7 @@ SponzaTestScene::SponzaTestScene()
 
 	// create game camera
 	Entity* cameraGame = new Entity();
-	cameraGame->AddComponent<TransformComponent>()->Init(XMFLOAT3(-64.28f, 12.22f, 0.41f), XMFLOAT3(13.0f, 89.5f, 0.0f));
+	cameraGame->AddComponent<TransformComponent>()->Init(XMFLOAT3(-32.28f, 6.22f, 0.20f), XMFLOAT3(13.0f, 89.5f, 0.0f));
 	cameraGame->AddComponent<CameraComponent>()->Init3D(85);
 	cameraGame->AddComponent<FreeMoveComponent>()->init(12.0f, 0.25f, 6.0f);
 	CM.SetCurrentCameraGame(cameraGame->GetComponent<CameraComponent>());
@@ -58,7 +59,7 @@ SponzaTestScene::SponzaTestScene()
 
 	Entity* sponza = new Entity();
 	sponza->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(0.025f, 0.025f, 0.025f));
-	sponza->AddComponent<ModelComponent>()->InitModel("Models/sponza.obj", STANDARD | CAST_SHADOW_DIR | CAST_REFLECTION, L"Textures/marble.dds", L"", L"", L"", true, 1);
+	sponza->AddComponent<ModelComponent>()->InitModel("Models/sponza.obj", STANDARD | CAST_SHADOW_DIR | CAST_REFLECTION | REFRACT, L"Textures/marble.dds", L"", L"", L"", true, 1);
 
 	Entity* sphere = new Entity();
 	sphere->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 2.5f, 0.5f), XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1));
@@ -95,6 +96,14 @@ SponzaTestScene::SponzaTestScene()
 	floor->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0.01f, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(600, 1, 600));
 	floor->AddComponent<ModelComponent>()->InitModel("Models/plane.obj", ALPHA_REFLECTION, L"Textures/sponza_floor_a_diff.dds", L"Textures/sponza_floor_a_ddn.dds", L"Textures/FlatHighSpecular.dds", L"", false, 800.0f);
 	floor->GetComponent<ModelComponent>()->GetMeshes()[0]->SetReflectionData(Mesh::ReflectiveData(0.2f));
+
+	/*Entity* water = new Entity();
+	water->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 2.0f, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(400, 1, 400));
+	water->AddComponent<ModelComponent>()->InitModel("models/plane.obj", ALPHA_WATER, L"", L"Textures/waterNormal.dds", L"Textures/FlatHighSpecular.dds", L"", false, 400.0f);
+	water->AddComponent<UVScrollComponent>()->Init(XMFLOAT2(0.015f, -0.01f));
+	water->GetComponent<ModelComponent>()->SetUVDVMap(L"Textures/waterDUDV.dds");
+	water->GetComponent<ModelComponent>()->SetFoamMap(L"Textures/foam3.dds");
+	water->GetComponent<ModelComponent>()->SetNoiseMap(L"Textures/perlinNoise2.dds");*/
 
 	Entity* dust = new Entity();
 	dust->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 10.0f, 0.0f), XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1));

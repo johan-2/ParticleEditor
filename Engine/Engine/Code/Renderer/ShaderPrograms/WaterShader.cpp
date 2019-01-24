@@ -155,17 +155,17 @@ void WaterShader::Render(std::vector<Mesh*>& waterMeshes)
 		ID3D11ShaderResourceView** meshTextures = mesh->GetTextureArray();
 
 		// fill texture array with all textures including the shadow map and reflection map
-		ID3D11ShaderResourceView* t[7] = { meshTextures[1], meshTextures[2], mesh->GetDUDVMap(), shadowMap, _simpleClipShaderReflection->GetRenderSRV(), _simpleClipShaderRefraction->GetRenderSRV(), _simpleClipShaderRefraction->GetDepthSRV() };
+		ID3D11ShaderResourceView* t[9] = { meshTextures[1], meshTextures[2], mesh->GetDUDVMap(), shadowMap, _simpleClipShaderReflection->GetRenderSRV(), _simpleClipShaderRefraction->GetRenderSRV(), _simpleClipShaderRefraction->GetDepthSRV(), mesh->GetFoamMap(), mesh->GetNoiseMap() };
 
 		// set SRV's
-		devCon->PSSetShaderResources(0, 7, t);
+		devCon->PSSetShaderResources(0, 9, t);
 
 		mesh->UploadBuffers();
 
 		devCon->DrawIndexed(mesh->GetNumIndices(), 0, 0);
 
 		// unbind so we can use resources as input in next stages
-		ID3D11ShaderResourceView* nullSRV[7] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL };
-		devCon->PSSetShaderResources(0, 7, nullSRV);
+		ID3D11ShaderResourceView* nullSRV[8] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
+		devCon->PSSetShaderResources(0, 8, nullSRV);
 	}
 }

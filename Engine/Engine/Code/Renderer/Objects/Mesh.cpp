@@ -51,6 +51,18 @@ void Mesh::CreateUVDVMap(const wchar_t* texture)
 	_DUDVMap = TP.GetTexture(texture);
 }
 
+void Mesh::CreateFoamMap(const wchar_t* texture)
+{
+	TexturePool& TP = *Systems::texturePool;
+	_foamMap = TP.GetTexture(texture);
+}
+
+void Mesh::CreateNoiseMap(const wchar_t* texture)
+{
+	TexturePool& TP = *Systems::texturePool;
+	_noiseMap = TP.GetTexture(texture);
+}
+
 void Mesh::CreateBuffers(VertexData* verticesData, unsigned long* indicesData, unsigned int numVertices, unsigned int numIndices) 
 {
 	// save number of vertices/indices

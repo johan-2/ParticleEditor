@@ -61,9 +61,11 @@ IslandTestScene::IslandTestScene()
 
 	Entity* water = new Entity();
 	water->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 2.0f, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(400, 1, 400));
-	water->AddComponent<ModelComponent>()->InitModel("models/plane.obj", ALPHA_WATER, L"", L"Textures/waterNormal.dds", L"Textures/FlatHighSpecular.dds", L"", false, 800.0f);
+	water->AddComponent<ModelComponent>()->InitModel("models/plane.obj", ALPHA_WATER, L"", L"Textures/waterNormal.dds", L"Textures/FlatHighSpecular.dds", L"", false, 400.0f);
 	water->AddComponent<UVScrollComponent>()->Init(XMFLOAT2(0.015f, -0.01f));
 	water->GetComponent<ModelComponent>()->SetUVDVMap(L"Textures/waterDUDV.dds");
+	water->GetComponent<ModelComponent>()->SetFoamMap(L"Textures/foam3.dds");
+	water->GetComponent<ModelComponent>()->SetNoiseMap(L"Textures/perlinNoise2.dds");
 
 	Entity* tree = new Entity();
 	tree->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0.0f, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(0.05f, 0.05f, 0.05f));

@@ -44,6 +44,8 @@ public:
 	const unsigned int&       GetNumMeshes() { return _numMeshes; }
 
 	void SetUVDVMap(const wchar_t* texture);
+	void SetFoamMap(const wchar_t* texture);
+	void SetNoiseMap(const wchar_t* texture);
 
 private:
 

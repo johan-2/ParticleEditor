@@ -107,3 +107,15 @@ void ModelComponent::SetUVDVMap(const wchar_t* texture)
 		_meshes[i]->CreateUVDVMap(texture);
 }
 
+void ModelComponent::SetFoamMap(const wchar_t* texture)
+{
+	for (int i = 0; i < _meshes.size(); i++)
+		_meshes[i]->CreateFoamMap(texture);
+}
+
+void ModelComponent::SetNoiseMap(const wchar_t* texture)
+{
+	for (int i = 0; i < _meshes.size(); i++)
+		_meshes[i]->CreateNoiseMap(texture);
+}
+
