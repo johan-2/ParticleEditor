@@ -19,7 +19,7 @@ static float normalScrollStrength      = 0.6;
 static bool  applyFoam               = true;
 static float foamToDepth             = 0.5;
 static float foamDistortStrength     = 2.4;
-static float foamScrollStrength      = 0.1;
+static float foamScrollStrength      = 0.8;
 static float foamTileMultiplier      = 5.0;
 static float foamNoiseTileMultiplier = 8.0;
 static float foamDistortionDamping   = 0.020;
@@ -197,7 +197,7 @@ float4 Main(PixelInputType input) : SV_TARGET
 		float2 noiseTexCoords = ((input.texCoord * foamNoiseTileMultiplier) + foamDistortStrength) + (input.texCoordOffset * foamScrollStrength);
 		
 		// sample the foam texture
-		float4 foamColor    = Texture[7].Sample(SampleType[0], foamTexCoords);
+		float4 foamColor = Texture[7].Sample(SampleType[0], foamTexCoords);
 		
 		// sample the noise texture and flip the white and black colors
 		// this make black in texture represent no foam and white will represent no modification to foam at all

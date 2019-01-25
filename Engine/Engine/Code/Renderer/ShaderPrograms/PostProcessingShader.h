@@ -19,7 +19,7 @@ public:
 
 	// get byte code from shaders
 	ID3D10Blob*& GetVertexShaderByteCode() { return _vertexPostProcessingShaderByteCode; }
-	ID3D10Blob*& GetPixelShaderByteCode()  { return _pixelPostProcessingShaderByteCode; }
+	ID3D10Blob*& GetPixelShaderByteCode()  { return _pixelPostProcessingHDRShaderByteCode; }
 
 	void CreateBloomBlurRenderTextures();
 	void createDofRenderTextures();
@@ -41,20 +41,23 @@ private:
 
 	ID3D11ShaderResourceView* RenderBlurMap(ID3D11ShaderResourceView* imageToBlur, float scaleDown1, RenderToTexture* h1, RenderToTexture* v1);
 	void ComputeBrightnessMap(ID3D11ShaderResourceView* originalImage);
-	void RenderFinal(ID3D11ShaderResourceView* SceneImage, ID3D11ShaderResourceView* sceneDepth);
+	void RenderFinalHDR(ID3D11ShaderResourceView* SceneImage, ID3D11ShaderResourceView* sceneDepth);
+	void RenderFinalSDR(ID3D11ShaderResourceView* SceneImageSDR);
 
 	// compiled shaders
 	ID3D11VertexShader*  _vertexBlurShader;
 	ID3D11PixelShader*   _pixelBlurShader;
 	ID3D11VertexShader*  _vertexPostProcessingShader;
-	ID3D11PixelShader*   _pixelPostProcessingShader;
+	ID3D11PixelShader*   _pixelPostProcessingHDRShader;
+	ID3D11PixelShader*   _pixelPostProcessingSDRShader;
 	ID3D11ComputeShader* _computeBrightnessShader;
 	
 	// the shader bytecode
 	ID3D10Blob* _vertexPostProcessingShaderByteCode;
-	ID3D10Blob* _pixelPostProcessingShaderByteCode;
+	ID3D10Blob* _pixelPostProcessingHDRShaderByteCode;
 	ID3D10Blob* _vertexBlurShaderByteCode;
 	ID3D10Blob* _pixelBlurShaderByteCode;
+	ID3D10Blob* _pixelPostProcessingSDRShaderByteCode;
 	ID3D10Blob* _computeBrightnessShaderByteCode;
 
 	// constant buffers
@@ -68,6 +71,7 @@ private:
 	RenderToTexture* _bloomVerticalBlurPass2;
 	RenderToTexture* _dofHorizontalBlurPass;
 	RenderToTexture* _dofVerticalBlurPass;
+	RenderToTexture* _sceneSDR;
 
 	// compute resources
 	ComputeResources _brightnessResources;
@@ -84,14 +88,20 @@ private:
 		int   pad; 
 	};
 
-	struct ConstantFinalPixel
+	struct ConstantFinalHDRPixel
 	{
 		int      applyBloom;
 		float    bloomIntensity;
 		int      applyDof;
-		int      pad1;
+		int      applyTonemap;
 		XMFLOAT2 startEndDofdst;
 		XMFLOAT2 pad2;
+	};
+
+	struct ConstantFinalSDRPixel
+	{
+		int      applyFXAA;
+		XMFLOAT3 pad1;
 	};
 };
 

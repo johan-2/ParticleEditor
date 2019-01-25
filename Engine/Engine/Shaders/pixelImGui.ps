@@ -1,6 +1,5 @@
-
 Texture2D shaderTexture;	
-SamplerState SampleType;	
+SamplerState SampleType[6]; // wrapTrilinear, clampTrilinear, wrapBilinear, clampBililinear, wrapAnisotropic, clampAnisotropic	
  
 struct PS_INPUT
 {
@@ -11,6 +10,6 @@ struct PS_INPUT
    
 float4 Main(PS_INPUT input) : SV_TARGET
 {
-	float4 out_col = input.col * shaderTexture.Sample(SampleType, input.uv); 
+	float4 out_col = input.col * shaderTexture.Sample(SampleType[0], input.uv); 
 	return out_col; 
 };

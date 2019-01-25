@@ -68,9 +68,15 @@ SponzaTestScene::SponzaTestScene()
 
 	Entity* bar = new Entity();
 	bar->AddComponent<TransformComponent>()->Init(XMFLOAT3(-20, 2.5f, 0.5f), XMFLOAT3(0, 0, 0), XMFLOAT3(2, 0.5f, 0.5f));
-	bar->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::CUBE, STANDARD | CAST_SHADOW_DIR | CAST_REFLECTION, L"", L"", L"", L"Textures/emissiveOrange.dds");
+	bar->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::CUBE, STANDARD | CAST_SHADOW_DIR | CAST_REFLECTION | REFRACT, L"", L"", L"", L"Textures/emissiveOrange.dds");
 	bar->AddComponent<LightPointComponent>()->Init(10, 10, XMFLOAT3(1.0f, 0.4f, 0.15f), 0.0f, 1.0f, 0.2f);
 	bar->AddComponent<RotationComponent>()->Init(XMFLOAT3(2, 0.0f, 1.5f), 40);
+
+	Entity* bar2 = new Entity();
+	bar2->AddComponent<TransformComponent>()->Init(XMFLOAT3(20, 2.5f, 0.5f), XMFLOAT3(0, 0, 0), XMFLOAT3(2, 0.5f, 0.1f));
+	bar2->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::CUBE, STANDARD | CAST_SHADOW_DIR | CAST_REFLECTION | REFRACT, L"", L"", L"", L"Textures/emissiveOrange.dds");
+	bar2->AddComponent<LightPointComponent>()->Init(10, 10, XMFLOAT3(1.0f, 0.4f, 0.15f), 0.0f, 1.0f, 0.2f);
+	bar2->AddComponent<RotationComponent>()->Init(XMFLOAT3(2, 1.0f, 1.5f), 60);
 
 	Entity* sphere2 = new Entity();
 	sphere2->AddComponent<TransformComponent>()->Init(XMFLOAT3(-30.0f, 3.5f, -10.12f), XMFLOAT3(0, 0, 0), XMFLOAT3(2.5f, 2.5f, 2.5f));

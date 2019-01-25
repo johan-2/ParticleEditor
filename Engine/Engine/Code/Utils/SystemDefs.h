@@ -38,6 +38,12 @@ public:
 	static bool  APPLY_DEPTH_OF_FIELD;
 	static float START_END_DOF_DST[2];
 
+	// FXAA
+	static bool APPLY_FXAA;
+
+	// TONEMAPPING
+	static bool APPLY_TONEMAPPING;
+
 	static void ReadSettings(const char* file);
 	static void WriteSettings(const char* file);	
 };

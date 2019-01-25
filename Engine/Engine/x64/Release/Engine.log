@@ -1,30 +1,28 @@
 ﻿  SponzaTestScene.cpp
   Generating code
-  3 of 3337 functions (<0.1%) were compiled, the rest were copied from previous compilation.
+  1 of 3338 functions (<0.1%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    5 functions had inline decision re-evaluated but remain unchanged
+    3 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
 Entity.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'Entity.obj' or at 'C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\vc141.pdb'; linking object as if no debug info
 IComponent.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'IComponent.obj' or at 'C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\vc141.pdb'; linking object as if no debug info
 World.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'World.obj' or at 'C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\vc141.pdb'; linking object as if no debug info
-CameraComponent.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'CameraComponent.obj' or at 'C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\vc141.pdb'; linking object as if no debug info
-FreeMoveComponent.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'FreeMoveComponent.obj' or at 'C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\vc141.pdb'; linking object as if no debug info
 LightDirectionComponent.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'LightDirectionComponent.obj' or at 'C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\vc141.pdb'; linking object as if no debug info
 LightPointComponent.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'LightPointComponent.obj' or at 'C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\vc141.pdb'; linking object as if no debug info
 ModelComponent.obj : warning LNK4020: a type record in 'c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\vc141.pdb' is corrupted; some symbols and types may not be accessible from the debugger
 ParticleSystemComponent.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'ParticleSystemComponent.obj' or at 'C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\vc141.pdb'; linking object as if no debug info
-QuadComponent.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'QuadComponent.obj' or at 'C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\vc141.pdb'; linking object as if no debug info
+QuadComponent.obj : warning LNK4020: a type record in 'c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\vc141.pdb' is corrupted; some symbols and types may not be accessible from the debugger
 RotationComponent.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'RotationComponent.obj' or at 'C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\vc141.pdb'; linking object as if no debug info
 TransformComponent.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'TransformComponent.obj' or at 'C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\vc141.pdb'; linking object as if no debug info
 UVScrollComponent.obj : warning LNK4020: a type record in 'c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\vc141.pdb' is corrupted; some symbols and types may not be accessible from the debugger
 Color32.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'Color32.obj' or at 'C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\vc141.pdb'; linking object as if no debug info
 DDSTextureLoader.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'DDSTextureLoader.obj' or at 'C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\vc141.pdb'; linking object as if no debug info
 IEditorWindow.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'IEditorWindow.obj' or at 'C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\vc141.pdb'; linking object as if no debug info
-MainEditorWindow.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'MainEditorWindow.obj' or at 'C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\vc141.pdb'; linking object as if no debug info
-MasterEditor.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'MasterEditor.obj' or at 'C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\vc141.pdb'; linking object as if no debug info
-PostProcessWindow.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'PostProcessWindow.obj' or at 'C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\vc141.pdb'; linking object as if no debug info
-SkyDomeWindow.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'SkyDomeWindow.obj' or at 'C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\vc141.pdb'; linking object as if no debug info
-SystemSettingsWindow.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'SystemSettingsWindow.obj' or at 'C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\vc141.pdb'; linking object as if no debug info
+MainEditorWindow.obj : warning LNK4020: a type record in 'c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\vc141.pdb' is corrupted; some symbols and types may not be accessible from the debugger
+MasterEditor.obj : warning LNK4020: a type record in 'c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\vc141.pdb' is corrupted; some symbols and types may not be accessible from the debugger
+PostProcessWindow.obj : warning LNK4020: a type record in 'c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\vc141.pdb' is corrupted; some symbols and types may not be accessible from the debugger
+SkyDomeWindow.obj : warning LNK4020: a type record in 'c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\vc141.pdb' is corrupted; some symbols and types may not be accessible from the debugger
+SystemSettingsWindow.obj : warning LNK4020: a type record in 'c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\vc141.pdb' is corrupted; some symbols and types may not be accessible from the debugger
 Framework.obj : warning LNK4020: a type record in 'c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\vc141.pdb' is corrupted; some symbols and types may not be accessible from the debugger
 imgui.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'imgui.obj' or at 'C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\vc141.pdb'; linking object as if no debug info
 imgui_demo.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'imgui_demo.obj' or at 'C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\vc141.pdb'; linking object as if no debug info
@@ -32,10 +30,10 @@ imgui_draw.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'imgui_draw
 Gamepad.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'Gamepad.obj' or at 'C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\vc141.pdb'; linking object as if no debug info
 Input.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'Input.obj' or at 'C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\vc141.pdb'; linking object as if no debug info
 CameraManager.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'CameraManager.obj' or at 'C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\vc141.pdb'; linking object as if no debug info
-DXManager.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'DXManager.obj' or at 'C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\vc141.pdb'; linking object as if no debug info
+DXManager.obj : warning LNK4020: a type record in 'c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\vc141.pdb' is corrupted; some symbols and types may not be accessible from the debugger
 GuiManager.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'GuiManager.obj' or at 'C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\vc141.pdb'; linking object as if no debug info
 LightManager.obj : warning LNK4020: a type record in 'c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\vc141.pdb' is corrupted; some symbols and types may not be accessible from the debugger
-GBuffer.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'GBuffer.obj' or at 'C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\vc141.pdb'; linking object as if no debug info
+GBuffer.obj : warning LNK4020: a type record in 'c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\vc141.pdb' is corrupted; some symbols and types may not be accessible from the debugger
 ScreenQuad.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'ScreenQuad.obj' or at 'C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\vc141.pdb'; linking object as if no debug info
 InstancedModel.obj : warning LNK4020: a type record in 'c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\vc141.pdb' is corrupted; some symbols and types may not be accessible from the debugger
 Mesh.obj : warning LNK4020: a type record in 'c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\vc141.pdb' is corrupted; some symbols and types may not be accessible from the debugger
@@ -57,15 +55,15 @@ DXBlendStates.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'DXBlend
 DXDepthStencilStates.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'DXDepthStencilStates.obj' or at 'C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\vc141.pdb'; linking object as if no debug info
 DXInputLayouts.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'DXInputLayouts.obj' or at 'C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\vc141.pdb'; linking object as if no debug info
 DXRasterizerStates.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'DXRasterizerStates.obj' or at 'C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\vc141.pdb'; linking object as if no debug info
-DXSamplerStates.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'DXSamplerStates.obj' or at 'C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\vc141.pdb'; linking object as if no debug info
+DXSamplerStates.obj : warning LNK4020: a type record in 'c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\vc141.pdb' is corrupted; some symbols and types may not be accessible from the debugger
 HardwareProperties.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'HardwareProperties.obj' or at 'C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\vc141.pdb'; linking object as if no debug info
 Systems.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'Systems.obj' or at 'C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\vc141.pdb'; linking object as if no debug info
 IslandTestScene.obj : warning LNK4020: a type record in 'c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\vc141.pdb' is corrupted; some symbols and types may not be accessible from the debugger
 SponzaTestScene.obj : warning LNK4020: a type record in 'c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\vc141.pdb' is corrupted; some symbols and types may not be accessible from the debugger
-DebugQuadHandler.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'DebugQuadHandler.obj' or at 'C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\vc141.pdb'; linking object as if no debug info
-SystemDefs.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'SystemDefs.obj' or at 'C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\vc141.pdb'; linking object as if no debug info
+DebugQuadHandler.obj : warning LNK4020: a type record in 'c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\vc141.pdb' is corrupted; some symbols and types may not be accessible from the debugger
+SystemDefs.obj : warning LNK4020: a type record in 'c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\vc141.pdb' is corrupted; some symbols and types may not be accessible from the debugger
 TexturePool.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'TexturePool.obj' or at 'C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\vc141.pdb'; linking object as if no debug info
-Time.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'Time.obj' or at 'C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\vc141.pdb'; linking object as if no debug info
+Time.obj : warning LNK4020: a type record in 'c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\vc141.pdb' is corrupted; some symbols and types may not be accessible from the debugger
 Window.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'Window.obj' or at 'C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\vc141.pdb'; linking object as if no debug info
 Main.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'Main.obj' or at 'C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\vc141.pdb'; linking object as if no debug info
   Engine.vcxproj -> C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\Engine.exe

@@ -15,11 +15,12 @@
 PostProcessingShader::PostProcessingShader()
 {
 	// create and compile shaders
-	SHADER_HELPERS::CreateVertexShader(L"Shaders/PostProcess/vertexPostProcessing.vs", _vertexPostProcessingShader, _vertexPostProcessingShaderByteCode);
-	SHADER_HELPERS::CreatePixelShader(L"Shaders/PostProcess/pixelPostProcessing.ps",   _pixelPostProcessingShader,  _pixelPostProcessingShaderByteCode);
-	SHADER_HELPERS::CreateVertexShader(L"Shaders/PostProcess/vertexBlur.vs",           _vertexBlurShader,           _vertexBlurShaderByteCode);
-	SHADER_HELPERS::CreatePixelShader(L"Shaders/PostProcess/pixelBlur.ps",             _pixelBlurShader,            _pixelBlurShaderByteCode);
-	SHADER_HELPERS::CreateComputeShader(L"Shaders/PostProcess/computeBrightness.cs",   _computeBrightnessShader,    _computeBrightnessShaderByteCode);	
+	SHADER_HELPERS::CreateVertexShader(L"Shaders/PostProcess/vertexPostProcessing.vs",  _vertexPostProcessingShader,   _vertexPostProcessingShaderByteCode);
+	SHADER_HELPERS::CreatePixelShader(L"Shaders/PostProcess/pixelPostProcessingHDR.ps", _pixelPostProcessingHDRShader, _pixelPostProcessingHDRShaderByteCode);
+	SHADER_HELPERS::CreateVertexShader(L"Shaders/PostProcess/vertexBlur.vs",            _vertexBlurShader,             _vertexBlurShaderByteCode);
+	SHADER_HELPERS::CreatePixelShader(L"Shaders/PostProcess/pixelBlur.ps",              _pixelBlurShader,              _pixelBlurShaderByteCode);
+	SHADER_HELPERS::CreatePixelShader(L"Shaders/PostProcess/pixelPostProcessingSDR.ps", _pixelPostProcessingSDRShader, _pixelPostProcessingSDRShaderByteCode);
+	SHADER_HELPERS::CreateComputeShader(L"Shaders/PostProcess/computeBrightness.cs",    _computeBrightnessShader,      _computeBrightnessShaderByteCode);	
 
 	// create constant buffers
 	SHADER_HELPERS::CreateConstantBuffer(_blurVertexConstant);
@@ -29,6 +30,8 @@ PostProcessingShader::PostProcessingShader()
 	CreateBloomBlurRenderTextures();
 	createDofRenderTextures();
 
+	_sceneSDR = new RenderToTexture(SystemSettings::SCREEN_WIDTH, SystemSettings::SCREEN_HEIGHT, false, false, false, false);
+
 	// create compute shader resources for calculating the brigthness map
 	SHADER_HELPERS::CreateTexture2DUAVSRV(SystemSettings::SCREEN_WIDTH, SystemSettings::SCREEN_HEIGHT, _brightnessResources.Tex, _brightnessResources.SRV, _brightnessResources.UAV);
 }
@@ -36,16 +39,18 @@ PostProcessingShader::PostProcessingShader()
 PostProcessingShader::~PostProcessingShader()
 {
 	_vertexPostProcessingShader->Release();
-	_pixelPostProcessingShader->Release();
+	_pixelPostProcessingHDRShader->Release();
 	_vertexBlurShader->Release();
 	_pixelBlurShader->Release();
 	_computeBrightnessShader->Release();
+	_pixelPostProcessingSDRShader->Release();
 
 	_vertexPostProcessingShaderByteCode->Release();
-	_pixelPostProcessingShaderByteCode->Release();
+	_pixelPostProcessingHDRShaderByteCode->Release();
 	_vertexBlurShaderByteCode->Release();
 	_pixelBlurShaderByteCode->Release();
 	_computeBrightnessShaderByteCode->Release();
+	_pixelPostProcessingSDRShaderByteCode->Release();
 
 	_brightnessResources.SRV->Release();
 	_brightnessResources.UAV->Release();
@@ -108,7 +113,8 @@ void PostProcessingShader::Render(ScreenQuad* quad, ID3D11ShaderResourceView* Sc
 	if (PostProcessing::APPLY_DEPTH_OF_FIELD)
 		_dofMap = RenderBlurMap(SceneImage, 1, _dofHorizontalBlurPass, _dofVerticalBlurPass);
 
-	RenderFinal(SceneImage, sceneDepth);
+	RenderFinalHDR(SceneImage, sceneDepth);
+	RenderFinalSDR(_sceneSDR->GetRenderTargetSRV());
 }
 
 void PostProcessingShader::ComputeBrightnessMap(ID3D11ShaderResourceView* originalImage)
@@ -193,31 +199,31 @@ ID3D11ShaderResourceView* PostProcessingShader::RenderBlurMap(ID3D11ShaderResour
 	return vertical->GetRenderTargetSRV();
 }
 
-void PostProcessingShader::RenderFinal(ID3D11ShaderResourceView* SceneImage, ID3D11ShaderResourceView* sceneDepth)
+void PostProcessingShader::RenderFinalHDR(ID3D11ShaderResourceView* SceneImage, ID3D11ShaderResourceView* sceneDepth)
 {
 	// get dx manager
 	DXManager& DXM = *Systems::dxManager;
 
-	// set to defult backbuffer and render our final scene image
-	DXM.SetBackBuffer();
-
 	// get devicecontext
 	ID3D11DeviceContext* devCon = DXM.GetDeviceCon();
 
+	_sceneSDR->SetRendertarget(false, false);
+
 	// set our shaders
 	devCon->VSSetShader(_vertexPostProcessingShader, NULL, 0);
-	devCon->PSSetShader(_pixelPostProcessingShader, NULL, 0);
+	devCon->PSSetShader(_pixelPostProcessingHDRShader, NULL, 0);
 
 	devCon->PSSetConstantBuffers(0, 1, &_finalPixelConstant);
 
 	// set pixel constants
-	ConstantFinalPixel pixelConstant;
+	ConstantFinalHDRPixel pixelConstant;
 	pixelConstant.applyBloom     = PostProcessing::APPLY_BLOOM;
 	pixelConstant.bloomIntensity = PostProcessing::BLOOM_INTENSITY;
 	pixelConstant.applyDof       = PostProcessing::APPLY_DEPTH_OF_FIELD;
+	pixelConstant.applyTonemap   = PostProcessing::APPLY_TONEMAPPING;
 	pixelConstant.startEndDofdst = XMFLOAT2(PostProcessing::START_END_DOF_DST[0], PostProcessing::START_END_DOF_DST[1]);
 
-	SHADER_HELPERS::UpdateConstantBuffer((void*)&pixelConstant, sizeof(ConstantFinalPixel), _finalPixelConstant);
+	SHADER_HELPERS::UpdateConstantBuffer((void*)&pixelConstant, sizeof(ConstantFinalHDRPixel), _finalPixelConstant);
 
 	// set textures
 	ID3D11ShaderResourceView* texArray[4] = { SceneImage, _bloomMap, _dofMap, sceneDepth };
@@ -229,6 +235,34 @@ void PostProcessingShader::RenderFinal(ID3D11ShaderResourceView* SceneImage, ID3
 	// unbind
 	ID3D11ShaderResourceView* nullSRV[4] = { NULL, NULL, NULL, NULL };
 	devCon->PSSetShaderResources(0, 4, nullSRV);
+}
+
+void PostProcessingShader::RenderFinalSDR(ID3D11ShaderResourceView* SceneImageSDR)
+{
+	// get dx manager
+	DXManager& DXM = *Systems::dxManager;
+
+	// get devicecontext
+	ID3D11DeviceContext* devCon = DXM.GetDeviceCon();
+
+	// set to defult backbuffer and render our final scene image
+	DXM.SetBackBuffer();
+
+	// set pixel constants
+	ConstantFinalSDRPixel pixelConstant;
+	pixelConstant.applyFXAA = PostProcessing::APPLY_FXAA;	
+	SHADER_HELPERS::UpdateConstantBuffer((void*)&pixelConstant, sizeof(ConstantFinalSDRPixel), _finalPixelConstant);
+
+	devCon->PSSetShader(_pixelPostProcessingSDRShader, NULL, 0);
+
+	devCon->PSSetShaderResources(0, 1, &SceneImageSDR);
+
+	// draw
+	devCon->DrawIndexed(6, 0, 0);
+
+	// unbind
+	ID3D11ShaderResourceView* nullSRV[1] = { NULL };
+	devCon->PSSetShaderResources(0, 1, nullSRV);
 }
 
 // ENABLE DEBUG QUADS FOR VERIOUS MAPS

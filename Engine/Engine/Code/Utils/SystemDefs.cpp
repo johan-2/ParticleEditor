@@ -67,6 +67,9 @@ float PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_2 = 8.0f;
 bool  PostProcessing::APPLY_DEPTH_OF_FIELD = true;
 float PostProcessing::START_END_DOF_DST[]  = { 20.0f, 40.0f};
 
+bool PostProcessing::APPLY_FXAA        = true;
+bool PostProcessing::APPLY_TONEMAPPING = true;
+
 PostProcessing::PostProcessing(){}
 PostProcessing::~PostProcessing(){}
 
