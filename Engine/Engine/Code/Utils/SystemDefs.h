@@ -42,7 +42,9 @@ public:
 	static bool APPLY_FXAA;
 
 	// TONEMAPPING
-	static bool APPLY_TONEMAPPING;
+	static bool  APPLY_TONEMAPPING;
+	static int   TONEMAP_TYPE;
+	static float TONEMAP_EXPOSURE;
 
 	static void ReadSettings(const char* file);
 	static void WriteSettings(const char* file);	

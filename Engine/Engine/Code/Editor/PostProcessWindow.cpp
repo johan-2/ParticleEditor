@@ -39,6 +39,25 @@ void PostProcessWindow::Render()
 	GUI::CheckBox("6", "Apply Depth Of Field", "if Doof will be applied to final image", &PostProcessing::APPLY_DEPTH_OF_FIELD);
 	GUI::FloatSlider2("7", "Start End Focus", "when the focus will start being blurred to when completely blurred", 0.0f, 1000.0f, &PostProcessing::START_END_DOF_DST[0]);
 
+	GUI::Space(2);
+
+	// TONEMAPPING
+	GUI::Text(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "TONEMAPPING");
+	GUI::CheckBox("7", "Apply Tonemap", "if tonemapping will be applied when going from HDR 16 bit per channel render targets to defualt 8 bit per channel backbuffer", &PostProcessing::APPLY_TONEMAPPING);
+
+	if (PostProcessing::APPLY_TONEMAPPING)
+	{
+		GUI::ComboBox("8", "TONEMAP TYPE", "thye type of tonemapping algorithm to use", "NAUGHTY DOG\0REINHARD\0EXPOSURE BASED", &PostProcessing::TONEMAP_TYPE);
+		if (PostProcessing::TONEMAP_TYPE == 2)
+			GUI::FloatSlider("9", "EXPOSURE AMOUNT", "the exposure amount, lower == darker", 0.1f, 1.5f, &PostProcessing::TONEMAP_EXPOSURE);
+	}
+
+	GUI::Space(2);
+
+	// FXAA
+	GUI::Text(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "FXAA");
+	GUI::CheckBox("10", "Apply FXAA (work in progress)", "if FXAA will be performed on the final scene image", &PostProcessing::APPLY_FXAA);
+
 	GUI::Space(1);
 
 	// serialize settings

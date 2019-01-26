@@ -95,7 +95,8 @@ private:
 		int      applyDof;
 		int      applyTonemap;
 		XMFLOAT2 startEndDofdst;
-		XMFLOAT2 pad2;
+		int      tonemapType;
+		float    tonemapExposure;
 	};
 
 	struct ConstantFinalSDRPixel

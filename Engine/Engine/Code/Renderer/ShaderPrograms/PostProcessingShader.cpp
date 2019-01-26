@@ -217,11 +217,13 @@ void PostProcessingShader::RenderFinalHDR(ID3D11ShaderResourceView* SceneImage, 
 
 	// set pixel constants
 	ConstantFinalHDRPixel pixelConstant;
-	pixelConstant.applyBloom     = PostProcessing::APPLY_BLOOM;
-	pixelConstant.bloomIntensity = PostProcessing::BLOOM_INTENSITY;
-	pixelConstant.applyDof       = PostProcessing::APPLY_DEPTH_OF_FIELD;
-	pixelConstant.applyTonemap   = PostProcessing::APPLY_TONEMAPPING;
-	pixelConstant.startEndDofdst = XMFLOAT2(PostProcessing::START_END_DOF_DST[0], PostProcessing::START_END_DOF_DST[1]);
+	pixelConstant.applyBloom      = PostProcessing::APPLY_BLOOM;
+	pixelConstant.bloomIntensity  = PostProcessing::BLOOM_INTENSITY;
+	pixelConstant.applyDof        = PostProcessing::APPLY_DEPTH_OF_FIELD;
+	pixelConstant.applyTonemap    = PostProcessing::APPLY_TONEMAPPING;
+	pixelConstant.startEndDofdst  = XMFLOAT2(PostProcessing::START_END_DOF_DST[0], PostProcessing::START_END_DOF_DST[1]);
+	pixelConstant.tonemapType     = PostProcessing::TONEMAP_TYPE;
+	pixelConstant.tonemapExposure = PostProcessing::TONEMAP_EXPOSURE;
 
 	SHADER_HELPERS::UpdateConstantBuffer((void*)&pixelConstant, sizeof(ConstantFinalHDRPixel), _finalPixelConstant);
 

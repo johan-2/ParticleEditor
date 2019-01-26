@@ -39,7 +39,7 @@ SponzaTestScene::SponzaTestScene()
 	// create game camera
 	Entity* cameraGame = new Entity();
 	cameraGame->AddComponent<TransformComponent>()->Init(XMFLOAT3(-32.28f, 6.22f, 0.20f), XMFLOAT3(13.0f, 89.5f, 0.0f));
-	cameraGame->AddComponent<CameraComponent>()->Init3D(85);
+	cameraGame->AddComponent<CameraComponent>()->Init3D(90);
 	cameraGame->AddComponent<FreeMoveComponent>()->init(12.0f, 0.25f, 6.0f);
 	CM.SetCurrentCameraGame(cameraGame->GetComponent<CameraComponent>());
 

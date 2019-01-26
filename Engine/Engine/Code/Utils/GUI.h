@@ -169,6 +169,14 @@ namespace GUI
 		ShowToolTip(toolTip);
 	}
 
+	static void ComboBox(const char* ID, const char* header, const char* toolTip, const char* items, int* data)
+	{
+		ImGui::Combo(ID, data, items);
+		ImGui::SameLine();
+		ImGui::TextColored(ImVec4(0.9f, 0.9f, 0.9f, 1.0f), header);
+		ShowToolTip(toolTip);
+	}
+
 	static std::string FindFileFromDirectory(const char* filter, const char* title)
 	{
 		// create memory for the path to the texture file we select

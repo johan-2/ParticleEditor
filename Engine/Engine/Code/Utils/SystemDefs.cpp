@@ -67,8 +67,11 @@ float PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_2 = 8.0f;
 bool  PostProcessing::APPLY_DEPTH_OF_FIELD = true;
 float PostProcessing::START_END_DOF_DST[]  = { 20.0f, 40.0f};
 
-bool PostProcessing::APPLY_FXAA        = true;
-bool PostProcessing::APPLY_TONEMAPPING = true;
+bool PostProcessing::APPLY_FXAA = true;
+
+bool  PostProcessing::APPLY_TONEMAPPING = true;
+int   PostProcessing::TONEMAP_TYPE      = 0;
+float PostProcessing::TONEMAP_EXPOSURE  = 0.9f;
 
 PostProcessing::PostProcessing(){}
 PostProcessing::~PostProcessing(){}
@@ -92,7 +95,11 @@ void PostProcessing::ReadSettings(const char* file)
 	BLOOM_BLUR_SCALE_DOWN_PASS_2 = JSON::ReadFloat(d,  "BLOOM_BLUR_SCALE_DOWN_PASS_2");
 	APPLY_DEPTH_OF_FIELD         = JSON::ReadBool(d,   "APPLY_DEPTH_OF_FIELD");
 	XMFLOAT2 dofDst              = JSON::ReadFloat2(d, "START_END_DOF_DST");
-	START_END_DOF_DST[0] = dofDst.x; START_END_DOF_DST[1] = dofDst.y;
+	START_END_DOF_DST[0]         = dofDst.x; START_END_DOF_DST[1] = dofDst.y;
+	APPLY_FXAA                   = JSON::ReadBool(d,   "APPLY_FXAA");
+	APPLY_TONEMAPPING            = JSON::ReadBool(d,   "APPLY_TONEMAPPING");
+	TONEMAP_TYPE                 = JSON::ReadInt(d,    "TONEMAP_TYPE");
+	TONEMAP_EXPOSURE             = JSON::ReadFloat(d,  "TONEMAP_EXPOSURE");
 }
 
 void PostProcessing::WriteSettings(const char* file)
@@ -111,6 +118,10 @@ void PostProcessing::WriteSettings(const char* file)
 	JSON::WriteFloat(&writer,  "BLOOM_BLUR_SCALE_DOWN_PASS_2", BLOOM_BLUR_SCALE_DOWN_PASS_2);
 	JSON::WriteBool(&writer,   "APPLY_DEPTH_OF_FIELD",         APPLY_DEPTH_OF_FIELD);
 	JSON::WriteFloat2(&writer, "START_END_DOF_DST",            XMFLOAT2(START_END_DOF_DST[0], START_END_DOF_DST[1]));
+	JSON::WriteBool(&writer,   "APPLY_TONEMAPPING",            APPLY_TONEMAPPING);
+	JSON::WriteBool(&writer,   "APPLY_FXAA",                   APPLY_FXAA);
+	JSON::WriteInt(&writer,    "TONEMAP_TYPE",                 TONEMAP_TYPE);
+	JSON::WriteFloat(&writer,  "TONEMAP_EXPOSURE",             TONEMAP_EXPOSURE);
 	
 	// end object
 	writer.EndObject();

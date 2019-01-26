@@ -6,6 +6,8 @@ uniform float  u_bloomIntensity;
 uniform int    u_applyDof;
 uniform int    u_applyToneMapping;
 uniform float2 u_dofStartEndDst;
+uniform int    u_tonemapType;
+uniform float  u_tonemap3Exposure;
 
 static float nearPlane = 0.1;
 static float farPlane  = 5000.0;
@@ -68,7 +70,9 @@ float4 Main(PixelInputType input) : SV_TARGET
 	
 	if (u_applyToneMapping)
 	{
-		finalColor.rgb = Tonemap1(finalColor.rgb);
+		if      (u_tonemapType == 0) finalColor.rgb = Tonemap1(finalColor.rgb);
+		else if (u_tonemapType == 1) finalColor.rgb = Tonemap2(finalColor.rgb);
+		else if (u_tonemapType == 2) finalColor.rgb = Tonemap3(finalColor.rgb, u_tonemap3Exposure);
 	}
 	
 	return finalColor;
