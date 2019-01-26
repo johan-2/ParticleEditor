@@ -106,6 +106,17 @@ float3 GetPointColor(PixelInputType input, float3 textureColor, float3 bumpNorma
     return finalColor;
 }
 
+float2 GetTexCoordOffset(PixelInputType input, float3x3 TBNMatrix)
+{
+	// calculate tex coords for POM here
+	float3x3 toTangentSpace = transpose(TBNMatrix);
+	
+	float3 viewDirectionW = normalize(-input.vertexToCamera);
+	float3 viewDirectionT = mul(viewDirectionW, toTangentSpace);
+	
+	return float2(0.0, 0.0);
+}
+
 float4 Main(PixelInputType input) : SV_TARGET
 {						
 	// if the alpha channel of the emissivemap is not zero it means that this is 
@@ -114,14 +125,19 @@ float4 Main(PixelInputType input) : SV_TARGET
 	if (emissiveMap.a > 0)	
 		return float4(Texture[0].Sample(SampleType[0],input.texCoord).rgb * emissiveMap.rgb, 1);
 	
+	input.normal   = normalize(input.normal);
+	input.binormal = normalize(input.binormal);
+	input.tangent  = normalize(input.tangent);
+	
+	float3x3 TBNMatrix = float3x3(input.tangent, input.binormal, input.normal);
+	
 	float4 textureColor = Texture[0].Sample(SampleType[0], input.texCoord);;		
 	float4 normalMap    = Texture[1].Sample(SampleType[0], input.texCoord);
 	float4 specularMap  = Texture[2].Sample(SampleType[0], input.texCoord);
 	
 	// convert normalmap sample to range -1 to 1 and convert to worldspace
-	normalMap                   = (normalMap * 2.0) -1.0;
-	float3x3 tangentSpaceMatrix = float3x3(input.tangent,input.binormal,input.normal);	
-	float3 bumpNormal           = normalize(mul(normalMap, tangentSpaceMatrix));  
+	normalMap         = (normalMap * 2.0) -1.0;	
+	float3 bumpNormal = normalize(mul(normalMap, TBNMatrix));  
 	
 	float3 baseColor        = GetBaseColor(input, textureColor.rgb);
 	float3 directionalColor = GetDirectionalColor(input, textureColor, bumpNormal, specularMap);

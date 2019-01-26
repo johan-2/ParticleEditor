@@ -1,6 +1,8 @@
 Texture2D Textures[4];	// diffuse, normal, specular, emissive
 SamplerState SampleType[6]; // wrapTrilinear, clampTrilinear, wrapBilinear, clampBililinear, wrapAnisotropic, clampAnisotropic	
- 		
+
+float4 u_cameraPosition; 	
+	
 struct PixelInputType
 {
     float4 position      : SV_POSITION;
@@ -20,19 +22,36 @@ struct Output
 	float4 specular : SV_TARGET3;
 };
 
+float2 GetTexCoordOffset(PixelInputType input, float3x3 TBNMatrix)
+{
+	// calculate tex coords for POM here
+	float3x3 toTangentSpace = transpose(TBNMatrix);
+	
+	float3 viewDirectionW = normalize(input.worldPosition - u_cameraPosition.xyz);
+	float3 viewDirectionT = mul(viewDirectionW, toTangentSpace);
+	
+	return float2(0.0, 0.0);
+}
+
 Output Main(PixelInputType input) 
 {
     Output output;
 	
-	float4 textureColor = Textures[0].Sample(SampleType[0],input.texCoord) * input.color; 	
-	float4 normalMap    = Textures[1].Sample(SampleType[0],input.texCoord);
-	float4 specularMap  = Textures[2].Sample(SampleType[0],input.texCoord);
-	float4 emissiveMap  = Textures[3].Sample(SampleType[0],input.texCoord);
-			
-	normalMap = (normalMap * 2.0) -1.0;
+	input.normal   = normalize(input.normal);
+	input.binormal = normalize(input.binormal);
+	input.tangent  = normalize(input.tangent);
 	
-	float3x3 tangentSpaceMatrix = float3x3(input.tangent, input.binormal, input.normal);	
-	float3 bumpNormal           = normalize(mul(normalMap, tangentSpaceMatrix));   	
+	float3x3 TBNMatrix = float3x3(input.tangent, input.binormal, input.normal);	
+	
+	GetTexCoordOffset(input, TBNMatrix);
+	
+	float4 textureColor = Textures[0].Sample(SampleType[0], input.texCoord) * input.color; 	
+	float4 normalMap    = Textures[1].Sample(SampleType[0], input.texCoord);
+	float4 specularMap  = Textures[2].Sample(SampleType[0], input.texCoord);
+	float4 emissiveMap  = Textures[3].Sample(SampleType[0], input.texCoord);
+			
+	normalMap         = (normalMap * 2.0) -1.0;
+	float3 bumpNormal = normalize(mul(normalMap, TBNMatrix));   	
 			    		  					   		    				
 	output.position = input.worldPosition;
 	output.normal   = float4(bumpNormal.xyz,1);

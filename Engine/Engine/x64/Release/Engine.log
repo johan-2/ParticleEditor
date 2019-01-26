@@ -1,9 +1,9 @@
-﻿  PostProcessWindow.cpp
-  SponzaTestScene.cpp
+﻿  Renderer.cpp
+  DeferredShader.cpp
   Generating code
-  3 of 3341 functions (<0.1%) were compiled, the rest were copied from previous compilation.
+  0 of 3341 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    3 functions had inline decision re-evaluated but remain unchanged
+    0 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
 Entity.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'Entity.obj' or at 'C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\vc141.pdb'; linking object as if no debug info
 IComponent.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'IComponent.obj' or at 'C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\vc141.pdb'; linking object as if no debug info

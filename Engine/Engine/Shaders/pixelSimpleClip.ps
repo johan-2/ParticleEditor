@@ -74,15 +74,20 @@ float3 GetPointColor(PixelInputType input, float3 textureColor, float3 bumpNorma
 }
 
 float4 Main(PixelInputType input) : SV_TARGET
-{     	           	 
+{     	         
+	input.normal   = normalize(input.normal);
+	input.binormal = normalize(input.binormal);
+	input.tangent  = normalize(input.tangent);
+	
+	float3x3 TBNMatrix = float3x3(input.tangent,input.binormal,input.normal);
+
 	float4 textureColor  = Texture[0].Sample(SampleType[0], input.texCoord);		
 	float4 normalMap     = Texture[1].Sample(SampleType[0], input.texCoord);
 	float4 emissiveColor = Texture[2].Sample(SampleType[0], input.texCoord);
 	
 	// convert normalmap sample to range -1 to 1 and convert to worldspace
-	normalMap                   = (normalMap * 2.0) -1.0;
-	float3x3 tangentSpaceMatrix = float3x3(input.tangent,input.binormal,input.normal);	
-	float3 bumpNormal           = normalize(mul(normalMap, tangentSpaceMatrix));  
+	normalMap         = (normalMap * 2.0) -1.0;		
+	float3 bumpNormal = normalize(mul(normalMap, TBNMatrix));  
 		
 	float3 baseColor        = GetBaseColor(input, textureColor);		
 	float3 directionalColor = GetDirectionalColor(input, textureColor, bumpNormal);

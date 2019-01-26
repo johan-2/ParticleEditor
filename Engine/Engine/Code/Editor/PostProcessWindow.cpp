@@ -4,6 +4,7 @@
 #include "SystemDefs.h"
 #include "Systems.h"
 #include "PostProcessingShader.h"
+
 PostProcessWindow::PostProcessWindow(MasterEditor* masterEditor) : IEditorWindow(masterEditor)
 {
 }

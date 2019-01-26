@@ -70,5 +70,6 @@ private:
 		XMFLOAT4X4 lightViewProj;
 		XMFLOAT4   cameraPosition;
 	};
+
 };
 

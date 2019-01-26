@@ -68,6 +68,12 @@ void DeferredShader::RenderGeometry(std::vector<Mesh*>& meshes)
 
 	// set the vertex constant buffer
 	devCon->VSSetConstantBuffers(0, 1, &_CBGeometryVertex);
+	devCon->PSSetConstantBuffers(0, 1, &_CBMisc);
+
+	// camera pos is needed to calculate UV offsets for paralax occlusion mapping
+	const XMFLOAT3& camPos  = camera->GetComponent<TransformComponent>()->GetPositionRef();
+	XMFLOAT4 cameraPosition = XMFLOAT4(camPos.x, camPos.y, camPos.z, 1.0f);
+	SHADER_HELPERS::UpdateConstantBuffer((void*)&cameraPosition, sizeof(XMFLOAT4), _CBMisc);
 
 	// constantbuffer structure
 	CBGeometryVertex vertexData;
