@@ -43,10 +43,11 @@ PixelInputType Main(VertexInputType input)
 	
 	// get the direction from vertex to camera for specular calculations	
 	float4 worldPosition  = mul(input.position, u_worldMatrix);	
-	output.worldPos = worldPosition;
+	output.worldPos  = worldPosition;
 	
 	// create the clipping plane to clip pixels under the reflection surface
 	output.clip = dot(mul(input.position, u_worldMatrix), u_clippingPlane);
+	
 	  
     return output;
 }

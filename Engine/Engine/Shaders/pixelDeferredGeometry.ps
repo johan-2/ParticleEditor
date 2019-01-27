@@ -1,7 +1,10 @@
+#include "CommonPixel.ps"
 Texture2D Textures[4];	// diffuse, normal, specular, emissive
 SamplerState SampleType[6]; // wrapTrilinear, clampTrilinear, wrapBilinear, clampBililinear, wrapAnisotropic, clampAnisotropic	
 
-float4 u_cameraPosition; 	
+float4 u_cameraPosition;
+int    u_hasHeightmap; 	
+float  u_heightScale;
 	
 struct PixelInputType
 {
@@ -22,17 +25,6 @@ struct Output
 	float4 specular : SV_TARGET3;
 };
 
-float2 GetTexCoordOffset(PixelInputType input, float3x3 TBNMatrix)
-{
-	// calculate tex coords for POM here
-	float3x3 toTangentSpace = transpose(TBNMatrix);
-	
-	float3 viewDirectionW = normalize(input.worldPosition - u_cameraPosition.xyz);
-	float3 viewDirectionT = mul(viewDirectionW, toTangentSpace);
-	
-	return float2(0.0, 0.0);
-}
-
 Output Main(PixelInputType input) 
 {
     Output output;
@@ -43,7 +35,8 @@ Output Main(PixelInputType input)
 	
 	float3x3 TBNMatrix = float3x3(input.tangent, input.binormal, input.normal);	
 	
-	GetTexCoordOffset(input, TBNMatrix);
+	if (u_hasHeightmap == 1)
+		input.texCoord += GetPOMOffset(Textures[1], SampleType[0], input.normal, input.tangent, input.worldPosition, u_cameraPosition.xyz, input.texCoord, u_heightScale);
 	
 	float4 textureColor = Textures[0].Sample(SampleType[0], input.texCoord) * input.color; 	
 	float4 normalMap    = Textures[1].Sample(SampleType[0], input.texCoord);

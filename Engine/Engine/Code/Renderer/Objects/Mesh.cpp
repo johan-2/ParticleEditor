@@ -5,15 +5,13 @@
 #include "Systems.h"
 #include "DXErrorhandler.h"
 
-Mesh::Mesh(Entity* parent, unsigned int FLAGS, const wchar_t* diffuseMap, const wchar_t* normalMap, const wchar_t* specularMap, const wchar_t* emissiveMap, bool hasAlpha) :
-	_uvOffset(XMFLOAT2(0,0))
+Mesh::Mesh(Entity* parent, unsigned int FLAGS, const wchar_t* diffuseMap, const wchar_t* normalMap, const wchar_t* specularMap, const wchar_t* emissiveMap, bool hasAlpha, bool hasHeightmap, float heightMapScale) :
+	_uvOffset(XMFLOAT2(0,0)),
+	_FLAGS(FLAGS),
+	_hasAlpha(hasAlpha),
+	_hasHeightmap(hasHeightmap),
+	_heightMapScale(heightMapScale)
 {
-	// set rendering flags
-	_FLAGS = FLAGS;
-
-	// set if mesh contains alpha
-	_hasAlpha = hasAlpha;
-
 	// get pointer to transform component
 	if (parent != nullptr)
 		_transform = parent->GetComponent<TransformComponent>();

@@ -1,3 +1,4 @@
+#include "CommonPixel.ps"
 Texture2D    Texture[3];      // diffuse, normal, emissive
 SamplerState SampleType[6]; // wrapTrilinear, clampTrilinear, wrapBilinear, clampBililinear, wrapAnisotropic, clampAnisotropic 	
  
@@ -24,6 +25,13 @@ cbuffer PointLightBuffer : register(b1)
 {
 	PointLight pointLights[1024];
 };
+
+cbuffer heightBuffer : register(b2)
+{
+	float4 cameraPosition;
+	int    hasHeightmap; 	
+	float  heightScale;
+}
  
 struct PixelInputType
 {
@@ -75,15 +83,22 @@ float3 GetPointColor(PixelInputType input, float3 textureColor, float3 bumpNorma
 
 float4 Main(PixelInputType input) : SV_TARGET
 {     	         
+	
 	input.normal   = normalize(input.normal);
 	input.binormal = normalize(input.binormal);
 	input.tangent  = normalize(input.tangent);
 	
 	float3x3 TBNMatrix = float3x3(input.tangent,input.binormal,input.normal);
+	
+	if (hasHeightmap == 1)
+		input.texCoord += GetPOMOffset(Texture[1], SampleType[0], input.normal, input.tangent, input.worldPos, cameraPosition.xyz, input.texCoord, heightScale);
 
 	float4 textureColor  = Texture[0].Sample(SampleType[0], input.texCoord);		
 	float4 normalMap     = Texture[1].Sample(SampleType[0], input.texCoord);
 	float4 emissiveColor = Texture[2].Sample(SampleType[0], input.texCoord);
+	
+	if (emissiveColor.a > 0)
+		return float4(textureColor * emissiveColor.rgb, 1);
 	
 	// convert normalmap sample to range -1 to 1 and convert to worldspace
 	normalMap         = (normalMap * 2.0) -1.0;		
@@ -93,8 +108,5 @@ float4 Main(PixelInputType input) : SV_TARGET
 	float3 directionalColor = GetDirectionalColor(input, textureColor, bumpNormal);
 	float3 pointColor       = GetPointColor(input, textureColor, bumpNormal);
 
-	if (emissiveColor.a > 0)
-		return float4(textureColor * emissiveColor.rgb, 1);
-			
 	return float4(baseColor + directionalColor + pointColor, textureColor.a);
 }

@@ -11,6 +11,7 @@
 #include "Systems.h"
 #include "MathHelpers.h"
 #include "InstancedModel.h"
+#include "SystemDefs.h"
 
 DeferredShader::DeferredShader()
 {
@@ -27,6 +28,7 @@ DeferredShader::DeferredShader()
 	SHADER_HELPERS::CreateConstantBuffer(_CBGeometryVertex);
 	SHADER_HELPERS::CreateConstantBuffer(_CBGeometryVertexInstanced);
 	SHADER_HELPERS::CreateConstantBuffer(_CBMisc);
+	SHADER_HELPERS::CreateConstantBuffer(_CBGeometryPixel);
 }
 
 DeferredShader::~DeferredShader()
@@ -68,12 +70,12 @@ void DeferredShader::RenderGeometry(std::vector<Mesh*>& meshes)
 
 	// set the vertex constant buffer
 	devCon->VSSetConstantBuffers(0, 1, &_CBGeometryVertex);
-	devCon->PSSetConstantBuffers(0, 1, &_CBMisc);
+	devCon->PSSetConstantBuffers(0, 1, &_CBGeometryPixel);
 
 	// camera pos is needed to calculate UV offsets for paralax occlusion mapping
+	CBGeometryPixel pixelData;
 	const XMFLOAT3& camPos  = camera->GetComponent<TransformComponent>()->GetPositionRef();
-	XMFLOAT4 cameraPosition = XMFLOAT4(camPos.x, camPos.y, camPos.z, 1.0f);
-	SHADER_HELPERS::UpdateConstantBuffer((void*)&cameraPosition, sizeof(XMFLOAT4), _CBMisc);
+	pixelData.cameraPos = XMFLOAT4(camPos.x, camPos.y, camPos.z, 1.0f);
 
 	// constantbuffer structure
 	CBGeometryVertex vertexData;
@@ -85,13 +87,18 @@ void DeferredShader::RenderGeometry(std::vector<Mesh*>& meshes)
 		// upload vertex and indexbuffers
 		meshes[i]->UploadBuffers();
 
-		//set and upload vertex constantdata
+		// set vertex constantdata
 		XMStoreFloat4x4(&vertexData.world,         XMLoadFloat4x4(&meshes[i]->GetWorldMatrixTrans()));
 		XMStoreFloat4x4(&vertexData.worldViewProj, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&meshes[i]->GetWorldMatrix(), &camera->GetViewProjMatrix())));
-		XMStoreFloat2(&vertexData.uvOffset,        XMLoadFloat2(&meshes[i]->GetUvOffset()));
+		XMStoreFloat2(&vertexData.UVOffset,        XMLoadFloat2(&meshes[i]->GetUvOffset()));
+
+		// set pixel constant data
+		pixelData.hasHeightmap = meshes[i]->HasHeightMap();
+		pixelData.heightScale  = meshes[i]->GetHeightMapScale();;
 
 		// update the constant buffer with the mesh data
 		SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(CBGeometryVertex), _CBGeometryVertex);
+		SHADER_HELPERS::UpdateConstantBuffer((void*)&pixelData,  sizeof(CBGeometryPixel),  _CBGeometryPixel);
 
 		// set textures
 		devCon->PSSetShaderResources(0, 4, meshes[i]->GetTextureArray());
@@ -108,7 +115,7 @@ void DeferredShader::RenderGeometry(std::vector<Mesh*>& meshes)
 void DeferredShader::renderGeometryInstanced(std::vector<InstancedModel*> models)
 {
 	// get DXManager
-	DXManager& DXM = *Systems::dxManager;
+	DXManager& DXM    = *Systems::dxManager;
 	CameraManager& CM = *Systems::cameraManager;
 
 	// render opaque objects here only
@@ -126,16 +133,48 @@ void DeferredShader::renderGeometryInstanced(std::vector<InstancedModel*> models
 
 	// set the vertex constant buffer
 	devCon->VSSetConstantBuffers(0, 1, &_CBGeometryVertexInstanced);
+	devCon->PSSetConstantBuffers(0, 1, &_CBGeometryPixel);
 
 	// constantbuffer structure
 	CBGeometryVertexInstanced vertexData;	
 	XMStoreFloat4x4(&vertexData.ViewProj, XMLoadFloat4x4(&camera->GetViewProjMatrixTrans()));
 	SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(CBGeometryVertexInstanced), _CBGeometryVertexInstanced);
 
+	// camera pos is needed to calculate UV offsets for paralax occlusion mapping
+	CBGeometryPixel pixelData;
+	const XMFLOAT3& camPos = camera->GetComponent<TransformComponent>()->GetPositionRef();
+	pixelData.cameraPos = XMFLOAT4(camPos.x, camPos.y, camPos.z, 1.0f);
+
 	// stuff that need to be set per mesh
 	size_t size = models.size();
 	for (int i = 0; i < size; i++)	
-		models[i]->RenderInstances();							
+	{
+		models[i]->UploadInstances();
+
+		const std::vector<Mesh*>& meshes = models[i]->GetMeshes();
+		size_t meshesSize = meshes.size();
+		for (int y = 0; y < meshesSize; y++)
+		{
+			// set pixel constant data
+			pixelData.hasHeightmap = meshes[y]->HasHeightMap();
+			pixelData.heightScale  = meshes[y]->GetHeightMapScale();
+			SHADER_HELPERS::UpdateConstantBuffer((void*)&pixelData, sizeof(CBGeometryPixel), _CBGeometryPixel);
+
+			ID3D11Buffer* vertexBuffer = meshes[y]->GetVertexBuffer();
+
+			// Set the vertex buffer in slot 0
+			devCon->IASetVertexBuffers(0, 1, &vertexBuffer, models[i]->GetStrides(), models[i]->GetOffsets());
+
+			// Set the index buffer 
+			devCon->IASetIndexBuffer(meshes[y]->GetIndexBuffer(), DXGI_FORMAT_R32_UINT, 0);
+
+			// set textures
+			devCon->PSSetShaderResources(0, 4, meshes[y]->GetTextureArray());
+
+			// draw all instances of this mesh
+			devCon->DrawIndexedInstanced(meshes[y]->GetNumIndices(), models[i]->GetNumInstances(), 0, 0, 0);
+		}									
+	}
 
 	// unbind so we can use resources as input in next stages
 	ID3D11ShaderResourceView* nullSRV[4] = { NULL, NULL, NULL, NULL };
@@ -200,3 +239,4 @@ void DeferredShader::RenderLightning(GBuffer*& gBuffer)
 	// enable depth again
 	DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::ENABLED);
 }
+

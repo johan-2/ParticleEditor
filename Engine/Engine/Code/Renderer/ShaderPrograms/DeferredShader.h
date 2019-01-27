@@ -40,6 +40,7 @@ private:
 
 	// constant buffers
 	ID3D11Buffer* _CBGeometryVertex;
+	ID3D11Buffer* _CBGeometryPixel;
 	ID3D11Buffer* _CBGeometryVertexInstanced;
 	ID3D11Buffer* _CBMisc;
 
@@ -56,8 +57,16 @@ private:
 	{
 		XMFLOAT4X4 world;
 		XMFLOAT4X4 worldViewProj;
-		XMFLOAT2   uvOffset;
+		XMFLOAT2   UVOffset;
 		XMFLOAT2   pad;
+	};
+
+	struct CBGeometryPixel
+	{
+		XMFLOAT4 cameraPos;
+		int      hasHeightmap;
+		float    heightScale;
+		XMFLOAT2 pad;
 	};
 
 	struct CBGeometryVertexInstanced

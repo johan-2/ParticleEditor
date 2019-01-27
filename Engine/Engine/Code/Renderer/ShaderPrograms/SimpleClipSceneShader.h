@@ -41,6 +41,7 @@ private:
 
 	// constant buffers
 	ID3D11Buffer* _CBVertex;
+	ID3D11Buffer* _CBPixel;
 	ID3D11Buffer* _CBVertexInstanced;
 
 	struct CBVertex
@@ -54,6 +55,14 @@ private:
 	{
 		XMFLOAT4X4 viewProj;
 		XMFLOAT4   clipingPlane;
+	};
+
+	struct CBPixel
+	{
+		XMFLOAT4 cameraPos;
+		int      hasHeightmap;
+		float    heightScale;
+		XMFLOAT2 pad;
 	};
 
 };

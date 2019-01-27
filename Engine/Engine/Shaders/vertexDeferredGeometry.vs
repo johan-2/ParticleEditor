@@ -37,13 +37,13 @@ PixelInputType Main(VertexInputType input)
     output.position = mul(input.position, u_worldViewProj); 	
     	   	
 	// transform normals to worldSpace
-	output.normal   = normalize(mul(input.normal, (float3x3)u_worldMatrix));
-	output.tangent  = normalize(mul(input.tangent, (float3x3)u_worldMatrix));
+	output.normal   = normalize(mul(input.normal,   (float3x3)u_worldMatrix));
+	output.tangent  = normalize(mul(input.tangent,  (float3x3)u_worldMatrix));
 	output.binormal = normalize(mul(input.binormal, (float3x3)u_worldMatrix));
 	
 	output.worldPosition = mul(input.position, u_worldMatrix);
 	
 	output.color = input.color;
-		   
+
     return output;
 }

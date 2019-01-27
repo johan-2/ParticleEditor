@@ -17,6 +17,7 @@ ForwardAlphaShader::ForwardAlphaShader()
 
 	// create constant buffers
 	SHADER_HELPERS::CreateConstantBuffer(_CBVertex);
+	SHADER_HELPERS::CreateConstantBuffer(_CBPixel);
 }
 
 ForwardAlphaShader::~ForwardAlphaShader()
@@ -61,12 +62,14 @@ void ForwardAlphaShader::RenderForward(std::vector<Mesh*>& meshes)
 	devCon->VSSetConstantBuffers(0, 1, &_CBVertex);
 	devCon->PSSetConstantBuffers(0, 1, &ambDirBuffer);
 	devCon->PSSetConstantBuffers(1, 1, &pointBuffer);
+	devCon->PSSetConstantBuffers(2, 1, &_CBPixel);
 
 	// set to alpha blending
 	DXM.BlendStates()->SetBlendState(BLEND_STATE::BLEND_ALPHA);
 
 	// create constant buffer structures
 	CBVertex constantVertex;
+	CBPixel  constantPixel;
 
 	// set camera matrices
 	XMStoreFloat3(&constantVertex.camPos, XMLoadFloat3(&cameraPos));
@@ -91,8 +94,12 @@ void ForwardAlphaShader::RenderForward(std::vector<Mesh*>& meshes)
 		XMStoreFloat4x4(&constantVertex.worldViewProjLight, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&worldMat, &cameraLight->GetViewProjMatrix())));
 		XMStoreFloat2(&constantVertex.uvOffset,             XMLoadFloat2(&mesh->GetUvOffset()));
 
+		constantPixel.hasHeightmap = mesh->HasHeightMap();
+		constantPixel.heightScale  = 0.08f;
+
 		// update vertex constant buffer
 		SHADER_HELPERS::UpdateConstantBuffer((void*)&constantVertex, sizeof(CBVertex), _CBVertex);
+		SHADER_HELPERS::UpdateConstantBuffer((void*)&constantPixel,  sizeof(CBPixel),  _CBPixel);
 
 		// get the texture array of mesh
 		ID3D11ShaderResourceView** meshTextures = mesh->GetTextureArray();

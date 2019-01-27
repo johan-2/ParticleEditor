@@ -21,7 +21,7 @@ using namespace DirectX;
 class Mesh
 {
 public:	
-	Mesh(Entity* parent, unsigned int FLAGS, const wchar_t* diffuseMap, const wchar_t* normalMap, const wchar_t* specularMap, const wchar_t* emissiveMap, bool hasAlpha);
+	Mesh(Entity* parent, unsigned int FLAGS, const wchar_t* diffuseMap, const wchar_t* normalMap, const wchar_t* specularMap, const wchar_t* emissiveMap, bool hasAlpha, bool hasHeightmap, float heightMapScale);
 	~Mesh();
 
 	// vertex data structure
@@ -61,8 +61,8 @@ public:
 	const XMFLOAT3& GetPosition()           { return _transform->GetPositionRef(); }
 
 	// get number of vertices and indices
-	unsigned int GetNumVertices() { return _numVertices; }
-	unsigned int GetNumIndices()  { return _numIndices; }
+	const unsigned int& GetNumVertices() { return _numVertices; }
+	const unsigned int& GetNumIndices()  { return _numIndices; }
 
 	ID3D11Buffer* GetVertexBuffer() { return _vertexBuffer; }
 	ID3D11Buffer* GetIndexBuffer()  { return _indexBuffer; }
@@ -71,7 +71,7 @@ public:
 	ID3D11ShaderResourceView** GetTextureArray() { return _textures; }
 
 	// get/set rendering flags
-	unsigned int GetFlags() { return _FLAGS; }
+	const unsigned int& GetFlags() { return _FLAGS; }
 	void SetFlags(unsigned int flags) { _FLAGS = flags; }
 
 	// set and get the offset of uv-coordinates for this mesh
@@ -98,6 +98,11 @@ public:
 	void CreateNoiseMap(const wchar_t* texture);
 	ID3D11ShaderResourceView* GetNoiseMap() { return _noiseMap; }
 
+	const bool& HasHeightMap() { return _hasHeightmap; }
+
+	void SetHeightMapScale(float value) { _heightMapScale = value; }
+	const float& GetHeightMapScale()    { return _heightMapScale; }
+
 private:
 
 	// pointers to the vertex/index buffers
@@ -121,9 +126,11 @@ private:
 	// rendering flags
 	unsigned int _FLAGS;
 	bool _hasAlpha;
+	bool _hasHeightmap;
 
 	// distance from camera
 	float _distance;
+	float _heightMapScale;
 
 	// pointer to transform component
 	TransformComponent* _transform;

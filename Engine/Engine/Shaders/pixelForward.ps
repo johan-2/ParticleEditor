@@ -1,5 +1,4 @@
 #include "CommonPixel.ps"
-
 Texture2D Texture[5];	    // diffuse, normal, specular, emissive, shadowmap
 SamplerState SampleType[6]; // wrapTrilinear, clampTrilinear, wrapBilinear, clampBililinear, wrapAnisotropic, clampAnisotropic	
 
@@ -27,6 +26,12 @@ cbuffer PointLightBuffer : register(b1)
 	PointLight pointLights[1024];
 };
 
+cbuffer heightBuffer : register(b2)
+{
+	int    hasHeightmap; 	
+	float  heightScale;
+}
+
 struct PixelInputType
 {
     float4 position           : SV_POSITION;
@@ -38,6 +43,7 @@ struct PixelInputType
 	float4 positionLightSpace : TEXCOORD2;
 	float3 worldPos           : TEXCOORD3;
 	float4 vertexColor        : COLOR;
+	float3 cameraPos          : TEXCOORD4;
 };
 
 float3 GetBaseColor(PixelInputType input, float3 textureColor)
@@ -130,6 +136,9 @@ float4 Main(PixelInputType input) : SV_TARGET
 	input.tangent  = normalize(input.tangent);
 	
 	float3x3 TBNMatrix = float3x3(input.tangent, input.binormal, input.normal);
+	
+	if (hasHeightmap == 1)
+		input.texCoord += GetPOMOffset(Texture[1], SampleType[0], input.normal, input.tangent, input.worldPos, input.cameraPos, input.texCoord, heightScale);
 	
 	float4 textureColor = Texture[0].Sample(SampleType[0], input.texCoord);;		
 	float4 normalMap    = Texture[1].Sample(SampleType[0], input.texCoord);

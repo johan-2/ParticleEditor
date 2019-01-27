@@ -107,8 +107,29 @@ void DepthShader::RenderDepthInstanced(std::vector<InstancedModel*>& models)
 
 	size_t size = models.size();
 	for (int i = 0; i < size; i++)
-		models[i]->RenderInstances();
+	{
+		models[i]->UploadInstances();
 
-	ID3D11ShaderResourceView* nullSRV[4] = { NULL, NULL, NULL, NULL };
-	devCon->PSSetShaderResources(0, 4, nullSRV);
+		const std::vector<Mesh*>& meshes = models[i]->GetMeshes();
+		size_t meshesSize = meshes.size();
+		for (int y = 0; y < meshesSize; y++)
+		{
+			ID3D11Buffer* vertexBuffer = meshes[y]->GetVertexBuffer();
+
+			// Set the vertex buffer in slot 0
+			devCon->IASetVertexBuffers(0, 1, &vertexBuffer, models[i]->GetStrides(), models[i]->GetOffsets());
+
+			// Set the index buffer 
+			devCon->IASetIndexBuffer(meshes[y]->GetIndexBuffer(), DXGI_FORMAT_R32_UINT, 0);
+
+			// set textures
+			devCon->PSSetShaderResources(0, 1, meshes[y]->GetTextureArray());
+
+			// draw all instances of this mesh
+			devCon->DrawIndexedInstanced(meshes[y]->GetNumIndices(), models[i]->GetNumInstances(), 0, 0, 0);
+		}
+	}
+
+	ID3D11ShaderResourceView* nullSRV[1] = { NULL};
+	devCon->PSSetShaderResources(0, 1, nullSRV);
 }

@@ -24,6 +24,7 @@ SimpleClipSceneShader::SimpleClipSceneShader()
 
 	// create constant buffers
 	SHADER_HELPERS::CreateConstantBuffer(_CBVertex);
+	SHADER_HELPERS::CreateConstantBuffer(_CBPixel);
 	SHADER_HELPERS::CreateConstantBuffer(_CBVertexInstanced);
 
 	// create render texture
@@ -56,9 +57,13 @@ void SimpleClipSceneShader::RenderScene(std::vector<Mesh*>& opaqueMeshes, std::v
 	// get game camera and shadow camera
 	CameraComponent*& camera      = CM.GetCurrentCameraGame();
 
-	// set vertex data that all meshes share
+	// set constant data that all meshes share
 	CBVertex constantVertex;
 	XMStoreFloat4(&constantVertex.clipingPlane, XMLoadFloat4(&clipPlane));
+
+	CBPixel  constantPixel;
+	const XMFLOAT3& camPos  = camera->GetComponent<TransformComponent>()->GetPositionRef();
+	constantPixel.cameraPos = XMFLOAT4(camPos.x, camPos.y, camPos.z, 1.0f);
 	
 	// clear our reflection map render texture and set it to active
 	_renderTexture->ClearRenderTarget(0, 0, 0, 1, false);
@@ -82,6 +87,7 @@ void SimpleClipSceneShader::RenderScene(std::vector<Mesh*>& opaqueMeshes, std::v
 	devCon->VSSetConstantBuffers(0, 1, &_CBVertex);
 	devCon->PSSetConstantBuffers(0, 1, &ambDirBuffer);
 	devCon->PSSetConstantBuffers(1, 1, &pointBuffer);
+	devCon->PSSetConstantBuffers(2, 1, &_CBPixel);
 
 	//-------------------------------------------------------------------------------------------- OPAQUE
 	// loop over all opaque meshes that is set to cast reflections
@@ -91,7 +97,13 @@ void SimpleClipSceneShader::RenderScene(std::vector<Mesh*>& opaqueMeshes, std::v
 		// get world matrix of mesh and update the buffer
 		XMStoreFloat4x4(&constantVertex.world, XMLoadFloat4x4(&opaqueMeshes[y]->GetWorldMatrixTrans()));
 		XMStoreFloat4x4(&constantVertex.worldViewProj, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&opaqueMeshes[y]->GetWorldMatrix(), &camera->GetViewProjMatrix())));
+
+		// set pixel constant data
+		constantPixel.hasHeightmap = opaqueMeshes[y]->HasHeightMap();
+		constantPixel.heightScale  = opaqueMeshes[y]->GetHeightMapScale();
+
 		SHADER_HELPERS::UpdateConstantBuffer((void*)&constantVertex, sizeof(CBVertex), _CBVertex);
+		SHADER_HELPERS::UpdateConstantBuffer((void*)&constantPixel,  sizeof(CBPixel),  _CBPixel);
 
 		// get the texture array of mesh
 		ID3D11ShaderResourceView** meshTextures = opaqueMeshes[y]->GetTextureArray();
@@ -124,7 +136,37 @@ void SimpleClipSceneShader::RenderScene(std::vector<Mesh*>& opaqueMeshes, std::v
 
 	size = instancedModels.size();
 	for (int i = 0; i < size; i++)
-		instancedModels[i]->RenderInstances();
+	{
+		instancedModels[i]->UploadInstances();
+
+		const std::vector<Mesh*>& meshes = instancedModels[i]->GetMeshes();
+		size_t meshesSize = meshes.size();
+		for (int y = 0; y < meshesSize; y++)
+		{
+			// set pixel constant data
+			constantPixel.hasHeightmap = meshes[y]->HasHeightMap();
+			constantPixel.heightScale  = meshes[y]->GetHeightMapScale();
+			SHADER_HELPERS::UpdateConstantBuffer((void*)&constantPixel, sizeof(CBPixel), _CBPixel);
+
+			ID3D11Buffer* vertexBuffer = meshes[y]->GetVertexBuffer();
+
+			// Set the vertex buffer in slot 0
+			devCon->IASetVertexBuffers(0, 1, &vertexBuffer, instancedModels[i]->GetStrides(), instancedModels[i]->GetOffsets());
+
+			// Set the index buffer 
+			devCon->IASetIndexBuffer(meshes[y]->GetIndexBuffer(), DXGI_FORMAT_R32_UINT, 0);
+
+			// get the texture array of mesh
+			ID3D11ShaderResourceView** meshTextures = meshes[y]->GetTextureArray();
+
+			// specular map is not sent to this shader tho this is not calculated
+			ID3D11ShaderResourceView* texArray[3] = { meshTextures[0], meshTextures[1], meshTextures[3] };
+			devCon->PSSetShaderResources(0, 3, texArray);
+
+			// draw all instances of this mesh
+			devCon->DrawIndexedInstanced(meshes[y]->GetNumIndices(), instancedModels[i]->GetNumInstances(), 0, 0, 0);
+		}
+	}
 
 	// -------------------------------------------------------------------------------------------- ALPHA
 
@@ -150,6 +192,11 @@ void SimpleClipSceneShader::RenderScene(std::vector<Mesh*>& opaqueMeshes, std::v
 		XMStoreFloat4x4(&constantVertex.world,         XMLoadFloat4x4(&alphaMeshes[y]->GetWorldMatrixTrans()));
 		XMStoreFloat4x4(&constantVertex.worldViewProj, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&alphaMeshes[y]->GetWorldMatrix(), &camera->GetViewProjMatrix())));
 		SHADER_HELPERS::UpdateConstantBuffer((void*)&constantVertex, sizeof(CBVertex), _CBVertex);
+
+		// set pixel constant data
+		constantPixel.hasHeightmap = alphaMeshes[y]->HasHeightMap();
+		constantPixel.heightScale  = alphaMeshes[y]->GetHeightMapScale();
+		SHADER_HELPERS::UpdateConstantBuffer((void*)&constantPixel, sizeof(CBPixel), _CBPixel);
 
 		// get the texture array of mesh
 		ID3D11ShaderResourceView** meshTextures = alphaMeshes[y]->GetTextureArray();

@@ -26,6 +26,7 @@ struct PixelInputType
 	float4 positionLightSpace : TEXCOORD2;	 
 	float3 worldPos           : TEXCOORD3;
 	float4 vertexColor        : COLOR;
+	float3 cameraPos          : TEXCOORD4;
 };
 
 PixelInputType Main(VertexInputType input)
@@ -51,7 +52,8 @@ PixelInputType Main(VertexInputType input)
 	// send world pos to pixel shader for point light calculations
 	output.worldPos = worldPosition;
 	
-	output.vertexColor = input.color;
+	output.vertexColor = input.color;	
+	output.cameraPos   = u_cameraPosition;
 		   
     return output;
 }

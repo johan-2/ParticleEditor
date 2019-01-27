@@ -1,3 +1,6 @@
+static int heightMinSampleCount = 8;
+static int heightMaxSampleCount = 64;
+
 float2 GetProjectiveTexCoords(float4 clipPosition)
 {
 	float2 result;
@@ -68,5 +71,69 @@ float GetShadowLightFraction(Texture2D shadowMap, SamplerState s, float4 posLigh
 	}
 	
 	return numInLight / 9.0;
+}
+
+float2 GetPOMOffset(Texture2D normalMap, SamplerState samplerType, float3 normalW, float3 tangentW, float3 positionW, float3 cameraPositionW, float2 texCoords, float heightScale)
+{	
+	// create the orthonormal basis
+	float3 T = normalize(tangentW - dot(tangentW, normalW) * normalW);
+	float3 B = cross(normalW, T);
+	
+	// get matrix for transforming from world to tangent space
+	float3x3 toTangentSpace = transpose(float3x3(T, B, normalW)); 
+	
+	// get the view direction of camera in both world and tangent space
+	float3 viewDirectionW = normalize(positionW - cameraPositionW);
+	float3 viewDirectionT = mul(viewDirectionW, toTangentSpace);
+	
+	// get the max offset based on inversed view direction and length of the view vector
+	float2 maxParallelOffset = -viewDirectionT.xy * heightScale / viewDirectionT.z;
+	
+	// get amount of samples we will do based on the dot between inversed view and surface normal
+	int sampleCount = (int)lerp(heightMaxSampleCount, heightMinSampleCount, dot(-viewDirectionW, normalW));
+	
+	// get the value of each step into the texture 
+	float zStep = 1.0 / (float)sampleCount;
+	
+	// get how much one step is in texCoords based on the max offset and zStep
+	float2 texStep = maxParallelOffset * zStep;
+	
+	// this must be done to be abble to sample the correct mip maps in a loop
+	float2 dx = ddx(texCoords);
+	float2 dy = ddy(texCoords);
+	
+	int sampleIndex       = 0;
+    float2 currTexOffset  = 0;
+    float2 prevTexOffset  = 0;
+    float2 finalTexOffset = 0;
+    float currRayZ        = 1.0 - zStep;
+    float prevRayZ        = 1.0;
+    float currHeight      = 0.0;
+    float prevHeight      = 0.0; 
+	
+	while (sampleIndex < sampleCount)
+	{
+		currHeight = normalMap.SampleGrad(samplerType, texCoords + currTexOffset, dx, dy).a;
+		
+		if (currHeight > currRayZ)
+		{			
+			float t = (prevHeight - prevRayZ) / (prevHeight - currHeight + currRayZ - prevRayZ);
+			finalTexOffset = prevTexOffset + t * texStep;
+			
+			sampleIndex = sampleCount;
+		}
+		else
+		{
+			++sampleIndex;
+			prevTexOffset  = currTexOffset;
+			prevRayZ       = currRayZ;
+			prevHeight     = currHeight;
+			currTexOffset += texStep;
+			
+			currRayZ -= zStep;
+		}
+	}
+	
+	return finalTexOffset;
 }
 

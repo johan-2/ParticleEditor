@@ -5,7 +5,7 @@
 #include "Systems.h"
 #include "Mesh.h"
 
-InstancedModel::InstancedModel(char* model, unsigned int flags, wchar_t* diffuseMap, wchar_t* normalMap, wchar_t* specularMap, wchar_t* emissiveMap, bool useMaterial, float tiling)
+InstancedModel::InstancedModel(char* model, unsigned int flags, wchar_t* diffuseMap, wchar_t* normalMap, wchar_t* specularMap, wchar_t* emissiveMap, bool useMaterial, float tiling, float heightMapScale)
 {
 	_FLAGS       = flags;
 	_useMaterial = useMaterial;
@@ -20,12 +20,19 @@ InstancedModel::InstancedModel(char* model, unsigned int flags, wchar_t* diffuse
 	assert(scene != nullptr);
 
 	// send the root node and recurivly create all meshes
-	ProcessNode(scene->mRootNode, scene, diffuseMap, normalMap, specularMap, emissiveMap, useMaterial, tiling);
+	ProcessNode(scene->mRootNode, scene, diffuseMap, normalMap, specularMap, emissiveMap, useMaterial, tiling, heightMapScale);
 
 	// get how many meshes that was loaded
 	_numMeshes = _meshes.size();
 
 	AddToRenderQueues(true);
+
+	// Set vertex buffers stride and offset.
+	_strides[0] = sizeof(Mesh::VertexData);
+	_strides[1] = sizeof(ModelInstance);
+
+	_offsets[0] = 0;
+	_offsets[1] = 0;
 }
 
 InstancedModel::~InstancedModel()
@@ -89,56 +96,26 @@ void InstancedModel::BuildInstanceBuffer(std::vector<ModelInstance>& instances)
 	devCon->Unmap(_instanceBuffer, 0);
 }
 
-void InstancedModel::RenderInstances()
+void InstancedModel::UploadInstances()
 {
 	ID3D11DeviceContext* devCon = Systems::dxManager->GetDeviceCon();
 
-	unsigned int strides[2];
-	unsigned int offsets[2];
-	
-	// Set vertex buffer stride and offset.
-	strides[0] = sizeof(Mesh::VertexData);
-	strides[1] = sizeof(ModelInstance);
-
-	offsets[0] = 0;
-	offsets[1] = 0;
-
 	// set the instance buffer in slot 1
-	devCon->IASetVertexBuffers(1, 1, &_instanceBuffer, &strides[1], &offsets[1]);
-
-	for (int i = 0; i < _numMeshes; i++)
-	{
-		ID3D11Buffer* vertexBuffer = _meshes[i]->GetVertexBuffer();
-
-		// Set the vertex buffer in slot 0
-		devCon->IASetVertexBuffers(0, 1, &vertexBuffer, &strides[0], &offsets[0]);
-
-		// Set the index buffer 
-		devCon->IASetIndexBuffer(_meshes[i]->GetIndexBuffer(), DXGI_FORMAT_R32_UINT, 0);
-
-		// get textures
-		ID3D11ShaderResourceView** texture = _meshes[i]->GetTextureArray();
-
-		// set texture
-		devCon->PSSetShaderResources(0, 4, texture);
-
-		// draw all instances of this mesh
-		devCon->DrawIndexedInstanced(_meshes[i]->GetNumIndices(), _numInstances, 0, 0, 0);
-	}
+	devCon->IASetVertexBuffers(1, 1, &_instanceBuffer, &_strides[1], &_offsets[1]);
 }
 
-void InstancedModel::ProcessNode(aiNode* node, const aiScene* scene, wchar_t* diffuseMap, wchar_t* normalMap, wchar_t* specularMap, wchar_t* emissiveMap, bool useMaterial, float tiling)
+void InstancedModel::ProcessNode(aiNode* node, const aiScene* scene, wchar_t* diffuseMap, wchar_t* normalMap, wchar_t* specularMap, wchar_t* emissiveMap, bool useMaterial, float tiling, float heightMapScale)
 {
 	// get and create all meshes in this node
 	for (UINT i = 0; i < node->mNumMeshes; i++)
 	{
 		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-		_meshes.push_back(ModelLoader::CreateMesh(mesh, scene, 0, diffuseMap, normalMap, specularMap, emissiveMap, _useMaterial, tiling, nullptr));
+		_meshes.push_back(ModelLoader::CreateMesh(mesh, scene, 0, diffuseMap, normalMap, specularMap, emissiveMap, _useMaterial, tiling, nullptr, heightMapScale));
 	}
 
 	// recursivly loop over and process all child nodes
 	for (UINT i = 0; i < node->mNumChildren; i++)
-		ProcessNode(node->mChildren[i], scene, diffuseMap, normalMap, specularMap, emissiveMap, useMaterial, tiling);
+		ProcessNode(node->mChildren[i], scene, diffuseMap, normalMap, specularMap, emissiveMap, useMaterial, tiling, heightMapScale);
 }
 
 void InstancedModel::AddToRenderQueues(bool add)
