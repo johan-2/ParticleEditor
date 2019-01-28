@@ -46,11 +46,11 @@ void MasterEditor::RenderStatsWindow()
 	DXManager& DXM    = *Systems::dxManager;
 	Input& input      = *Systems::input;
 
-	TransformComponent* gameCamTransform = CM.GetCurrentCameraGame()->GetComponent<TransformComponent>();
-	TransformComponent* shadowCamTransform = CM.GetCurrentCameraDepthMap()->GetComponent<TransformComponent>();
+	TransformComponent* gameCamTransform = CM.currentCameraGame->GetComponent<TransformComponent>();
+	TransformComponent* shadowCamTransform = CM.currentCameraDepthMap->GetComponent<TransformComponent>();
 
-	FreeMoveComponent* gameCameraMove = CM.GetCurrentCameraGame()->GetComponent<FreeMoveComponent>();
-	FreeMoveComponent* shadowCameraMove = CM.GetCurrentCameraDepthMap()->GetComponent<FreeMoveComponent>();
+	FreeMoveComponent* gameCameraMove = CM.currentCameraGame->GetComponent<FreeMoveComponent>();
+	FreeMoveComponent* shadowCameraMove = CM.currentCameraDepthMap->GetComponent<FreeMoveComponent>();
 
 	if (input.IskeyPressed(DIK_F1))
 		gameCameraMove->SetActive(!gameCameraMove->IsActive());

@@ -45,8 +45,8 @@ void ForwardAlphaShader::RenderForward(std::vector<Mesh*>& meshes)
 	ID3D11DeviceContext*& devCon = DXM.GetDeviceCon();
 
 	// get game camera and shadow camera
-	CameraComponent*& camera      = CM.GetCurrentCameraGame();
-	CameraComponent*& cameraLight = CM.GetCurrentCameraDepthMap();
+	CameraComponent*& camera      = CM.currentCameraGame;
+	CameraComponent*& cameraLight = CM.currentCameraDepthMap;
 
 	// get camera position
 	const XMFLOAT3& cameraPos = camera->GetComponent<TransformComponent>()->GetPositionRef();
@@ -74,9 +74,6 @@ void ForwardAlphaShader::RenderForward(std::vector<Mesh*>& meshes)
 	// set camera matrices
 	XMStoreFloat3(&constantVertex.camPos, XMLoadFloat3(&cameraPos));
 
-	// get shadow map
-	ID3D11ShaderResourceView* shadowMap = cameraLight->GetSRV();
-
 	// sort alpha meshes to render back to front
 	SHADER_HELPERS::MeshSort(meshes, cameraPos, true);
 
@@ -90,8 +87,8 @@ void ForwardAlphaShader::RenderForward(std::vector<Mesh*>& meshes)
 		const XMFLOAT4X4& worldMat = mesh->GetWorldMatrix();
 
 		XMStoreFloat4x4(&constantVertex.world,              XMLoadFloat4x4(&mesh->GetWorldMatrixTrans()));
-		XMStoreFloat4x4(&constantVertex.worldViewProj,      XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&worldMat, &camera->GetViewProjMatrix())));
-		XMStoreFloat4x4(&constantVertex.worldViewProjLight, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&worldMat, &cameraLight->GetViewProjMatrix())));
+		XMStoreFloat4x4(&constantVertex.worldViewProj,      XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&worldMat, &camera->viewProjMatrix)));
+		XMStoreFloat4x4(&constantVertex.worldViewProjLight, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&worldMat, &cameraLight->viewProjMatrix)));
 		XMStoreFloat2(&constantVertex.uvOffset,             XMLoadFloat2(&mesh->GetUvOffset()));
 
 		constantPixel.hasHeightmap = mesh->HasHeightMap();
@@ -105,7 +102,7 @@ void ForwardAlphaShader::RenderForward(std::vector<Mesh*>& meshes)
 		ID3D11ShaderResourceView** meshTextures = mesh->GetTextureArray();
 
 		// fill texture array with all textures including the shadow map
-		ID3D11ShaderResourceView* t[5] = { meshTextures[0], meshTextures[1], meshTextures[2], meshTextures[3], shadowMap };
+		ID3D11ShaderResourceView* t[5] = { meshTextures[0], meshTextures[1], meshTextures[2], meshTextures[3], cameraLight->renderTexture };
 
 		// set SRV's
 		devCon->PSSetShaderResources(0, 5, t);

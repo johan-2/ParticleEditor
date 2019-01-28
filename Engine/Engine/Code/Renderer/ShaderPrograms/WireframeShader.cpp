@@ -45,7 +45,7 @@ void WireframeShader::RenderWireFrame(std::vector<Mesh*>& meshes)
 	ConstantVertex vertexData;
 
 	// get the camera that will render the depthmap
-	CameraComponent* camera = CM.GetCurrentCameraGame();
+	CameraComponent* camera = CM.currentCameraGame;
 
 	// set our shaders
 	devCon->VSSetShader(_vertexShader, NULL, 0);
@@ -60,7 +60,7 @@ void WireframeShader::RenderWireFrame(std::vector<Mesh*>& meshes)
 	for (int i = 0; i < size; i++)
 	{
 		// set world matrix
-		XMStoreFloat4x4(&vertexData.worldViewProj, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&meshes[i]->GetWorldMatrix(), &camera->GetViewProjMatrix())));
+		XMStoreFloat4x4(&vertexData.worldViewProj, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&meshes[i]->GetWorldMatrix(), &camera->viewProjMatrix)));
 
 		// update the constant buffer with the vertexdata of this mesh
 		SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(ConstantVertex), _constantBufferVertex);

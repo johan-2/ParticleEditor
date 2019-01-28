@@ -83,7 +83,7 @@ RenderToTexture::RenderToTexture(unsigned int width, unsigned int height, bool d
 
 		depthTex2D->Release();	
 
-		if (addDepthDebugQuad) Systems::renderer->GetDebugQuadHandler()->AddDebugQuad(_depthStencilSRV);
+		if (addDepthDebugQuad) Systems::renderer->debugQuadHandler->AddDebugQuad(_depthStencilSRV);
 	}
 	else // create both a render target view and a depth stencil view
 	{		
@@ -203,8 +203,8 @@ RenderToTexture::RenderToTexture(unsigned int width, unsigned int height, bool d
 		depthTex2D->Release();
 		renderTex2D->Release();		
 
-		if (addDepthDebugQuad)  Systems::renderer->GetDebugQuadHandler()->AddDebugQuad(_depthStencilSRV);
-		if (addRenderDebugQuad) Systems::renderer->GetDebugQuadHandler()->AddDebugQuad(_renderTargetSRV);
+		if (addDepthDebugQuad)  Systems::renderer->debugQuadHandler->AddDebugQuad(_depthStencilSRV);
+		if (addRenderDebugQuad) Systems::renderer->debugQuadHandler->AddDebugQuad(_renderTargetSRV);
 	}	
 }
 

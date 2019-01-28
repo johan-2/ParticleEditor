@@ -20,7 +20,7 @@ SkyDomeWindow::~SkyDomeWindow()
 
 void SkyDomeWindow::Render()
 {
-	SkyDome* skyDome         = Systems::renderer->GetSkyDome();
+	SkyDome* skyDome         = Systems::renderer->skyDome;
 	SkySettings* skySettings = skyDome->GetSkySettings();
 	SunMoon* sunMoon         = skyDome->GetSoonMoonSettings();
 	ID3D11ShaderResourceView* previewTex = Systems::texturePool->GetTexture(L"Textures/domeMap.dds", false);
@@ -133,7 +133,7 @@ void SkyDomeWindow::RenderCubeMap(SkySettings* skySettings)
 			skySettings->cubeMapName = GUI::ReplaceWithRelativePath("SkyBoxes/", path);
 			
 			// set the new cubemap
-			Systems::renderer->GetSkyDome()->LoadCubemap();
+			Systems::renderer->skyDome->LoadCubemap();
 		}		
 	}
 }

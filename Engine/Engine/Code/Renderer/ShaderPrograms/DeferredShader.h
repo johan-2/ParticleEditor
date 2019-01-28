@@ -20,13 +20,12 @@ public:
 	void renderGeometryInstanced(std::vector<InstancedModel*> models);
 	void RenderLightning(GBuffer*& gBuffer);
 
-	// get byte code from shaders
-	ID3D10Blob*& GetVertexGeometryShaderByteCode() { return _vertexGeometryShaderByteCode; }
-	ID3D10Blob*& GetVertexGeometryShaderByteCodeInstanced() { return _vertexGeometryShaderByteCodeInstanced; }
-	ID3D10Blob*& GetPixelGeometryShaderByteCode()  { return _pixelGeometryShaderByteCode; }
-
-	ID3D10Blob*& GetVertexLightningShaderByteCode() { return _vertexLightningShaderByteCode; }
-	ID3D10Blob*& GetPixelLightningShaderByteCode() { return _pixelLightningShaderByteCode; }
+	// the shader bytecode
+	ID3D10Blob* vertexGeometryShaderByteCode;
+	ID3D10Blob* vertexGeometryShaderByteCodeInstanced;
+	ID3D10Blob* pixelGeometryShaderByteCode;
+	ID3D10Blob* vertexLightningShaderByteCode;
+	ID3D10Blob* pixelLightningShaderByteCode;
 
 private:
 
@@ -43,14 +42,6 @@ private:
 	ID3D11Buffer* _CBGeometryPixel;
 	ID3D11Buffer* _CBGeometryVertexInstanced;
 	ID3D11Buffer* _CBMisc;
-
-	// the shader bytecode
-	ID3D10Blob* _vertexGeometryShaderByteCode;
-	ID3D10Blob* _vertexGeometryShaderByteCodeInstanced;
-	ID3D10Blob* _pixelGeometryShaderByteCode;
-
-	ID3D10Blob* _vertexLightningShaderByteCode;
-	ID3D10Blob* _pixelLightningShaderByteCode;
 
 	// constant data structure for the geometry pass
 	struct CBGeometryVertex

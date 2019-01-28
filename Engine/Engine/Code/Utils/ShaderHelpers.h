@@ -276,6 +276,7 @@ namespace SHADER_HELPERS
 
 	static void CreateComputeShader(LPCWSTR filePath, ID3D11ComputeShader*& shader, ID3D10Blob*& buffer, char* entryPoint = "Main")
 	{
+
 		ID3D11Device* device = Systems::dxManager->GetDevice();
 		ID3D10Blob* errorMessage;
 

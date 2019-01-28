@@ -28,9 +28,9 @@ void PostProcessWindow::Render()
 	GUI::FloatSlider("3", "Intensity", "How strong the bloom effect will be", 0.1f, 10.0f, &PostProcessing::BLOOM_INTENSITY);
 
 	GUI::FloatSlider("4", "Res Scale Down P1", "How much we will lower the res output blurred image on first pass",  1.0f, 10.0f, &PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_1);
-	GUI::SameLine(); if (GUI::Button("Apply1")) Systems::renderer->GetPostProcessShader()->CreateBloomBlurRenderTextures();
+	GUI::SameLine(); if (GUI::Button("Apply1")) Systems::renderer->postProcessingShader->CreateBloomBlurRenderTextures();
 	GUI::FloatSlider("5", "Res Scale Down P2", "How much we will lower the res output blurred image on second pass", 1.0f, 10.0f, &PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_2);
-	GUI::SameLine(); if (GUI::Button("Apply2")) Systems::renderer->GetPostProcessShader()->CreateBloomBlurRenderTextures();
+	GUI::SameLine(); if (GUI::Button("Apply2")) Systems::renderer->postProcessingShader->CreateBloomBlurRenderTextures();
 	GUI::ClearItemWidth();
 
 	GUI::Space(2);

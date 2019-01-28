@@ -40,48 +40,48 @@ Renderer::~Renderer()
 	delete _depthMap;
 	delete _gBuffer;
 	delete _fullScreenQuad;
-	delete _skyDome;
-	delete _depthShader;
-	delete _deferredShader;
-	delete _quadShader;
-	delete _particleShader;
-	delete _imGUIShader;
-	delete _forwardAlphaShader;
-	delete _inputLayouts;
-	delete _planarReflectionShader;
-	delete _PostProcessingShader;
-	delete _waterShader;
-	delete _debugQuadHandler;
+	delete skyDome;
+	delete depthShader;
+	delete deferredShader;
+	delete quadShader;
+	delete particleShader;
+	delete imGUIShader;
+	delete forwardAlphaShader;
+	delete inputLayouts;
+	delete planarReflectionShader;
+	delete postProcessingShader;
+	delete waterShader;
+	delete debugQuadHandler;
 }
 
 void Renderer::Initialize()
 {
 	// system for handeling creating and displaying
 	// debug UI quads of render targets
-	_debugQuadHandler = new DebugQuadHandler();
+	debugQuadHandler = new DebugQuadHandler();
 
 	// set clear color
 	SetClearColor(0, 0, 0, 1);
 
 	// create and compile shaders
-	_depthShader            = new DepthShader();
-	_deferredShader         = new DeferredShader();
-	_quadShader             = new QuadShader();
-	_particleShader         = new ParticleShader();
-	_imGUIShader            = new ImGUIShader();
-	_forwardAlphaShader     = new ForwardAlphaShader();
-	_wireframeShader        = new WireframeShader();
-	_planarReflectionShader = new PlanarReflectionShader();
-	_PostProcessingShader   = new PostProcessingShader();
-	_waterShader            = new WaterShader();
+	depthShader            = new DepthShader();
+	deferredShader         = new DeferredShader();
+	quadShader             = new QuadShader();
+	particleShader         = new ParticleShader();
+	imGUIShader            = new ImGUIShader();
+	forwardAlphaShader     = new ForwardAlphaShader();
+	wireframeShader        = new WireframeShader();
+	planarReflectionShader = new PlanarReflectionShader();
+	postProcessingShader   = new PostProcessingShader();
+	waterShader            = new WaterShader();
 
 	// create input layouts
-	_inputLayouts = new DXInputLayouts();
-	_inputLayouts->CreateInputLayout3D(_deferredShader->GetVertexGeometryShaderByteCode());
-	_inputLayouts->CreateInputLayout3DInstanced(_deferredShader->GetVertexGeometryShaderByteCodeInstanced());
-	_inputLayouts->CreateInputLayout2D(_quadShader->GetVertexShaderByteCode());
-	_inputLayouts->CreateInputLayoutParticle(_particleShader->GetVertexShaderByteCode());
-	_inputLayouts->CreateInputLayoutGUI(_imGUIShader->GetVertexShaderByteCode());
+	inputLayouts = new DXInputLayouts();
+	inputLayouts->CreateInputLayout3D(deferredShader->vertexGeometryShaderByteCode);
+	inputLayouts->CreateInputLayout3DInstanced(deferredShader->vertexGeometryShaderByteCodeInstanced);
+	inputLayouts->CreateInputLayout2D(quadShader->GetVertexShaderByteCode());
+	inputLayouts->CreateInputLayoutParticle(particleShader->GetVertexShaderByteCode());
+	inputLayouts->CreateInputLayoutGUI(imGUIShader->GetVertexShaderByteCode());
 
 	// create gbuffer for deffered rendering
 	_gBuffer = new GBuffer();
@@ -93,7 +93,7 @@ void Renderer::Initialize()
 	// create the main rendertarget we will use
 	// this will hold our final scene up till we apply post processing
 	// and render to the backbuffer
-	_mainRendertarget = new RenderToTexture((unsigned int)SystemSettings::SCREEN_WIDTH, (unsigned int)SystemSettings::SCREEN_HEIGHT, false, SystemSettings::USE_HDR, false);
+	mainRendertarget = new RenderToTexture((unsigned int)SystemSettings::SCREEN_WIDTH, (unsigned int)SystemSettings::SCREEN_HEIGHT, false, SystemSettings::USE_HDR, false);
 }
 
 Entity* Renderer::CreateShadowMap(float orthoSize, float resolution, XMFLOAT3 position, XMFLOAT3 rotation, bool debugQuad)
@@ -114,26 +114,20 @@ Entity* Renderer::CreateShadowMap(float orthoSize, float resolution, XMFLOAT3 po
 	CameraComponent* depthCamera = _cameraDepth->GetComponent<CameraComponent>();
 
 	// give camera a reference to the SRV in depthMap render texture
-	depthCamera->SetSRV(_depthMap->GetDepthStencilSRV());
+	depthCamera->renderTexture = _depthMap->GetDepthStencilSRV();
 
 	// set this camera to the active depth render camera
-	Systems::cameraManager->SetCurrentCameraDepthMap(depthCamera);
+	Systems::cameraManager->currentCameraDepthMap = depthCamera;
 
 	return _cameraDepth;
 }
 
-SkyDome* Renderer::CreateSkyDome(const char* file)
-{
-	_skyDome = new SkyDome(file);
-	return _skyDome;
-}
-
 void Renderer::ShowGBufferDebugImages()
 {
-	_debugQuadHandler->AddDebugQuad(_gBuffer->GetSrvArray()[0]);
-	_debugQuadHandler->AddDebugQuad(_gBuffer->GetSrvArray()[1]);
-	_debugQuadHandler->AddDebugQuad(_gBuffer->GetSrvArray()[2]);
-	_debugQuadHandler->AddDebugQuad(_gBuffer->GetSrvArray()[3]);
+	debugQuadHandler->AddDebugQuad(_gBuffer->GetSrvArray()[0]);
+	debugQuadHandler->AddDebugQuad(_gBuffer->GetSrvArray()[1]);
+	debugQuadHandler->AddDebugQuad(_gBuffer->GetSrvArray()[2]);
+	debugQuadHandler->AddDebugQuad(_gBuffer->GetSrvArray()[3]);
 }
 
 void Renderer::Render() 
@@ -145,8 +139,8 @@ void Renderer::Render()
 	Systems::lightManager->UpdateLightBuffers();
 
 	// clear the backbuffer and main rendertarget buffers
-	dXM.ClearRenderTarget(_clearColor[0], _clearColor[1], _clearColor[2], _clearColor[3]);
-	_mainRendertarget->ClearRenderTarget(_clearColor[0], _clearColor[1], _clearColor[2], _clearColor[3], false);
+	dXM.ClearRenderTarget(clearColor[0], clearColor[1], clearColor[2], clearColor[3]);
+	mainRendertarget->ClearRenderTarget(clearColor[0], clearColor[1], clearColor[2], clearColor[3], false);
 	
 	// render shadowmap
 	RenderDepth();
@@ -155,37 +149,37 @@ void Renderer::Render()
 	RenderDeferred();		
 
 	// render skybox, will mask out all pixels that contains geometry in the fullscreen quad, leaving only the skybox rendered on "empty" pixels
-	_inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT_3D);
-	_skyDome->Render();
+	inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT_3D);
+	skyDome->Render();
 
 	// render debug wireframe meshes, these are forward rendered
-	_wireframeShader->RenderWireFrame(_meshes[S_WIREFRAME]);
+	wireframeShader->RenderWireFrame(_meshes[S_WIREFRAME]);
 
 	// render planar reflections forward
-	_planarReflectionShader->Render(_meshes[S_ALPHA_REFLECTION]);
+	planarReflectionShader->Render(_meshes[S_ALPHA_REFLECTION]);
 
 	// render reflective/refractive water
-	_waterShader->Render(_meshes[S_ALPHA_WATER]);
+	waterShader->Render(_meshes[S_ALPHA_WATER]);
 
 	// render alpha meshes
-	_forwardAlphaShader->RenderForward(_meshes[S_FORWARD_ALPHA]);
+	forwardAlphaShader->RenderForward(_meshes[S_FORWARD_ALPHA]);
 
 	// render particles
-	_inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT_PARTICLE);
-	_particleShader->RenderParticles(_particleSystems);
+	inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT_PARTICLE);
+	particleShader->RenderParticles(_particleSystems);
 
 	// render the final 2d stuff 
-	_inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT_2D);
+	inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT_2D);
 
 	// Render post processing 
-	_PostProcessingShader->Render(_fullScreenQuad, _mainRendertarget->GetRenderTargetSRV(), _mainRendertarget->GetDepthStencilSRV());
+	postProcessingShader->Render(_fullScreenQuad, mainRendertarget->GetRenderTargetSRV(), mainRendertarget->GetDepthStencilSRV());
 
 	// render UI
-	_quadShader->RenderQuadUI(_quads);
+	quadShader->RenderQuadUI(_quads);
 	
 	// render IM GUI
-	_inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT_GUI);
-	_imGUIShader->RenderGUI();
+	inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT_GUI);
+	imGUIShader->RenderGUI();
 }
 
 void Renderer::RenderDeferred()
@@ -193,26 +187,26 @@ void Renderer::RenderDeferred()
 	DXManager& dXM = *Systems::dxManager;
 		
 	// set the rendertargets of the GBuffer active		
-	_gBuffer->SetRenderTargets(_mainRendertarget->GetDepthStencil());		
+	_gBuffer->SetRenderTargets(mainRendertarget->GetDepthStencil());		
 
 	// render all geometry info to the render targets
-	_inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT_3D);
-	_deferredShader->RenderGeometry(_meshes[S_DEFERRED]);
+	inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT_3D);
+	deferredShader->RenderGeometry(_meshes[S_DEFERRED]);
 
-	_inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT_3D_INSTANCED);
-	_deferredShader->renderGeometryInstanced(_instancedModels[S_INSTANCED_DEFERRED]);
+	inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT_3D_INSTANCED);
+	deferredShader->renderGeometryInstanced(_instancedModels[S_INSTANCED_DEFERRED]);
 
 	// set to 2D input Layout
-	_inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT_2D);
+	inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT_2D);
 
 	// set to defualt rendertarget 
-	_mainRendertarget->SetRendertarget(false, false);
+	mainRendertarget->SetRendertarget(false, false);
 
 	// upload the vertices of the screensized quad
 	_fullScreenQuad->UploadBuffers();
 
 	// render lights as 2d post processing
-	_deferredShader->RenderLightning(_gBuffer);
+	deferredShader->RenderLightning(_gBuffer);
 }
 
 void Renderer::RenderDepth() 
@@ -229,14 +223,14 @@ void Renderer::RenderDepth()
 	_depthMap->SetRendertarget(true, false);
 
 	// render all meshes 
-	_inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT_3D);
-	_depthShader->RenderDepth(_meshes[S_DEPTH]);
+	inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT_3D);
+	depthShader->RenderDepth(_meshes[S_DEPTH]);
 
-	_inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT_3D_INSTANCED);
-	_depthShader->RenderDepthInstanced(_instancedModels[S_INSTANCED_DEPTH]);
+	inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT_3D_INSTANCED);
+	depthShader->RenderDepthInstanced(_instancedModels[S_INSTANCED_DEPTH]);
 }
 
 void Renderer::SetMainRenderTarget()
 {
-	_mainRendertarget->SetRendertarget(false, false); 
+	mainRendertarget->SetRendertarget(false, false); 
 }

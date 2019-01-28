@@ -127,7 +127,7 @@ void SkyDome::RenderCubeMap(bool noMask)
 	ID3D11DeviceContext*& devCon = DXM.GetDeviceCon();
 
 	// get game camera
-	CameraComponent*& camera     = Systems::cameraManager->GetCurrentCameraGame();
+	CameraComponent*& camera     = Systems::cameraManager->currentCameraGame;
 	TransformComponent* camTrans = camera->GetComponent<TransformComponent>();
 
 	// set shaders			
@@ -147,7 +147,7 @@ void SkyDome::RenderCubeMap(bool noMask)
 	else        DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::MASKED_SKYBOX);
 	
 	CBVertDome vertexData;
-	XMStoreFloat4x4(&vertexData.worldViewProj, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&camTrans->GetPositionMatrix(), &camera->GetViewProjMatrix())));
+	XMStoreFloat4x4(&vertexData.worldViewProj, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&camTrans->GetPositionMatrix(), &camera->viewProjMatrix)));
 
 	// update constant buffer
 	SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(CBVertDome), _constantBufferVertex);
@@ -170,7 +170,7 @@ void SkyDome::RenderBlendedColors(bool noMask)
 	ID3D11DeviceContext* devCon = DXM.GetDeviceCon();
 
 	// get game camera
-	CameraComponent* camera      = Systems::cameraManager->GetCurrentCameraGame();
+	CameraComponent* camera      = Systems::cameraManager->currentCameraGame;
 	TransformComponent* camTrans = camera->GetComponent<TransformComponent>();
 
 	// set shaders			
@@ -189,7 +189,7 @@ void SkyDome::RenderBlendedColors(bool noMask)
 	else        DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::MASKED_SKYBOX);
 	
 	CBVertDome vertexData;
-	XMStoreFloat4x4(&vertexData.worldViewProj, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&camTrans->GetPositionMatrix(), &camera->GetViewProjMatrix())));
+	XMStoreFloat4x4(&vertexData.worldViewProj, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&camTrans->GetPositionMatrix(), &camera->viewProjMatrix)));
 
 	// set the colors, the percent fraction is stored in the w channel that specifies how
 	// low to high a color will be used on the skydome 
@@ -216,7 +216,7 @@ void SkyDome::RenderSunMoon(bool noMask)
 	ID3D11DeviceContext* devCon = DXM.GetDeviceCon();
 
 	// get game camera
-	CameraComponent* camera      = Systems::cameraManager->GetCurrentCameraGame();
+	CameraComponent* camera      = Systems::cameraManager->currentCameraGame;
 	TransformComponent* camTrans = camera->GetComponent<TransformComponent>();
 
 	// render sun with alpha blend
@@ -234,8 +234,8 @@ void SkyDome::RenderSunMoon(bool noMask)
 	// set world and projection matrix
 	CBVertSun vertexData;
 	XMStoreFloat4x4(&vertexData.world, XMLoadFloat4x4(&_sunMoon.sun.positionMatrix));
-	XMStoreFloat4x4(&vertexData.view, XMMatrixTranspose(XMLoadFloat4x4(&camera->GetViewMatrix())));
-	XMStoreFloat4x4(&vertexData.Proj, XMMatrixTranspose(XMLoadFloat4x4(&camera->GetProjectionMatrix())));
+	XMStoreFloat4x4(&vertexData.view, XMMatrixTranspose(XMLoadFloat4x4(&camera->viewMatrix)));
+	XMStoreFloat4x4(&vertexData.Proj, XMMatrixTranspose(XMLoadFloat4x4(&camera->projectionMatrix)));
 
 	// constantbuffer pixel structure
 	ConstantSunPixel pixeldata;
@@ -380,7 +380,7 @@ void SkyDome::UpdateShadowLightTranslation(const float& delta)
 {
 	// get the transform of the camera that renders the shadowmap, the directional light 
 	// use this same transform for setting the light direction
-	TransformComponent* lightTransform = Systems::cameraManager->GetCurrentCameraDepthMap()->GetComponent<TransformComponent>();
+	TransformComponent* lightTransform = Systems::cameraManager->currentCameraDepthMap->GetComponent<TransformComponent>();
 
 	// set new light rotation depending on the threshold if
 	// the sun or the moon is the light casting source

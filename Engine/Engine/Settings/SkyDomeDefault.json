@@ -1,6 +1,6 @@
 {
-    "speedMultiplier": 0.10999999940395355,
-    "cycleTimer": 0.30346521735191347,
+    "speedMultiplier": 0.2199999988079071,
+    "cycleTimer": 0.5811836123466492,
     "switchToMoonLightThreshold": -0.10000000149011612,
     "sunsetLightColorStartEndBlend": [
         0.20000000298023225,
@@ -141,11 +141,11 @@
     ],
     "sunMinMaxDst": [
         0.3999999761581421,
-        5.0
+        3.2300000190734865
     ],
     "moonMinMaxDst": [
-        12.529999732971192,
-        15.149999618530274
+        9.09000015258789,
+        12.729999542236329
     ],
     "sunBeginEndDstLerp": [
         0.5399999618530273,

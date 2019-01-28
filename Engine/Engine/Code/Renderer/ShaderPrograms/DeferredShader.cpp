@@ -16,13 +16,13 @@
 DeferredShader::DeferredShader()
 {
 	//create deferred geometry shaders
-	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexDeferredGeometry.vs", _vertexGeometryShader, _vertexGeometryShaderByteCode);
-	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexDeferredGeometryInstanced.vs", _vertexGeometryShaderInstanced, _vertexGeometryShaderByteCodeInstanced);
-	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelDeferredGeometry.ps",   _pixelGeometryShader,  _pixelGeometryShaderByteCode);
+	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexDeferredGeometry.vs", _vertexGeometryShader, vertexGeometryShaderByteCode);
+	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexDeferredGeometryInstanced.vs", _vertexGeometryShaderInstanced, vertexGeometryShaderByteCodeInstanced);
+	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelDeferredGeometry.ps",   _pixelGeometryShader,  pixelGeometryShaderByteCode);
 
 	//create deferred lightning shaders
-	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexDeferredLightning.vs", _vertexLightShader, _vertexLightningShaderByteCode);
-	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelDeferredLightning.ps",   _pixelLightShader,    _pixelLightningShaderByteCode);
+	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexDeferredLightning.vs", _vertexLightShader, vertexLightningShaderByteCode);
+	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelDeferredLightning.ps",   _pixelLightShader,    pixelLightningShaderByteCode);
 
 	// create constant buffers for the deferred passes
 	SHADER_HELPERS::CreateConstantBuffer(_CBGeometryVertex);
@@ -33,11 +33,11 @@ DeferredShader::DeferredShader()
 
 DeferredShader::~DeferredShader()
 {
-	_vertexGeometryShaderByteCode->Release();
-	_pixelGeometryShaderByteCode->Release();
+	vertexGeometryShaderByteCode->Release();
+	pixelGeometryShaderByteCode->Release();
 
-	_vertexLightningShaderByteCode->Release();
-	_pixelLightningShaderByteCode->Release();
+	vertexLightningShaderByteCode->Release();
+	pixelLightningShaderByteCode->Release();
 
 	_vertexGeometryShader->Release();
 	_pixelGeometryShader->Release();
@@ -62,7 +62,7 @@ void DeferredShader::RenderGeometry(std::vector<Mesh*>& meshes)
 	ID3D11DeviceContext* devCon = DXM.GetDeviceCon();
 
 	// get the game camera
-	CameraComponent* camera = CM.GetCurrentCameraGame();
+	CameraComponent* camera = CM.currentCameraGame;
 
 	// set shaders
 	devCon->VSSetShader(_vertexGeometryShader, NULL, 0);
@@ -89,7 +89,7 @@ void DeferredShader::RenderGeometry(std::vector<Mesh*>& meshes)
 
 		// set vertex constantdata
 		XMStoreFloat4x4(&vertexData.world,         XMLoadFloat4x4(&meshes[i]->GetWorldMatrixTrans()));
-		XMStoreFloat4x4(&vertexData.worldViewProj, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&meshes[i]->GetWorldMatrix(), &camera->GetViewProjMatrix())));
+		XMStoreFloat4x4(&vertexData.worldViewProj, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&meshes[i]->GetWorldMatrix(), &camera->viewProjMatrix)));
 		XMStoreFloat2(&vertexData.UVOffset,        XMLoadFloat2(&meshes[i]->GetUvOffset()));
 
 		// set pixel constant data
@@ -125,7 +125,7 @@ void DeferredShader::renderGeometryInstanced(std::vector<InstancedModel*> models
 	ID3D11DeviceContext* devCon = DXM.GetDeviceCon();
 
 	// get the game camera
-	CameraComponent* camera = CM.GetCurrentCameraGame();
+	CameraComponent* camera = CM.currentCameraGame;
 
 	// set shaders
 	devCon->VSSetShader(_vertexGeometryShaderInstanced, NULL, 0);
@@ -137,7 +137,7 @@ void DeferredShader::renderGeometryInstanced(std::vector<InstancedModel*> models
 
 	// constantbuffer structure
 	CBGeometryVertexInstanced vertexData;	
-	XMStoreFloat4x4(&vertexData.ViewProj, XMLoadFloat4x4(&camera->GetViewProjMatrixTrans()));
+	XMStoreFloat4x4(&vertexData.ViewProj, XMLoadFloat4x4(&camera->viewProjMatrixTrans));
 	SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(CBGeometryVertexInstanced), _CBGeometryVertexInstanced);
 
 	// camera pos is needed to calculate UV offsets for paralax occlusion mapping
@@ -192,8 +192,8 @@ void DeferredShader::RenderLightning(GBuffer*& gBuffer)
 	ID3D11DeviceContext*& devCon = DXM.GetDeviceCon();
 
 	// get cameras
-	CameraComponent*& camera      = CM.GetCurrentCameraGame();
-	CameraComponent*& cameraLight = CM.GetCurrentCameraDepthMap();
+	CameraComponent*& camera      = CM.currentCameraGame;
+	CameraComponent*& cameraLight = CM.currentCameraDepthMap;
 	const XMFLOAT3& camPos        = camera->GetComponent<TransformComponent>()->GetPositionRef();
 
 	// set shaders
@@ -206,14 +206,14 @@ void DeferredShader::RenderLightning(GBuffer*& gBuffer)
 	// fill misc buffer with camera position and light worldviewproj
 	CBMiscPixel miscPixel;
 	miscPixel.cameraPosition = XMFLOAT4(camPos.x, camPos.y, camPos.z, 1.0f);	
-	XMStoreFloat4x4(&miscPixel.lightViewProj, XMLoadFloat4x4(&cameraLight->GetViewProjMatrixTrans()));
+	XMStoreFloat4x4(&miscPixel.lightViewProj, XMLoadFloat4x4(&cameraLight->viewProjMatrixTrans));
 
 	// update buffer
 	SHADER_HELPERS::UpdateConstantBuffer((void*)&miscPixel, sizeof(CBMiscPixel), _CBMisc);
 
 	// get Gbuffer textures and depthmap
 	ID3D11ShaderResourceView**& gBufferTextures = gBuffer->GetSrvArray();
-	ID3D11ShaderResourceView* depthMap = cameraLight->GetSRV();
+	ID3D11ShaderResourceView* depthMap = cameraLight->renderTexture;
 
 	// add all to one array
 	ID3D11ShaderResourceView* textureArray[5] = { depthMap, gBufferTextures[0], gBufferTextures[1], gBufferTextures[2], gBufferTextures[3] };

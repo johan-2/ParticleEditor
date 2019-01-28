@@ -78,8 +78,8 @@ void PostProcessingShader::CreateBloomBlurRenderTextures()
 
 	// check if some of the old textures was used in the debug quads
 	// if a match is found it will give it a ptr to the new texture instead
-	Systems::renderer->GetDebugQuadHandler()->ReplaceTexture(oldp1, _bloomVerticalBlurPass1->GetRenderTargetSRV());
-	Systems::renderer->GetDebugQuadHandler()->ReplaceTexture(oldp2, _bloomVerticalBlurPass2->GetRenderTargetSRV());
+	Systems::renderer->debugQuadHandler->ReplaceTexture(oldp1, _bloomVerticalBlurPass1->GetRenderTargetSRV());
+	Systems::renderer->debugQuadHandler->ReplaceTexture(oldp2, _bloomVerticalBlurPass2->GetRenderTargetSRV());
 }
 
 void PostProcessingShader::createDofRenderTextures()
@@ -276,7 +276,7 @@ void PostProcessingShader::ShowAllDebugQuads()
 	ShowDofMapDebugQuad();
 }
 
-void PostProcessingShader::ShowBrightnessMapDebugQuad() { Systems::renderer->GetDebugQuadHandler()->AddDebugQuad(_brightnessResources.SRV); }
-void PostProcessingShader::ShowBloomBlurP1DebugQuad()   { Systems::renderer->GetDebugQuadHandler()->AddDebugQuad(_bloomVerticalBlurPass1->GetRenderTargetSRV()); }
-void PostProcessingShader::ShowBloomBlurP2DebugQuad()   { Systems::renderer->GetDebugQuadHandler()->AddDebugQuad(_bloomVerticalBlurPass2->GetRenderTargetSRV()); }
-void PostProcessingShader::ShowDofMapDebugQuad()        { Systems::renderer->GetDebugQuadHandler()->AddDebugQuad(_dofVerticalBlurPass->GetRenderTargetSRV()); }
+void PostProcessingShader::ShowBrightnessMapDebugQuad() { Systems::renderer->debugQuadHandler->AddDebugQuad(_brightnessResources.SRV); }
+void PostProcessingShader::ShowBloomBlurP1DebugQuad()   { Systems::renderer->debugQuadHandler->AddDebugQuad(_bloomVerticalBlurPass1->GetRenderTargetSRV()); }
+void PostProcessingShader::ShowBloomBlurP2DebugQuad()   { Systems::renderer->debugQuadHandler->AddDebugQuad(_bloomVerticalBlurPass2->GetRenderTargetSRV()); }
+void PostProcessingShader::ShowDofMapDebugQuad()        { Systems::renderer->debugQuadHandler->AddDebugQuad(_dofVerticalBlurPass->GetRenderTargetSRV()); }

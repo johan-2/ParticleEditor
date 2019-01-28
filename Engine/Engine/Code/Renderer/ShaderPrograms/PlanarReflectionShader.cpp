@@ -47,7 +47,7 @@ PlanarReflectionShader::~PlanarReflectionShader()
 
 void PlanarReflectionShader::ShowDebugQuads()
 {
-	Systems::renderer->GetDebugQuadHandler()->AddDebugQuad(_simpleClipShaderReflection->GetRenderSRV());
+	Systems::renderer->debugQuadHandler->AddDebugQuad(_simpleClipShaderReflection->GetRenderSRV());
 }
 
 void PlanarReflectionShader::Render(std::vector<Mesh*>& reflectionMeshes)
@@ -65,8 +65,8 @@ void PlanarReflectionShader::Render(std::vector<Mesh*>& reflectionMeshes)
 	ID3D11DeviceContext*& devCon = DXM.GetDeviceCon();
 
 	// get game camera and shadow camera
-	CameraComponent*& camera      = CM.GetCurrentCameraGame();
-	CameraComponent*& cameraLight = CM.GetCurrentCameraDepthMap();
+	CameraComponent*& camera      = CM.currentCameraGame;
+	CameraComponent*& cameraLight = CM.currentCameraDepthMap;
 
 	TransformComponent* camTrans = camera->GetComponent<TransformComponent>();
 
@@ -79,9 +79,6 @@ void PlanarReflectionShader::Render(std::vector<Mesh*>& reflectionMeshes)
 	CBReflect cbReflect;
 
 	XMStoreFloat3(&cbVertex.camPos, XMLoadFloat3(&cameraPos));
-
-	// get shadow map
-	ID3D11ShaderResourceView* shadowMap = cameraLight->GetSRV();	
 
 	// loop over all meshes that will project reflections onto itself
 	size_t numMeshes = reflectionMeshes.size();
@@ -104,7 +101,7 @@ void PlanarReflectionShader::Render(std::vector<Mesh*>& reflectionMeshes)
 		camera->CalculateViewMatrix();
 
 		// save the reflection viewprojmatrix
-		XMFLOAT4X4 reflectMat = camera->GetViewProjMatrix();
+		XMFLOAT4X4 reflectMat = camera->viewProjMatrix;
 
 		// render the reflectionmap
 		_simpleClipShaderReflection->RenderScene(renderer.GetMeshes(SHADER_TYPE::S_CAST_REFLECTION_OPAQUE), renderer.GetMeshes(SHADER_TYPE::S_CAST_REFLECTION_ALPHA), renderer.GetInstancedModels(INSTANCED_SHADER_TYPE::S_INSTANCED_CAST_REFLECTION), clipPlane, true);
@@ -138,8 +135,8 @@ void PlanarReflectionShader::Render(std::vector<Mesh*>& reflectionMeshes)
 		const XMFLOAT4X4& worldMat = mesh->GetWorldMatrix();
 
 		XMStoreFloat4x4(&cbVertex.world,                XMLoadFloat4x4(&mesh->GetWorldMatrixTrans()));
-		XMStoreFloat4x4(&cbVertex.worldViewProj,        XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&worldMat, &camera->GetViewProjMatrix())));
-		XMStoreFloat4x4(&cbVertex.worldViewProjLight,   XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&worldMat, &cameraLight->GetViewProjMatrix())));
+		XMStoreFloat4x4(&cbVertex.worldViewProj,        XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&worldMat, &camera->viewProjMatrix)));
+		XMStoreFloat4x4(&cbVertex.worldViewProjLight,   XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&worldMat, &cameraLight->viewProjMatrix)));
 		XMStoreFloat4x4(&cbVertex.worldViewProjReflect, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&worldMat, &reflectMat)));
 		XMStoreFloat2(&cbVertex.uvOffset,               XMLoadFloat2(&mesh->GetUvOffset()));
 
@@ -154,7 +151,7 @@ void PlanarReflectionShader::Render(std::vector<Mesh*>& reflectionMeshes)
 		ID3D11ShaderResourceView** meshTextures = mesh->GetTextureArray();
 
 		// fill texture array with all textures including the shadow map and reflection map
-		ID3D11ShaderResourceView* t[6] = { meshTextures[0], meshTextures[1], meshTextures[2], meshTextures[3], shadowMap, _simpleClipShaderReflection->GetRenderSRV() };
+		ID3D11ShaderResourceView* t[6] = { meshTextures[0], meshTextures[1], meshTextures[2], meshTextures[3], cameraLight->renderTexture, _simpleClipShaderReflection->GetRenderSRV() };
 
 		// set SRV's
 		devCon->PSSetShaderResources(0, 6, t);

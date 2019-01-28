@@ -28,24 +28,24 @@ IslandTestScene::IslandTestScene()
 	Entity* shadowMapRenderer = renderer.CreateShadowMap(100.0f, 8192.0f, XMFLOAT3(-6, 325, 9), XMFLOAT3(85.0f, -90.0f, 0), true);
 
 	// create skybox
-	_skyDome = renderer.CreateSkyDome("Settings/SkyDomeDefault.json");
+	_skyDome = renderer.skyDome = new SkyDome("Settings/SkyDomeDefault.json");
 
 	renderer.ShowGBufferDebugImages();
-	renderer.GetWaterShader()->ShowDebugQuads();
-	renderer.GetPostProcessShader()->ShowBloomBlurP2DebugQuad();
+	renderer.waterShader->ShowDebugQuads();
+	renderer.postProcessingShader->ShowBloomBlurP2DebugQuad();
 
 	// create game camera
 	Entity* cameraGame = new Entity();
 	cameraGame->AddComponent<TransformComponent>()->Init(XMFLOAT3(-64.28f, 12.22f, 0.41f), XMFLOAT3(13.0f, 89.5f, 0.0f));
 	cameraGame->AddComponent<CameraComponent>()->Init3D(70);
 	cameraGame->AddComponent<FreeMoveComponent>()->init(12.0f, 0.25f, 4.0f);
-	CM.SetCurrentCameraGame(cameraGame->GetComponent<CameraComponent>());
+	CM.currentCameraGame = cameraGame->GetComponent<CameraComponent>();
 
 	// create UIcamera
 	Entity* cameraUI = new Entity();
 	cameraUI->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0, -1));
 	cameraUI->AddComponent<CameraComponent>()->Init2D(XMFLOAT2(SystemSettings::SCREEN_WIDTH, SystemSettings::SCREEN_HEIGHT), XMFLOAT2(0.01f, 10.0f));
-	CM.SetCurrentCameraUI(cameraUI->GetComponent<CameraComponent>());
+	CM.currentCameraUI = cameraUI->GetComponent<CameraComponent>();
 
 	// set ambient light color	
 	LM.SetAmbientColor(XMFLOAT4(0.15f, 0.15f, 0.15f, 1.0f));

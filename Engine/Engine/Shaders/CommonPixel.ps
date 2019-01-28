@@ -86,10 +86,15 @@ float2 GetPOMOffset(Texture2D normalMap, SamplerState samplerType, float3 normal
 	float3 viewDirectionW = normalize(positionW - cameraPositionW);
 	float3 viewDirectionT = mul(viewDirectionW, toTangentSpace);
 	
-	// get the max offset based on inversed view direction and length of the view vector
+	// get the max uv offset  
+	// the height scale is a tweakable value for how intense the parallax will be
+	// the correct way of getting the heightScale is to convert
+	// one world unit of mesh to one unit in texture space [0-1] relative to the size of the mesh and tiling of texture
+    // but this gives more control of the effect
 	float2 maxParallelOffset = -viewDirectionT.xy * heightScale / viewDirectionT.z;
 	
 	// get amount of samples we will do based on the dot between inversed view and surface normal
+	// min max is tweakable values here, heigher == better precision but more expensive
 	int sampleCount = (int)lerp(heightMaxSampleCount, heightMinSampleCount, dot(-viewDirectionW, normalW));
 	
 	// get the value of each step into the texture 
@@ -102,34 +107,50 @@ float2 GetPOMOffset(Texture2D normalMap, SamplerState samplerType, float3 normal
 	float2 dx = ddx(texCoords);
 	float2 dy = ddy(texCoords);
 	
-	int sampleIndex       = 0;
-    float2 currTexOffset  = 0;
-    float2 prevTexOffset  = 0;
-    float2 finalTexOffset = 0;
-    float currRayZ        = 1.0 - zStep;
-    float prevRayZ        = 1.0;
-    float currHeight      = 0.0;
-    float prevHeight      = 0.0; 
+	int i                 = 0;           // start index count of how many samples we have done
+    float2 currTexOffset  = 0;           // the start texture offset of the first iteration
+    float2 prevTexOffset  = 0;           // the tex offset we had on the last failed intersection test
+    float2 finalTexOffset = 0;           // the end result texture offset
+    float currRayZ        = 1.0 - zStep; // the length of the current ray deep into the texture, v starts at 1 therefore we have to decrement the ray value to go deeper into the texture
+    float prevRayZ        = 1.0;         // the length of the ray from the last failed intersection test
+    float currHeight      = 0.0;         // the current sampled height from the heightmap
+    float prevHeight      = 0.0;         // the heightmap value from last sample
 	
-	while (sampleIndex < sampleCount)
+	// V [0,1]       [1,1]
+	// |------------------
+	// |------------------
+	// |------------------
+	// |------------------
+	// |------------------
+	// |[0,0]        [1,0]
+	// -------------------U
+	
+	while (i < sampleCount)
 	{
+		// sample the height from our current texture coords
 		currHeight = normalMap.SampleGrad(samplerType, texCoords + currTexOffset, dx, dy).a;
 		
+		// if the sampled height is higher then the current length of ray 
+		// we have found the height intersection
 		if (currHeight > currRayZ)
 		{			
+			// get the final texture offset
 			float t = (prevHeight - prevRayZ) / (prevHeight - currHeight + currRayZ - prevRayZ);
 			finalTexOffset = prevTexOffset + t * texStep;
 			
-			sampleIndex = sampleCount;
+			// exit loop
+			i = sampleCount;
 		}
 		else
 		{
-			++sampleIndex;
+			// increment step values
+			i++;
 			prevTexOffset  = currTexOffset;
 			prevRayZ       = currRayZ;
 			prevHeight     = currHeight;
 			currTexOffset += texStep;
 			
+			// go deeper into the texture by step length 
 			currRayZ -= zStep;
 		}
 	}

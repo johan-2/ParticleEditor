@@ -78,30 +78,11 @@ public:
 	std::vector<InstancedModel*>& GetInstancedModels(INSTANCED_SHADER_TYPE type) { return _instancedModels[type]; }
 	std::vector<ParticleSystemComponent*>& GetParticles()                        { return _particleSystems; }
 
-	// get input layouts
-	DXInputLayouts* GetInputLayouts()       { return _inputLayouts; } 
-
-	// get the debug quad handler
-	DebugQuadHandler* GetDebugQuadHandler() { return _debugQuadHandler; }
-
-	// get shaders
-	ParticleShader*         GetParticleShader()    { return _particleShader; }
-	PostProcessingShader*   GetPostProcessShader() { return _PostProcessingShader; }
-	WaterShader*            GetWaterShader()       { return _waterShader; }
-	PlanarReflectionShader* GetPlanarShader()      { return _planarReflectionShader; }
-
-	// create/ get skydome
-	SkyDome* GetSkyDome() { return _skyDome; }
-	SkyDome* CreateSkyDome(const char* file);
-
 	// create the shadowmap
 	Entity* CreateShadowMap(float orthoSize, float resolution, XMFLOAT3 position, XMFLOAT3 rotation, bool debugQuad);
 
 	// create debug images that show each component of the G-Buffer
 	void ShowGBufferDebugImages();
-
-	// set the clear color
-	void SetClearColor(float r, float g, float b, float a) { _clearColor[0] = r; _clearColor[1] = g; _clearColor[2] = b; _clearColor[3] = a; }
 
 	// set the main render target active
 	void SetMainRenderTarget(); 
@@ -109,33 +90,38 @@ public:
 	// will render everything
 	void Render();
 
-	// set a input layout
-	void SetInputLayout(INPUT_LAYOUT_TYPE type) { _inputLayouts->SetInputLayout(type); }
+	// skydome class with all rendering built in
+	SkyDome* skyDome;
+
+	// contains all input layouts
+	DXInputLayouts* inputLayouts;
+
+	// class that handles creating and aligning debug render quads
+	DebugQuadHandler* debugQuadHandler;
+
+	// shader "programs" that will handle all preperations
+	// for rendering with a specific shader
+	DepthShader*            depthShader;
+	DeferredShader*         deferredShader;
+	QuadShader*             quadShader;
+	ParticleShader*         particleShader;
+	ImGUIShader*            imGUIShader;
+	ForwardAlphaShader*     forwardAlphaShader;
+	WireframeShader*        wireframeShader;
+	PlanarReflectionShader* planarReflectionShader;
+	PostProcessingShader*   postProcessingShader;
+	WaterShader*            waterShader;
+
+	RenderToTexture* mainRendertarget;
+
+	float clearColor[4];
+	void SetClearColor(float r, float g, float b, float a) { clearColor[0] = r; clearColor[1] = g; clearColor[2] = b; clearColor[3] = a;}
 	
 private:
 
 	// render functions
 	void RenderDeferred();
 	void RenderDepth();
-
-	// shader "programs" that will handle all preperations
-	// for rendering with a specific shader
-	DepthShader*            _depthShader;
-	DeferredShader*         _deferredShader;
-	QuadShader*             _quadShader;
-	ParticleShader*         _particleShader;
-	ImGUIShader*            _imGUIShader;
-	ForwardAlphaShader*     _forwardAlphaShader;
-	WireframeShader*        _wireframeShader;
-	PlanarReflectionShader* _planarReflectionShader;
-	PostProcessingShader*   _PostProcessingShader;
-	WaterShader*            _waterShader;
-
-	// skybox class with all rendering built in
-	SkyDome* _skyDome;
-
-	// contains all input layouts
-	DXInputLayouts* _inputLayouts;
 
 	// list of meshes for each shader type
 	// one mesh can be added to several shader types
@@ -150,22 +136,14 @@ private:
 	// all particle systems
 	std::vector<ParticleSystemComponent*> _particleSystems;
 
-	// the camera entity that renders the depth map for shadows
-	Entity* _cameraDepth;
-
-	// render targets
-	RenderToTexture* _depthMap;
-	RenderToTexture* _mainRendertarget;
-
-	// class that handles creating and aligning debug render quads
-	DebugQuadHandler* _debugQuadHandler;
+	// shadow rendering
+	Entity*          _cameraDepth;
+	RenderToTexture* _depthMap;	
 
 	// the Gbuffer for deferred rendering
 	// and the fullscreen quad where we will 
 	// project the deferred lightningpass
 	GBuffer*    _gBuffer;
 	ScreenQuad* _fullScreenQuad;
-
-	float _clearColor[4];
 };
 

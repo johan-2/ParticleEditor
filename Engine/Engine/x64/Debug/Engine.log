@@ -1,2 +1,10 @@
-﻿  DepthShader.cpp
+﻿  Entity.cpp
+  PostProcessWindow.cpp
+  SkyDomeWindow.cpp
+  GBuffer.cpp
+  SimpleClipSceneShader.cpp
+  WaterShader.cpp
+  IslandTestScene.cpp
+  SponzaTestScene.cpp
+  Generating Code...
   Engine.vcxproj -> C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\Engine.exe

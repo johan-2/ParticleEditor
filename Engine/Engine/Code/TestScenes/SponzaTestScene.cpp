@@ -30,24 +30,24 @@ SponzaTestScene::SponzaTestScene()
 	Entity* shadowMapRenderer = renderer.CreateShadowMap(150.0f, 8192.0f, XMFLOAT3(-6, 325, 9), XMFLOAT3(85.0f, -90.0f, 0), true);
 
 	// create skybox
-	_skyDome = renderer.CreateSkyDome("Settings/SkyDomeDefault.json");
+	_skyDome = renderer.skyDome = new SkyDome("Settings/SkyDomeDefault.json");
 
 	renderer.ShowGBufferDebugImages();
-	renderer.GetPlanarShader()->ShowDebugQuads();
-	renderer.GetPostProcessShader()->ShowBloomBlurP2DebugQuad();
+	renderer.planarReflectionShader->ShowDebugQuads();
+	renderer.postProcessingShader->ShowBloomBlurP2DebugQuad();
 
 	// create game camera
 	Entity* cameraGame = new Entity();
 	cameraGame->AddComponent<TransformComponent>()->Init(XMFLOAT3(-32.28f, 6.22f, 0.20f), XMFLOAT3(13.0f, 89.5f, 0.0f));
 	cameraGame->AddComponent<CameraComponent>()->Init3D(90);
 	cameraGame->AddComponent<FreeMoveComponent>()->init(12.0f, 0.25f, 6.0f);
-	CM.SetCurrentCameraGame(cameraGame->GetComponent<CameraComponent>());
+	CM.currentCameraGame = cameraGame->GetComponent<CameraComponent>();
 
 	// create UIcamera
 	Entity* cameraUI = new Entity();
 	cameraUI->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0, -1));
 	cameraUI->AddComponent<CameraComponent>()->Init2D(XMFLOAT2(SystemSettings::SCREEN_WIDTH, SystemSettings::SCREEN_HEIGHT), XMFLOAT2(0.01f, 10.0f));
-	CM.SetCurrentCameraUI(cameraUI->GetComponent<CameraComponent>());
+	CM.currentCameraUI = cameraUI->GetComponent<CameraComponent>();
 
 	// set ambient light color	
 	LM.SetAmbientColor(XMFLOAT4(0.15f, 0.15f, 0.15f, 1.0f));

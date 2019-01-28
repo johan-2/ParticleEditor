@@ -55,7 +55,7 @@ void SimpleClipSceneShader::RenderScene(std::vector<Mesh*>& opaqueMeshes, std::v
 	ID3D11DeviceContext*& devCon = DXM.GetDeviceCon();
 
 	// get game camera and shadow camera
-	CameraComponent*& camera      = CM.GetCurrentCameraGame();
+	CameraComponent*& camera = CM.currentCameraGame;
 
 	// set constant data that all meshes share
 	CBVertex constantVertex;
@@ -71,7 +71,7 @@ void SimpleClipSceneShader::RenderScene(std::vector<Mesh*>& opaqueMeshes, std::v
 
 	// render skybox first
 	if (includeSkyBox)
-		Systems::renderer->GetSkyDome()->Render(true);
+		Systems::renderer->skyDome->Render(true);
 
 	// set opaque blend state
 	DXM.BlendStates()->SetBlendState(BLEND_STATE::BLEND_OPAQUE);
@@ -96,7 +96,7 @@ void SimpleClipSceneShader::RenderScene(std::vector<Mesh*>& opaqueMeshes, std::v
 	{
 		// get world matrix of mesh and update the buffer
 		XMStoreFloat4x4(&constantVertex.world, XMLoadFloat4x4(&opaqueMeshes[y]->GetWorldMatrixTrans()));
-		XMStoreFloat4x4(&constantVertex.worldViewProj, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&opaqueMeshes[y]->GetWorldMatrix(), &camera->GetViewProjMatrix())));
+		XMStoreFloat4x4(&constantVertex.worldViewProj, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&opaqueMeshes[y]->GetWorldMatrix(), &camera->viewProjMatrix)));
 
 		// set pixel constant data
 		constantPixel.hasHeightmap = opaqueMeshes[y]->HasHeightMap();
@@ -126,11 +126,11 @@ void SimpleClipSceneShader::RenderScene(std::vector<Mesh*>& opaqueMeshes, std::v
 	// change to instanced shader and constant buffer
 	devCon->VSSetShader(_vertexShaderInstanced, NULL, 0);
 	devCon->VSSetConstantBuffers(0, 1, &_CBVertexInstanced);
-	Systems::renderer->GetInputLayouts()->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT_3D_INSTANCED);
+	Systems::renderer->inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT_3D_INSTANCED);
 
 	// uppdate constant buffer
 	CBVertexInstanced vertexInstanced;
-	XMStoreFloat4x4(&vertexInstanced.viewProj, XMLoadFloat4x4(&camera->GetViewProjMatrixTrans()));
+	XMStoreFloat4x4(&vertexInstanced.viewProj, XMLoadFloat4x4(&camera->viewProjMatrixTrans));
 	XMStoreFloat4(&vertexInstanced.clipingPlane, XMLoadFloat4(&clipPlane));
 	SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexInstanced, sizeof(CBVertexInstanced), _CBVertexInstanced);
 
@@ -173,7 +173,7 @@ void SimpleClipSceneShader::RenderScene(std::vector<Mesh*>& opaqueMeshes, std::v
 	// set back the vertex shader and constant buffer that all but instanced meshes use
 	devCon->VSSetShader(_vertexShader, NULL, 0);
 	devCon->VSSetConstantBuffers(0, 1, &_CBVertex);
-	Systems::renderer->GetInputLayouts()->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT_3D);
+	Systems::renderer->inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT_3D);
 
 	// set shader and blend state if we have any alpha meshes
 	// that is being reflected, also sort these from the pos
@@ -190,7 +190,7 @@ void SimpleClipSceneShader::RenderScene(std::vector<Mesh*>& opaqueMeshes, std::v
 	{
 		// get world matrix of mesh and update the buffer
 		XMStoreFloat4x4(&constantVertex.world,         XMLoadFloat4x4(&alphaMeshes[y]->GetWorldMatrixTrans()));
-		XMStoreFloat4x4(&constantVertex.worldViewProj, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&alphaMeshes[y]->GetWorldMatrix(), &camera->GetViewProjMatrix())));
+		XMStoreFloat4x4(&constantVertex.worldViewProj, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&alphaMeshes[y]->GetWorldMatrix(), &camera->viewProjMatrix)));
 		SHADER_HELPERS::UpdateConstantBuffer((void*)&constantVertex, sizeof(CBVertex), _CBVertex);
 
 		// set pixel constant data
@@ -218,13 +218,13 @@ void SimpleClipSceneShader::RenderScene(std::vector<Mesh*>& opaqueMeshes, std::v
 	if (includeParticles)
 	{
 		Renderer& renderer = *Systems::renderer;
-		std::vector<ParticleSystemComponent*>& particles = renderer.GetParticles();
+		const std::vector<ParticleSystemComponent*>& particles = renderer.GetParticles();
 
 		if (particles.size() > 0)
 		{
-			renderer.GetInputLayouts()->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT_PARTICLE);
-			renderer.GetParticleShader()->RenderParticles(particles);
-			renderer.GetInputLayouts()->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT_3D);
+			renderer.inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT_PARTICLE);
+			renderer.particleShader->RenderParticles(particles);
+			renderer.inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT_3D);
 		}
 	}
 }

@@ -12,9 +12,9 @@
 DepthShader::DepthShader()
 {
 	// create and compile shaders
-	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexDepth.vs", _vertexShader, _vertexShaderByteCode);
-	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexDepthInstanced.vs", _vertexShaderInstanced, _vertexShaderByteCodeInstanced);
-	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelDepth.ps",   _pixelShader,  _pixelShaderByteCode);
+	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexDepth.vs", _vertexShader, vertexShaderByteCode);
+	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexDepthInstanced.vs", _vertexShaderInstanced, vertexShaderByteCodeInstanced);
+	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelDepth.ps",   _pixelShader,  pixelShaderByteCode);
 
 	// create constant buffer for vertex shader
 	SHADER_HELPERS::CreateConstantBuffer(_constantBufferVertex);
@@ -22,8 +22,8 @@ DepthShader::DepthShader()
 
 DepthShader::~DepthShader()
 {
-	_vertexShaderByteCode->Release();
-	_pixelShaderByteCode->Release();
+	vertexShaderByteCode->Release();
+	pixelShaderByteCode->Release();
 
 	_vertexShader->Release();
 	_pixelShader->Release();
@@ -46,7 +46,7 @@ void DepthShader::RenderDepth(std::vector<Mesh*>& meshes)
 	ConstantVertex vertexData;
 
 	// get the camera that will render the depthmap
-	CameraComponent* camera = CM.GetCurrentCameraDepthMap();
+	CameraComponent* camera = CM.currentCameraDepthMap;
 
 	// set our shaders
 	devCon->VSSetShader(_vertexShader, NULL, 0);
@@ -59,7 +59,7 @@ void DepthShader::RenderDepth(std::vector<Mesh*>& meshes)
 	for (int i = 0; i < size; i++)
 	{
 		// set world matrix of mesh
-		XMStoreFloat4x4(&vertexData.worldViewProj, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&meshes[i]->GetWorldMatrix(), &camera->GetViewProjMatrix())));
+		XMStoreFloat4x4(&vertexData.worldViewProj, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&meshes[i]->GetWorldMatrix(), &camera->viewProjMatrix)));
 
 		// update the constant buffer with the vertexdata of this mesh
 		SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(ConstantVertex), _constantBufferVertex);
@@ -91,7 +91,7 @@ void DepthShader::RenderDepthInstanced(std::vector<InstancedModel*>& models)
 	ID3D11DeviceContext* devCon = DXM.GetDeviceCon();
 
 	// get the camera that will render the depthmap
-	CameraComponent* camera = CM.GetCurrentCameraDepthMap();
+	CameraComponent* camera = CM.currentCameraDepthMap;
 
 	// set our shaders
 	devCon->VSSetShader(_vertexShaderInstanced, NULL, 0);
@@ -102,7 +102,7 @@ void DepthShader::RenderDepthInstanced(std::vector<InstancedModel*>& models)
 
 	// set world matrix of mesh
 	ConstantVertex vertexData;
-	XMStoreFloat4x4(&vertexData.worldViewProj, XMLoadFloat4x4(&camera->GetViewProjMatrixTrans()));
+	XMStoreFloat4x4(&vertexData.worldViewProj, XMLoadFloat4x4(&camera->viewProjMatrixTrans));
 	SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(ConstantVertex), _constantBufferVertex);
 
 	size_t size = models.size();

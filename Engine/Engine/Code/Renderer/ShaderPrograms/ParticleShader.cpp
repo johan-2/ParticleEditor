@@ -41,7 +41,7 @@ void ParticleShader::RenderParticles(const std::vector<ParticleSystemComponent*>
 	ID3D11DeviceContext* devCon = DXM.GetDeviceCon();
 
 	// get the game camera
-	CameraComponent* camera = CM.GetCurrentCameraGame();
+	CameraComponent* camera = CM.currentCameraGame;
 
 	// set shaders			
 	devCon->VSSetShader(_vertexShader, NULL, 0);
@@ -54,7 +54,7 @@ void ParticleShader::RenderParticles(const std::vector<ParticleSystemComponent*>
 	CBVertex vertexData;
 
 	// set the vertex constant data
-	XMStoreFloat4x4(&vertexData.viewProj, XMLoadFloat4x4(&camera->GetViewProjMatrixTrans()));
+	XMStoreFloat4x4(&vertexData.viewProj, XMLoadFloat4x4(&camera->viewProjMatrixTrans));
 	
 	// update the vertex constant buffer
 	SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(CBVertex), _constantBufferVertex);

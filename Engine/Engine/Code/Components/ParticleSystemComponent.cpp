@@ -475,7 +475,7 @@ void ParticleSystemComponent::UpdateLifeTime(const float& delta)
 
 void ParticleSystemComponent::SortParticles(unsigned int index)
 {
-	XMFLOAT3 camPos = Systems::cameraManager->GetCurrentCameraGame()->GetComponent<TransformComponent>()->GetPositionVal();
+	XMFLOAT3 camPos = Systems::cameraManager->currentCameraGame->GetComponent<TransformComponent>()->GetPositionVal();
 	XMFLOAT3 vec;
 
 	// get distance of particle from camera
@@ -517,7 +517,7 @@ XMFLOAT3 ParticleSystemComponent::GetDirectionLocal(XMFLOAT3 direction)
 void ParticleSystemComponent::UpdateRotations(const float& delta)
 {
 	XMFLOAT3 forward, up, right;
-	Systems::cameraManager->GetCurrentCameraGame()->GetComponent<TransformComponent>()->GetAllAxis(forward, right, up);
+	Systems::cameraManager->currentCameraGame->GetComponent<TransformComponent>()->GetAllAxis(forward, right, up);
 
 	XMFLOAT4X4 rotationMatrix; XMStoreFloat4x4(&rotationMatrix, XMMatrixIdentity());
 

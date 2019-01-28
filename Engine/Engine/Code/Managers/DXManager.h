@@ -36,10 +36,6 @@ public:
 	ID3D11Device*&        GetDevice()    { return _device; }
 	ID3D11DeviceContext*& GetDeviceCon() { return _devCon; }	
 
-	// get default render/depth views
-	ID3D11DepthStencilView*&   GetDefaultDepthStencilView() { return _depthStencilView; }
-	ID3D11RenderTargetView*&   GetDefaultRenderTargetView() { return _renderTargetView; }
-
 private:
 
 	// create swapchain and devices
