@@ -21,8 +21,8 @@
 PlanarReflectionShader::PlanarReflectionShader()
 {
 	//create shaders
-	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexForwardPlanar.vs", _planarVertexShader, _planarVertexShaderByteCode);
-	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelForwardPlanar.ps",   _planarPixelShader, _planarPixelShaderByteCode);
+	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexForwardPlanar.vs", _planarVertexShader, planarVertexShaderByteCode);
+	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelForwardPlanar.ps",   _planarPixelShader, planarPixelShaderByteCode);
 
 	// create constant buffers
 	SHADER_HELPERS::CreateConstantBuffer(_CBVertex);
@@ -36,8 +36,8 @@ PlanarReflectionShader::~PlanarReflectionShader()
 	_planarVertexShader->Release();
 	_planarPixelShader->Release();
 
-	_planarVertexShaderByteCode->Release();
-	_planarPixelShaderByteCode->Release();
+	planarVertexShaderByteCode->Release();
+	planarPixelShaderByteCode->Release();
 
 	_CBReflect->Release();
 	_CBVertex->Release();
@@ -61,16 +61,15 @@ void PlanarReflectionShader::Render(std::vector<Mesh*>& reflectionMeshes)
 	LightManager&  LM  = *Systems::lightManager;
 	Renderer& renderer = *Systems::renderer;
 
-	// get device context
-	ID3D11DeviceContext*& devCon = DXM.devCon;
-
-	// get game camera and shadow camera
+	// get device context and cameras
+	ID3D11DeviceContext*& devCon  = DXM.devCon;
 	CameraComponent*& camera      = CM.currentCameraGame;
 	CameraComponent*& cameraLight = CM.currentCameraDepthMap;
 
 	TransformComponent* camTrans = camera->GetComponent<TransformComponent>();
 
-	// get camera position
+	// save camera properties before we change the 
+	// position and rotation to render the reflectionmap
 	XMFLOAT3 cameraPos = camTrans->position;
 	XMFLOAT3 cameraRot = camTrans->rotation;
 
@@ -100,7 +99,7 @@ void PlanarReflectionShader::Render(std::vector<Mesh*>& reflectionMeshes)
 		camTrans->BuildWorldMatrix();
 		camera->CalculateViewMatrix();
 
-		// save the reflection viewprojmatrix
+		// save the reflection viewprojmatrix so we can upload it to constant buffer
 		XMFLOAT4X4 reflectMat = camera->viewProjMatrix;
 
 		// render the reflectionmap
@@ -143,9 +142,6 @@ void PlanarReflectionShader::Render(std::vector<Mesh*>& reflectionMeshes)
 		// update vertex constant buffer
 		SHADER_HELPERS::UpdateConstantBuffer((void*)&cbVertex,  sizeof(CBVertex),  _CBVertex);
 		SHADER_HELPERS::UpdateConstantBuffer((void*)&cbReflect, sizeof(CBReflect), _CBReflect);
-
-		// get the texture array of mesh
-		ID3D11ShaderResourceView** meshTextures = mesh->baseTextures;
 
 		// fill texture array with all textures including the shadow map and reflection map
 		ID3D11ShaderResourceView* t[6] = { mesh->baseTextures[0], mesh->baseTextures[1], mesh->baseTextures[2], mesh->baseTextures[3], cameraLight->renderTexture, _simpleClipShaderReflection->GetRenderSRV() };

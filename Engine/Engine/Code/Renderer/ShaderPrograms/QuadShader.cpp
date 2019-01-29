@@ -11,8 +11,8 @@
 QuadShader::QuadShader()
 {
 	// create quad shaders
-	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexQuad.vs", _vertexShader, _vertexShaderByteCode);
-	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelQuad.ps",   _pixelShader,  _pixelShaderByteCode);
+	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexQuad.vs", _vertexShader, vertexShaderByteCode);
+	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelQuad.ps",   _pixelShader,  pixelShaderByteCode);
 
 	// create constant buffers
 	SHADER_HELPERS::CreateConstantBuffer(_constantBufferVertex);
@@ -21,8 +21,8 @@ QuadShader::QuadShader()
 
 QuadShader::~QuadShader()
 {
-	_vertexShaderByteCode->Release();
-	_pixelShaderByteCode->Release();
+	vertexShaderByteCode->Release();
+	pixelShaderByteCode->Release();
 
 	_vertexShader->Release();
 	_pixelShader->Release();
@@ -69,17 +69,14 @@ void QuadShader::RenderQuadUI(const std::vector<QuadComponent*>& quads)
 	for (int i = 0; i < quads.size(); i++)
 	{
 		// set the color of this quad in the constant pixel buffer
-		pixelData.color       = quads[i]->GetColor();
-		pixelData.ignoreAlpha = quads[i]->IgnoreAlpha();
+		pixelData.color       = quads[i]->color;
+		pixelData.ignoreAlpha = quads[i]->ignoreAlpha;
 
 		// update the buffer for each quad
 		SHADER_HELPERS::UpdateConstantBuffer((void*)&pixelData, sizeof(ConstantQuadUIPixel), _constantBufferPixel);
 
-		// get the quad texture
-		ID3D11ShaderResourceView* texture = quads[i]->GetTexture();
-
 		// set the texture
-		devCon->PSSetShaderResources(0, 1, &texture);
+		devCon->PSSetShaderResources(0, 1, &quads[i]->texture);
 
 		// set the vertex and inex buffers
 		quads[i]->UploadBuffers();

@@ -25,7 +25,7 @@ void DebugQuadHandler::AddDebugQuad(ID3D11ShaderResourceView* texture)
 {
 	Entity* quad = new Entity();
 	quad->AddComponent<QuadComponent>()->Init(XMFLOAT2(_nextStartPosX, _nextStartPosY), XMFLOAT2(_width, _height), L"", XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), true);
-	quad->GetComponent<QuadComponent>()->SetTexture(texture);
+	quad->GetComponent<QuadComponent>()->texture = texture;
 
 	_count++;
 	_nextStartPosX += _spacingHorizontal;
@@ -45,7 +45,7 @@ void DebugQuadHandler::RemoveDebugQuad(ID3D11ShaderResourceView* texture)
 	for (int i = 0; i < _quadEntities.size(); i++)
 	{
 		QuadComponent* quad = _quadEntities[i]->GetComponent<QuadComponent>();
-		if (quad->GetTexture() == texture)
+		if (quad->texture == texture)
 		{
 			_quadEntities[i]->RemoveEntity();
 			VECTOR_HELPERS::RemoveItemFromVector(_quadEntities, _quadEntities[i]);
@@ -59,9 +59,9 @@ void DebugQuadHandler::ReplaceTexture(ID3D11ShaderResourceView* original, ID3D11
 	for (int i = 0; i< _quadEntities.size(); i++)
 	{
 		QuadComponent* quad = _quadEntities[i]->GetComponent<QuadComponent>();
-		if (quad->GetTexture() == original)
+		if (quad->texture == original)
 		{
-			quad->SetTexture(replacement);
+			quad->texture = replacement;
 			break;
 		}
 	}

@@ -85,12 +85,10 @@ void Mesh::CreateBuffers(VertexData* verticesData, unsigned long* indicesData, u
 
 	// create vertex and index buffers
 	result = device->CreateBuffer(&vertexBufferDesc, &vertexData, &vertexBuffer);
-	if (FAILED(result))
-		DX_ERROR::PrintError(result, "failed to create vertex buffer for mesh");
+	if (FAILED(result)) DX_ERROR::PrintError(result, "failed to create vertex buffer for mesh");
 
 	result = device->CreateBuffer(&indexBufferDesc, &indexData, &indexBuffer);
-	if (FAILED(result))
-		DX_ERROR::PrintError(result, "failed to create index buffer for mesh");
+	if (FAILED(result)) DX_ERROR::PrintError(result, "failed to create index buffer for mesh");
 }
 
 void Mesh::UploadBuffers() 

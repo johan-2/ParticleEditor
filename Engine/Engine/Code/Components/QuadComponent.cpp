@@ -20,15 +20,15 @@ QuadComponent::~QuadComponent()
 
 void QuadComponent::Init(XMFLOAT2 position, XMFLOAT2 size, wchar_t* texturePath, XMFLOAT4 color, bool ignoreAlpha)
 {
-	_size         = size;
-	_position     = position;
-	_color        = color;
-	_prevSize     = size;
-	_PrevPosition = position;
-	_ignoreAlpha  = ignoreAlpha;
+	this->size         = size;
+	this->position     = position;
+	this->color        = color;
+	_prevSize          = size;
+	_PrevPosition      = position;
+	this->ignoreAlpha  = ignoreAlpha;
 
 	CreateBuffers();
-	_texture = Systems::texturePool->GetTexture(texturePath);
+	texture = Systems::texturePool->GetTexture(texturePath);
 
 	Systems::renderer->AddQuadToRenderer(this);
 }
@@ -55,10 +55,10 @@ void QuadComponent::CreateBuffers()
 	
 	// Calculate the screen coordinates of the quad, convert so 0.0 now is the top left corner of screen
 	// also convert so the pivot point is always in the middle of the quad
-	left   = (float)((SystemSettings::SCREEN_WIDTH / 2) * -1) + _position.x -(_size.x /2);
-	right  = left + _size.x;	
-	top    = (float)(SystemSettings::SCREEN_HEIGHT / 2) - _position.y + (_size.y /2);
-	bottom = top - _size.y;
+	left   = (float)((SystemSettings::SCREEN_WIDTH / 2) * -1) + position.x -(size.x /2);
+	right  = left + size.x;	
+	top    = (float)(SystemSettings::SCREEN_HEIGHT / 2) - position.y + (size.y /2);
+	bottom = top - size.y;
 	
 	// set data of vertices
 	vertices[0].position = XMFLOAT3(left, top, 0.0f);      // Top left.
@@ -110,15 +110,15 @@ void QuadComponent::UpdateBuffers()
 {
 
 	// get if position or scale have changed
-	bool result  = XMVector4Equal(XMLoadFloat2(&_PrevPosition), XMLoadFloat2(&_position));
-	bool result2 = XMVector4Equal(XMLoadFloat2(&_prevSize), XMLoadFloat2(&_size));	
+	bool result  = XMVector4Equal(XMLoadFloat2(&_PrevPosition), XMLoadFloat2(&position));
+	bool result2 = XMVector4Equal(XMLoadFloat2(&_prevSize), XMLoadFloat2(&size));	
 
 	// only uppdate buffer if the pos or scale have changed
 	if (!result || !result2)
 	{
 		// save last pos for next frame
-		_PrevPosition = _position;
-		_prevSize     = _size;
+		_PrevPosition = position;
+		_prevSize     = size;
 		
 		// get device context
 		ID3D11DeviceContext*& devCon = Systems::dxManager->devCon;
@@ -131,10 +131,10 @@ void QuadComponent::UpdateBuffers()
 
 		// calculate all corners of quad
 		float left, right, top, bottom;
-		left = (float)((SystemSettings::SCREEN_WIDTH / 2) * -1) + _position.x - (_size.x / 2);
-		right = left + _size.x;
-		top = (float)(SystemSettings::SCREEN_HEIGHT / 2) - _position.y + (_size.y / 2);
-		bottom = top - _size.y;
+		left = (float)((SystemSettings::SCREEN_WIDTH / 2) * -1) + position.x - (size.x / 2);
+		right = left + size.x;
+		top = (float)(SystemSettings::SCREEN_HEIGHT / 2) - position.y + (size.y / 2);
+		bottom = top - size.y;
 				
 		// set the data of vertices
 		vertices[0].position = XMFLOAT3(left, top, 0.0f);      // Top left.

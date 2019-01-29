@@ -29,6 +29,7 @@ ForwardAlphaShader::~ForwardAlphaShader()
 	pixelShaderByteCode->Release();
 
 	_CBVertex->Release();
+	_CBPixel->Release();
 }
 
 void ForwardAlphaShader::RenderForward(std::vector<Mesh*>& meshes)
@@ -41,10 +42,8 @@ void ForwardAlphaShader::RenderForward(std::vector<Mesh*>& meshes)
 	CameraManager& CM = *Systems::cameraManager;
 	LightManager& LM  = *Systems::lightManager;
 
-	// get device context
-	ID3D11DeviceContext*& devCon = DXM.devCon;
-
-	// get game camera and shadow camera
+	// get context and cameras
+	ID3D11DeviceContext*& devCon  = DXM.devCon;
 	CameraComponent*& camera      = CM.currentCameraGame;
 	CameraComponent*& cameraLight = CM.currentCameraDepthMap;
 

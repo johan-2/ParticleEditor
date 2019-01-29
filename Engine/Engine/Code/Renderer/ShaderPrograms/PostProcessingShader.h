@@ -17,10 +17,6 @@ public:
 	// renders all meshes to the depth map
 	void Render(ScreenQuad* quad, ID3D11ShaderResourceView* SceneImage, ID3D11ShaderResourceView* sceneDepth);
 
-	// get byte code from shaders
-	ID3D10Blob*& GetVertexShaderByteCode() { return _vertexPostProcessingShaderByteCode; }
-	ID3D10Blob*& GetPixelShaderByteCode()  { return _pixelPostProcessingHDRShaderByteCode; }
-
 	void CreateBloomBlurRenderTextures();
 	void createDofRenderTextures();
 
@@ -29,6 +25,14 @@ public:
 	void ShowBloomBlurP1DebugQuad();
 	void ShowBloomBlurP2DebugQuad();
 	void ShowDofMapDebugQuad();
+
+	// the shader bytecode
+	ID3D10Blob* vertexPostProcessingShaderByteCode;
+	ID3D10Blob* pixelPostProcessingHDRShaderByteCode;
+	ID3D10Blob* vertexBlurShaderByteCode;
+	ID3D10Blob* pixelBlurShaderByteCode;
+	ID3D10Blob* pixelPostProcessingSDRShaderByteCode;
+	ID3D10Blob* computeBrightnessShaderByteCode;
 
 private:
 
@@ -51,14 +55,6 @@ private:
 	ID3D11PixelShader*   _pixelPostProcessingHDRShader;
 	ID3D11PixelShader*   _pixelPostProcessingSDRShader;
 	ID3D11ComputeShader* _computeBrightnessShader;
-	
-	// the shader bytecode
-	ID3D10Blob* _vertexPostProcessingShaderByteCode;
-	ID3D10Blob* _pixelPostProcessingHDRShaderByteCode;
-	ID3D10Blob* _vertexBlurShaderByteCode;
-	ID3D10Blob* _pixelBlurShaderByteCode;
-	ID3D10Blob* _pixelPostProcessingSDRShaderByteCode;
-	ID3D10Blob* _computeBrightnessShaderByteCode;
 
 	// constant buffers
 	ID3D11Buffer* _blurVertexConstant;

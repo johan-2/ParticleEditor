@@ -111,18 +111,15 @@ void DXManager::CreateSwapchainAndRenderTarget(HWND hwnd, bool fullscreen, int s
 		                                   flags, &featureLevel, 1, D3D11_SDK_VERSION,
 		                                   &swapChainDesc, &_swapChain, &device, NULL, &devCon);
 
-	if (FAILED(result))
-		DX_ERROR::PrintError(result, "failed to create swapchain and devices");
+	if (FAILED(result)) DX_ERROR::PrintError(result, "failed to create swapchain and devices");
 
 	// get pointer to the backbuffer texture so we can create the defualt rendertarget view	
 	result = _swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBufferPtr);
-	if (FAILED(result))
-		DX_ERROR::PrintError(result, "failed to get back buffer from swapchain");
+	if (FAILED(result)) DX_ERROR::PrintError(result, "failed to get back buffer from swapchain");
 
 	// create the main backbuffer rendertarget
 	result = device->CreateRenderTargetView(backBufferPtr, NULL, &_renderTargetView);
-	if (FAILED(result))
-		DX_ERROR::PrintError(result, "failed to create Render target from back buffer ptr");
+	if (FAILED(result)) DX_ERROR::PrintError(result, "failed to create Render target from back buffer ptr");
 
 	// delete texture after creation of rendertarget
 	backBufferPtr->Release();
@@ -149,7 +146,6 @@ void DXManager::SetDebugLayerIgnores()
 			D3D11_MESSAGE_ID hide[] =
 			{
 				D3D11_MESSAGE_ID_DEVICE_DRAW_CONSTANT_BUFFER_TOO_SMALL,
-
 			};
 
 			D3D11_INFO_QUEUE_FILTER filter;
@@ -203,13 +199,11 @@ void DXManager::CreateDepthStencilViews(int screenWidth, int screenHeight)
 
 	// create the depth texture using the description
 	result = device->CreateTexture2D(&depthStencilTexDesc, NULL, &depthTex2D);
-	if (FAILED(result))
-		DX_ERROR::PrintError(result, "failed to create depth stencil texture");
+	if (FAILED(result)) DX_ERROR::PrintError(result, "failed to create depth stencil texture");
 
 	// create the default depthstencilview
 	result = device->CreateDepthStencilView(depthTex2D, &depthStencilViewDesc, &_depthStencilView);
-	if (FAILED(result))
-		DX_ERROR::PrintError(result, "failed to create defualt depth stencil view");
+	if (FAILED(result)) DX_ERROR::PrintError(result, "failed to create defualt depth stencil view");
 
 	depthTex2D->Release();
 }

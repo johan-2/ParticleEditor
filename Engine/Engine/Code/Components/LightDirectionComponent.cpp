@@ -16,7 +16,7 @@ LightDirectionComponent::~LightDirectionComponent()
 void LightDirectionComponent::Init(XMFLOAT4 lightColor, TransformComponent* transformOverride)
 {
 	// set light properties
-	lightColor = lightColor;
+	this->lightColor = lightColor;
 
 	// get pointer to transform
 	_transform = GetComponent<TransformComponent>();

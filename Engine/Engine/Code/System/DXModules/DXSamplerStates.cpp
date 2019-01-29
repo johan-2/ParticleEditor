@@ -13,6 +13,10 @@ DXSamplerStates::~DXSamplerStates()
 {
 	_sampleStateWrapTri->Release();
 	_sampleStateClampTri->Release();
+	_sampleStateWrapBil->Release();
+	_sampleStateClampBil->Release();
+	_sampleStateWrapAni->Release();
+	_sampleStateClampAni->Release();
 }
 
 void DXSamplerStates::CreateSamplerStates()

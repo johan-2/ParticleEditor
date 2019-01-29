@@ -48,24 +48,23 @@ void DXDepthStencilStates::CreateDepthStencilStates()
 
 	// depth enabled
 	result = _device->CreateDepthStencilState(&depthStencilDesc, &_depthStencilEnabled);
-	if (FAILED(result))
-		DX_ERROR::PrintError(result, "failed to create depth stencil state");
+	if (FAILED(result)) DX_ERROR::PrintError(result, "failed to create depth stencil state");
 
 	// will only read the depthbuffer, the depthstencil is ignored here aswell
 	depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
 	depthStencilDesc.StencilEnable  = true;
 	depthStencilDesc.DepthEnable    = true;	
+
 	result = _device->CreateDepthStencilState(&depthStencilDesc, &_depthStencilReadOnly);
-	if (FAILED(result))
-		DX_ERROR::PrintError(result, "failed to create depth stencil state");
+	if (FAILED(result)) DX_ERROR::PrintError(result, "failed to create depth stencil state");
 
 	// will not read or write the deptbuffer and stencilbuffer
 	depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
 	depthStencilDesc.DepthEnable    = false;
 	depthStencilDesc.StencilEnable  = false;
+
 	result = _device->CreateDepthStencilState(&depthStencilDesc, &_depthStencilDisabled);
-	if (FAILED(result))
-		DX_ERROR::PrintError(result, "failed to create depth stencil state");
+	if (FAILED(result)) DX_ERROR::PrintError(result, "failed to create depth stencil state");
 
 	// masked depthstencil with reference set to the same as the regular depthEnabled depthstencil that is used while rendering geometry
 	// comparison set to not equal meaning that the pixels that got flagged during the geometry pass will fail and skybox wont render over them
@@ -84,8 +83,7 @@ void DXDepthStencilStates::CreateDepthStencilStates()
 	depthStencilDesc.BackFace.StencilFunc        = D3D11_COMPARISON_NOT_EQUAL;
 
 	result = _device->CreateDepthStencilState(&depthStencilDesc, &_depthStencilMaskedSkybox);
-	if (FAILED(result))
-		DX_ERROR::PrintError(result, "failed to create depth stencil state");
+	if (FAILED(result)) DX_ERROR::PrintError(result, "failed to create depth stencil state");
 
 	// wont render non geometry pixels for the fullscreen light pass
 	// only renders the pixels that got flagged during the geometrypass (opposite of skybox)
@@ -93,8 +91,7 @@ void DXDepthStencilStates::CreateDepthStencilStates()
 	depthStencilDesc.BackFace.StencilFunc  = D3D11_COMPARISON_EQUAL;
 
 	result = _device->CreateDepthStencilState(&depthStencilDesc, &_depthStencilMaskedLightning);
-	if (FAILED(result))
-		DX_ERROR::PrintError(result, "failed to create depth stencil state");
+	if (FAILED(result)) DX_ERROR::PrintError(result, "failed to create depth stencil state");
 
 	_devCon->OMSetDepthStencilState(_depthStencilEnabled, 1);
 }

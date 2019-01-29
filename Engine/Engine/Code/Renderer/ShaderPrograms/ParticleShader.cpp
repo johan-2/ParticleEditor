@@ -10,8 +10,8 @@
 ParticleShader::ParticleShader()
 {
 	// create and compile shaders
-	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexParticle.vs", _vertexShader, _vertexShaderByteCode);
-	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelParticle.ps",   _pixelShader,  _pixelShaderByteCode);
+	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexParticle.vs", _vertexShader, vertexShaderByteCode);
+	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelParticle.ps",   _pixelShader,  pixelShaderByteCode);
 
 	// create constant buffer for vertex shader
 	SHADER_HELPERS::CreateConstantBuffer(_constantBufferVertex);
@@ -19,8 +19,8 @@ ParticleShader::ParticleShader()
 
 ParticleShader::~ParticleShader()
 {
-	_vertexShaderByteCode->Release();
-	_pixelShaderByteCode->Release();
+	vertexShaderByteCode->Release();
+	pixelShaderByteCode->Release();
 
 	_vertexShader->Release();
 	_pixelShader->Release();
@@ -28,7 +28,7 @@ ParticleShader::~ParticleShader()
 	_constantBufferVertex->Release();
 }
 
-void ParticleShader::RenderParticles(const std::vector<ParticleSystemComponent*>& systems)
+void ParticleShader::RenderParticles(std::vector<ParticleSystemComponent*>& systems)
 {
 	if (systems.size() == 0)
 		return;
@@ -37,11 +37,9 @@ void ParticleShader::RenderParticles(const std::vector<ParticleSystemComponent*>
 	DXManager& DXM    = *Systems::dxManager;
 	CameraManager& CM = *Systems::cameraManager;
 
-	// get device context
+	// get device context and camera
 	ID3D11DeviceContext*& devCon = DXM.devCon;
-
-	// get the game camera
-	CameraComponent* camera = CM.currentCameraGame;
+	CameraComponent* camera      = CM.currentCameraGame;
 
 	// set shaders			
 	devCon->VSSetShader(_vertexShader, NULL, 0);
@@ -63,32 +61,37 @@ void ParticleShader::RenderParticles(const std::vector<ParticleSystemComponent*>
 	DXM.depthStencilStates->SetDepthStencilState(DEPTH_STENCIL_STATE::READ_ONLY);
 
 	// loop over all particle systems
-	for (int i = 0; i < systems.size(); i++)
+	size_t numSystems = systems.size();
+	for (int i = 0; i < numSystems; i++)
 	{
+		ParticleSystemComponent*& system = systems[i];
+
 		// loop over all emitters in each system
-		for (int y = 0; y < systems[i]->GetNumEmitters(); y++)
+		size_t numEmitters = system->numEmitters;
+		for (int y = 0; y < numEmitters; y++)
 		{
 			// upload vertex and indexbuffers
-			systems[i]->UploadBuffers(y);
+			system->UploadBuffers(y);
 
 			// set the blend state that this emitter uses
 			// TODO: this is probably going to set the same blend state
 			// multiple times in a row, fix this
-			DXM.blendStates->SetBlendState(systems[i]->GetBlendState(y));
+			DXM.blendStates->SetBlendState(system->GetBlendState(y));
 
 			// get texture
-			ID3D11ShaderResourceView* texture = systems[i]->GetTexture(y);
+			ID3D11ShaderResourceView* texture = system->GetTexture(y);
 
 			// set texture
 			devCon->PSSetShaderResources(0, 1, &texture);
 
 			// draw	instanced with the same 6 indices and 4 vertices for all particles	
-			devCon->DrawIndexedInstanced(6, systems[i]->GetNumParticles(y), 0, 0, 0);
+			devCon->DrawIndexedInstanced(6, system->GetNumParticles(y), 0, 0, 0);
 		}
 	}
 	// unbind so we can use resources as input in next stages
 	ID3D11ShaderResourceView* nullSRV[1] = { NULL};
 	devCon->PSSetShaderResources(0, 1, nullSRV);
+
 	// enable depth writing
 	DXM.depthStencilStates->SetDepthStencilState(DEPTH_STENCIL_STATE::ENABLED);
 }

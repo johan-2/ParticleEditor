@@ -79,8 +79,8 @@ void Renderer::Initialize()
 	inputLayouts = new DXInputLayouts();
 	inputLayouts->CreateInputLayout3D(deferredShader->vertexGeometryShaderByteCode);
 	inputLayouts->CreateInputLayout3DInstanced(deferredShader->vertexGeometryShaderByteCodeInstanced);
-	inputLayouts->CreateInputLayout2D(quadShader->GetVertexShaderByteCode());
-	inputLayouts->CreateInputLayoutParticle(particleShader->GetVertexShaderByteCode());
+	inputLayouts->CreateInputLayout2D(quadShader->vertexShaderByteCode);
+	inputLayouts->CreateInputLayoutParticle(particleShader->vertexShaderByteCode);
 	inputLayouts->CreateInputLayoutGUI(imGUIShader->GetVertexShaderByteCode());
 
 	// create gbuffer for deffered rendering
@@ -114,7 +114,7 @@ Entity* Renderer::CreateShadowMap(float orthoSize, float resolution, XMFLOAT3 po
 	CameraComponent* depthCamera = _cameraDepth->GetComponent<CameraComponent>();
 
 	// give camera a reference to the SRV in depthMap render texture
-	depthCamera->renderTexture = _depthMap->GetDepthStencilSRV();
+	depthCamera->renderTexture = _depthMap->depthStencilSRV;
 
 	// set this camera to the active depth render camera
 	Systems::cameraManager->currentCameraDepthMap = depthCamera;
@@ -172,7 +172,7 @@ void Renderer::Render()
 	inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT_2D);
 
 	// Render post processing 
-	postProcessingShader->Render(_fullScreenQuad, mainRendertarget->GetRenderTargetSRV(), mainRendertarget->GetDepthStencilSRV());
+	postProcessingShader->Render(_fullScreenQuad, mainRendertarget->renderTargetSRV, mainRendertarget->depthStencilSRV);
 
 	// render UI
 	quadShader->RenderQuadUI(_quads);
@@ -187,7 +187,7 @@ void Renderer::RenderDeferred()
 	DXManager& dXM = *Systems::dxManager;
 		
 	// set the rendertargets of the GBuffer active		
-	_gBuffer->SetRenderTargets(mainRendertarget->GetDepthStencil());		
+	_gBuffer->SetRenderTargets(mainRendertarget->depthStencilView);		
 
 	// render all geometry info to the render targets
 	inputLayouts->SetInputLayout(INPUT_LAYOUT_TYPE::LAYOUT_3D);

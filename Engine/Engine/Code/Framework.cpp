@@ -105,7 +105,7 @@ void Framework::Run()
 		if (Systems::input->IskeyPressed(DIK_ESCAPE))
 		{
 			DXM.SetFullscreen(false);
-			DestroyWindow(_window->GetHWND());
+			DestroyWindow(_window->hwnd);
 		}
 
 		// update everything

@@ -21,6 +21,10 @@ public:
 	void Render(std::vector<Mesh*>& waterMeshes);
 	void ShowDebugQuads();
 
+	// the shader bytecode
+	ID3D10Blob* waterVertexShaderByteCode;
+	ID3D10Blob* waterPixelShaderByteCode;
+
 private:
 	
 	// compiled shaders
@@ -29,10 +33,6 @@ private:
 	
 	// constant buffers
 	ID3D11Buffer* _CBVertex;
-
-	// the shader bytecode
-	ID3D10Blob* _waterVertexShaderByteCode;
-	ID3D10Blob* _waterPixelShaderByteCode;
 
 	SimpleClipSceneShader*  _simpleClipShaderReflection;
 	SimpleClipSceneShader*  _simpleClipShaderRefraction;

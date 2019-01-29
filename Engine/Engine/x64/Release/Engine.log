@@ -1,18 +1,8 @@
-﻿  ModelComponent.cpp
-  UVScrollComponent.cpp
-  Framework.cpp
-  LightManager.cpp
-  InstancedModel.cpp
-  Mesh.cpp
-  DeferredShader.cpp
-  DepthShader.cpp
-  SimpleClipSceneShader.cpp
-  IslandTestScene.cpp
-  SponzaTestScene.cpp
+﻿  SponzaTestScene.cpp
   Generating code
-  0 of 3267 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+  1 of 3251 functions (<0.1%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    0 functions had inline decision re-evaluated but remain unchanged
+    3 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
 ModelComponent.obj : warning LNK4020: a type record in 'c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\vc141.pdb' is corrupted; some symbols and types may not be accessible from the debugger
 ParticleSystemComponent.obj : warning LNK4020: a type record in 'c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\vc141.pdb' is corrupted; some symbols and types may not be accessible from the debugger
@@ -22,7 +12,7 @@ TransformComponent.obj : warning LNK4020: a type record in 'c:\users\nilss\deskt
 UVScrollComponent.obj : warning LNK4020: a type record in 'c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\vc141.pdb' is corrupted; some symbols and types may not be accessible from the debugger
 Color32.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'Color32.obj' or at 'C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\vc141.pdb'; linking object as if no debug info
 DDSTextureLoader.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'DDSTextureLoader.obj' or at 'C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\vc141.pdb'; linking object as if no debug info
-IEditorWindow.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'IEditorWindow.obj' or at 'C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\vc141.pdb'; linking object as if no debug info
+IEditorWindow.obj : warning LNK4020: a type record in 'c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\vc141.pdb' is corrupted; some symbols and types may not be accessible from the debugger
 MainEditorWindow.obj : warning LNK4020: a type record in 'c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\vc141.pdb' is corrupted; some symbols and types may not be accessible from the debugger
 MasterEditor.obj : warning LNK4020: a type record in 'c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\vc141.pdb' is corrupted; some symbols and types may not be accessible from the debugger
 PostProcessWindow.obj : warning LNK4020: a type record in 'c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\vc141.pdb' is corrupted; some symbols and types may not be accessible from the debugger
@@ -56,10 +46,10 @@ QuadShader.obj : warning LNK4020: a type record in 'c:\users\nilss\desktop\engin
 SimpleClipSceneShader.obj : warning LNK4020: a type record in 'c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\vc141.pdb' is corrupted; some symbols and types may not be accessible from the debugger
 WaterShader.obj : warning LNK4020: a type record in 'c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\vc141.pdb' is corrupted; some symbols and types may not be accessible from the debugger
 WireframeShader.obj : warning LNK4020: a type record in 'c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\vc141.pdb' is corrupted; some symbols and types may not be accessible from the debugger
-DXBlendStates.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'DXBlendStates.obj' or at 'C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\vc141.pdb'; linking object as if no debug info
-DXDepthStencilStates.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'DXDepthStencilStates.obj' or at 'C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\vc141.pdb'; linking object as if no debug info
+DXBlendStates.obj : warning LNK4020: a type record in 'c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\vc141.pdb' is corrupted; some symbols and types may not be accessible from the debugger
+DXDepthStencilStates.obj : warning LNK4020: a type record in 'c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\vc141.pdb' is corrupted; some symbols and types may not be accessible from the debugger
 DXInputLayouts.obj : warning LNK4020: a type record in 'c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\vc141.pdb' is corrupted; some symbols and types may not be accessible from the debugger
-DXRasterizerStates.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'DXRasterizerStates.obj' or at 'C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\vc141.pdb'; linking object as if no debug info
+DXRasterizerStates.obj : warning LNK4020: a type record in 'c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\vc141.pdb' is corrupted; some symbols and types may not be accessible from the debugger
 DXSamplerStates.obj : warning LNK4020: a type record in 'c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\vc141.pdb' is corrupted; some symbols and types may not be accessible from the debugger
 HardwareProperties.obj : warning LNK4020: a type record in 'c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\vc141.pdb' is corrupted; some symbols and types may not be accessible from the debugger
 Systems.obj : warning LNK4020: a type record in 'c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\vc141.pdb' is corrupted; some symbols and types may not be accessible from the debugger
@@ -69,6 +59,6 @@ DebugQuadHandler.obj : warning LNK4020: a type record in 'c:\users\nilss\desktop
 SystemDefs.obj : warning LNK4020: a type record in 'c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\vc141.pdb' is corrupted; some symbols and types may not be accessible from the debugger
 TexturePool.obj : warning LNK4020: a type record in 'c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\vc141.pdb' is corrupted; some symbols and types may not be accessible from the debugger
 Time.obj : warning LNK4020: a type record in 'c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\vc141.pdb' is corrupted; some symbols and types may not be accessible from the debugger
-Window.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'Window.obj' or at 'C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\vc141.pdb'; linking object as if no debug info
+Window.obj : warning LNK4020: a type record in 'c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\vc141.pdb' is corrupted; some symbols and types may not be accessible from the debugger
 Main.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'Main.obj' or at 'C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\vc141.pdb'; linking object as if no debug info
   Engine.vcxproj -> C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\Engine.exe

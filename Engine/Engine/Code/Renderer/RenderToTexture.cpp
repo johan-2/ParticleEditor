@@ -61,29 +61,29 @@ RenderToTexture::RenderToTexture(unsigned int width, unsigned int height, bool d
 			DX_ERROR::PrintError(result, "failed to create Texture2D in render texture");
 
 		// create depthstencilview
-		result = device->CreateDepthStencilView(depthTex2D, &depthStencilViewDesc, &_depthStencilView);
+		result = device->CreateDepthStencilView(depthTex2D, &depthStencilViewDesc, &depthStencilView);
 		if (FAILED(result))
 			DX_ERROR::PrintError(result, "failed to create depth stencil in render texture");
 
 		// create depth stencil view read only
-		result = device->CreateDepthStencilView(depthTex2D, &depthStencilViewReadDesc, &_depthStencilViewReadOnly);
+		result = device->CreateDepthStencilView(depthTex2D, &depthStencilViewReadDesc, &depthStencilViewReadOnly);
 		if (FAILED(result))
 			DX_ERROR::PrintError(result, "failed to create depth stencil in render texture");
 
-		result = device->CreateShaderResourceView(depthTex2D, &depthStencilSRVDesc, &_depthStencilSRV);
+		result = device->CreateShaderResourceView(depthTex2D, &depthStencilSRVDesc, &depthStencilSRV);
 		if (FAILED(result))
 			DX_ERROR::PrintError(result, "failed to create SRV in render texture");
 
-		_viewport.Width    = (float)width;
-		_viewport.Height   = (float)height;
-		_viewport.MinDepth = 0.0f;
-		_viewport.MaxDepth = 1.0f;
-		_viewport.TopLeftX = 0.0f;
-		_viewport.TopLeftY = 0.0f;
+		viewport.Width    = (float)width;
+		viewport.Height   = (float)height;
+		viewport.MinDepth = 0.0f;
+		viewport.MaxDepth = 1.0f;
+		viewport.TopLeftX = 0.0f;
+		viewport.TopLeftY = 0.0f;
 
 		depthTex2D->Release();	
 
-		if (addDepthDebugQuad) Systems::renderer->debugQuadHandler->AddDebugQuad(_depthStencilSRV);
+		if (addDepthDebugQuad) Systems::renderer->debugQuadHandler->AddDebugQuad(depthStencilSRV);
 	}
 	else // create both a render target view and a depth stencil view
 	{		
@@ -169,68 +169,63 @@ RenderToTexture::RenderToTexture(unsigned int width, unsigned int height, bool d
 			DX_ERROR::PrintError(result, "failed to create Texture2D for depth stencil in render texture");
 
 		// create render target view
-		result = device->CreateRenderTargetView(renderTex2D, &renderTargetViewDesc, &_renderTargetView);
+		result = device->CreateRenderTargetView(renderTex2D, &renderTargetViewDesc, &renderTargetView);
 		if (FAILED(result))
 			DX_ERROR::PrintError(result, "failed to create render target in render texture");
 
 		// create depth stencil view
-		result = device->CreateDepthStencilView(depthTex2D, &depthStencilViewDesc, &_depthStencilView);
+		result = device->CreateDepthStencilView(depthTex2D, &depthStencilViewDesc, &depthStencilView);
 		if (FAILED(result))
 			DX_ERROR::PrintError(result, "failed to create depth stencil in render texture");
 
 		// create depth stencil view read only
-		result = device->CreateDepthStencilView(depthTex2D, &depthStencilViewReadDesc, &_depthStencilViewReadOnly);
+		result = device->CreateDepthStencilView(depthTex2D, &depthStencilViewReadDesc, &depthStencilViewReadOnly);
 		if (FAILED(result))
 			DX_ERROR::PrintError(result, "failed to create depth stencil read only in render texture");
 
 		// create SRV from render target
-		result = device->CreateShaderResourceView(renderTex2D, &RenderTargetSRVDesc, &_renderTargetSRV);
+		result = device->CreateShaderResourceView(renderTex2D, &RenderTargetSRVDesc, &renderTargetSRV);
 		if (FAILED(result))
 			DX_ERROR::PrintError(result, "failed to create render target SRV in render texture");
 
 		// create SRV from depth stencil
-		result = device->CreateShaderResourceView(depthTex2D, &depthStencilSRVDesc, &_depthStencilSRV);
+		result = device->CreateShaderResourceView(depthTex2D, &depthStencilSRVDesc, &depthStencilSRV);
 		if (FAILED(result))
 			DX_ERROR::PrintError(result, "failed to create depth SRV in render texture");
 
-		_viewport.Width    = (float)width;
-		_viewport.Height   = (float)height;
-		_viewport.MinDepth = 0.0f;
-		_viewport.MaxDepth = 1.0f;
-		_viewport.TopLeftX = 0.0f;
-		_viewport.TopLeftY = 0.0f;
+		viewport.Width    = (float)width;
+		viewport.Height   = (float)height;
+		viewport.MinDepth = 0.0f;
+		viewport.MaxDepth = 1.0f;
+		viewport.TopLeftX = 0.0f;
+		viewport.TopLeftY = 0.0f;
 
 		depthTex2D->Release();
 		renderTex2D->Release();		
 
-		if (addDepthDebugQuad)  Systems::renderer->debugQuadHandler->AddDebugQuad(_depthStencilSRV);
-		if (addRenderDebugQuad) Systems::renderer->debugQuadHandler->AddDebugQuad(_renderTargetSRV);
+		if (addDepthDebugQuad)  Systems::renderer->debugQuadHandler->AddDebugQuad(depthStencilSRV);
+		if (addRenderDebugQuad) Systems::renderer->debugQuadHandler->AddDebugQuad(renderTargetSRV);
 	}	
 }
 
 RenderToTexture::~RenderToTexture()
 {
-	Release();
-}
-
-void RenderToTexture::Release()
-{
-	if (_renderTargetView)          _renderTargetView->Release();
-	if (_depthStencilView)          _depthStencilView->Release();
-	if (_depthStencilViewReadOnly)  _depthStencilViewReadOnly->Release();
-	if (_renderTargetSRV)           _renderTargetSRV->Release();
-	if (_depthStencilSRV)           _depthStencilSRV->Release();
+	if (renderTargetView)          renderTargetView->Release();
+	if (depthStencilView)          depthStencilView->Release();
+	if (depthStencilViewReadOnly)  depthStencilViewReadOnly->Release();
+	if (renderTargetSRV)           renderTargetSRV->Release();
+	if (depthStencilSRV)           depthStencilSRV->Release();
 }
 
 void RenderToTexture::SetRendertarget(bool depthOnly, bool depthReadOnly)
 {
 	ID3D11DeviceContext*& devCon = Systems::dxManager->devCon;
 
-	ID3D11RenderTargetView* RT = depthOnly ? nullptr : _renderTargetView;
-	ID3D11DepthStencilView* DS = depthReadOnly ? _depthStencilViewReadOnly : _depthStencilView;
+	ID3D11RenderTargetView* RT = depthOnly ? nullptr : renderTargetView;
+	ID3D11DepthStencilView* DS = depthReadOnly ? depthStencilViewReadOnly : depthStencilView;
 
 	devCon->OMSetRenderTargets(1, &RT, DS);
-	devCon->RSSetViewports(1, &_viewport);
+	devCon->RSSetViewports(1, &viewport);
 }
 
 void RenderToTexture::ClearRenderTarget(float r, float g, float b, float a, bool depthOnly)
@@ -241,10 +236,10 @@ void RenderToTexture::ClearRenderTarget(float r, float g, float b, float a, bool
 
 	if (depthOnly) 
 	{
-		devCon->ClearDepthStencilView(_depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+		devCon->ClearDepthStencilView(depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 		return;
 	}
 
-	devCon->ClearRenderTargetView(_renderTargetView, color);
-	devCon->ClearDepthStencilView(_depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	devCon->ClearRenderTargetView(renderTargetView, color);
+	devCon->ClearDepthStencilView(depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 }

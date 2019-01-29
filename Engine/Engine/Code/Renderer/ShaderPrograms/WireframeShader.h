@@ -16,9 +16,9 @@ public:
 	// renders all meshes to the depth map
 	void RenderWireFrame(std::vector<Mesh*>& meshes);
 
-	// get byte code from shaders
-	ID3D10Blob*& GetVertexShaderByteCode() { return _vertexShaderByteCode; }
-	ID3D10Blob*& GetPixelShaderByteCode() { return _pixelShaderByteCode; }
+	// the shader bytecode
+	ID3D10Blob* vertexShaderByteCode;
+	ID3D10Blob* pixelShaderByteCode;
 
 private:
 
@@ -28,10 +28,6 @@ private:
 
 	// constant buffers
 	ID3D11Buffer* _constantBufferVertex;
-
-	// the shader bytecode
-	ID3D10Blob* _vertexShaderByteCode;
-	ID3D10Blob* _pixelShaderByteCode;
 
 	// constant data structure
 	struct ConstantVertex

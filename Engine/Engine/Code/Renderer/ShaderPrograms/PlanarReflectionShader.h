@@ -21,6 +21,10 @@ public:
 	void Render(std::vector<Mesh*>& reflectionMeshes);
 	void ShowDebugQuads();
 
+	// the shader bytecode
+	ID3D10Blob* planarVertexShaderByteCode;
+	ID3D10Blob* planarPixelShaderByteCode;
+
 private:
 	
 	// compiled shaders
@@ -31,10 +35,6 @@ private:
 	// constant buffers
 	ID3D11Buffer* _CBVertex;
 	ID3D11Buffer* _CBReflect;
-
-	// the shader bytecode
-	ID3D10Blob* _planarVertexShaderByteCode;
-	ID3D10Blob* _planarPixelShaderByteCode;
 
 	struct CBVertex
 	{

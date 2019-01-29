@@ -28,48 +28,39 @@ void Input::InitializeInputDevices(HINSTANCE hinstance, HWND hwnd)
 
 	// create directinput interface
 	result = DirectInput8Create(hinstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&_directInput, NULL);
-	if (FAILED(result))
-		printf("failed to create directInput interface\n");
+	if (FAILED(result)) printf("failed to create directInput interface\n");
 
 	// create keyboard device 
 	result = _directInput->CreateDevice(GUID_SysKeyboard, &_keyboard, NULL);
-	if (FAILED(result))
-		printf("failed to create keyboard interface\n");
+	if (FAILED(result)) printf("failed to create keyboard interface\n");
 
 	// set keyboard data format to defualt
 	result = _keyboard->SetDataFormat(&c_dfDIKeyboard);
-	if (FAILED(result))
-		printf("failed to set data format for keyboard\n");
+	if (FAILED(result)) printf("failed to set data format for keyboard\n");
 
 	// set application to exclusivly receive input when in main focus
 	result = _keyboard->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_EXCLUSIVE);
-	if (FAILED(result))
-		printf("failed to set cooperative level for keyboard\n");
+	if (FAILED(result)) printf("failed to set cooperative level for keyboard\n");
 	
 	// aquire acces to keyboard
 	result = _keyboard->Acquire();
-	if (FAILED(result))
-		printf("failed to get acces over keyboard\n");
+	if (FAILED(result)) printf("failed to get acces over keyboard\n");
 
 	// create mouse device
 	result = _directInput->CreateDevice(GUID_SysMouse, &_mouse, NULL);
-	if (FAILED(result))
-		printf("failed to create mouse interface\n");
+	if (FAILED(result)) printf("failed to create mouse interface\n");
 
 	// set mouse data format to default
 	result = _mouse->SetDataFormat(&c_dfDIMouse);
-	if (FAILED(result))
-		printf("failed to set data format for mouise\n");
+	if (FAILED(result)) printf("failed to set data format for mouise\n");
 
 	// mouse can be used by other applications even when this window is in foreground
 	result = _mouse->SetCooperativeLevel(hwnd, DISCL_BACKGROUND | DISCL_NONEXCLUSIVE);
-	if (FAILED(result))
-		printf("failed to set cooperative level for mouse\n");
+	if (FAILED(result)) printf("failed to set cooperative level for mouse\n");
 
 	// aquire acces to keyboard
 	result = _mouse->Acquire();
-	if (FAILED(result))
-		printf("failed to get acces over mouse\n");	
+	if (FAILED(result)) printf("failed to get acces over mouse\n");	
 }
 
 void Input::Update() 

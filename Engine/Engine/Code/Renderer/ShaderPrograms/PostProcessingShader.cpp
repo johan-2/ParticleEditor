@@ -15,12 +15,12 @@
 PostProcessingShader::PostProcessingShader()
 {
 	// create and compile shaders
-	SHADER_HELPERS::CreateVertexShader(L"Shaders/PostProcess/vertexPostProcessing.vs",  _vertexPostProcessingShader,   _vertexPostProcessingShaderByteCode);
-	SHADER_HELPERS::CreatePixelShader(L"Shaders/PostProcess/pixelPostProcessingHDR.ps", _pixelPostProcessingHDRShader, _pixelPostProcessingHDRShaderByteCode);
-	SHADER_HELPERS::CreateVertexShader(L"Shaders/PostProcess/vertexBlur.vs",            _vertexBlurShader,             _vertexBlurShaderByteCode);
-	SHADER_HELPERS::CreatePixelShader(L"Shaders/PostProcess/pixelBlur.ps",              _pixelBlurShader,              _pixelBlurShaderByteCode);
-	SHADER_HELPERS::CreatePixelShader(L"Shaders/PostProcess/pixelPostProcessingSDR.ps", _pixelPostProcessingSDRShader, _pixelPostProcessingSDRShaderByteCode);
-	SHADER_HELPERS::CreateComputeShader(L"Shaders/PostProcess/computeBrightness.cs",    _computeBrightnessShader,      _computeBrightnessShaderByteCode);	
+	SHADER_HELPERS::CreateVertexShader(L"Shaders/PostProcess/vertexPostProcessing.vs",  _vertexPostProcessingShader,   vertexPostProcessingShaderByteCode);
+	SHADER_HELPERS::CreatePixelShader(L"Shaders/PostProcess/pixelPostProcessingHDR.ps", _pixelPostProcessingHDRShader, pixelPostProcessingHDRShaderByteCode);
+	SHADER_HELPERS::CreateVertexShader(L"Shaders/PostProcess/vertexBlur.vs",            _vertexBlurShader,             vertexBlurShaderByteCode);
+	SHADER_HELPERS::CreatePixelShader(L"Shaders/PostProcess/pixelBlur.ps",              _pixelBlurShader,              pixelBlurShaderByteCode);
+	SHADER_HELPERS::CreatePixelShader(L"Shaders/PostProcess/pixelPostProcessingSDR.ps", _pixelPostProcessingSDRShader, pixelPostProcessingSDRShaderByteCode);
+	SHADER_HELPERS::CreateComputeShader(L"Shaders/PostProcess/computeBrightness.cs",    _computeBrightnessShader,      computeBrightnessShaderByteCode);	
 
 	// create constant buffers
 	SHADER_HELPERS::CreateConstantBuffer(_blurVertexConstant);
@@ -45,12 +45,12 @@ PostProcessingShader::~PostProcessingShader()
 	_computeBrightnessShader->Release();
 	_pixelPostProcessingSDRShader->Release();
 
-	_vertexPostProcessingShaderByteCode->Release();
-	_pixelPostProcessingHDRShaderByteCode->Release();
-	_vertexBlurShaderByteCode->Release();
-	_pixelBlurShaderByteCode->Release();
-	_computeBrightnessShaderByteCode->Release();
-	_pixelPostProcessingSDRShaderByteCode->Release();
+	vertexPostProcessingShaderByteCode->Release();
+	pixelPostProcessingHDRShaderByteCode->Release();
+	vertexBlurShaderByteCode->Release();
+	pixelBlurShaderByteCode->Release();
+	computeBrightnessShaderByteCode->Release();
+	pixelPostProcessingSDRShaderByteCode->Release();
 
 	_brightnessResources.SRV->Release();
 	_brightnessResources.UAV->Release();
@@ -66,8 +66,8 @@ void PostProcessingShader::CreateBloomBlurRenderTextures()
 	// delete old ones if exist and also get ptrs to the textures that 
 	// could be used displaying debug quads
 	if (_bloomHorizontalBlurPass1)   delete _bloomHorizontalBlurPass1;
-	if (_bloomVerticalBlurPass1)   { oldp1 = _bloomVerticalBlurPass1->GetRenderTargetSRV(); delete _bloomVerticalBlurPass1;}
-	if (_bloomHorizontalBlurPass2) { oldp2 = _bloomVerticalBlurPass2->GetRenderTargetSRV(); delete _bloomHorizontalBlurPass2;}
+	if (_bloomVerticalBlurPass1)   { oldp1 = _bloomVerticalBlurPass1->renderTargetSRV; delete _bloomVerticalBlurPass1;}
+	if (_bloomHorizontalBlurPass2) { oldp2 = _bloomVerticalBlurPass2->renderTargetSRV; delete _bloomHorizontalBlurPass2;}
 	if (_bloomVerticalBlurPass2)     delete _bloomVerticalBlurPass2;
 
 	// create new render textures
@@ -78,8 +78,8 @@ void PostProcessingShader::CreateBloomBlurRenderTextures()
 
 	// check if some of the old textures was used in the debug quads
 	// if a match is found it will give it a ptr to the new texture instead
-	Systems::renderer->debugQuadHandler->ReplaceTexture(oldp1, _bloomVerticalBlurPass1->GetRenderTargetSRV());
-	Systems::renderer->debugQuadHandler->ReplaceTexture(oldp2, _bloomVerticalBlurPass2->GetRenderTargetSRV());
+	Systems::renderer->debugQuadHandler->ReplaceTexture(oldp1, _bloomVerticalBlurPass1->renderTargetSRV);
+	Systems::renderer->debugQuadHandler->ReplaceTexture(oldp2, _bloomVerticalBlurPass2->renderTargetSRV);
 }
 
 void PostProcessingShader::createDofRenderTextures()
@@ -106,15 +106,20 @@ void PostProcessingShader::Render(ScreenQuad* quad, ID3D11ShaderResourceView* Sc
 
 		// blur the brightness map
 		_bloomMap = RenderBlurMap(_brightnessResources.SRV, PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_1, _bloomHorizontalBlurPass1, _bloomVerticalBlurPass1);
+
+		// if set to two pass blur we blur the texture from first pass
 		if (PostProcessing::BLOOM_USE_TWO_PASS_BLUR)
-			_bloomMap = RenderBlurMap(_bloomVerticalBlurPass1->GetRenderTargetSRV(), PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_2, _bloomHorizontalBlurPass2, _bloomVerticalBlurPass2);
+			_bloomMap = RenderBlurMap(_bloomVerticalBlurPass1->renderTargetSRV, PostProcessing::BLOOM_BLUR_SCALE_DOWN_PASS_2, _bloomHorizontalBlurPass2, _bloomVerticalBlurPass2);
 	}
 
 	if (PostProcessing::APPLY_DEPTH_OF_FIELD)
 		_dofMap = RenderBlurMap(SceneImage, 1, _dofHorizontalBlurPass, _dofVerticalBlurPass);
 
+	// render the final post process effects and apply tonemapping
 	RenderFinalHDR(SceneImage, sceneDepth);
-	RenderFinalSDR(_sceneSDR->GetRenderTargetSRV());
+
+	// render the final post processing effects that need to be done in LDR space
+	RenderFinalSDR(_sceneSDR->renderTargetSRV);
 }
 
 void PostProcessingShader::ComputeBrightnessMap(ID3D11ShaderResourceView* originalImage)
@@ -187,7 +192,7 @@ ID3D11ShaderResourceView* PostProcessingShader::RenderBlurMap(ID3D11ShaderResour
 	SHADER_HELPERS::UpdateConstantBuffer((void*)&constantVertex, sizeof(ConstantBlurVertex), _blurVertexConstant);
 
 	// get and set the horizontaly blurred texture
-	ID3D11ShaderResourceView* hBlur1SRV = horizontal->GetRenderTargetSRV();
+	ID3D11ShaderResourceView* hBlur1SRV = horizontal->renderTargetSRV;
 	devCon->PSSetShaderResources(0, 1, &hBlur1SRV);
 
 	// draw vertical pass
@@ -196,7 +201,7 @@ ID3D11ShaderResourceView* PostProcessingShader::RenderBlurMap(ID3D11ShaderResour
 	devCon->PSSetShaderResources(0, 1, nullSRV);
 
 	// return blurred image
-	return vertical->GetRenderTargetSRV();
+	return vertical->renderTargetSRV;
 }
 
 void PostProcessingShader::RenderFinalHDR(ID3D11ShaderResourceView* SceneImage, ID3D11ShaderResourceView* sceneDepth)
@@ -277,6 +282,6 @@ void PostProcessingShader::ShowAllDebugQuads()
 }
 
 void PostProcessingShader::ShowBrightnessMapDebugQuad() { Systems::renderer->debugQuadHandler->AddDebugQuad(_brightnessResources.SRV); }
-void PostProcessingShader::ShowBloomBlurP1DebugQuad()   { Systems::renderer->debugQuadHandler->AddDebugQuad(_bloomVerticalBlurPass1->GetRenderTargetSRV()); }
-void PostProcessingShader::ShowBloomBlurP2DebugQuad()   { Systems::renderer->debugQuadHandler->AddDebugQuad(_bloomVerticalBlurPass2->GetRenderTargetSRV()); }
-void PostProcessingShader::ShowDofMapDebugQuad()        { Systems::renderer->debugQuadHandler->AddDebugQuad(_dofVerticalBlurPass->GetRenderTargetSRV()); }
+void PostProcessingShader::ShowBloomBlurP1DebugQuad()   { Systems::renderer->debugQuadHandler->AddDebugQuad(_bloomVerticalBlurPass1->renderTargetSRV); }
+void PostProcessingShader::ShowBloomBlurP2DebugQuad()   { Systems::renderer->debugQuadHandler->AddDebugQuad(_bloomVerticalBlurPass2->renderTargetSRV); }
+void PostProcessingShader::ShowDofMapDebugQuad()        { Systems::renderer->debugQuadHandler->AddDebugQuad(_dofVerticalBlurPass->renderTargetSRV); }

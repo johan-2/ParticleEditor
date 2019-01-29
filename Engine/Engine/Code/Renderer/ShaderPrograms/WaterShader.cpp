@@ -21,8 +21,8 @@
 WaterShader::WaterShader()
 {
 	//create shaders
-	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexForwardWater.vs", _waterVertexShader, _waterVertexShaderByteCode);
-	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelForwardWater.ps",   _waterPixelShader, _waterPixelShaderByteCode);
+	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexForwardWater.vs", _waterVertexShader, waterVertexShaderByteCode);
+	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelForwardWater.ps",   _waterPixelShader, waterPixelShaderByteCode);
 
 	// create constant buffers
 	SHADER_HELPERS::CreateConstantBuffer(_CBVertex);
@@ -36,8 +36,8 @@ WaterShader::~WaterShader()
 	_waterVertexShader->Release();
 	_waterPixelShader->Release();
 
-	_waterVertexShaderByteCode->Release();
-	_waterPixelShaderByteCode->Release();
+	waterVertexShaderByteCode->Release();
+	waterPixelShaderByteCode->Release();
 
 	_CBVertex->Release();
 

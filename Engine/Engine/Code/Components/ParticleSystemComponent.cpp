@@ -20,7 +20,7 @@
 
 ParticleSystemComponent::ParticleSystemComponent() : IComponent(PARTICLE_COMPONENT),
 _hasLifetime(false),
-_numEmitters(0),
+numEmitters(0),
 _previousPosition(XMFLOAT3(0,0,0))
 {
 }
@@ -32,7 +32,7 @@ ParticleSystemComponent::~ParticleSystemComponent()
 	delete[] _emitterData;
 	delete[] _settings;
 
-	for (int i = 0; i < _numEmitters; i++)
+	for (int i = 0; i < numEmitters; i++)
 	{
 		_vertexBuffer[i]->Release();
 		_indexBuffer[i]->Release();
@@ -60,11 +60,11 @@ void ParticleSystemComponent::Init(const char* particleFile)
 
 void ParticleSystemComponent::Init(std::vector<ParticleSettings> settings)
 {
-	_numEmitters = settings.size();
-	_settings    = new ParticleSettings[_numEmitters];
+	numEmitters = settings.size();
+	_settings    = new ParticleSettings[numEmitters];
 
 	// set all settings
-	for (int i = 0; i < _numEmitters; i++)
+	for (int i = 0; i < numEmitters; i++)
 		_settings[i] = settings[i];
 
 	// create arrays of memory
@@ -77,18 +77,18 @@ void ParticleSystemComponent::Init(std::vector<ParticleSettings> settings)
 void ParticleSystemComponent::AllocateMemory()
 {
 	// allocate memory for all settings
-	_vertexBuffer         = new ID3D11Buffer*[_numEmitters];
-	_indexBuffer          = new ID3D11Buffer*[_numEmitters];
-	_instanceBuffer       = new ID3D11Buffer*[_numEmitters];
+	_vertexBuffer         = new ID3D11Buffer*[numEmitters];
+	_indexBuffer          = new ID3D11Buffer*[numEmitters];
+	_instanceBuffer       = new ID3D11Buffer*[numEmitters];
 
-	_particleInstanceData = new ParticleInstanceType*[_numEmitters];
-	_particleData         = new ParticleData*[_numEmitters];
+	_particleInstanceData = new ParticleInstanceType*[numEmitters];
+	_particleData         = new ParticleData*[numEmitters];
 
-	_emitterData          = new EmitterData[_numEmitters];
-	_texture              = new ID3D11ShaderResourceView*[_numEmitters] {nullptr};
+	_emitterData          = new EmitterData[numEmitters];
+	textures              = new ID3D11ShaderResourceView*[numEmitters] {nullptr};
 
 	// allocate arrays for each particle
-	for (int i = 0; i < _numEmitters; i++)
+	for (int i = 0; i < numEmitters; i++)
 	{
 		_particleInstanceData[i] = new ParticleInstanceType[_settings[i].numParticles];
 		_particleData[i]         = new ParticleData[_settings[i].numParticles];
@@ -104,7 +104,7 @@ void ParticleSystemComponent::SetUp()
 	_transform = GetComponent<TransformComponent>();
 
 	// loop over all emitters and do neccesary setup
-	for (int i =0; i < _numEmitters; i++)
+	for (int i =0; i < numEmitters; i++)
 	{				
 		// if in burst mode we use one timer for every particle per emitter
 		_emitterData[i].lifeTime = _settings[i].particleLifetime;
@@ -118,7 +118,7 @@ void ParticleSystemComponent::SetUp()
 		
 		// get texture if string is not empty
 		// else get defualt white texture
-		_texture[i] = _settings[i].texturePath.c_str() != "" ? Systems::texturePool->GetTexture(wtp.c_str()) : Systems::texturePool->GetTexture(L"textures/defaultDiffuse.dds");
+		textures[i] = _settings[i].texturePath.c_str() != "" ? Systems::texturePool->GetTexture(wtp.c_str()) : Systems::texturePool->GetTexture(L"textures/defaultDiffuse.dds");
 
 		// check if emitter have a limited lifetime or not
 		// if one emitter has lifetime we will destroy the
@@ -329,7 +329,7 @@ void ParticleSystemComponent::Update(const float& delta)
 	UpdateRotations(delta);
 
 	// sort particles if the emitter uses alpha blend
-	for(int i =0; i< _numEmitters; i++)
+	for(int i =0; i< numEmitters; i++)
 		if(_settings[i].BLEND == BLEND_STATE::BLEND_ALPHA)
 		   SortParticles(i);
 
@@ -345,7 +345,7 @@ void ParticleSystemComponent::UpdateVelocity(const float& delta)
 	XMFLOAT3 velocityVector;
 	XMStoreFloat3(&velocityVector, XMVectorSubtract(XMLoadFloat3(&EmitterPos), XMLoadFloat3(&_previousPosition)));
 
-	for (int i = 0; i < _numEmitters; i++)
+	for (int i = 0; i < numEmitters; i++)
 	{
 		for (int y =0; y < _settings[i].numParticles; y++)
 		{
@@ -401,7 +401,7 @@ void ParticleSystemComponent::UpdateVelocity(const float& delta)
 
 void ParticleSystemComponent::UpdateLerps(const float& delta)
 {
-	for (int i = 0; i < _numEmitters; i++)
+	for (int i = 0; i < numEmitters; i++)
 	{
 		for (int y =0; y < _settings[i].numParticles; y++)
 		{
@@ -428,7 +428,7 @@ void ParticleSystemComponent::UpdateLerps(const float& delta)
 
 void ParticleSystemComponent::UpdateLifeTime(const float& delta)
 {
-	for (int i =0; i < _numEmitters; i++)
+	for (int i =0; i < numEmitters; i++)
 	{
 		// if has a lifetime, countdown and remove entity
 		if (_hasLifetime)
@@ -521,7 +521,7 @@ void ParticleSystemComponent::UpdateRotations(const float& delta)
 
 	XMFLOAT4X4 rotationMatrix; XMStoreFloat4x4(&rotationMatrix, XMMatrixIdentity());
 
-	 for(int i =0; i < _numEmitters; i++)
+	 for(int i =0; i < numEmitters; i++)
 	 {
 		 if (_settings[i].rotationByVelocity) // billboarding with z rotation by velocityvector
 		 {
@@ -592,7 +592,7 @@ void ParticleSystemComponent::UpdateBuffer()
 	XMFLOAT3 color;
 	float alpha;
 			
-	for (int i =0; i < _numEmitters; i++)
+	for (int i =0; i < numEmitters; i++)
 	{
 		for (int y = 0; y < _settings[i].numParticles; y++)
 		{
@@ -671,13 +671,13 @@ void ParticleSystemComponent::ParsefromJson(const char* file)
 	assert(d.IsObject());
 
 	assert(d["numEmitters"].IsInt());
-	_numEmitters = d["numEmitters"].GetInt();
+	numEmitters = d["numEmitters"].GetInt();
 
-	_settings = new ParticleSettings[_numEmitters];
+	_settings = new ParticleSettings[numEmitters];
 	
 	std::string key = "";
 
-	for(int i =0; i < _numEmitters; i++)
+	for(int i =0; i < numEmitters; i++)
 	{
 		std::string index = std::to_string(i);
 

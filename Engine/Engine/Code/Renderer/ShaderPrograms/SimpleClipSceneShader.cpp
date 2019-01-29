@@ -18,9 +18,9 @@
 SimpleClipSceneShader::SimpleClipSceneShader()
 {
 	// create shaders
-	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexSimpleClip.vs", _vertexShader, _vertexShaderByteCode);
-	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexSimpleClipInstanced.vs", _vertexShaderInstanced, _vertexShaderByteCodeInstanced);
-	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelSimpleClip.ps",   _pixelShader,  _pixelShaderByteCode);
+	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexSimpleClip.vs", _vertexShader, vertexShaderByteCode);
+	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexSimpleClipInstanced.vs", _vertexShaderInstanced, vertexShaderByteCodeInstanced);
+	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelSimpleClip.ps",   _pixelShader,  pixelShaderByteCode);
 
 	// create constant buffers
 	SHADER_HELPERS::CreateConstantBuffer(_CBVertex);
@@ -37,9 +37,9 @@ SimpleClipSceneShader::~SimpleClipSceneShader()
 	_vertexShaderInstanced->Release();
 	_pixelShader->Release();
 
-	_vertexShaderByteCode->Release();
-	_vertexShaderByteCodeInstanced->Release();
-	_pixelShaderByteCode->Release();
+	vertexShaderByteCode->Release();
+	vertexShaderByteCodeInstanced->Release();
+	pixelShaderByteCode->Release();
 
 	_CBVertex->Release();
 }
@@ -216,7 +216,7 @@ void SimpleClipSceneShader::RenderScene(std::vector<Mesh*>& opaqueMeshes, std::v
 	if (includeParticles)
 	{
 		Renderer& renderer = *Systems::renderer;
-		const std::vector<ParticleSystemComponent*>& particles = renderer.GetParticles();
+		std::vector<ParticleSystemComponent*>& particles = renderer.GetParticles();
 
 		if (particles.size() > 0)
 		{

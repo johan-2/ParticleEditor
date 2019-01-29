@@ -26,31 +26,26 @@ void HardwareProperties::GetHardwareInfo(int screenWidth, int screenHeight)
 
 	// Create factory
 	result = CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&factory);
-	if (FAILED(result))
-		DX_ERROR::PrintError(result, "failed to create DXGI factory");
+	if (FAILED(result)) DX_ERROR::PrintError(result, "failed to create DXGI factory");
 
 	// use the factory to create a adapter for the primary graphics interface(video card), we can then use the adapter to get info about our monitor/video memory etc
 	result = factory->EnumAdapters(0, &adapter);
-	if (FAILED(result))
-		DX_ERROR::PrintError(result, "failed to create adapter");
+	if (FAILED(result)) DX_ERROR::PrintError(result, "failed to create adapter");
 
 	// get the primary adapter output
 	result = adapter->EnumOutputs(0, &adapterOutput);
-	if (FAILED(result))
-		DX_ERROR::PrintError(result, "failed to create adapter output");
+	if (FAILED(result)) DX_ERROR::PrintError(result, "failed to create adapter output");
 
 	//get the number of modes that fit the DXGI_FORMATR8G8B8A8_UNORM display format for the adapter output
 	result = adapterOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, NULL);
-	if (FAILED(result))
-		DX_ERROR::PrintError(result, "failed to get display modes");
+	if (FAILED(result)) DX_ERROR::PrintError(result, "failed to get display modes");
 
 	// create a list to hold all the possible modes for this monitor/videocard combination
 	displayModeList = new DXGI_MODE_DESC[numModes];
 
 	// get all displaymodes
 	result = adapterOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, displayModeList);
-	if (FAILED(result))
-		DX_ERROR::PrintError(result, "failed to create output mode list");
+	if (FAILED(result)) DX_ERROR::PrintError(result, "failed to create output mode list");
 
 	// save the monitors refreshrate to be used if Vsync is enabled	
 	for (int i = 0; i < numModes; i++)

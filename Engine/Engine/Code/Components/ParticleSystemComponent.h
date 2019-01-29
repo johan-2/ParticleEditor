@@ -114,22 +114,22 @@ public:
 	BLEND_STATE GetBlendState(int index) { return _settings[index].BLEND; }
 
 	// get texture by emitter index in this system
-	ID3D11ShaderResourceView* GetTexture(int index) { return _texture[index]; }
+	ID3D11ShaderResourceView* GetTexture(int index) { return textures[index]; }
 
 	// get num particles by emitter index in this system
 	unsigned int GetNumParticles(int index) { return _settings[index].numParticles; }
 
-	// get num emitters in this system
-	unsigned int GetNumEmitters() { return _numEmitters; }
-
 	// get particle settings by emitter index
 	ParticleSettings GetSettings(int index){ return _settings[index]; }
 
-	// get all textures in this system
-	ID3D11ShaderResourceView** GetTextureArray() { return _texture; }
-
 	// get the position of the system transform
 	XMFLOAT3 GetSystemPosition() { return _transform->position; }
+
+	// how many emitter does this system have
+	unsigned int numEmitters;
+
+	// texture array, one per emitter in system
+	ID3D11ShaderResourceView** textures;
 
 private:
 
@@ -165,12 +165,6 @@ private:
 	float    GetRandomFloat(float min, float max);
 	float    LerpFloat(float a, float b, float f);
 	XMFLOAT3 GetDirectionLocal(XMFLOAT3 direction);
-
-	// texture array, one per emitter in system
-	ID3D11ShaderResourceView** _texture;
-
-	// how many emitter does this system have
-	unsigned int _numEmitters;
 		
 	// does this system have a lifetime
 	// and should be destroyed after the time

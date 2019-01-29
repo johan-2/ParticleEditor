@@ -130,12 +130,10 @@ void GuiManager::CreateBuffers()
 	HRESULT result;
 
 	result = device->CreateBuffer(&vertexDesc, NULL, &vertexBuffer);
-	if (FAILED(result))
-		DX_ERROR::PrintError(result, "failed to create vertex buffer for GUI");
+	if (FAILED(result)) DX_ERROR::PrintError(result, "failed to create vertex buffer for GUI");
 
 	result = device->CreateBuffer(&indexDesc, NULL, &indexBuffer);
-	if (FAILED(result))
-		DX_ERROR::PrintError(result, "failed to create index buffer for GUI");
+	if (FAILED(result)) DX_ERROR::PrintError(result, "failed to create index buffer for GUI");
 }
 
 void GuiManager::Update()

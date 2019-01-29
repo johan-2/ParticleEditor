@@ -47,22 +47,20 @@ DeferredShader::~DeferredShader()
 
 	_CBGeometryVertex->Release();
 	_CBMisc->Release();
+	_CBGeometryVertexInstanced->Release();
+	_CBGeometryPixel->Release();
 }
 
 void DeferredShader::RenderGeometry(std::vector<Mesh*>& meshes)
 {
-	// get DXManager
-	DXManager& DXM    = *Systems::dxManager;
-	CameraManager& CM = *Systems::cameraManager;
+	// get data needed
+	DXManager& DXM               = *Systems::dxManager;
+	CameraManager& CM            = *Systems::cameraManager;
+	ID3D11DeviceContext*& devCon = DXM.devCon;
+	CameraComponent*& camera     = CM.currentCameraGame;
 
 	// render opaque objects here only
 	DXM.blendStates->SetBlendState(BLEND_STATE::BLEND_OPAQUE);
-
-	// get devicecontext
-	ID3D11DeviceContext*& devCon = DXM.devCon;
-
-	// get the game camera
-	CameraComponent* camera = CM.currentCameraGame;
 
 	// set shaders
 	devCon->VSSetShader(_vertexGeometryShader, NULL, 0);
@@ -84,27 +82,30 @@ void DeferredShader::RenderGeometry(std::vector<Mesh*>& meshes)
 	size_t size = meshes.size();
 	for (int i = 0; i < size; i++)
 	{
+		// get mesh
+		Mesh*& mesh = meshes[i];
+
 		// upload vertex and indexbuffers
-		meshes[i]->UploadBuffers();
+		mesh->UploadBuffers();
 
 		// set vertex constantdata
-		XMStoreFloat4x4(&vertexData.world,         XMLoadFloat4x4(&meshes[i]->GetWorldMatrixTrans()));
-		XMStoreFloat4x4(&vertexData.worldViewProj, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&meshes[i]->GetWorldMatrix(), &camera->viewProjMatrix)));
-		XMStoreFloat2(&vertexData.UVOffset,        XMLoadFloat2(&meshes[i]->uvOffset));
+		XMStoreFloat4x4(&vertexData.world,         XMLoadFloat4x4(&mesh->GetWorldMatrixTrans()));
+		XMStoreFloat4x4(&vertexData.worldViewProj, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&mesh->GetWorldMatrix(), &camera->viewProjMatrix)));
+		XMStoreFloat2(&vertexData.UVOffset,        XMLoadFloat2(&mesh->uvOffset));
 
 		// set pixel constant data
-		pixelData.hasHeightmap = meshes[i]->hasHeightmap;
-		pixelData.heightScale  = meshes[i]->heightMapScale;
+		pixelData.hasHeightmap = mesh->hasHeightmap;
+		pixelData.heightScale  = mesh->heightMapScale;
 
 		// update the constant buffer with the mesh data
 		SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(CBGeometryVertex), _CBGeometryVertex);
 		SHADER_HELPERS::UpdateConstantBuffer((void*)&pixelData,  sizeof(CBGeometryPixel),  _CBGeometryPixel);
 
 		// set textures
-		devCon->PSSetShaderResources(0, 4, meshes[i]->baseTextures);
+		devCon->PSSetShaderResources(0, 4, mesh->baseTextures);
 
 		// draw
-		devCon->DrawIndexed(meshes[i]->numIndices, 0, 0);
+		devCon->DrawIndexed(mesh->numIndices, 0, 0);
 	}
 
 	// unbind so we can use resources as input in next stages
@@ -115,17 +116,13 @@ void DeferredShader::RenderGeometry(std::vector<Mesh*>& meshes)
 void DeferredShader::renderGeometryInstanced(std::vector<InstancedModel*> models)
 {
 	// get DXManager
-	DXManager& DXM    = *Systems::dxManager;
-	CameraManager& CM = *Systems::cameraManager;
+	DXManager& DXM               = *Systems::dxManager;
+	CameraManager& CM            = *Systems::cameraManager;
+	ID3D11DeviceContext*& devCon = DXM.devCon;
+	CameraComponent*& camera     = CM.currentCameraGame;
 
 	// render opaque objects here only
-	DXM.blendStates->SetBlendState(BLEND_STATE::BLEND_OPAQUE);
-
-	// get devicecontext
-	ID3D11DeviceContext*& devCon = DXM.devCon;
-
-	// get the game camera
-	CameraComponent* camera = CM.currentCameraGame;
+	DXM.blendStates->SetBlendState(BLEND_STATE::BLEND_OPAQUE);	
 
 	// set shaders
 	devCon->VSSetShader(_vertexGeometryShaderInstanced, NULL, 0);
@@ -149,28 +146,35 @@ void DeferredShader::renderGeometryInstanced(std::vector<InstancedModel*> models
 	size_t size = models.size();
 	for (int i = 0; i < size; i++)	
 	{
-		models[i]->UploadInstances();
+		// get instanced model
+		InstancedModel*& model = models[i];
 
-		const std::vector<Mesh*>& meshes = models[i]->meshes;
+		// upload instance data
+		model->UploadInstances();
+
+		std::vector<Mesh*>& meshes = model->meshes;
 		size_t meshesSize = meshes.size();
 		for (int y = 0; y < meshesSize; y++)
 		{
+			// get mesh
+			Mesh*& mesh = meshes[y];
+
 			// set pixel constant data
-			pixelData.hasHeightmap = meshes[y]->hasHeightmap;
-			pixelData.heightScale  = meshes[y]->heightMapScale;
+			pixelData.hasHeightmap = mesh->hasHeightmap;
+			pixelData.heightScale  = mesh->heightMapScale;
 			SHADER_HELPERS::UpdateConstantBuffer((void*)&pixelData, sizeof(CBGeometryPixel), _CBGeometryPixel);
 
 			// Set the vertex buffer in slot 0
-			devCon->IASetVertexBuffers(0, 1, &meshes[y]->vertexBuffer, models[i]->strides, models[i]->offsets);
+			devCon->IASetVertexBuffers(0, 1, &mesh->vertexBuffer, model->strides, model->offsets);
 
 			// Set the index buffer 
-			devCon->IASetIndexBuffer(meshes[y]->indexBuffer, DXGI_FORMAT_R32_UINT, 0);
+			devCon->IASetIndexBuffer(mesh->indexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
 			// set textures
-			devCon->PSSetShaderResources(0, 4, meshes[y]->baseTextures);
+			devCon->PSSetShaderResources(0, 4, mesh->baseTextures);
 
 			// draw all instances of this mesh
-			devCon->DrawIndexedInstanced(meshes[y]->numIndices, models[i]->numInstances, 0, 0, 0);
+			devCon->DrawIndexedInstanced(mesh->numIndices, model->numInstances, 0, 0, 0);
 		}									
 	}
 
@@ -181,15 +185,11 @@ void DeferredShader::renderGeometryInstanced(std::vector<InstancedModel*> models
 
 void DeferredShader::RenderLightning(GBuffer*& gBuffer)
 {
-	// get DXManager
-	DXManager& DXM    = *Systems::dxManager;
-	LightManager& LM  = *Systems::lightManager;
-	CameraManager& CM = *Systems::cameraManager;
-
-	// get devicecontext
-	ID3D11DeviceContext*& devCon = DXM.devCon;
-
-	// get cameras
+	// get data needed
+	DXManager& DXM                = *Systems::dxManager;
+	LightManager& LM              = *Systems::lightManager;
+	CameraManager& CM             = *Systems::cameraManager;
+	ID3D11DeviceContext*& devCon  = DXM.devCon;
 	CameraComponent*& camera      = CM.currentCameraGame;
 	CameraComponent*& cameraLight = CM.currentCameraDepthMap;
 	const XMFLOAT3& camPos        = camera->GetComponent<TransformComponent>()->position;
@@ -209,12 +209,8 @@ void DeferredShader::RenderLightning(GBuffer*& gBuffer)
 	// update buffer
 	SHADER_HELPERS::UpdateConstantBuffer((void*)&miscPixel, sizeof(CBMiscPixel), _CBMisc);
 
-	// get Gbuffer textures and depthmap
-	ID3D11ShaderResourceView**& gBufferTextures = gBuffer->SRVArray;
-	ID3D11ShaderResourceView* depthMap = cameraLight->renderTexture;
-
-	// add all to one array
-	ID3D11ShaderResourceView* textureArray[5] = { depthMap, gBufferTextures[0], gBufferTextures[1], gBufferTextures[2], gBufferTextures[3] };
+	// add all textures to one array
+	ID3D11ShaderResourceView* textureArray[5] = { cameraLight->renderTexture, gBuffer->SRVArray[0], gBuffer->SRVArray[1], gBuffer->SRVArray[2], gBuffer->SRVArray[3] };
 
 	// set the textures
 	devCon->PSSetShaderResources(0, 5, textureArray);

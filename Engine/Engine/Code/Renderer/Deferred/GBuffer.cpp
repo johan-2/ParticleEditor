@@ -41,7 +41,7 @@ void GBuffer::CreateRenderTargets()
 
 	// allocate array of pointers
 	_renderTargetArray = new ID3D11RenderTargetView*[4];
-	SRVArray          = new ID3D11ShaderResourceView*[4];	
+	SRVArray           = new ID3D11ShaderResourceView*[4];	
 
 	// texture that we will use to create targets
 	ID3D11Texture2D* tex2D;
@@ -83,16 +83,13 @@ void GBuffer::CreateRenderTargets()
 	// create the texture and views for position buffer
 	// position use 16 byte (optimise so we reconstruct position from depth, this whole buffer can then be removed)
 	result = device->CreateTexture2D(&RenderTargetTexDesc, NULL, &tex2D);
-	if (FAILED(result))
-		DX_ERROR::PrintError(result, "failed to create texture2D for GBuffer position");
+	if (FAILED(result)) DX_ERROR::PrintError(result, "failed to create texture2D for GBuffer position");
 	
 	result = device->CreateRenderTargetView(tex2D, &renderTargetViewDesc, &_renderTargetArray[0]);
-	if (FAILED(result))
-		DX_ERROR::PrintError(result, "failed to create render target view for GBuffer position");
+	if (FAILED(result)) DX_ERROR::PrintError(result, "failed to create render target view for GBuffer position");
 
 	result = device->CreateShaderResourceView(tex2D, &resourceViewDesc, &SRVArray[0]);
-	if (FAILED(result))
-		DX_ERROR::PrintError(result, "failed to create SRV for GBuffer position");
+	if (FAILED(result)) DX_ERROR::PrintError(result, "failed to create SRV for GBuffer position");
 
 	tex2D->Release();
 	
@@ -123,19 +120,16 @@ void GBuffer::CreateRenderTargets()
 	resourceViewDesc.Format     = RenderTargetTexDesc.Format;
 
 	// create the texture and views for diffuse and specular buffers
-	for (int i =2; i< 4; i++)
+	for (int i = 2; i< 4; i++)
 	{
 		result = device->CreateTexture2D(&RenderTargetTexDesc, NULL, &tex2D);
-		if (FAILED(result))
-			DX_ERROR::PrintError(result, "failed to create texture2D for diffuse/specualr GBuffer");
+		if (FAILED(result)) DX_ERROR::PrintError(result, "failed to create texture2D for diffuse/specualr GBuffer");
 
 		result = device->CreateRenderTargetView(tex2D, &renderTargetViewDesc, &_renderTargetArray[i]);
-		if (FAILED(result))
-			DX_ERROR::PrintError(result, "failed to create render target view for diffuse/specualr GBuffer");
+		if (FAILED(result)) DX_ERROR::PrintError(result, "failed to create render target view for diffuse/specualr GBuffer");
 
 		result = device->CreateShaderResourceView(tex2D, &resourceViewDesc, &SRVArray[i]);
-		if (FAILED(result))
-			DX_ERROR::PrintError(result, "failed to create SRV for diffuse/specualr GBuffer");
+		if (FAILED(result)) DX_ERROR::PrintError(result, "failed to create SRV for diffuse/specualr GBuffer");
 
 		tex2D->Release();
 	}	

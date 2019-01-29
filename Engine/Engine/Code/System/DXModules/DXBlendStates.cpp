@@ -26,47 +26,47 @@ void DXBlendStates::CreateBlendStates()
 	ZeroMemory(&blendStateDesc, sizeof(D3D11_BLEND_DESC));
 
 	// alpha blending
-	blendStateDesc.RenderTarget[0].BlendEnable = true;
-	blendStateDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
-	blendStateDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
-	blendStateDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
-	blendStateDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
-	blendStateDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
-	blendStateDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+	blendStateDesc.RenderTarget[0].BlendEnable           = true;
+	blendStateDesc.RenderTarget[0].SrcBlend              = D3D11_BLEND_SRC_ALPHA;
+	blendStateDesc.RenderTarget[0].DestBlend             = D3D11_BLEND_INV_SRC_ALPHA;
+	blendStateDesc.RenderTarget[0].BlendOp               = D3D11_BLEND_OP_ADD;
+	blendStateDesc.RenderTarget[0].SrcBlendAlpha         = D3D11_BLEND_ONE;
+	blendStateDesc.RenderTarget[0].DestBlendAlpha        = D3D11_BLEND_ZERO;
+	blendStateDesc.RenderTarget[0].BlendOpAlpha          = D3D11_BLEND_OP_ADD;
 	blendStateDesc.RenderTarget[0].RenderTargetWriteMask = 0x0f;
+
 	result = _device->CreateBlendState(&blendStateDesc, &_blendStateAlpha);
-	if (FAILED(result))
-		DX_ERROR::PrintError(result, "failed to create blend state");
+	if (FAILED(result)) DX_ERROR::PrintError(result, "failed to create blend state");
 		
 	// opaque blending
 	blendStateDesc.RenderTarget[0].BlendEnable = false;
+
 	result = _device->CreateBlendState(&blendStateDesc, &_blendStateOpaque);
-	if (FAILED(result))
-		DX_ERROR::PrintError(result, "failed to create blend state");
+	if (FAILED(result)) DX_ERROR::PrintError(result, "failed to create blend state");
 
 	//additive blending
-	blendStateDesc.RenderTarget[0].BlendEnable = true;
-	blendStateDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
-	blendStateDesc.RenderTarget[0].DestBlend = D3D11_BLEND_ONE;
-	blendStateDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
-	blendStateDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+	blendStateDesc.RenderTarget[0].BlendEnable    = true;
+	blendStateDesc.RenderTarget[0].SrcBlend       = D3D11_BLEND_ONE;
+	blendStateDesc.RenderTarget[0].DestBlend      = D3D11_BLEND_ONE;
+	blendStateDesc.RenderTarget[0].BlendOp        = D3D11_BLEND_OP_ADD;
+	blendStateDesc.RenderTarget[0].SrcBlendAlpha  = D3D11_BLEND_ONE;
 	blendStateDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ONE;
-	blendStateDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+	blendStateDesc.RenderTarget[0].BlendOpAlpha   = D3D11_BLEND_OP_ADD;
+
 	result = _device->CreateBlendState(&blendStateDesc, &_blendStateAdditive);
-	if (FAILED(result))
-		DX_ERROR::PrintError(result, "failed to create blend state");
+	if (FAILED(result)) DX_ERROR::PrintError(result, "failed to create blend state");
 
 	// subtractive blending
-	blendStateDesc.RenderTarget[0].BlendEnable = true;
-	blendStateDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
-	blendStateDesc.RenderTarget[0].DestBlend = D3D11_BLEND_ONE;
-	blendStateDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_REV_SUBTRACT;
-	blendStateDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ZERO;
+	blendStateDesc.RenderTarget[0].BlendEnable    = true;
+	blendStateDesc.RenderTarget[0].SrcBlend       = D3D11_BLEND_ONE;
+	blendStateDesc.RenderTarget[0].DestBlend      = D3D11_BLEND_ONE;
+	blendStateDesc.RenderTarget[0].BlendOp        = D3D11_BLEND_OP_REV_SUBTRACT;
+	blendStateDesc.RenderTarget[0].SrcBlendAlpha  = D3D11_BLEND_ZERO;
 	blendStateDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
-	blendStateDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+	blendStateDesc.RenderTarget[0].BlendOpAlpha   = D3D11_BLEND_OP_ADD;
+
 	result = _device->CreateBlendState(&blendStateDesc, &_blendStateSubtractive);
-	if (FAILED(result))
-		DX_ERROR::PrintError(result, "failed to create blend state");
+	if (FAILED(result)) DX_ERROR::PrintError(result, "failed to create blend state");
 }
 
 // set blend state

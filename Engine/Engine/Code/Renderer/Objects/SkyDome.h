@@ -104,13 +104,20 @@ public:
 	// upload buffers and render
 	void Render(bool noMask = false);
 
-	// set the skybox active/inactive
-	void setActive(bool active) { _isActive = active; }
-
 	void ReadSettings(const char* file);
 
-	SunMoon* GetSoonMoonSettings() { return &_sunMoon; }
-	SkySettings* GetSkySettings()  { return &_skySettings; }
+	// sun data
+	SkySettings skySettings;
+	SunMoon     sunMoon;
+	bool        isActive;
+
+	// the shader bytecode
+	ID3D10Blob* vertexDomeCubeMapShaderByteCode;
+	ID3D10Blob* pixelDomeCubeMapShaderByteCode;
+	ID3D10Blob* vertexDomeColorBlendShaderByteCode;
+	ID3D10Blob* pixelDomeColorBlendShaderByteCode;
+	ID3D10Blob* vertexSunShaderByteCode;
+	ID3D10Blob* pixelSunShaderByteCode;
 
 private:
 
@@ -152,24 +159,8 @@ private:
 	ID3D11VertexShader* _vertexSunShader;
 	ID3D11PixelShader*  _pixelSunShader;
 
-	// the shader bytecode
-	ID3D10Blob* _vertexDomeCubeMapShaderByteCode;
-	ID3D10Blob* _pixelDomeCubeMapShaderByteCode;
-	ID3D10Blob* _vertexDomeColorBlendShaderByteCode;
-	ID3D10Blob* _pixelDomeColorBlendShaderByteCode;
-	ID3D10Blob* _vertexSunShaderByteCode;
-	ID3D10Blob* _pixelSunShaderByteCode;
-
-	// is skybox active
-	bool _isActive;
-
 	// sphere mesh
 	Mesh* _domeMesh;
-
-	// sun data
-	SunMoon _sunMoon;
-
-	SkySettings _skySettings;
 
 	// vertex constant buffer
 	struct CBVertDome

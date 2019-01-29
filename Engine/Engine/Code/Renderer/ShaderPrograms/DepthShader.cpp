@@ -34,19 +34,12 @@ DepthShader::~DepthShader()
 void DepthShader::RenderDepth(std::vector<Mesh*>& meshes)
 {
 	// get dx manager
-	DXManager& DXM    = *Systems::dxManager;
-	CameraManager& CM = *Systems::cameraManager;
+	DXManager& DXM               = *Systems::dxManager;
+	CameraManager& CM            = *Systems::cameraManager;
+	CameraComponent*& camera     = CM.currentCameraDepthMap;
+	ID3D11DeviceContext*& devCon = DXM.devCon;
 
 	DXM.blendStates->SetBlendState(BLEND_STATE::BLEND_ALPHA);
-
-	// get devicecontext
-	ID3D11DeviceContext* devCon = DXM.devCon;
-
-	// constantbuffer structure for vertex data
-	ConstantVertex vertexData;
-
-	// get the camera that will render the depthmap
-	CameraComponent* camera = CM.currentCameraDepthMap;
 
 	// set our shaders
 	devCon->VSSetShader(_vertexShader, NULL, 0);
@@ -55,23 +48,28 @@ void DepthShader::RenderDepth(std::vector<Mesh*>& meshes)
 	// set the vertex constant buffer
 	devCon->VSSetConstantBuffers(0, 1, &_constantBufferVertex);
 
+	// constantbuffer structure for vertex data
+	ConstantVertex vertexData;
+
 	size_t size = meshes.size();
 	for (int i = 0; i < size; i++)
 	{
+		Mesh*& mesh = meshes[i];
+
 		// set world matrix of mesh
-		XMStoreFloat4x4(&vertexData.worldViewProj, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&meshes[i]->GetWorldMatrix(), &camera->viewProjMatrix)));
+		XMStoreFloat4x4(&vertexData.worldViewProj, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&mesh->GetWorldMatrix(), &camera->viewProjMatrix)));
 
 		// update the constant buffer with the vertexdata of this mesh
 		SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(ConstantVertex), _constantBufferVertex);
 
 		// set textures
-		devCon->PSSetShaderResources(0, 1, meshes[i]->baseTextures);
+		devCon->PSSetShaderResources(0, 1, mesh->baseTextures);
 
 		// upload vertices and indices
-		meshes[i]->UploadBuffers();
+		mesh->UploadBuffers();
 
 		// draw
-		devCon->DrawIndexed(meshes[i]->numIndices, 0, 0);
+		devCon->DrawIndexed(mesh->numIndices, 0, 0);
 	}
 
 	// unbind so we can use resources as input in next stages
@@ -81,17 +79,13 @@ void DepthShader::RenderDepth(std::vector<Mesh*>& meshes)
 
 void DepthShader::RenderDepthInstanced(std::vector<InstancedModel*>& models)
 {
-	// get dx manager
-	DXManager& DXM = *Systems::dxManager;
-	CameraManager& CM = *Systems::cameraManager;
-
+	// get data needed
+	DXManager& DXM               = *Systems::dxManager;
+	CameraManager& CM            = *Systems::cameraManager;
+	ID3D11DeviceContext*& devCon = DXM.devCon;	
+	CameraComponent*& camera     = CM.currentCameraDepthMap;
+	
 	DXM.blendStates->SetBlendState(BLEND_STATE::BLEND_ALPHA);
-
-	// get devicecontext
-	ID3D11DeviceContext*& devCon = DXM.devCon;
-
-	// get the camera that will render the depthmap
-	CameraComponent* camera = CM.currentCameraDepthMap;
 
 	// set our shaders
 	devCon->VSSetShader(_vertexShaderInstanced, NULL, 0);
@@ -118,10 +112,8 @@ void DepthShader::RenderDepthInstanced(std::vector<InstancedModel*>& models)
 		{
 			Mesh*& mesh = meshes[y];
 
-			ID3D11Buffer* vertexBuffer = mesh->vertexBuffer;
-
 			// Set the vertex buffer in slot 0
-			devCon->IASetVertexBuffers(0, 1, &vertexBuffer, model->strides, model->offsets);
+			devCon->IASetVertexBuffers(0, 1, &mesh->vertexBuffer, model->strides, model->offsets);
 
 			// Set the index buffer 
 			devCon->IASetIndexBuffer(mesh->indexBuffer, DXGI_FORMAT_R32_UINT, 0);

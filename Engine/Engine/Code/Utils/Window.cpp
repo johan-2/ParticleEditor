@@ -8,16 +8,15 @@ Window::Window(const char* title, unsigned int x, unsigned int y, unsigned int w
 
 Window::~Window()
 {
-	UnregisterClass((LPCSTR)_windowName, _HINSTANCE);
+	UnregisterClass((LPCSTR)windowName, hInstance);
 }
 
 void Window::CreateApplicationWindow(const char* title, int x, int y, int width, int height, WNDPROC wndProc)
 {
-	_windowName = title;
-	HWND hwnd;
+	windowName = title;
 	WNDCLASSEX wc;
 
-	_HINSTANCE = GetModuleHandle(NULL);
+	hInstance = GetModuleHandle(NULL);
 
 	ZeroMemory(&wc, sizeof(WNDCLASSEX));
 
@@ -26,7 +25,7 @@ void Window::CreateApplicationWindow(const char* title, int x, int y, int width,
 	wc.lpfnWndProc   = wndProc; 
 	wc.cbClsExtra    = 0;
 	wc.cbWndExtra    = 0;
-	wc.hInstance     = _HINSTANCE;
+	wc.hInstance     = hInstance;
 	wc.hIcon         = LoadIcon(NULL, IDI_WINLOGO);
 	wc.hIconSm       = wc.hIcon;
 	wc.hCursor       = LoadCursor(NULL, IDC_ARROW);
@@ -46,7 +45,7 @@ void Window::CreateApplicationWindow(const char* title, int x, int y, int width,
 
 	// create window
 	hwnd = CreateWindowEx(WS_EX_APPWINDOW, title, title, nStyle,
-		                  x, y, width, height, NULL, NULL, _HINSTANCE, NULL);
+		                  x, y, width, height, NULL, NULL, hInstance, NULL);
 
 	// show message box that window failed
 	if (hwnd == NULL)
@@ -60,6 +59,4 @@ void Window::CreateApplicationWindow(const char* title, int x, int y, int width,
 	ShowWindow(hwnd, SW_SHOW);
 	SetForegroundWindow(hwnd);
 	SetFocus(hwnd);
-
-	_HWND = hwnd;
 }
