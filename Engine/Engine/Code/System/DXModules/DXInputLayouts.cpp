@@ -15,9 +15,7 @@ DXInputLayouts::~DXInputLayouts()
 
 void DXInputLayouts::CreateInputLayout3D(ID3D10Blob*& vertexShaderByteCode)
 {
-	DXManager& DXM = *Systems::dxManager;
-
-	ID3D11Device* device = DXM.GetDevice();
+	ID3D11Device* device = Systems::dxManager->device;
 
 	D3D11_INPUT_ELEMENT_DESC inputLayout3D[6]
 	{
@@ -37,9 +35,7 @@ void DXInputLayouts::CreateInputLayout3D(ID3D10Blob*& vertexShaderByteCode)
 
 void DXInputLayouts::CreateInputLayout3DInstanced(ID3D10Blob*& vertexShaderByteCode)
 {
-	DXManager& DXM = *Systems::dxManager;
-
-	ID3D11Device* device = DXM.GetDevice();
+	ID3D11Device* device = Systems::dxManager->device;
 
 	D3D11_INPUT_ELEMENT_DESC inputLayout3DInstanced[10]
 	{
@@ -63,9 +59,7 @@ void DXInputLayouts::CreateInputLayout3DInstanced(ID3D10Blob*& vertexShaderByteC
 
 void DXInputLayouts::CreateInputLayout2D(ID3D10Blob*& vertexShaderByteCode)
 {
-	DXManager& DXM = *Systems::dxManager;
-
-	ID3D11Device* device = DXM.GetDevice();
+	ID3D11Device* device = Systems::dxManager->device;
 
 	D3D11_INPUT_ELEMENT_DESC inputLayout2D[2]
 	{
@@ -81,9 +75,7 @@ void DXInputLayouts::CreateInputLayout2D(ID3D10Blob*& vertexShaderByteCode)
 
 void DXInputLayouts::CreateInputLayoutParticle(ID3D10Blob*& vertexShaderByteCode)
 {
-	DXManager& DXM = *Systems::dxManager;
-
-	ID3D11Device* device = DXM.GetDevice();
+	ID3D11Device* device = Systems::dxManager->device;
 
 	D3D11_INPUT_ELEMENT_DESC inputLayoutParticle[7]
 	{
@@ -104,9 +96,7 @@ void DXInputLayouts::CreateInputLayoutParticle(ID3D10Blob*& vertexShaderByteCode
 
 void DXInputLayouts::CreateInputLayoutGUI(ID3D10Blob*& vertexShaderByteCode)
 {
-	DXManager& DXM = *Systems::dxManager;
-
-	ID3D11Device* device = DXM.GetDevice();
+	ID3D11Device* device = Systems::dxManager->device;
 
 	D3D11_INPUT_ELEMENT_DESC inputLayoutGui[3]
 	{
@@ -123,9 +113,8 @@ void DXInputLayouts::CreateInputLayoutGUI(ID3D10Blob*& vertexShaderByteCode)
 
 void DXInputLayouts::SetInputLayout(INPUT_LAYOUT_TYPE type)
 {
-	DXManager& DXM = *Systems::dxManager;
+	ID3D11DeviceContext*& devCon = Systems::dxManager->devCon;
 
-	ID3D11DeviceContext* devCon = DXM.GetDeviceCon();
 	switch (type)
 	{
 	case LAYOUT_3D:

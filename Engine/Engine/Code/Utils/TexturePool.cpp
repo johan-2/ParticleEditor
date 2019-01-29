@@ -39,7 +39,7 @@ ID3D11ShaderResourceView* TexturePool::GetTexture(const wchar_t* name, bool prin
 		ID3D11ShaderResourceView* texture;
 
 		// create new texture
-		HRESULT result = DirectX::CreateDDSTextureFromFile(Systems::dxManager->GetDevice(), name, NULL, &texture);
+		HRESULT result = DirectX::CreateDDSTextureFromFile(Systems::dxManager->device, name, NULL, &texture);
 
 		if (FAILED(result))
 		{

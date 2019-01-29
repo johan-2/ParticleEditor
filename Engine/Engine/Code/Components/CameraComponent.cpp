@@ -42,14 +42,13 @@ void CameraComponent::Update(const float& delta)
 void CameraComponent::CalculateViewMatrix() 
 {
 	XMFLOAT3 forward, right, up;
-	const XMFLOAT3& pos = _transform->GetPositionRef();
 	_transform->GetAllAxis(forward, right, up);
 	
 	// create the viewMatrix based on our position, look direction and updirection of the camera	
-	XMStoreFloat3(&forward, XMVectorAdd(XMLoadFloat3(&pos), XMLoadFloat3(&forward)));
+	XMStoreFloat3(&forward, XMVectorAdd(XMLoadFloat3(&_transform->position), XMLoadFloat3(&forward)));
 
 	// create matrices
-	XMStoreFloat4x4(&viewMatrix,          XMMatrixLookAtLH(XMLoadFloat3(&pos), XMLoadFloat3(&forward), XMLoadFloat3(&up)));
+	XMStoreFloat4x4(&viewMatrix,          XMMatrixLookAtLH(XMLoadFloat3(&_transform->position), XMLoadFloat3(&forward), XMLoadFloat3(&up)));
 	XMStoreFloat4x4(&viewProjMatrix,      XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiply(&viewMatrix, &projectionMatrix)));
 	XMStoreFloat4x4(&viewProjMatrixTrans, XMMatrixTranspose(XMLoadFloat4x4(&viewProjMatrix)));
 }

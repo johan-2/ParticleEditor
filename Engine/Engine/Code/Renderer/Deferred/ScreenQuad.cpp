@@ -18,7 +18,7 @@ ScreenQuad::~ScreenQuad()
 void ScreenQuad::CreateBuffers()
 {
 	// get device
-	ID3D11Device* device = Systems::dxManager->GetDevice();
+	ID3D11Device*& device = Systems::dxManager->device;
 
 	// create vertices/indices
 	VertexType  vertices[4];
@@ -77,7 +77,7 @@ void ScreenQuad::CreateBuffers()
 
 void ScreenQuad::UploadBuffers()
 {
-	ID3D11DeviceContext* devCon = Systems::dxManager->GetDeviceCon();
+	ID3D11DeviceContext*& devCon = Systems::dxManager->devCon;
 
 	unsigned int stride = sizeof(VertexType);
 	unsigned int offset = 0;

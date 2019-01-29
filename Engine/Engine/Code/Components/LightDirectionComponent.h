@@ -15,18 +15,14 @@ public:
 
 	void Init(XMFLOAT4 lightColor, TransformComponent* transformOverride = nullptr);
 	
+	void Update(const float& delta);
+
 	// get the look direction of this light
 	XMFLOAT3 GetLightDirection();
-
 	XMFLOAT3 GetLightDirectionInv(); 
 
-	// get light properties
-	const XMFLOAT4& GetLightColor()    { return _lightColor; }
-
-	// set light properties
-	void SetLightColor(XMFLOAT4 color)     { _lightColor = color; }
-
-	void Update(const float& delta);
+	// light color
+	XMFLOAT4 lightColor;
 
 private:
 
@@ -36,7 +32,6 @@ private:
 	// pointer to transform to overide light direction
 	TransformComponent* _overrideTransform;
 
-	// light color
-	XMFLOAT4 _lightColor;
+	
 };
 

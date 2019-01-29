@@ -1,6 +1,5 @@
 #include "ModelComponent.h"
 #include <DirectXMath.h>
-#include "Mesh.h"
 #include "Entity.h"
 #include "ModelLoader.h"
 
@@ -12,8 +11,8 @@ ModelComponent::ModelComponent() : IComponent(COMPONENT_TYPE::MODEL_COMPONENT)
 
 ModelComponent::~ModelComponent()
 {
-	for (int i = 0; i < _numMeshes; i++)
-		delete _meshes[i];
+	for (int i = 0; i < numMeshes; i++)
+		delete meshes[i];
 }
 
 void ModelComponent::InitModel(char* model, unsigned int flags, wchar_t* diffuseMap, wchar_t* normalMap, wchar_t* specularMap, wchar_t* emissiveMap, bool useMaterial, float tiling, float heightMapScale)
@@ -34,7 +33,7 @@ void ModelComponent::InitModel(char* model, unsigned int flags, wchar_t* diffuse
 	ProcessNode(scene->mRootNode, scene, diffuseMap, normalMap, specularMap, emissiveMap, useMaterial, tiling, heightMapScale);
 
 	// get how many meshes that was loaded
-	_numMeshes = _meshes.size();
+	numMeshes = meshes.size();
 }
 
 void ModelComponent::Update(const float& delta)
@@ -52,8 +51,8 @@ void ModelComponent::SetActive(bool active)
 	IComponent::SetActive(active);
 	
 	// remove/add meshes to renderer
-	for (int i = 0; i < _meshes.size(); i++)
-		_meshes[i]->AddRemoveToRenderer(active);
+	for (int i = 0; i < meshes.size(); i++)
+		meshes[i]->AddRemoveToRenderer(active);
 }
 
 // set the flag on all meshes in this model
@@ -68,11 +67,11 @@ void ModelComponent::SetRenderFlags(unsigned int flags)
 
 	// remove our meshes from the renderer
 	// set new render flags and re add them to the renderer
-	for (int i = 0; i < _numMeshes; i++)
+	for (int i = 0; i < numMeshes; i++)
 	{
-		_meshes[i]->AddRemoveToRenderer(false);
-		_meshes[i]->SetFlags(flags);
-		_meshes[i]->AddRemoveToRenderer(true);
+		meshes[i]->AddRemoveToRenderer(false);
+		meshes[i]->FLAGS = flags;
+		meshes[i]->AddRemoveToRenderer(true);
 	}
 }
 
@@ -82,7 +81,7 @@ void ModelComponent::ProcessNode(aiNode* node, const aiScene* scene, wchar_t* di
 	for (UINT i = 0; i < node->mNumMeshes; i++)
 	{
 		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-		_meshes.push_back(ModelLoader::CreateMesh(mesh, scene, _FLAGS, diffuseMap, normalMap, specularMap, emissiveMap, _useMaterial, tiling, _parent, heightMapScale));
+		meshes.push_back(ModelLoader::CreateMesh(mesh, scene, _FLAGS, diffuseMap, normalMap, specularMap, emissiveMap, _useMaterial, tiling, parent, heightMapScale));
 	}
 
 	// recursivly loop over and process all child nodes
@@ -90,21 +89,4 @@ void ModelComponent::ProcessNode(aiNode* node, const aiScene* scene, wchar_t* di
 		ProcessNode(node->mChildren[i], scene, diffuseMap, normalMap, specularMap, emissiveMap, useMaterial, tiling, heightMapScale);	
 }
 
-void ModelComponent::SetUVDVMap(const wchar_t* texture)
-{
-	for (int i = 0; i < _meshes.size(); i++)
-		_meshes[i]->CreateUVDVMap(texture);
-}
-
-void ModelComponent::SetFoamMap(const wchar_t* texture)
-{
-	for (int i = 0; i < _meshes.size(); i++)
-		_meshes[i]->CreateFoamMap(texture);
-}
-
-void ModelComponent::SetNoiseMap(const wchar_t* texture)
-{
-	for (int i = 0; i < _meshes.size(); i++)
-		_meshes[i]->CreateNoiseMap(texture);
-}
 

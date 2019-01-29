@@ -48,7 +48,7 @@ IslandTestScene::IslandTestScene()
 	CM.currentCameraUI = cameraUI->GetComponent<CameraComponent>();
 
 	// set ambient light color	
-	LM.SetAmbientColor(XMFLOAT4(0.15f, 0.15f, 0.15f, 1.0f));
+	LM.ambientColor = XMFLOAT4(0.15f, 0.15f, 0.15f, 1.0f);
 
 	// create directional light and give it pointer to the depth render camera transform
 	// it will use the forward of this camera as the light direction
@@ -63,7 +63,7 @@ IslandTestScene::IslandTestScene()
 	water->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 2.0f, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(400, 1, 400));
 	water->AddComponent<ModelComponent>()->InitModel("models/plane.obj", ALPHA_WATER, L"", L"Textures/waterNormal.dds", L"Textures/FlatHighSpecular.dds", L"", false, 400.0f);
 	water->AddComponent<UVScrollComponent>()->Init(XMFLOAT2(0.015f, -0.01f));
-	water->GetComponent<ModelComponent>()->SetUVDVMap(L"Textures/waterDUDV.dds");
+	water->GetComponent<ModelComponent>()->SetDUDVMap(L"Textures/waterDUDV.dds");
 	water->GetComponent<ModelComponent>()->SetFoamMap(L"Textures/foam3.dds");
 	water->GetComponent<ModelComponent>()->SetNoiseMap(L"Textures/perlinNoise2.dds");
 

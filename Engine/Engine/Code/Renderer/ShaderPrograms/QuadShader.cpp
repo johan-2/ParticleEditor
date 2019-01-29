@@ -40,7 +40,7 @@ void QuadShader::RenderQuadUI(const std::vector<QuadComponent*>& quads)
 	DXManager& DXM = *Systems::dxManager;
 
 	// get device context
-	ID3D11DeviceContext* devCon = DXM.GetDeviceCon();
+	ID3D11DeviceContext*& devCon = DXM.devCon;
 
 	// set shaders			
 	devCon->VSSetShader(_vertexShader, NULL, 0);
@@ -51,10 +51,10 @@ void QuadShader::RenderQuadUI(const std::vector<QuadComponent*>& quads)
 	devCon->PSSetConstantBuffers(0, 1, &_constantBufferPixel);
 
 	// render with alpha blending
-	DXM.BlendStates()->SetBlendState(BLEND_STATE::BLEND_ALPHA);
+	DXM.blendStates->SetBlendState(BLEND_STATE::BLEND_ALPHA);
 
 	// render with depth off
-	DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::DISABLED);
+	DXM.depthStencilStates->SetDepthStencilState(DEPTH_STENCIL_STATE::DISABLED);
 	
 	// constant buffer structures
 	ConstantQuadUIVertex vertexData;
@@ -89,5 +89,5 @@ void QuadShader::RenderQuadUI(const std::vector<QuadComponent*>& quads)
 	}
 
 	// enable depth after the UI Rendering is done
-	DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::ENABLED);
+	DXM.depthStencilStates->SetDepthStencilState(DEPTH_STENCIL_STATE::ENABLED);
 }

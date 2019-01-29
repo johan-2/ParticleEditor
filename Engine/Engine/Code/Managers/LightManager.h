@@ -35,47 +35,34 @@ public:
 	LightManager();
 	~LightManager();				
 
-	// set the color of our ambient light
-	void SetAmbientColor(XMFLOAT4 color) { _ambientColor = color; } 
-	
-	// set the directional light to use for rendering
-	void SetDirectionalLight(LightDirectionComponent* light);
-
 	// add a pointlight to the list of pointlights
+	// list of pointlights is kept private so it have
+	// to go throught the AddPointLight function to make
+	// sure we dont add more point lights then the shader can 
+	// fit in one buffer
 	void AddPointLight(LightPointComponent* light);
-
-	// get all lights
-	const XMFLOAT4&                     GetAmbientColor()     { return _ambientColor; }
-	LightDirectionComponent*&           GetDirectionalLight() { return _directionalLight; }
-	std::vector<LightPointComponent*>&  GetPointLight()       { return _pointLights; }
+	const std::vector<LightPointComponent*>& GetPointLights() { return _pointLights; }
+	int GetNumPointLights()                                   { return (int)_pointLights.size(); }
 		
-	// remove the current directional light
-	void RemoveDirectionalLight();
-
 	// updates the data for light constant buffers
 	void UpdateLightBuffers();
 
-	ID3D11Buffer* GetPointLightCB()  { return _CBPoint; }
-	ID3D11Buffer* GetAmbDirLightCB() { return _CBAmbDir; }
 
-	// get num of pointlights active
-	int GetNumPointLights() { return (int)_pointLights.size(); }
-	
-private:
-	
-	// color for ambient light
-	XMFLOAT4 _ambientColor;
+	// lights
+	LightDirectionComponent* directionalLight;
+	XMFLOAT4                 ambientColor;
 
-	// pointer to directional light
-	LightDirectionComponent* _directionalLight;
+	// light CB buffers
+	ID3D11Buffer* cbPoint;
+	ID3D11Buffer* cbAmbDir;
 	
-	// list of all point lights
-	std::vector<LightPointComponent*> _pointLights;
+private:	
 
 	// holds the properties of all point lights
 	CBPoint       _pointData[MAX_POINT_LIGHTS];
 	CBAmbDir      _ambDirData;
-	ID3D11Buffer* _CBPoint;
-	ID3D11Buffer* _CBAmbDir;
+
+	// point lights
+	std::vector<LightPointComponent*> _pointLights;
 };
 

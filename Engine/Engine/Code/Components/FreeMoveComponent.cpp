@@ -80,7 +80,7 @@ void FreeMoveComponent::UpdateMovement(const float& deltaTime)
 	_transform->AddTranslation(translation);
 
 	// calculate new world matrix
-	_transform->UpdateWorldMatrix();
+	_transform->BuildWorldMatrix();
 }
 
 

@@ -50,7 +50,7 @@ SponzaTestScene::SponzaTestScene()
 	CM.currentCameraUI = cameraUI->GetComponent<CameraComponent>();
 
 	// set ambient light color	
-	LM.SetAmbientColor(XMFLOAT4(0.15f, 0.15f, 0.15f, 1.0f));
+	LM.ambientColor = XMFLOAT4(0.15f, 0.15f, 0.15f, 1.0f);
 
 	// create directional light and give it pointer to the depth render camera transform
 	// it will use the forward of this camera as the light direction
@@ -109,7 +109,7 @@ SponzaTestScene::SponzaTestScene()
 	Entity* floor = new Entity();
 	floor->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0.01f, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(600, 1, 600));
 	floor->AddComponent<ModelComponent>()->InitModel("Models/plane.obj", ALPHA_REFLECTION, L"Textures/sponza_floor_a_diff.dds", L"Textures/sponza_floor_a_ddn.dds", L"Textures/FlatHighSpecular.dds", L"", false, 800.0f);
-	floor->GetComponent<ModelComponent>()->GetMeshes()[0]->SetReflectionData(Mesh::ReflectiveData(0.25f));
+	floor->GetComponent<ModelComponent>()->meshes[0]->planarReflectionFraction = 0.25f;
 
 	/*Entity* water = new Entity();
 	water->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 2.0f, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(400, 1, 400));

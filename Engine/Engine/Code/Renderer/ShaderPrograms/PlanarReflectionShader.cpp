@@ -62,7 +62,7 @@ void PlanarReflectionShader::Render(std::vector<Mesh*>& reflectionMeshes)
 	Renderer& renderer = *Systems::renderer;
 
 	// get device context
-	ID3D11DeviceContext*& devCon = DXM.GetDeviceCon();
+	ID3D11DeviceContext*& devCon = DXM.devCon;
 
 	// get game camera and shadow camera
 	CameraComponent*& camera      = CM.currentCameraGame;
@@ -71,8 +71,8 @@ void PlanarReflectionShader::Render(std::vector<Mesh*>& reflectionMeshes)
 	TransformComponent* camTrans = camera->GetComponent<TransformComponent>();
 
 	// get camera position
-	XMFLOAT3 cameraPos = camTrans->GetPositionVal();
-	XMFLOAT3 cameraRot = camTrans->GetRotationVal();
+	XMFLOAT3 cameraPos = camTrans->position;
+	XMFLOAT3 cameraRot = camTrans->rotation;
 
 	// create constant buffer structures
 	CBVertex  cbVertex;
@@ -95,9 +95,9 @@ void PlanarReflectionShader::Render(std::vector<Mesh*>& reflectionMeshes)
 		reflectPos.y -= (cameraPos.y - mesh->GetPosition().y) * 2.0f;
 
 		// set reflection position/rotation and build matrices
-		camTrans->SetRotation(XMFLOAT3(-cameraRot.x, cameraRot.y, cameraRot.z));
-		camTrans->SetPosition(reflectPos);
-		camTrans->UpdateWorldMatrix();
+		camTrans->rotation = XMFLOAT3(-cameraRot.x, cameraRot.y, cameraRot.z);
+		camTrans->position = reflectPos;
+		camTrans->BuildWorldMatrix();
 		camera->CalculateViewMatrix();
 
 		// save the reflection viewprojmatrix
@@ -107,9 +107,9 @@ void PlanarReflectionShader::Render(std::vector<Mesh*>& reflectionMeshes)
 		_simpleClipShaderReflection->RenderScene(renderer.GetMeshes(SHADER_TYPE::S_CAST_REFLECTION_OPAQUE), renderer.GetMeshes(SHADER_TYPE::S_CAST_REFLECTION_ALPHA), renderer.GetInstancedModels(INSTANCED_SHADER_TYPE::S_INSTANCED_CAST_REFLECTION), clipPlane, true);
 
 		// change back to original camera position/rotation
-		camTrans->SetRotation(cameraRot);
-		camTrans->SetPosition(cameraPos);
-		camTrans->UpdateWorldMatrix();
+		camTrans->rotation = cameraRot;
+		camTrans->position = cameraPos;
+		camTrans->BuildWorldMatrix();
 		camera->CalculateViewMatrix();
 
 		// set back to defualt render target and render the reflection mesh
@@ -119,17 +119,14 @@ void PlanarReflectionShader::Render(std::vector<Mesh*>& reflectionMeshes)
 		devCon->VSSetShader(_planarVertexShader, NULL, 0);
 		devCon->PSSetShader(_planarPixelShader, NULL, 0);
 
-		ID3D11Buffer* pointBuffer  = LM.GetPointLightCB();
-		ID3D11Buffer* ambDirBuffer = LM.GetAmbDirLightCB();
-
 		// set the vertex constant buffer, the pixel ones is already set
 		devCon->VSSetConstantBuffers(0, 1, &_CBVertex);
-		devCon->PSSetConstantBuffers(0, 1, &ambDirBuffer);
-		devCon->PSSetConstantBuffers(1, 1, &pointBuffer);
+		devCon->PSSetConstantBuffers(0, 1, &LM.cbAmbDir);
+		devCon->PSSetConstantBuffers(1, 1, &LM.cbPoint);
 		devCon->PSSetConstantBuffers(2, 1, &_CBReflect);
 
 		// set to alpha blending
-		DXM.BlendStates()->SetBlendState(BLEND_STATE::BLEND_ALPHA);
+		DXM.blendStates->SetBlendState(BLEND_STATE::BLEND_ALPHA);
 
 		// set vertex constant values
 		const XMFLOAT4X4& worldMat = mesh->GetWorldMatrix();
@@ -138,27 +135,27 @@ void PlanarReflectionShader::Render(std::vector<Mesh*>& reflectionMeshes)
 		XMStoreFloat4x4(&cbVertex.worldViewProj,        XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&worldMat, &camera->viewProjMatrix)));
 		XMStoreFloat4x4(&cbVertex.worldViewProjLight,   XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&worldMat, &cameraLight->viewProjMatrix)));
 		XMStoreFloat4x4(&cbVertex.worldViewProjReflect, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&worldMat, &reflectMat)));
-		XMStoreFloat2(&cbVertex.uvOffset,               XMLoadFloat2(&mesh->GetUvOffset()));
+		XMStoreFloat2(&cbVertex.uvOffset,               XMLoadFloat2(&mesh->uvOffset));
 
 		// set the fraction of the reflection blending with the texture color
-		cbReflect.reflectiveFraction = mesh->GetReflectiveData().reflectiveFraction;
+		cbReflect.reflectiveFraction = mesh->planarReflectionFraction;
 
 		// update vertex constant buffer
 		SHADER_HELPERS::UpdateConstantBuffer((void*)&cbVertex,  sizeof(CBVertex),  _CBVertex);
 		SHADER_HELPERS::UpdateConstantBuffer((void*)&cbReflect, sizeof(CBReflect), _CBReflect);
 
 		// get the texture array of mesh
-		ID3D11ShaderResourceView** meshTextures = mesh->GetTextureArray();
+		ID3D11ShaderResourceView** meshTextures = mesh->baseTextures;
 
 		// fill texture array with all textures including the shadow map and reflection map
-		ID3D11ShaderResourceView* t[6] = { meshTextures[0], meshTextures[1], meshTextures[2], meshTextures[3], cameraLight->renderTexture, _simpleClipShaderReflection->GetRenderSRV() };
+		ID3D11ShaderResourceView* t[6] = { mesh->baseTextures[0], mesh->baseTextures[1], mesh->baseTextures[2], mesh->baseTextures[3], cameraLight->renderTexture, _simpleClipShaderReflection->GetRenderSRV() };
 
 		// set SRV's
 		devCon->PSSetShaderResources(0, 6, t);
 
 		mesh->UploadBuffers();
 
-		devCon->DrawIndexed(mesh->GetNumIndices(), 0, 0);
+		devCon->DrawIndexed(mesh->numIndices, 0, 0);
 	}
 
 	// unbind so we can use resources as input in next stages

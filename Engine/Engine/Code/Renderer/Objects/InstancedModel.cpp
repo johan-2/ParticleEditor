@@ -23,27 +23,28 @@ InstancedModel::InstancedModel(char* model, unsigned int flags, wchar_t* diffuse
 	ProcessNode(scene->mRootNode, scene, diffuseMap, normalMap, specularMap, emissiveMap, useMaterial, tiling, heightMapScale);
 
 	// get how many meshes that was loaded
-	_numMeshes = _meshes.size();
+	numMeshes = meshes.size();
 
 	AddToRenderQueues(true);
 
 	// Set vertex buffers stride and offset.
-	_strides[0] = sizeof(Mesh::VertexData);
-	_strides[1] = sizeof(ModelInstance);
+	strides[0] = sizeof(Mesh::VertexData);
+	strides[1] = sizeof(ModelInstance);
 
-	_offsets[0] = 0;
-	_offsets[1] = 0;
+	offsets[0] = 0;
+	offsets[1] = 0;
 }
 
 InstancedModel::~InstancedModel()
 {
+	_instanceBuffer->Release();
 }
 
 void InstancedModel::BuildInstanceBuffer(std::vector<ModelInstance>& instances)
 {
 	D3D11_MAPPED_SUBRESOURCE data;
-	ID3D11DeviceContext* devCon = Systems::dxManager->GetDeviceCon();
-	_numInstances               = instances.size();
+	ID3D11DeviceContext*& devCon = Systems::dxManager->devCon;
+	numInstances                = instances.size();
 
 	if (_instanceBuffer == nullptr)
 	{
@@ -52,13 +53,13 @@ void InstancedModel::BuildInstanceBuffer(std::vector<ModelInstance>& instances)
 
 		// Set up the description of the instance buffer.
 		instanceBufferDesc.Usage               = D3D11_USAGE_DYNAMIC;
-		instanceBufferDesc.ByteWidth           = sizeof(ModelInstance) * _numInstances;
+		instanceBufferDesc.ByteWidth           = sizeof(ModelInstance) * numInstances;
 		instanceBufferDesc.BindFlags           = D3D11_BIND_VERTEX_BUFFER;
 		instanceBufferDesc.CPUAccessFlags      = D3D11_CPU_ACCESS_WRITE;
 		instanceBufferDesc.MiscFlags           = 0;
 		instanceBufferDesc.StructureByteStride = 0;
 
-		HRESULT result = Systems::dxManager->GetDevice()->CreateBuffer(&instanceBufferDesc, NULL, &_instanceBuffer);
+		HRESULT result = Systems::dxManager->device->CreateBuffer(&instanceBufferDesc, NULL, &_instanceBuffer);
 		if (FAILED(result)) DX_ERROR::PrintError(result, "failed to create instance buffer for instanced model");
 	}
 	else
@@ -66,7 +67,7 @@ void InstancedModel::BuildInstanceBuffer(std::vector<ModelInstance>& instances)
 		D3D11_BUFFER_DESC old;
 		_instanceBuffer->GetDesc(&old);
 
-		if (old.ByteWidth < sizeof(ModelInstance) * _numInstances)
+		if (old.ByteWidth < sizeof(ModelInstance) * numInstances)
 		{
 			// realease old buffer, is now to small
 			_instanceBuffer->Release();
@@ -74,13 +75,13 @@ void InstancedModel::BuildInstanceBuffer(std::vector<ModelInstance>& instances)
 			// create new buffer with increased size so we have room to expand
 			D3D11_BUFFER_DESC instanceBufferDesc;
 			instanceBufferDesc.Usage               = D3D11_USAGE_DYNAMIC;
-			instanceBufferDesc.ByteWidth           = (sizeof(ModelInstance) * _numInstances) * 1.5f;
+			instanceBufferDesc.ByteWidth           = (sizeof(ModelInstance) * numInstances) * 1.5f;
 			instanceBufferDesc.BindFlags           = D3D11_BIND_VERTEX_BUFFER;
 			instanceBufferDesc.CPUAccessFlags      = D3D11_CPU_ACCESS_WRITE;
 			instanceBufferDesc.MiscFlags           = 0;
 			instanceBufferDesc.StructureByteStride = 0;
 
-			HRESULT result = Systems::dxManager->GetDevice()->CreateBuffer(&instanceBufferDesc, NULL, &_instanceBuffer);
+			HRESULT result = Systems::dxManager->device->CreateBuffer(&instanceBufferDesc, NULL, &_instanceBuffer);
 			if (FAILED(result)) DX_ERROR::PrintError(result, "failed to create instance buffer for instanced model");
 		}		
 	}
@@ -98,10 +99,8 @@ void InstancedModel::BuildInstanceBuffer(std::vector<ModelInstance>& instances)
 
 void InstancedModel::UploadInstances()
 {
-	ID3D11DeviceContext* devCon = Systems::dxManager->GetDeviceCon();
-
 	// set the instance buffer in slot 1
-	devCon->IASetVertexBuffers(1, 1, &_instanceBuffer, &_strides[1], &_offsets[1]);
+	Systems::dxManager->devCon->IASetVertexBuffers(1, 1, &_instanceBuffer, &strides[1], &offsets[1]);
 }
 
 void InstancedModel::ProcessNode(aiNode* node, const aiScene* scene, wchar_t* diffuseMap, wchar_t* normalMap, wchar_t* specularMap, wchar_t* emissiveMap, bool useMaterial, float tiling, float heightMapScale)
@@ -110,7 +109,7 @@ void InstancedModel::ProcessNode(aiNode* node, const aiScene* scene, wchar_t* di
 	for (UINT i = 0; i < node->mNumMeshes; i++)
 	{
 		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-		_meshes.push_back(ModelLoader::CreateMesh(mesh, scene, 0, diffuseMap, normalMap, specularMap, emissiveMap, _useMaterial, tiling, nullptr, heightMapScale));
+		meshes.push_back(ModelLoader::CreateMesh(mesh, scene, 0, diffuseMap, normalMap, specularMap, emissiveMap, _useMaterial, tiling, nullptr, heightMapScale));
 	}
 
 	// recursivly loop over and process all child nodes

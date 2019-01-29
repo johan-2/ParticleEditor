@@ -17,16 +17,16 @@ DXManager::DXManager()
 
 DXManager::~DXManager()
 {	
-	delete _DXDepthStencilStates;
-	delete _DXRasterizerStates;
-	delete _DXBlendStates;
-	delete _DXSamplerStates;
+	delete depthStencilStates;
+	delete rasterizerStates;
+	delete blendStates;
+	delete samplerStates;
 
 	_renderTargetView->Release();
 	_depthStencilView->Release();
 
-	_device->Release();
-	_devCon->Release();
+	device->Release();
+	devCon->Release();
 	_swapChain->Release();
 }
 
@@ -36,7 +36,7 @@ void DXManager::Initialize(HWND hwnd, int screenWidth, int screenHeight, bool vs
 	_vsyncEnabled = vsync;
 
 	// fetch the harware settings (refreshrate etc)
-	_hardwareProperties = new HardwareProperties(screenWidth, screenHeight);
+	hardwareProperties = new HardwareProperties(screenWidth, screenHeight);
 		
 	// create the swapchain, devices and render target
 	CreateSwapchainAndRenderTarget(hwnd, fullscreen, screenWidth, screenHeight);
@@ -45,10 +45,10 @@ void DXManager::Initialize(HWND hwnd, int screenWidth, int screenHeight, bool vs
 	CreateDepthStencilViews(screenWidth, screenHeight);
 			
 	// create depth stencil states, rasterizer states, blend states and sampler states
-	_DXDepthStencilStates = new DXDepthStencilStates(_device, _devCon);	
-	_DXRasterizerStates   = new DXRasterizerStates(_device, _devCon);
-	_DXBlendStates        = new DXBlendStates(_device, _devCon);
-	_DXSamplerStates      = new DXSamplerStates(_device, _devCon);
+	depthStencilStates = new DXDepthStencilStates(device, devCon);	
+	rasterizerStates   = new DXRasterizerStates(device, devCon);
+	blendStates        = new DXBlendStates(device, devCon);
+	samplerStates      = new DXSamplerStates(device, devCon);
 
 	// Create and set viewport
 	CreateViewport(screenWidth, screenHeight);	
@@ -78,7 +78,7 @@ void DXManager::CreateSwapchainAndRenderTarget(HWND hwnd, bool fullscreen, int s
 	// set the refresh rate to match monitor if vSync is enabled
 	if (_vsyncEnabled) 
 	{
-		const HardwareInfo& info = _hardwareProperties->GetHardwareInfo();
+		const HardwareInfo& info = hardwareProperties->hardwareInfo;
 
 		swapChainDesc.BufferDesc.RefreshRate.Numerator   = info.numerator;
 		swapChainDesc.BufferDesc.RefreshRate.Denominator = info.denominator;
@@ -109,7 +109,7 @@ void DXManager::CreateSwapchainAndRenderTarget(HWND hwnd, bool fullscreen, int s
 	// create the swapchain and d3d interfaces
 	result = D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL,
 		                                   flags, &featureLevel, 1, D3D11_SDK_VERSION,
-		                                   &swapChainDesc, &_swapChain, &_device, NULL, &_devCon);
+		                                   &swapChainDesc, &_swapChain, &device, NULL, &devCon);
 
 	if (FAILED(result))
 		DX_ERROR::PrintError(result, "failed to create swapchain and devices");
@@ -120,7 +120,7 @@ void DXManager::CreateSwapchainAndRenderTarget(HWND hwnd, bool fullscreen, int s
 		DX_ERROR::PrintError(result, "failed to get back buffer from swapchain");
 
 	// create the main backbuffer rendertarget
-	result = _device->CreateRenderTargetView(backBufferPtr, NULL, &_renderTargetView);
+	result = device->CreateRenderTargetView(backBufferPtr, NULL, &_renderTargetView);
 	if (FAILED(result))
 		DX_ERROR::PrintError(result, "failed to create Render target from back buffer ptr");
 
@@ -128,7 +128,7 @@ void DXManager::CreateSwapchainAndRenderTarget(HWND hwnd, bool fullscreen, int s
 	backBufferPtr->Release();
 
 	// set topology
-	_devCon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	devCon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 #ifdef DEBUG_LAYER
 	SetDebugLayerIgnores();
@@ -138,7 +138,7 @@ void DXManager::CreateSwapchainAndRenderTarget(HWND hwnd, bool fullscreen, int s
 void DXManager::SetDebugLayerIgnores()
 {
 	ID3D11Debug *d3dDebug = nullptr;
-	if (SUCCEEDED(_device->QueryInterface(__uuidof(ID3D11Debug), (void**)&d3dDebug)))
+	if (SUCCEEDED(device->QueryInterface(__uuidof(ID3D11Debug), (void**)&d3dDebug)))
 	{
 		ID3D11InfoQueue *d3dInfoQueue = nullptr;
 		if (SUCCEEDED(d3dDebug->QueryInterface(__uuidof(ID3D11InfoQueue), (void**)&d3dInfoQueue)))
@@ -202,12 +202,12 @@ void DXManager::CreateDepthStencilViews(int screenWidth, int screenHeight)
 	resourceViewDesc.Texture2D.MipLevels       = 1;
 
 	// create the depth texture using the description
-	result = _device->CreateTexture2D(&depthStencilTexDesc, NULL, &depthTex2D);
+	result = device->CreateTexture2D(&depthStencilTexDesc, NULL, &depthTex2D);
 	if (FAILED(result))
 		DX_ERROR::PrintError(result, "failed to create depth stencil texture");
 
 	// create the default depthstencilview
-	result = _device->CreateDepthStencilView(depthTex2D, &depthStencilViewDesc, &_depthStencilView);
+	result = device->CreateDepthStencilView(depthTex2D, &depthStencilViewDesc, &_depthStencilView);
 	if (FAILED(result))
 		DX_ERROR::PrintError(result, "failed to create defualt depth stencil view");
 
@@ -224,7 +224,7 @@ void DXManager::CreateViewport(int screenWidth, int screenHeight)
 	_viewport.TopLeftX = 0.0f;
 	_viewport.TopLeftY = 0.0f;
 
-	_devCon->RSSetViewports(1, &_viewport);
+	devCon->RSSetViewports(1, &_viewport);
 }
 
 // clears render target and depth/stencil buffers
@@ -233,8 +233,8 @@ void DXManager::ClearRenderTarget(float r, float g, float b, float a)
 	float color[4] = { r,g,b,a };
 
 	// clear rendertarget and depth
-	_devCon->ClearRenderTargetView(_renderTargetView, color);
-	_devCon->ClearDepthStencilView(_depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1, 1);
+	devCon->ClearRenderTargetView(_renderTargetView, color);
+	devCon->ClearDepthStencilView(_depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1, 1);
 
 }
 void DXManager::PresentScene()
@@ -246,21 +246,21 @@ void DXManager::PresentScene()
 
 void DXManager::SetBackBuffer()
 {
-	_devCon->RSSetViewports(1, &_viewport);
-	_devCon->OMSetRenderTargets(1, &_renderTargetView, _depthStencilView);
+	devCon->RSSetViewports(1, &_viewport);
+	devCon->OMSetRenderTargets(1, &_renderTargetView, _depthStencilView);
 }
 
 void DXManager::SetNullRenderTarget()
 {
 	ID3D11RenderTargetView* rtv = nullptr;
 	ID3D11DepthStencilView* dsv = nullptr;
-	_devCon->OMSetRenderTargets(1, &rtv, dsv);
+	devCon->OMSetRenderTargets(1, &rtv, dsv);
 }
 
 // set a viewport
-void DXManager::SetViewport(D3D11_VIEWPORT* viewport, bool setDefault)
+void DXManager::SetDefaultViewport()
 {
-	setDefault ? _devCon->RSSetViewports(1, &_viewport) : _devCon->RSSetViewports(1, viewport);
+	devCon->RSSetViewports(1, &_viewport);
 }
 
 // sets fullscreen or toggles the fullscreen mode

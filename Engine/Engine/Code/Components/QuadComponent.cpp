@@ -41,7 +41,7 @@ void QuadComponent::Update(const float& delta)
 void QuadComponent::CreateBuffers()
 {
 	// get device
-	ID3D11Device* device = Systems::dxManager->GetDevice();
+	ID3D11Device*& device = Systems::dxManager->device;
 
 	// create buffer descriptions and sub resource pointers
 	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
@@ -121,7 +121,7 @@ void QuadComponent::UpdateBuffers()
 		_prevSize     = _size;
 		
 		// get device context
-		ID3D11DeviceContext* devCon = Systems::dxManager->GetDeviceCon();
+		ID3D11DeviceContext*& devCon = Systems::dxManager->devCon;
 
 		// create resource pointer and vertex array
 		D3D11_MAPPED_SUBRESOURCE vertexData;
@@ -161,7 +161,7 @@ void QuadComponent::UpdateBuffers()
 
 void QuadComponent::UploadBuffers()
 {
-	ID3D11DeviceContext* devCon = Systems::dxManager->GetDeviceCon();
+	ID3D11DeviceContext*& devCon = Systems::dxManager->devCon;
 
 	unsigned int stride = sizeof(VertexType);
 	unsigned int offset = 0;

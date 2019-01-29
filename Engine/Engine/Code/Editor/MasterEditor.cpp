@@ -59,14 +59,14 @@ void MasterEditor::RenderStatsWindow()
 		shadowCameraMove->SetActive(!shadowCameraMove->IsActive());
 
 	// get camera position
-	const XMFLOAT3& gameCamPos = gameCamTransform->GetPositionRef();
-	const XMFLOAT3& gameCamRot = gameCamTransform->GetRotationRef();
+	const XMFLOAT3& gameCamPos = gameCamTransform->position;
+	const XMFLOAT3& gameCamRot = gameCamTransform->rotation;
 
-	const XMFLOAT3& shadowCamPos = shadowCamTransform->GetPositionRef();
-	const XMFLOAT3& shadowCamRot = shadowCamTransform->GetRotationRef();
+	const XMFLOAT3& shadowCamPos = shadowCamTransform->position;
+	const XMFLOAT3& shadowCamRot = shadowCamTransform->rotation;
 
 	// get hardware info
-	const HardwareInfo& info = DXM.GetHardwareProperties()->GetHardwareInfo();
+	const HardwareInfo& info = DXM.hardwareProperties->hardwareInfo;
 
 	// set properties of next window
 	ImGui::SetNextWindowBgAlpha(0.3f);

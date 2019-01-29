@@ -39,7 +39,7 @@ void WireframeShader::RenderWireFrame(std::vector<Mesh*>& meshes)
 	CameraManager& CM = *Systems::cameraManager;
 
 	// get devicecontext
-	ID3D11DeviceContext* devCon = DXM.GetDeviceCon();
+	ID3D11DeviceContext*& devCon = DXM.devCon;
 
 	// constantbuffer structure for vertex data
 	ConstantVertex vertexData;
@@ -54,7 +54,7 @@ void WireframeShader::RenderWireFrame(std::vector<Mesh*>& meshes)
 	// set the vertex constant buffer
 	devCon->VSSetConstantBuffers(0, 1, &_constantBufferVertex);
 
-	DXM.RasterizerStates()->SetRasterizerState(RASTERIZER_STATE::WIREFRAME);
+	DXM.rasterizerStates->SetRasterizerState(RASTERIZER_STATE::WIREFRAME);
 
 	size_t size = meshes.size();
 	for (int i = 0; i < size; i++)
@@ -69,8 +69,8 @@ void WireframeShader::RenderWireFrame(std::vector<Mesh*>& meshes)
 		meshes[i]->UploadBuffers();
 
 		// draw
-		devCon->DrawIndexed(meshes[i]->GetNumIndices(), 0, 0);
+		devCon->DrawIndexed(meshes[i]->numIndices, 0, 0);
 	}
 
-	DXM.RasterizerStates()->SetRasterizerState(RASTERIZER_STATE::BACKCULL);
+	DXM.rasterizerStates->SetRasterizerState(RASTERIZER_STATE::BACKCULL);
 }

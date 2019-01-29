@@ -15,6 +15,10 @@ public:
 
 	void RenderForward(std::vector<Mesh*>& meshes);
 
+	// the shader bytecode
+	ID3D10Blob* vertexShaderByteCode;
+	ID3D10Blob* pixelShaderByteCode;
+
 private:
 
 	// compiled shaders
@@ -24,10 +28,6 @@ private:
 	// constant buffers
 	ID3D11Buffer* _CBVertex;
 	ID3D11Buffer* _CBPixel;
-	
-	// the shader bytecode
-	ID3D10Blob* _vertexShaderByteCode;
-	ID3D10Blob* _pixelShaderByteCode;
 
 	struct CBVertex
 	{

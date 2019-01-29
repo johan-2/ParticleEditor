@@ -38,7 +38,7 @@ void ParticleShader::RenderParticles(const std::vector<ParticleSystemComponent*>
 	CameraManager& CM = *Systems::cameraManager;
 
 	// get device context
-	ID3D11DeviceContext* devCon = DXM.GetDeviceCon();
+	ID3D11DeviceContext*& devCon = DXM.devCon;
 
 	// get the game camera
 	CameraComponent* camera = CM.currentCameraGame;
@@ -60,7 +60,7 @@ void ParticleShader::RenderParticles(const std::vector<ParticleSystemComponent*>
 	SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(CBVertex), _constantBufferVertex);
 
 	// don't write the particles to the depth buffer, only read
-	DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::READ_ONLY);
+	DXM.depthStencilStates->SetDepthStencilState(DEPTH_STENCIL_STATE::READ_ONLY);
 
 	// loop over all particle systems
 	for (int i = 0; i < systems.size(); i++)
@@ -74,7 +74,7 @@ void ParticleShader::RenderParticles(const std::vector<ParticleSystemComponent*>
 			// set the blend state that this emitter uses
 			// TODO: this is probably going to set the same blend state
 			// multiple times in a row, fix this
-			DXM.BlendStates()->SetBlendState(systems[i]->GetBlendState(y));
+			DXM.blendStates->SetBlendState(systems[i]->GetBlendState(y));
 
 			// get texture
 			ID3D11ShaderResourceView* texture = systems[i]->GetTexture(y);
@@ -90,5 +90,5 @@ void ParticleShader::RenderParticles(const std::vector<ParticleSystemComponent*>
 	ID3D11ShaderResourceView* nullSRV[1] = { NULL};
 	devCon->PSSetShaderResources(0, 1, nullSRV);
 	// enable depth writing
-	DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::ENABLED);
+	DXM.depthStencilStates->SetDepthStencilState(DEPTH_STENCIL_STATE::ENABLED);
 }

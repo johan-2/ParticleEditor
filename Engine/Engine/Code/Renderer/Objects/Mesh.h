@@ -35,19 +35,6 @@ public:
 		Color32  color;
 	};
 
-	// structure that holds information about reflections
-	// if this mesh is being rendered with the ALPHA_REFLECTION flag
-	struct ReflectiveData
-	{
-		float reflectiveFraction = 0.2f;
-
-		ReflectiveData(){}
-
-		ReflectiveData(float fraction) :
-			reflectiveFraction(fraction)
-			{}
-	};
-
 	// create vertex and index buffers
 	void CreateBuffers(VertexData* verticesData, unsigned long* indicesData, unsigned int numVertices, unsigned int numIndices);
 
@@ -56,86 +43,38 @@ public:
 
 	// get the world matrix of the transform this mesh belongs to
 	// get the position of the transform this mesh belongs to
-	const XMFLOAT4X4& GetWorldMatrix()      { return _transform->GetWorldMatrix(); }
-	const XMFLOAT4X4& GetWorldMatrixTrans() { return _transform->GetWorldMatrixTrans(); }
-	const XMFLOAT3& GetPosition()           { return _transform->GetPositionRef(); }
-
-	// get number of vertices and indices
-	const unsigned int& GetNumVertices() { return _numVertices; }
-	const unsigned int& GetNumIndices()  { return _numIndices; }
-
-	ID3D11Buffer* GetVertexBuffer() { return _vertexBuffer; }
-	ID3D11Buffer* GetIndexBuffer()  { return _indexBuffer; }
-
-	// get all textures this mesh uses
-	ID3D11ShaderResourceView** GetTextureArray() { return _textures; }
-
-	// get/set rendering flags
-	const unsigned int& GetFlags() { return _FLAGS; }
-	void SetFlags(unsigned int flags) { _FLAGS = flags; }
-
-	// set and get the offset of uv-coordinates for this mesh
-	void SetUvOffset(XMFLOAT2 offset) { _uvOffset = offset; }
-	const XMFLOAT2& GetUvOffset()     { return _uvOffset; }
-
-	// get and set distance to camera
-	const float& GetDistanceFromCamera()     { return _distance; }
-	void SetDistanceToCamera(float distance) { _distance = distance; }
+	const XMFLOAT4X4& GetWorldMatrix()      { return _transform->worldMatrix; }
+	const XMFLOAT4X4& GetWorldMatrixTrans() { return _transform->worldMatrixTrans; }
+	const XMFLOAT3& GetPosition()           { return _transform->position; }	
 
 	// adds and removes this mesh to/from the renderer
 	void AddRemoveToRenderer(bool add);
-
-	// set the reflection data if this mesh is rendered using the planear reflection shader
-	ReflectiveData GetReflectiveData()          { return _reflectData; }
-	void SetReflectionData(ReflectiveData data) { _reflectData = data; }
-
-	void CreateUVDVMap(const wchar_t* texture);
-	ID3D11ShaderResourceView* GetDUDVMap() { return _DUDVMap; }
-
-	void CreateFoamMap(const wchar_t* texture);
-	ID3D11ShaderResourceView* GetFoamMap() { return _foamMap; }
-
-	void CreateNoiseMap(const wchar_t* texture);
-	ID3D11ShaderResourceView* GetNoiseMap() { return _noiseMap; }
-
-	const bool& HasHeightMap() { return _hasHeightmap; }
-
-	void SetHeightMapScale(float value) { _heightMapScale = value; }
-	const float& GetHeightMapScale()    { return _heightMapScale; }
-
-private:
-
-	// pointers to the vertex/index buffers
-	ID3D11Buffer* _vertexBuffer;
-	ID3D11Buffer*_indexBuffer;
-
-	// count of vertices/indices
-	unsigned int _numVertices;
-	unsigned int _numIndices;
-
-	// texture array
-	ID3D11ShaderResourceView* _textures[4];
-
-	ID3D11ShaderResourceView* _DUDVMap;
-	ID3D11ShaderResourceView* _foamMap;
-	ID3D11ShaderResourceView* _noiseMap;
-
-	// uv offset
-	XMFLOAT2 _uvOffset;
 	
-	// rendering flags
-	unsigned int _FLAGS;
-	bool _hasAlpha;
-	bool _hasHeightmap;
+	// buffers
+	ID3D11Buffer* vertexBuffer;
+	ID3D11Buffer* indexBuffer;	
 
-	// distance from camera
-	float _distance;
-	float _heightMapScale;
+	// num vertices/indices
+	unsigned int numVertices;
+	unsigned int numIndices;
+
+	// textures
+	ID3D11ShaderResourceView* baseTextures[4];
+	ID3D11ShaderResourceView* DUDVMap;
+	ID3D11ShaderResourceView* foamMap;
+	ID3D11ShaderResourceView* noiseMap;
+
+	unsigned int FLAGS;
+	bool         hasHeightmap;	
+	bool         hasAlpha;
+	float        camDistance;
+	float        heightMapScale;	
+	float        planarReflectionFraction;
+	XMFLOAT2     uvOffset;
+
+private:	
 
 	// pointer to transform component
 	TransformComponent* _transform;
-
-	// structure to store data of reflection if this mesh is projecting that
-	ReflectiveData _reflectData;
 };
 

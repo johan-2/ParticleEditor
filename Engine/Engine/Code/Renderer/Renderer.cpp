@@ -124,10 +124,10 @@ Entity* Renderer::CreateShadowMap(float orthoSize, float resolution, XMFLOAT3 po
 
 void Renderer::ShowGBufferDebugImages()
 {
-	debugQuadHandler->AddDebugQuad(_gBuffer->GetSrvArray()[0]);
-	debugQuadHandler->AddDebugQuad(_gBuffer->GetSrvArray()[1]);
-	debugQuadHandler->AddDebugQuad(_gBuffer->GetSrvArray()[2]);
-	debugQuadHandler->AddDebugQuad(_gBuffer->GetSrvArray()[3]);
+	debugQuadHandler->AddDebugQuad(_gBuffer->SRVArray[0]);
+	debugQuadHandler->AddDebugQuad(_gBuffer->SRVArray[1]);
+	debugQuadHandler->AddDebugQuad(_gBuffer->SRVArray[2]);
+	debugQuadHandler->AddDebugQuad(_gBuffer->SRVArray[3]);
 }
 
 void Renderer::Render() 

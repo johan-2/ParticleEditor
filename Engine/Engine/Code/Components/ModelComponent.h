@@ -3,6 +3,9 @@
 #include "IComponent.h"
 #include <vector>
 #include "Color32.h"
+#include "Mesh.h"
+#include "Systems.h"
+#include "TexturePool.h"
 
 #include "assimp/Importer.hpp"
 #include "assimp/scene.h"
@@ -28,25 +31,19 @@ public:
 	// set render flags on all meshes in this model
 	void SetRenderFlags(unsigned int flags); 
 
-	// get mesh list and how many meshes this model have
-	const std::vector<Mesh*>& GetMeshes()    { return _meshes; }
-	const unsigned int&       GetNumMeshes() { return _numMeshes; }
+	// adds a texturemap to all meshes in model
+	void SetDUDVMap(const wchar_t* texture)  { for (int i = 0; i < meshes.size(); i++) meshes[i]->DUDVMap  = Systems::texturePool->GetTexture(texture); }
+	void SetFoamMap(const wchar_t* texture)  { for (int i = 0; i < meshes.size(); i++) meshes[i]->foamMap  = Systems::texturePool->GetTexture(texture); }
+	void SetNoiseMap(const wchar_t* texture) { for (int i = 0; i < meshes.size(); i++) meshes[i]->noiseMap = Systems::texturePool->GetTexture(texture); }
 
-	void SetUVDVMap(const wchar_t* texture);
-	void SetFoamMap(const wchar_t* texture);
-	void SetNoiseMap(const wchar_t* texture);
+	std::vector<Mesh*> meshes;
+	unsigned int       numMeshes;
 
 private:
 
 	void ProcessNode(aiNode* node, const aiScene* scene, wchar_t* diffuseMap, wchar_t* normalMap, wchar_t* specularMap, wchar_t* emissiveMap, bool useMaterial, float tiling, float heightMapScale);
-	
-	// meshes list and num meshes count
-	std::vector<Mesh*> _meshes;
-	unsigned int       _numMeshes;
 
-	bool _useMaterial;
-	
-	// render flags
+	bool         _useMaterial;
 	unsigned int _FLAGS;
 };
 

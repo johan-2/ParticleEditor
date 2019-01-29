@@ -52,7 +52,7 @@ void SimpleClipSceneShader::RenderScene(std::vector<Mesh*>& opaqueMeshes, std::v
 	LightManager&  LM  = *Systems::lightManager;
 
 	// get device context
-	ID3D11DeviceContext*& devCon = DXM.GetDeviceCon();
+	ID3D11DeviceContext*& devCon = DXM.devCon;
 
 	// get game camera and shadow camera
 	CameraComponent*& camera = CM.currentCameraGame;
@@ -62,7 +62,7 @@ void SimpleClipSceneShader::RenderScene(std::vector<Mesh*>& opaqueMeshes, std::v
 	XMStoreFloat4(&constantVertex.clipingPlane, XMLoadFloat4(&clipPlane));
 
 	CBPixel  constantPixel;
-	const XMFLOAT3& camPos  = camera->GetComponent<TransformComponent>()->GetPositionRef();
+	const XMFLOAT3& camPos  = camera->GetComponent<TransformComponent>()->position;
 	constantPixel.cameraPos = XMFLOAT4(camPos.x, camPos.y, camPos.z, 1.0f);
 	
 	// clear our reflection map render texture and set it to active
@@ -74,19 +74,16 @@ void SimpleClipSceneShader::RenderScene(std::vector<Mesh*>& opaqueMeshes, std::v
 		Systems::renderer->skyDome->Render(true);
 
 	// set opaque blend state
-	DXM.BlendStates()->SetBlendState(BLEND_STATE::BLEND_OPAQUE);
+	DXM.blendStates->SetBlendState(BLEND_STATE::BLEND_OPAQUE);
 
 	// set shaders that will handle rednering opaque meshes to reflectionmap
 	devCon->VSSetShader(_vertexShader, NULL, 0);
 	devCon->PSSetShader(_pixelShader, NULL, 0);
 
-	ID3D11Buffer* pointBuffer = LM.GetPointLightCB();
-	ID3D11Buffer* ambDirBuffer = LM.GetAmbDirLightCB();
-
 	// set constant buffer for the vertex and pixel shader
 	devCon->VSSetConstantBuffers(0, 1, &_CBVertex);
-	devCon->PSSetConstantBuffers(0, 1, &ambDirBuffer);
-	devCon->PSSetConstantBuffers(1, 1, &pointBuffer);
+	devCon->PSSetConstantBuffers(0, 1, &LM.cbAmbDir);
+	devCon->PSSetConstantBuffers(1, 1, &LM.cbPoint);
 	devCon->PSSetConstantBuffers(2, 1, &_CBPixel);
 
 	//-------------------------------------------------------------------------------------------- OPAQUE
@@ -94,28 +91,30 @@ void SimpleClipSceneShader::RenderScene(std::vector<Mesh*>& opaqueMeshes, std::v
 	size_t size = opaqueMeshes.size();
 	for (int y = 0; y < size; y++)
 	{
+		Mesh*& mesh = opaqueMeshes[y];
+
 		// get world matrix of mesh and update the buffer
-		XMStoreFloat4x4(&constantVertex.world, XMLoadFloat4x4(&opaqueMeshes[y]->GetWorldMatrixTrans()));
-		XMStoreFloat4x4(&constantVertex.worldViewProj, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&opaqueMeshes[y]->GetWorldMatrix(), &camera->viewProjMatrix)));
+		XMStoreFloat4x4(&constantVertex.world, XMLoadFloat4x4(&mesh->GetWorldMatrixTrans()));
+		XMStoreFloat4x4(&constantVertex.worldViewProj, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&mesh->GetWorldMatrix(), &camera->viewProjMatrix)));
 
 		// set pixel constant data
-		constantPixel.hasHeightmap = opaqueMeshes[y]->HasHeightMap();
-		constantPixel.heightScale  = opaqueMeshes[y]->GetHeightMapScale();
+		constantPixel.hasHeightmap = mesh->hasHeightmap;
+		constantPixel.heightScale  = mesh->heightMapScale;
 
 		SHADER_HELPERS::UpdateConstantBuffer((void*)&constantVertex, sizeof(CBVertex), _CBVertex);
 		SHADER_HELPERS::UpdateConstantBuffer((void*)&constantPixel,  sizeof(CBPixel),  _CBPixel);
 
 		// get the texture array of mesh
-		ID3D11ShaderResourceView** meshTextures = opaqueMeshes[y]->GetTextureArray();
+		ID3D11ShaderResourceView** meshTextures = mesh->baseTextures;
 
 		// specular map is not sent to this shader tho this is not calculated
 		ID3D11ShaderResourceView* texArray[3] = { meshTextures[0], meshTextures[1], meshTextures[3] };
 		devCon->PSSetShaderResources(0, 3, texArray);
 
 		// upload and draw the mesh
-		opaqueMeshes[y]->UploadBuffers();
+		mesh->UploadBuffers();
 
-		devCon->DrawIndexed(opaqueMeshes[y]->GetNumIndices(), 0, 0);
+		devCon->DrawIndexed(mesh->numIndices, 0, 0);
 	}
 
 	// unbind so we can use resources as input in next stages
@@ -137,34 +136,34 @@ void SimpleClipSceneShader::RenderScene(std::vector<Mesh*>& opaqueMeshes, std::v
 	size = instancedModels.size();
 	for (int i = 0; i < size; i++)
 	{
-		instancedModels[i]->UploadInstances();
+		InstancedModel*& model = instancedModels[i];
+		model->UploadInstances();
 
-		const std::vector<Mesh*>& meshes = instancedModels[i]->GetMeshes();
+		std::vector<Mesh*>& meshes = model->meshes;
 		size_t meshesSize = meshes.size();
 		for (int y = 0; y < meshesSize; y++)
 		{
+			Mesh*& mesh = meshes[y];
+
 			// set pixel constant data
-			constantPixel.hasHeightmap = meshes[y]->HasHeightMap();
-			constantPixel.heightScale  = meshes[y]->GetHeightMapScale();
+			constantPixel.hasHeightmap = mesh->hasHeightmap;
+			constantPixel.heightScale  = mesh->heightMapScale;
 			SHADER_HELPERS::UpdateConstantBuffer((void*)&constantPixel, sizeof(CBPixel), _CBPixel);
 
-			ID3D11Buffer* vertexBuffer = meshes[y]->GetVertexBuffer();
+			ID3D11Buffer* vertexBuffer = mesh->vertexBuffer;
 
 			// Set the vertex buffer in slot 0
-			devCon->IASetVertexBuffers(0, 1, &vertexBuffer, instancedModels[i]->GetStrides(), instancedModels[i]->GetOffsets());
+			devCon->IASetVertexBuffers(0, 1, &vertexBuffer, model->strides, model->offsets);
 
 			// Set the index buffer 
-			devCon->IASetIndexBuffer(meshes[y]->GetIndexBuffer(), DXGI_FORMAT_R32_UINT, 0);
-
-			// get the texture array of mesh
-			ID3D11ShaderResourceView** meshTextures = meshes[y]->GetTextureArray();
+			devCon->IASetIndexBuffer(mesh->indexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
 			// specular map is not sent to this shader tho this is not calculated
-			ID3D11ShaderResourceView* texArray[3] = { meshTextures[0], meshTextures[1], meshTextures[3] };
+			ID3D11ShaderResourceView* texArray[3] = { mesh->baseTextures[0], mesh->baseTextures[1], mesh->baseTextures[3] };
 			devCon->PSSetShaderResources(0, 3, texArray);
 
 			// draw all instances of this mesh
-			devCon->DrawIndexedInstanced(meshes[y]->GetNumIndices(), instancedModels[i]->GetNumInstances(), 0, 0, 0);
+			devCon->DrawIndexedInstanced(mesh->numIndices, model->numInstances, 0, 0, 0);
 		}
 	}
 
@@ -181,34 +180,33 @@ void SimpleClipSceneShader::RenderScene(std::vector<Mesh*>& opaqueMeshes, std::v
 	size = alphaMeshes.size();
 	if (size > 0)
 	{
-		DXM.BlendStates()->SetBlendState(BLEND_STATE::BLEND_ALPHA);
-		SHADER_HELPERS::MeshSort(alphaMeshes, camera->GetComponent<TransformComponent>()->GetPositionVal(), true);
+		DXM.blendStates->SetBlendState(BLEND_STATE::BLEND_ALPHA);
+		SHADER_HELPERS::MeshSort(alphaMeshes, camera->GetComponent<TransformComponent>()->position, true);
 	}
 
 	// loop over all alpha meshes that is set to cast reflections
 	for (int y = 0; y < size; y++)
 	{
+		Mesh*& mesh = alphaMeshes[y];
+
 		// get world matrix of mesh and update the buffer
-		XMStoreFloat4x4(&constantVertex.world,         XMLoadFloat4x4(&alphaMeshes[y]->GetWorldMatrixTrans()));
-		XMStoreFloat4x4(&constantVertex.worldViewProj, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&alphaMeshes[y]->GetWorldMatrix(), &camera->viewProjMatrix)));
+		XMStoreFloat4x4(&constantVertex.world,         XMLoadFloat4x4(&mesh->GetWorldMatrixTrans()));
+		XMStoreFloat4x4(&constantVertex.worldViewProj, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&mesh->GetWorldMatrix(), &camera->viewProjMatrix)));
 		SHADER_HELPERS::UpdateConstantBuffer((void*)&constantVertex, sizeof(CBVertex), _CBVertex);
 
 		// set pixel constant data
-		constantPixel.hasHeightmap = alphaMeshes[y]->HasHeightMap();
-		constantPixel.heightScale  = alphaMeshes[y]->GetHeightMapScale();
+		constantPixel.hasHeightmap = mesh->hasHeightmap;
+		constantPixel.heightScale  = mesh->heightMapScale;
 		SHADER_HELPERS::UpdateConstantBuffer((void*)&constantPixel, sizeof(CBPixel), _CBPixel);
 
-		// get the texture array of mesh
-		ID3D11ShaderResourceView** meshTextures = alphaMeshes[y]->GetTextureArray();
-
 		// specular map is not sent to this shader tho this is not calculated
-		ID3D11ShaderResourceView* texArray[3] = { meshTextures[0], meshTextures[1], meshTextures[3] };
+		ID3D11ShaderResourceView* texArray[3] = { mesh->baseTextures[0], mesh->baseTextures[1], mesh->baseTextures[3] };
 		devCon->PSSetShaderResources(0, 3, texArray);
 
 		// upload and draw the mesh
-		alphaMeshes[y]->UploadBuffers();
+		mesh->UploadBuffers();
 
-		devCon->DrawIndexed(alphaMeshes[y]->GetNumIndices(), 0, 0);
+		devCon->DrawIndexed(mesh->numIndices, 0, 0);
 	}
 
 	devCon->PSSetShaderResources(0, 3, nullSRV);

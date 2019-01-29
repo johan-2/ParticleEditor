@@ -37,10 +37,10 @@ void DepthShader::RenderDepth(std::vector<Mesh*>& meshes)
 	DXManager& DXM    = *Systems::dxManager;
 	CameraManager& CM = *Systems::cameraManager;
 
-	DXM.BlendStates()->SetBlendState(BLEND_STATE::BLEND_ALPHA);
+	DXM.blendStates->SetBlendState(BLEND_STATE::BLEND_ALPHA);
 
 	// get devicecontext
-	ID3D11DeviceContext* devCon = DXM.GetDeviceCon();
+	ID3D11DeviceContext* devCon = DXM.devCon;
 
 	// constantbuffer structure for vertex data
 	ConstantVertex vertexData;
@@ -65,13 +65,13 @@ void DepthShader::RenderDepth(std::vector<Mesh*>& meshes)
 		SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(ConstantVertex), _constantBufferVertex);
 
 		// set textures
-		devCon->PSSetShaderResources(0, 1, meshes[i]->GetTextureArray());
+		devCon->PSSetShaderResources(0, 1, meshes[i]->baseTextures);
 
 		// upload vertices and indices
 		meshes[i]->UploadBuffers();
 
 		// draw
-		devCon->DrawIndexed(meshes[i]->GetNumIndices(), 0, 0);
+		devCon->DrawIndexed(meshes[i]->numIndices, 0, 0);
 	}
 
 	// unbind so we can use resources as input in next stages
@@ -85,10 +85,10 @@ void DepthShader::RenderDepthInstanced(std::vector<InstancedModel*>& models)
 	DXManager& DXM = *Systems::dxManager;
 	CameraManager& CM = *Systems::cameraManager;
 
-	DXM.BlendStates()->SetBlendState(BLEND_STATE::BLEND_ALPHA);
+	DXM.blendStates->SetBlendState(BLEND_STATE::BLEND_ALPHA);
 
 	// get devicecontext
-	ID3D11DeviceContext* devCon = DXM.GetDeviceCon();
+	ID3D11DeviceContext*& devCon = DXM.devCon;
 
 	// get the camera that will render the depthmap
 	CameraComponent* camera = CM.currentCameraDepthMap;
@@ -108,25 +108,29 @@ void DepthShader::RenderDepthInstanced(std::vector<InstancedModel*>& models)
 	size_t size = models.size();
 	for (int i = 0; i < size; i++)
 	{
-		models[i]->UploadInstances();
+		InstancedModel*& model = models[i];
 
-		const std::vector<Mesh*>& meshes = models[i]->GetMeshes();
+		model->UploadInstances();
+
+		std::vector<Mesh*>& meshes = model->meshes;
 		size_t meshesSize = meshes.size();
 		for (int y = 0; y < meshesSize; y++)
 		{
-			ID3D11Buffer* vertexBuffer = meshes[y]->GetVertexBuffer();
+			Mesh*& mesh = meshes[y];
+
+			ID3D11Buffer* vertexBuffer = mesh->vertexBuffer;
 
 			// Set the vertex buffer in slot 0
-			devCon->IASetVertexBuffers(0, 1, &vertexBuffer, models[i]->GetStrides(), models[i]->GetOffsets());
+			devCon->IASetVertexBuffers(0, 1, &vertexBuffer, model->strides, model->offsets);
 
 			// Set the index buffer 
-			devCon->IASetIndexBuffer(meshes[y]->GetIndexBuffer(), DXGI_FORMAT_R32_UINT, 0);
+			devCon->IASetIndexBuffer(mesh->indexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
 			// set textures
-			devCon->PSSetShaderResources(0, 1, meshes[y]->GetTextureArray());
+			devCon->PSSetShaderResources(0, 1, mesh->baseTextures);
 
 			// draw all instances of this mesh
-			devCon->DrawIndexedInstanced(meshes[y]->GetNumIndices(), models[i]->GetNumInstances(), 0, 0, 0);
+			devCon->DrawIndexedInstanced(mesh->numIndices, model->numInstances, 0, 0, 0);
 		}
 	}
 

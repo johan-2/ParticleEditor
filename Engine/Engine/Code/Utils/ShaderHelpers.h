@@ -11,7 +11,7 @@ namespace SHADER_HELPERS
 {
 	static void CreateConstantBuffer(ID3D11Buffer*& buffer)
 	{
-		ID3D11Device* device = Systems::dxManager->GetDevice();
+		ID3D11Device*& device = Systems::dxManager->device;
 
 		D3D11_BUFFER_DESC bufferDesc;
 		bufferDesc.Usage               = D3D11_USAGE_DYNAMIC;
@@ -30,7 +30,7 @@ namespace SHADER_HELPERS
 
 	static void CreateStructuredStagingBuffer(unsigned int structSize, unsigned int count, ID3D11Buffer*& buffer)
 	{
-		ID3D11Device* device = Systems::dxManager->GetDevice();
+		ID3D11Device*& device = Systems::dxManager->device;
 
 		D3D11_BUFFER_DESC bufferDesc;
 		bufferDesc.Usage               = D3D11_USAGE_STAGING;
@@ -49,7 +49,7 @@ namespace SHADER_HELPERS
 
 	static void CreateStructuredSRVBuffer(void* data, unsigned int structSize, unsigned int count, ID3D11Buffer*& buffer, ID3D11ShaderResourceView*& bufferSRV)
 	{
-		ID3D11Device* device = Systems::dxManager->GetDevice();
+		ID3D11Device*& device = Systems::dxManager->device;
 
 		D3D11_BUFFER_DESC bufferDesc;
 		ZeroMemory(&bufferDesc, sizeof(D3D11_BUFFER_DESC));
@@ -83,7 +83,7 @@ namespace SHADER_HELPERS
 
 	static void CreateStructuredUAVSRVBuffer(void* initialData, unsigned int structSize, unsigned int count, ID3D11Buffer*& buffer, ID3D11ShaderResourceView*& bufferSRV, ID3D11UnorderedAccessView*& bufferUAV, bool append = false)
 	{
-		ID3D11Device* device = Systems::dxManager->GetDevice();
+		ID3D11Device*& device = Systems::dxManager->device;
 
 		D3D11_BUFFER_DESC bufferDesc;
 		ZeroMemory(&bufferDesc, sizeof(D3D11_BUFFER_DESC));
@@ -128,7 +128,7 @@ namespace SHADER_HELPERS
 
 	static void CreateTexture2DUAVSRV(int width, int height, ID3D11Texture2D*& texture, ID3D11ShaderResourceView*& texSRV, ID3D11UnorderedAccessView*& texUAV)
 	{
-		ID3D11Device* device = Systems::dxManager->GetDevice();
+		ID3D11Device*& device = Systems::dxManager->device;
 
 		D3D11_TEXTURE2D_DESC texDesc;
 		ZeroMemory(&texDesc, sizeof(texDesc));
@@ -171,8 +171,8 @@ namespace SHADER_HELPERS
 
 	static void UpdateConstantBuffer(void* data, unsigned int size, ID3D11Buffer*& buffer)
 	{
-		ID3D11DeviceContext* devCon = Systems::dxManager->GetDeviceCon();
-		ID3D11Device* device        = Systems::dxManager->GetDevice();
+		ID3D11DeviceContext*& devCon = Systems::dxManager->devCon;
+		ID3D11Device*& device        = Systems::dxManager->device;
 
 		//get desc of the current constant buffer in use
 		D3D11_BUFFER_DESC old;
@@ -210,8 +210,8 @@ namespace SHADER_HELPERS
 
 	static void UpdateStructuredBuffer(void* data, unsigned int structSize, unsigned int count, ID3D11Buffer*& buffer)
 	{
-		ID3D11DeviceContext* devCon = Systems::dxManager->GetDeviceCon();
-		ID3D11Device* device = Systems::dxManager->GetDevice();
+		ID3D11DeviceContext*& devCon = Systems::dxManager->devCon;
+		ID3D11Device*&        device = Systems::dxManager->device;
 
 		//get desc of the current constant buffer in use
 		D3D11_BUFFER_DESC old;
@@ -248,7 +248,7 @@ namespace SHADER_HELPERS
 
 	static void CreateVertexShader(LPCWSTR filePath, ID3D11VertexShader*& shader, ID3D10Blob*& buffer, char* entryPoint = "Main")
 	{
-		ID3D11Device* device = Systems::dxManager->GetDevice();
+		ID3D11Device*& device = Systems::dxManager->device;
 		ID3D10Blob* errorMessage;
 
 		// compile the vertex shader code from the text file into temporal buffers
@@ -262,7 +262,7 @@ namespace SHADER_HELPERS
 
 	static void CreatePixelShader(LPCWSTR filePath, ID3D11PixelShader*& shader, ID3D10Blob*& buffer, char* entryPoint = "Main")
 	{
-		ID3D11Device* device = Systems::dxManager->GetDevice();
+		ID3D11Device*& device = Systems::dxManager->device;
 		ID3D10Blob* errorMessage;
 
 		// compile the pixel shader code from the text file into temporal buffers
@@ -277,7 +277,7 @@ namespace SHADER_HELPERS
 	static void CreateComputeShader(LPCWSTR filePath, ID3D11ComputeShader*& shader, ID3D10Blob*& buffer, char* entryPoint = "Main")
 	{
 
-		ID3D11Device* device = Systems::dxManager->GetDevice();
+		ID3D11Device*& device = Systems::dxManager->device;
 		ID3D10Blob* errorMessage;
 
 		// compile the compute shader code into blob
@@ -301,12 +301,12 @@ namespace SHADER_HELPERS
 			XMStoreFloat3(&vec, XMVectorSubtract(XMLoadFloat3(&meshes[i]->GetPosition()), XMLoadFloat3(&position)));
 			XMStoreFloat(&distance, XMVector3Length(XMLoadFloat3(&vec)));
 
-			meshes[i]->SetDistanceToCamera(distance);
+			meshes[i]->camDistance = distance;
 		}
 
 		if (backToFront)
-			std::sort(meshes.begin(), meshes.end(), [](Mesh* a, Mesh* b) -> bool {return a->GetDistanceFromCamera() > b->GetDistanceFromCamera(); });
+			std::sort(meshes.begin(), meshes.end(), [](Mesh* a, Mesh* b) -> bool {return a->camDistance > b->camDistance; });
 		else
-			std::sort(meshes.begin(), meshes.end(), [](Mesh* a, Mesh* b) -> bool {return a->GetDistanceFromCamera() < b->GetDistanceFromCamera(); });
+			std::sort(meshes.begin(), meshes.end(), [](Mesh* a, Mesh* b) -> bool {return a->camDistance < b->camDistance; });
 	}
 }

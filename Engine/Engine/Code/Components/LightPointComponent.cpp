@@ -14,12 +14,12 @@ LightPointComponent::~LightPointComponent()
 // set light properties
 void LightPointComponent::Init(float radius, float intensity, XMFLOAT3 color, float attConstant, float attLinear, float attExponential)
 {
-	_radius         = radius;
-	_intensity      = intensity;
-	_color          = color;
-	_attConstant    = attConstant;
-	_attLinear      = attLinear;
-	_attExponential = attExponential;
+	this->radius         = radius;
+	this->intensity      = intensity;
+	this->color          = color;
+	this->attConstant    = attConstant;
+	this->attLinear      = attLinear;
+	this->attExponential = attExponential;
 
 	Systems::lightManager->AddPointLight(this);
 }

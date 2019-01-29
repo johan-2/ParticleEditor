@@ -7,7 +7,7 @@
 
 RenderToTexture::RenderToTexture(unsigned int width, unsigned int height, bool depthOnly, bool HDR, bool addRenderDebugQuad, bool addDepthDebugQuad)
 {
-	ID3D11Device* device = Systems::dxManager->GetDevice();
+	ID3D11Device*& device = Systems::dxManager->device;
 	HRESULT result;
 
 	// if we are only interessted in rendering to a new depth stencil view
@@ -224,7 +224,7 @@ void RenderToTexture::Release()
 
 void RenderToTexture::SetRendertarget(bool depthOnly, bool depthReadOnly)
 {
-	ID3D11DeviceContext* devCon = Systems::dxManager->GetDeviceCon();
+	ID3D11DeviceContext*& devCon = Systems::dxManager->devCon;
 
 	ID3D11RenderTargetView* RT = depthOnly ? nullptr : _renderTargetView;
 	ID3D11DepthStencilView* DS = depthReadOnly ? _depthStencilViewReadOnly : _depthStencilView;
@@ -237,7 +237,7 @@ void RenderToTexture::ClearRenderTarget(float r, float g, float b, float a, bool
 {
 	float color[4]{ r,g,b,a };
 
-	ID3D11DeviceContext* devCon = Systems::dxManager->GetDeviceCon();
+	ID3D11DeviceContext*& devCon = Systems::dxManager->devCon;
 
 	if (depthOnly) 
 	{

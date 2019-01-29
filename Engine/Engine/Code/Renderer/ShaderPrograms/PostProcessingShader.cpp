@@ -92,7 +92,7 @@ void PostProcessingShader::createDofRenderTextures()
 void PostProcessingShader::Render(ScreenQuad* quad, ID3D11ShaderResourceView* SceneImage, ID3D11ShaderResourceView* sceneDepth)
 {
 	DXManager& DXM = *Systems::dxManager;
-	DXM.BlendStates()->SetBlendState(BLEND_STATE::BLEND_OPAQUE);
+	DXM.blendStates->SetBlendState(BLEND_STATE::BLEND_OPAQUE);
 	quad->UploadBuffers();
 
 	// unbind our main rendertarget so we can use the SRV as input 
@@ -120,7 +120,7 @@ void PostProcessingShader::Render(ScreenQuad* quad, ID3D11ShaderResourceView* Sc
 void PostProcessingShader::ComputeBrightnessMap(ID3D11ShaderResourceView* originalImage)
 {
 	// get devicecontext
-	ID3D11DeviceContext* devCon = Systems::dxManager->GetDeviceCon();
+	ID3D11DeviceContext*& devCon = Systems::dxManager->devCon;
 
 	devCon->CSSetShader(_computeBrightnessShader, NULL, 0);
 	devCon->CSSetShaderResources(0, 1, &originalImage);
@@ -147,7 +147,7 @@ void PostProcessingShader::ComputeBrightnessMap(ID3D11ShaderResourceView* origin
 ID3D11ShaderResourceView* PostProcessingShader::RenderBlurMap(ID3D11ShaderResourceView* imageToBlur, float scaleDown, RenderToTexture* horizontal, RenderToTexture* vertical)
 {
 	// get devicecontext
-	ID3D11DeviceContext* devCon = Systems::dxManager->GetDeviceCon();
+	ID3D11DeviceContext*& devCon = Systems::dxManager->devCon;
 
 	ID3D11ShaderResourceView* nullSRV[1] = { NULL };
 
@@ -205,7 +205,7 @@ void PostProcessingShader::RenderFinalHDR(ID3D11ShaderResourceView* SceneImage, 
 	DXManager& DXM = *Systems::dxManager;
 
 	// get devicecontext
-	ID3D11DeviceContext* devCon = DXM.GetDeviceCon();
+	ID3D11DeviceContext*& devCon = DXM.devCon;
 
 	_sceneSDR->SetRendertarget(false, false);
 
@@ -245,7 +245,7 @@ void PostProcessingShader::RenderFinalSDR(ID3D11ShaderResourceView* SceneImageSD
 	DXManager& DXM = *Systems::dxManager;
 
 	// get devicecontext
-	ID3D11DeviceContext* devCon = DXM.GetDeviceCon();
+	ID3D11DeviceContext*& devCon = DXM.devCon;
 
 	// set to defult backbuffer and render our final scene image
 	DXM.SetBackBuffer();

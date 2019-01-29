@@ -148,13 +148,13 @@ void ParticleSystemComponent::SetUp()
 	}
 	
 	// get current entity position for use next frame
-	_previousPosition = _transform->GetPositionVal();
+	_previousPosition = _transform->position;
 }
 
 void ParticleSystemComponent::CreateBuffers(XMFLOAT2 size, unsigned int index)
 {	
 	// get device
-    ID3D11Device* device = Systems::dxManager->GetDevice();
+    ID3D11Device*& device = Systems::dxManager->device;
 
 	// get half size
 	float halfX = size.x * 0.5f;
@@ -249,7 +249,7 @@ void ParticleSystemComponent::SpawnAllParticles(unsigned int index)
 void ParticleSystemComponent::SpawnParticle(ParticleData& particle, unsigned int index)
 {
 	 // get entity position
-	const XMFLOAT3& emitterPos = _transform->GetPositionRef();
+	const XMFLOAT3& emitterPos = _transform->position;
 
 	// get min/max spawn points from the position of entity
 	XMFLOAT2 spawnMinMaxX = XMFLOAT2(emitterPos.x - (_settings[index].spawnRadius * 0.5f), emitterPos.x + (_settings[index].spawnRadius * 0.5f));
@@ -339,7 +339,7 @@ void ParticleSystemComponent::Update(const float& delta)
 
 void ParticleSystemComponent::UpdateVelocity(const float& delta)
 {
-	XMFLOAT3 EmitterPos = _transform->GetPositionVal();
+	XMFLOAT3 EmitterPos = _transform->position;
 
 	// get velocity rom last pos to currentpos
 	XMFLOAT3 velocityVector;
@@ -435,7 +435,7 @@ void ParticleSystemComponent::UpdateLifeTime(const float& delta)
 		{
 			_settings[i].emitterLifetime -= delta;
 			if (_settings[i].emitterLifetime <= 0)
-				_parent->RemoveEntity();
+				parent->RemoveEntity();
 		}
 
 		// if in burst mode only update the timer that all particles share
@@ -475,7 +475,7 @@ void ParticleSystemComponent::UpdateLifeTime(const float& delta)
 
 void ParticleSystemComponent::SortParticles(unsigned int index)
 {
-	XMFLOAT3 camPos = Systems::cameraManager->currentCameraGame->GetComponent<TransformComponent>()->GetPositionVal();
+	XMFLOAT3 camPos = Systems::cameraManager->currentCameraGame->GetComponent<TransformComponent>()->position;
 	XMFLOAT3 vec;
 
 	// get distance of particle from camera
@@ -504,7 +504,7 @@ float ParticleSystemComponent::LerpFloat(float a, float b, float f)
 
 XMFLOAT3 ParticleSystemComponent::GetDirectionLocal(XMFLOAT3 direction)
 {
-	const XMFLOAT3& emitterRotation = _transform->GetRotationRef();
+	const XMFLOAT3& emitterRotation = _transform->rotation;
 	XMFLOAT4X4 matrixRotation; XMStoreFloat4x4(&matrixRotation, XMMatrixIdentity());
 
 	XMStoreFloat4x4(&matrixRotation, XMMatrixRotationRollPitchYaw(XMConvertToRadians(emitterRotation.x), XMConvertToRadians(emitterRotation.y), XMConvertToRadians(emitterRotation.z)));
@@ -617,7 +617,7 @@ void ParticleSystemComponent::UpdateBuffer()
 				XMStoreFloat4(&_particleInstanceData[i][y].color, XMLoadFloat4(&XMFLOAT4(color.x, color.y, color.z, alpha)));
 		}
 
-		ID3D11DeviceContext* devCon = Systems::dxManager->GetDeviceCon();
+		ID3D11DeviceContext*& devCon = Systems::dxManager->devCon;
 		D3D11_MAPPED_SUBRESOURCE data;
 
 		// map instancebuffer
@@ -635,7 +635,7 @@ void ParticleSystemComponent::UpdateBuffer()
 
 void ParticleSystemComponent::UploadBuffers(unsigned int index)
 {
-	ID3D11DeviceContext* devCon = Systems::dxManager->GetDeviceCon();
+	ID3D11DeviceContext*& devCon = Systems::dxManager->devCon;
 
 	unsigned int strides[2];
 	unsigned int offsets[2];

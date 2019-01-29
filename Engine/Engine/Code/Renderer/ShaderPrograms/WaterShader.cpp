@@ -64,7 +64,7 @@ void WaterShader::Render(std::vector<Mesh*>& waterMeshes)
 	Renderer& renderer = *Systems::renderer;
 
 	// get device context
-	ID3D11DeviceContext*& devCon = DXM.GetDeviceCon();
+	ID3D11DeviceContext*& devCon = DXM.devCon;
 
 	// get game camera and shadow camera
 	CameraComponent*& camera      = CM.currentCameraGame;
@@ -73,8 +73,8 @@ void WaterShader::Render(std::vector<Mesh*>& waterMeshes)
 	TransformComponent* camTrans = camera->GetComponent<TransformComponent>();
 
 	// get camera position
-	XMFLOAT3 cameraPos = camTrans->GetPositionVal();
-	XMFLOAT3 cameraRot = camTrans->GetRotationVal();
+	XMFLOAT3 cameraPos = camTrans->position;
+	XMFLOAT3 cameraRot = camTrans->rotation;
 
 	// create constant buffer structures
 	CBVertexWater constantVertex;
@@ -101,9 +101,9 @@ void WaterShader::Render(std::vector<Mesh*>& waterMeshes)
 		reflectPos.y -= (cameraPos.y - mesh->GetPosition().y) * 2.0f;
 
 		// set reflection position/rotation and build matrices
-		camTrans->SetRotation(XMFLOAT3(-cameraRot.x, cameraRot.y, cameraRot.z));
-		camTrans->SetPosition(reflectPos);
-		camTrans->UpdateWorldMatrix();
+		camTrans->rotation = XMFLOAT3(-cameraRot.x, cameraRot.y, cameraRot.z);
+		camTrans->position = reflectPos;
+		camTrans->BuildWorldMatrix();
 		camera->CalculateViewMatrix();
 
 		// save the reflection viewprojmatrix
@@ -113,9 +113,9 @@ void WaterShader::Render(std::vector<Mesh*>& waterMeshes)
 		_simpleClipShaderReflection->RenderScene(renderer.GetMeshes(SHADER_TYPE::S_CAST_REFLECTION_OPAQUE), renderer.GetMeshes(SHADER_TYPE::S_CAST_REFLECTION_ALPHA), renderer.GetInstancedModels(INSTANCED_SHADER_TYPE::S_INSTANCED_CAST_REFLECTION), clipPlaneReflect, true);
 
 		// change back to original camera position/rotation
-		camTrans->SetRotation(cameraRot);
-		camTrans->SetPosition(cameraPos);
-		camTrans->UpdateWorldMatrix();
+		camTrans->rotation = cameraRot;
+		camTrans->position = cameraPos;
+		camTrans->BuildWorldMatrix();
 		camera->CalculateViewMatrix();
 
 		// set back to defualt render target and render the reflection mesh
@@ -125,16 +125,13 @@ void WaterShader::Render(std::vector<Mesh*>& waterMeshes)
 		devCon->VSSetShader(_waterVertexShader, NULL, 0);
 		devCon->PSSetShader(_waterPixelShader, NULL, 0);
 
-		ID3D11Buffer* pointBuffer = LM.GetPointLightCB();
-		ID3D11Buffer* ambDirBuffer = LM.GetAmbDirLightCB();
-
 		// set the vertex constant buffer, the pixel ones is already set
 		devCon->VSSetConstantBuffers(0, 1, &_CBVertex);
-		devCon->PSSetConstantBuffers(0, 1, &ambDirBuffer);
-		devCon->PSSetConstantBuffers(1, 1, &pointBuffer);
+		devCon->PSSetConstantBuffers(0, 1, &LM.cbAmbDir);
+		devCon->PSSetConstantBuffers(1, 1, &LM.cbPoint);
 
 		// set to alpha blending
-		DXM.BlendStates()->SetBlendState(BLEND_STATE::BLEND_ALPHA);
+		DXM.blendStates->SetBlendState(BLEND_STATE::BLEND_ALPHA);
 
 		// set vertex constant values
 		const XMFLOAT4X4& worldMat = mesh->GetWorldMatrix();
@@ -143,23 +140,31 @@ void WaterShader::Render(std::vector<Mesh*>& waterMeshes)
 		XMStoreFloat4x4(&constantVertex.worldViewProj,        XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&worldMat, &camera->viewProjMatrix)));
 		XMStoreFloat4x4(&constantVertex.worldViewProjLight,   XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&worldMat, &cameraLight->viewProjMatrix)));
 		XMStoreFloat4x4(&constantVertex.worldViewProjReflect, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&worldMat, &reflectMat)));
-		XMStoreFloat2(&constantVertex.uvOffset,               XMLoadFloat2(&mesh->GetUvOffset()));
+		XMStoreFloat2(&constantVertex.uvOffset,               XMLoadFloat2(&mesh->uvOffset));
 
 		// update vertex constant buffer
 		SHADER_HELPERS::UpdateConstantBuffer((void*)&constantVertex, sizeof(CBVertexWater), _CBVertex);
 
-		// get the texture array of mesh
-		ID3D11ShaderResourceView** meshTextures = mesh->GetTextureArray();
-
 		// fill texture array with all textures including the shadow map and reflection map
-		ID3D11ShaderResourceView* t[9] = { meshTextures[1], meshTextures[2], mesh->GetDUDVMap(), cameraLight->renderTexture, _simpleClipShaderReflection->GetRenderSRV(), _simpleClipShaderRefraction->GetRenderSRV(), _simpleClipShaderRefraction->GetDepthSRV(), mesh->GetFoamMap(), mesh->GetNoiseMap() };
+		ID3D11ShaderResourceView* t[9] = 
+		{
+			mesh->baseTextures[1],
+			mesh->baseTextures[2],
+			mesh->DUDVMap, 
+			cameraLight->renderTexture, 
+			_simpleClipShaderReflection->GetRenderSRV(), 
+			_simpleClipShaderRefraction->GetRenderSRV(), 
+			_simpleClipShaderRefraction->GetDepthSRV(),
+			mesh->foamMap,
+			mesh->noiseMap 
+		};
 
 		// set SRV's
 		devCon->PSSetShaderResources(0, 9, t);
 
 		mesh->UploadBuffers();
 
-		devCon->DrawIndexed(mesh->GetNumIndices(), 0, 0);
+		devCon->DrawIndexed(mesh->numIndices, 0, 0);
 
 		// unbind so we can use resources as input in next stages
 		ID3D11ShaderResourceView* nullSRV[8] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL };

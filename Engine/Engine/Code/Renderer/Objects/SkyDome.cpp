@@ -99,7 +99,7 @@ void SkyDome::LoadCubemap()
 	std::wstring file(_skySettings.cubeMapName.begin(), _skySettings.cubeMapName.end());
 
 	// create cubemap from file
-	HRESULT result = DirectX::CreateDDSTextureFromFile(Systems::dxManager->GetDevice(), file.c_str(), NULL, &_skySettings.cubeMap);
+	HRESULT result = DirectX::CreateDDSTextureFromFile(Systems::dxManager->device, file.c_str(), NULL, &_skySettings.cubeMap);
 
 	// get and print error message if failed
 	if (FAILED(result))						
@@ -124,7 +124,7 @@ void SkyDome::RenderCubeMap(bool noMask)
 	DXManager& DXM = *Systems::dxManager;
 
 	// get device context
-	ID3D11DeviceContext*& devCon = DXM.GetDeviceCon();
+	ID3D11DeviceContext*& devCon = DXM.devCon;
 
 	// get game camera
 	CameraComponent*& camera     = Systems::cameraManager->currentCameraGame;
@@ -141,20 +141,20 @@ void SkyDome::RenderCubeMap(bool noMask)
 	devCon->PSSetShaderResources(0, 1, &_skySettings.cubeMap);
 
 	// use no culling
-	DXM.RasterizerStates()->SetRasterizerState(RASTERIZER_STATE::NOCULL);
+	DXM.rasterizerStates->SetRasterizerState(RASTERIZER_STATE::NOCULL);
 
-	if (noMask) DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::DISABLED);
-	else        DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::MASKED_SKYBOX);
+	if (noMask) DXM.depthStencilStates->SetDepthStencilState(DEPTH_STENCIL_STATE::DISABLED);
+	else        DXM.depthStencilStates->SetDepthStencilState(DEPTH_STENCIL_STATE::MASKED_SKYBOX);
 	
 	CBVertDome vertexData;
-	XMStoreFloat4x4(&vertexData.worldViewProj, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&camTrans->GetPositionMatrix(), &camera->viewProjMatrix)));
+	XMStoreFloat4x4(&vertexData.worldViewProj, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&camTrans->positionMatrix, &camera->viewProjMatrix)));
 
 	// update constant buffer
 	SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(CBVertDome), _constantBufferVertex);
 
 	// upload and draw dome mesh
 	_domeMesh->UploadBuffers();
-	devCon->DrawIndexed(_domeMesh->GetNumIndices(), 0, 0);
+	devCon->DrawIndexed(_domeMesh->numIndices, 0, 0);
 
 	ID3D11ShaderResourceView* nullSRV[1] = { NULL };
 	devCon->PSSetShaderResources(0, 1, nullSRV);
@@ -167,7 +167,7 @@ void SkyDome::RenderBlendedColors(bool noMask)
 	DXManager& DXM = *Systems::dxManager;
 
 	// get device context
-	ID3D11DeviceContext* devCon = DXM.GetDeviceCon();
+	ID3D11DeviceContext* devCon = DXM.devCon;
 
 	// get game camera
 	CameraComponent* camera      = Systems::cameraManager->currentCameraGame;
@@ -182,14 +182,14 @@ void SkyDome::RenderBlendedColors(bool noMask)
 	devCon->PSSetConstantBuffers(0, 1, &_constantBufferColorBlendPixel);
 
 	// use no culling
-	DXM.RasterizerStates()->SetRasterizerState(RASTERIZER_STATE::NOCULL);
+	DXM.rasterizerStates->SetRasterizerState(RASTERIZER_STATE::NOCULL);
 	
 	// set vertex constants
-	if (noMask) DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::DISABLED);
-	else        DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::MASKED_SKYBOX);
+	if (noMask) DXM.depthStencilStates->SetDepthStencilState(DEPTH_STENCIL_STATE::DISABLED);
+	else        DXM.depthStencilStates->SetDepthStencilState(DEPTH_STENCIL_STATE::MASKED_SKYBOX);
 	
 	CBVertDome vertexData;
-	XMStoreFloat4x4(&vertexData.worldViewProj, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&camTrans->GetPositionMatrix(), &camera->viewProjMatrix)));
+	XMStoreFloat4x4(&vertexData.worldViewProj, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&camTrans->positionMatrix, &camera->viewProjMatrix)));
 
 	// set the colors, the percent fraction is stored in the w channel that specifies how
 	// low to high a color will be used on the skydome 
@@ -204,7 +204,7 @@ void SkyDome::RenderBlendedColors(bool noMask)
 
 	// upload and draw dome mesh
 	_domeMesh->UploadBuffers();
-	devCon->DrawIndexed(_domeMesh->GetNumIndices(), 0, 0);
+	devCon->DrawIndexed(_domeMesh->numIndices, 0, 0);
 }
 
 void SkyDome::RenderSunMoon(bool noMask)
@@ -213,14 +213,14 @@ void SkyDome::RenderSunMoon(bool noMask)
 	DXManager& DXM = *Systems::dxManager;
 
 	// get device context
-	ID3D11DeviceContext* devCon = DXM.GetDeviceCon();
+	ID3D11DeviceContext* devCon = DXM.devCon;
 
 	// get game camera
 	CameraComponent* camera      = Systems::cameraManager->currentCameraGame;
 	TransformComponent* camTrans = camera->GetComponent<TransformComponent>();
 
 	// render sun with alpha blend
-	DXM.BlendStates()->SetBlendState(BLEND_ALPHA);
+	DXM.blendStates->SetBlendState(BLEND_ALPHA);
 
 	// set shaders			
 	devCon->VSSetShader(_vertexSunShader, NULL, 0);
@@ -229,7 +229,7 @@ void SkyDome::RenderSunMoon(bool noMask)
 	devCon->PSSetConstantBuffers(0, 1, &_constantSunPixel);
 
 	// calculate sun/moon data
-	CaluclateSunMoonMatrix(camTrans->GetPositionRef());
+	CaluclateSunMoonMatrix(camTrans->position);
 
 	// set world and projection matrix
 	CBVertSun vertexData;
@@ -251,10 +251,10 @@ void SkyDome::RenderSunMoon(bool noMask)
 	_sunMoon.sun.mesh->UploadBuffers();
 
 	// set texture
-	devCon->PSSetShaderResources(0, 1, &_sunMoon.sun.mesh->GetTextureArray()[0]);
+	devCon->PSSetShaderResources(0, 1, &_sunMoon.sun.mesh->baseTextures[0]);
 
 	// upload and draw sun
-	devCon->DrawIndexed(_sunMoon.sun.mesh->GetNumIndices(), 0, 0);
+	devCon->DrawIndexed(_sunMoon.sun.mesh->numIndices, 0, 0);
 
 	// change properties for moon
 	vertexData.world       = _sunMoon.moon.positionMatrix;
@@ -270,16 +270,16 @@ void SkyDome::RenderSunMoon(bool noMask)
 	_sunMoon.moon.mesh->UploadBuffers();
 
 	// set texture
-	devCon->PSSetShaderResources(0, 1, &_sunMoon.moon.mesh->GetTextureArray()[0]);
+	devCon->PSSetShaderResources(0, 1, &_sunMoon.moon.mesh->baseTextures[0]);
 
 	// upload and draw moon
-	devCon->DrawIndexed(_sunMoon.moon.mesh->GetNumIndices(), 0, 0);
+	devCon->DrawIndexed(_sunMoon.moon.mesh->numIndices, 0, 0);
 
 	// enable rendering of all pixels
-	DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::ENABLED);
+	DXM.depthStencilStates->SetDepthStencilState(DEPTH_STENCIL_STATE::ENABLED);
 
 	// set back to backcull
-	DXM.RasterizerStates()->SetRasterizerState(RASTERIZER_STATE::BACKCULL);
+	DXM.rasterizerStates->SetRasterizerState(RASTERIZER_STATE::BACKCULL);
 
 	ID3D11ShaderResourceView* nullSRV[1] = { NULL };
 	devCon->PSSetShaderResources(0, 1, nullSRV);
@@ -339,10 +339,10 @@ void SkyDome::UpdateSunMoonTranslation(const float& delta)
 	XMStoreFloat3(&moonRotation, XMVectorAdd(XMLoadFloat3(&sunRotation), XMLoadFloat3(&moonOffset)));
 
 	// update rotation and matrices
-	_sunMoon.sun.transform->SetRotation(sunRotation);
-	_sunMoon.moon.transform->SetRotation(moonRotation);
-	_sunMoon.sun.transform->UpdateWorldMatrix();
-	_sunMoon.moon.transform->UpdateWorldMatrix();
+	_sunMoon.sun.transform->rotation  = sunRotation;
+	_sunMoon.moon.transform->rotation = moonRotation;
+	_sunMoon.sun.transform->BuildWorldMatrix();
+	_sunMoon.moon.transform->BuildWorldMatrix();
 
 	// get the inverse look of sun
 	XMFLOAT3 invertedForward = _sunMoon.sun.transform->GetForward();
@@ -384,8 +384,8 @@ void SkyDome::UpdateShadowLightTranslation(const float& delta)
 
 	// set new light rotation depending on the threshold if
 	// the sun or the moon is the light casting source
-	lightTransform->SetRotation(_sunMoon.sun.relativeHeight < _skySettings.switchToMoonLightThreshold ? _sunMoon.moon.transform->GetRotationVal() : _sunMoon.sun.transform->GetRotationVal());
-	lightTransform->UpdateWorldMatrix();
+	lightTransform->rotation = _sunMoon.sun.relativeHeight < _skySettings.switchToMoonLightThreshold ? _sunMoon.moon.transform->rotation : _sunMoon.sun.transform->rotation;
+	lightTransform->BuildWorldMatrix();
 
 	// get the inverted forward of the current lightsource
 	// so we can offset the shadowmap camera based on this
@@ -393,16 +393,14 @@ void SkyDome::UpdateShadowLightTranslation(const float& delta)
 	XMStoreFloat3(&invertedForwardLight, XMVectorNegate(XMLoadFloat3(&lightTransform->GetForward())));
 
 	// move the shadowmap camera 
-	XMFLOAT3 finalPosition;
-	XMStoreFloat3(&finalPosition, XMVectorMultiply(XMLoadFloat3(&invertedForwardLight), XMLoadFloat3(&_skySettings.shadowMapDistance)));
-	lightTransform->SetPosition(finalPosition);
-	lightTransform->UpdateWorldMatrix();
+	XMStoreFloat3(&lightTransform->position, XMVectorMultiply(XMLoadFloat3(&invertedForwardLight), XMLoadFloat3(&_skySettings.shadowMapDistance)));
+	lightTransform->BuildWorldMatrix();
 }
 
 void SkyDome::UpdateShadowLightColor(const float& delta)
 {
 	// get the directional light so we can change the colors of light
-	LightDirectionComponent* directionLight = Systems::lightManager->GetDirectionalLight();
+	LightDirectionComponent*& directionLight = Systems::lightManager->directionalLight;
 
 	// final directional light color depending on the dot product
 	// day to sunset
@@ -427,7 +425,7 @@ void SkyDome::UpdateShadowLightColor(const float& delta)
 	XMStoreFloat4(&blendedLightColor, XMVectorMultiply(XMLoadFloat4(&blendedLightColor), XMLoadFloat4(&lightStrength)));
 
 	// set the color of directional light
-	directionLight->SetLightColor(blendedLightColor);
+	directionLight->lightColor = blendedLightColor;
 }
 
 void SkyDome::UpdateSkyColors(const float& delta)

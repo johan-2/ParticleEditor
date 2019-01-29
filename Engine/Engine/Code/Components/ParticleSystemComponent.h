@@ -129,7 +129,7 @@ public:
 	ID3D11ShaderResourceView** GetTextureArray() { return _texture; }
 
 	// get the position of the system transform
-	XMFLOAT3 GetSystemPosition() { return _transform->GetPositionVal(); }
+	XMFLOAT3 GetSystemPosition() { return _transform->position; }
 
 private:
 

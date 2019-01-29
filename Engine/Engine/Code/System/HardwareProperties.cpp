@@ -57,12 +57,12 @@ void HardwareProperties::GetHardwareInfo(int screenWidth, int screenHeight)
 	{
 		if (displayModeList[i].Width == (unsigned int)screenWidth && displayModeList[i].Height == (unsigned int)screenHeight)
 		{
-			_hardwareInfo.numerator   = displayModeList[i].RefreshRate.Numerator;
-			_hardwareInfo.denominator = displayModeList[i].RefreshRate.Denominator;
-			_hardwareInfo.refreshrate = (int)round((float)_hardwareInfo.numerator / _hardwareInfo.denominator);
+			hardwareInfo.numerator   = displayModeList[i].RefreshRate.Numerator;
+			hardwareInfo.denominator = displayModeList[i].RefreshRate.Denominator;
+			hardwareInfo.refreshrate = (int)round((float)hardwareInfo.numerator / hardwareInfo.denominator);
 		}
 	}
-	if (_hardwareInfo.numerator == 0 && _hardwareInfo.denominator == 0)
+	if (hardwareInfo.numerator == 0 && hardwareInfo.denominator == 0)
 		printf("your monitor do not support the current aspect ratio\n");
 
 	// Get the adapter description 
@@ -71,10 +71,10 @@ void HardwareProperties::GetHardwareInfo(int screenWidth, int screenHeight)
 		DX_ERROR::PrintError(result, "failed to create adapter description");
 
 	// store the videocard memory in mbs
-	_hardwareInfo.videoCardMemory = (unsigned int)(adapterDesc.DedicatedVideoMemory / 1024 / 1024);
+	hardwareInfo.videoCardMemory = (unsigned int)(adapterDesc.DedicatedVideoMemory / 1024 / 1024);
 
 	// convert the name of videocard to character array
-	error = wcstombs_s(&stringLenght, _hardwareInfo.videoCardDescription, 128, adapterDesc.Description, 128);
+	error = wcstombs_s(&stringLenght, hardwareInfo.videoCardDescription, 128, adapterDesc.Description, 128);
 	if (error != 0)
 		printf("Failed to convert the videocard info");
 
