@@ -3,9 +3,9 @@
 #include <vector>
 #include <DirectXMath.h>
 
-#include "assimp/Importer.hpp"
-#include "assimp/scene.h"
-#include "assimp/postprocess.h"
+#include "ThirdParty/assimp/Importer.hpp"
+#include "ThirdParty/assimp/scene.h"
+#include "ThirdParty/assimp/postprocess.h"
 
 class mesh;
 

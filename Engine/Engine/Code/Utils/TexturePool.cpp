@@ -1,6 +1,6 @@
 #include "TexturePool.h"
 #include "DXManager.h"
-#include "DDSTextureLoader/DDSTextureLoader.h"
+#include "ThirdParty/DDSTextureLoader/DDSTextureLoader.h"
 #include <comdef.h>
 #include "Systems.h"
 #include "DXErrorHandler.h"

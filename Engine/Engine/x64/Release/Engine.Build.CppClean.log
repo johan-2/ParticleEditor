@@ -1,10 +1,10 @@
 c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\vc141.pdb
+c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\systemsettingswindow.obj
 c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\skydomewindow.obj
 c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\postprocesswindow.obj
 c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\mastereditor.obj
 c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\maineditorwindow.obj
 c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\ieditorwindow.obj
-c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\ddstextureloader.obj
 c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\color32.obj
 c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\uvscrollcomponent.obj
 c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\transformcomponent.obj
@@ -26,6 +26,7 @@ c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\rendertotexture.obj
 c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\renderer.obj
 c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\skydome.obj
 c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\mesh.obj
+c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\instancedmodel.obj
 c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\screenquad.obj
 c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\gbuffer.obj
 c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\lightmanager.obj
@@ -38,10 +39,9 @@ c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\imgui_draw.obj
 c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\imgui_demo.obj
 c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\imgui.obj
 c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\framework.obj
-c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\systemsettingswindow.obj
-c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\time.obj
-c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\texturepool.obj
 c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\systemdefs.obj
+c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\debugquadhandler.obj
+c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\ddstextureloader.obj
 c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\sponzatestscene.obj
 c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\islandtestscene.obj
 c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\systems.obj
@@ -61,7 +61,8 @@ c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\imguishader.obj
 c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\postprocessingshader.obj
 c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\main.obj
 c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\window.obj
-c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\debugquadhandler.obj
+c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\time.obj
+c:\users\nilss\desktop\enginedx11\engine\engine\x64\release\texturepool.obj
 c:\users\nilss\desktop\enginedx11\engine\engine\engine.ipdb
 c:\users\nilss\desktop\enginedx11\engine\engine\engine.iobj
 c:\users\nilss\desktop\enginedx11\engine\engine\engine.exe

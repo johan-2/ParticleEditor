@@ -2,7 +2,7 @@
 #include "CameraManager.h"
 #include "DXManager.h"
 #include "TransformComponent.h"
-#include "DDSTextureLoader/DDSTextureLoader.h"
+#include "ThirdParty/DDSTextureLoader/DDSTextureLoader.h"
 #include "DXErrorHandler.h"
 #include "ShaderHelpers.h"
 #include "DXBlendstates.h"
