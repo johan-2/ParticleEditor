@@ -12,9 +12,9 @@
 DepthShader::DepthShader()
 {
 	// create and compile shaders
-	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexDepth.vs", _vertexShader, vertexShaderByteCode);
-	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexDepthInstanced.vs", _vertexShaderInstanced, vertexShaderByteCodeInstanced);
-	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelDepth.ps",   _pixelShader,  pixelShaderByteCode);
+	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexDepth.hlsl", _vertexShader, vertexShaderByteCode);
+	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexDepthInstanced.hlsl", _vertexShaderInstanced, vertexShaderByteCodeInstanced);
+	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelDepth.hlsl",   _pixelShader,  pixelShaderByteCode);
 
 	// create constant buffer for vertex shader
 	SHADER_HELPERS::CreateConstantBuffer(_constantBufferVertex);

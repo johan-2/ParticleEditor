@@ -1,1 +1,59 @@
-﻿  Engine.vcxproj -> C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\Engine.exe
+﻿  Entity.cpp
+  IComponent.cpp
+  World.cpp
+  FreeMoveComponent.cpp
+  LightDirectionComponent.cpp
+  LightPointComponent.cpp
+  ModelComponent.cpp
+  ParticleSystemComponent.cpp
+  QuadComponent.cpp
+  RotationComponent.cpp
+  UVScrollComponent.cpp
+  MainEditorWindow.cpp
+  MasterEditor.cpp
+  PostProcessWindow.cpp
+  SkyDomeWindow.cpp
+  SystemSettingsWindow.cpp
+  Framework.cpp
+  Input.cpp
+  DXManager.cpp
+  GuiManager.cpp
+  Generating Code...
+  Compiling...
+  LightManager.cpp
+  GBuffer.cpp
+  ScreenQuad.cpp
+  InstancedModel.cpp
+  Mesh.cpp
+  SkyDome.cpp
+  Renderer.cpp
+  RenderToTexture.cpp
+  DeferredShader.cpp
+  DepthShader.cpp
+  ForwardAlphaShader.cpp
+  PostProcessingShader.cpp
+  ImGUIShader.cpp
+  ParticleShader.cpp
+  PlanarReflectionShader.cpp
+  QuadShader.cpp
+  SimpleClipSceneShader.cpp
+  WaterShader.cpp
+  WireframeShader.cpp
+  DXInputLayouts.cpp
+  Generating Code...
+  Compiling...
+  Systems.cpp
+  IslandTestScene.cpp
+  SponzaTestScene.cpp
+  imgui.cpp
+  imgui_draw.cpp
+  DebugQuadHandler.cpp
+  TexturePool.cpp
+  Generating Code...
+Window.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'Window.obj' or at 'C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\vc141.pdb'; linking object as if no debug info
+HardwareProperties.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'HardwareProperties.obj' or at 'C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\vc141.pdb'; linking object as if no debug info
+DXSamplerStates.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'DXSamplerStates.obj' or at 'C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\vc141.pdb'; linking object as if no debug info
+DXRasterizerStates.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'DXRasterizerStates.obj' or at 'C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\vc141.pdb'; linking object as if no debug info
+DXDepthStencilStates.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'DXDepthStencilStates.obj' or at 'C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\vc141.pdb'; linking object as if no debug info
+DXBlendStates.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'DXBlendStates.obj' or at 'C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\vc141.pdb'; linking object as if no debug info
+  Engine.vcxproj -> C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\Engine.exe

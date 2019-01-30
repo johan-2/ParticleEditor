@@ -12,8 +12,8 @@
 ImGUIShader::ImGUIShader()
 {
 	// create shaders
-	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexImGui.vs", _vertexShader, _vertexShaderByteCode);
-	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelImGui.ps",   _pixelShader,  _pixelShaderByteCode);
+	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexImGui.hlsl", _vertexShader, _vertexShaderByteCode);
+	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelImGui.hlsl",   _pixelShader,  _pixelShaderByteCode);
 
 	// create constant buffers
 	SHADER_HELPERS::CreateConstantBuffer(_constantBufferVertex);

@@ -1,4 +1,4 @@
-#include "CommonPixel.ps"
+#include "CommonPixel.hlsl"
 Texture2D Textures[4];	// diffuse, normal, specular, emissive
 SamplerState SampleType[6]; // wrapTrilinear, clampTrilinear, wrapBilinear, clampBililinear, wrapAnisotropic, clampAnisotropic	
 

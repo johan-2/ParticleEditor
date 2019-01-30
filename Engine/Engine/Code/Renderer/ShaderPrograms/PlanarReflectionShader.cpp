@@ -21,8 +21,8 @@
 PlanarReflectionShader::PlanarReflectionShader()
 {
 	//create shaders
-	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexForwardPlanar.vs", _planarVertexShader, planarVertexShaderByteCode);
-	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelForwardPlanar.ps",   _planarPixelShader, planarPixelShaderByteCode);
+	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexForwardPlanar.hlsl", _planarVertexShader, planarVertexShaderByteCode);
+	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelForwardPlanar.hlsl",   _planarPixelShader, planarPixelShaderByteCode);
 
 	// create constant buffers
 	SHADER_HELPERS::CreateConstantBuffer(_CBVertex);

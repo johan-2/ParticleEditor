@@ -11,8 +11,8 @@
 WireframeShader::WireframeShader()
 {
 	// create and compile shaders
-	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexWireframe.vs", _vertexShader, vertexShaderByteCode);
-	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelWireframe.ps",   _pixelShader,  pixelShaderByteCode);
+	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexWireframe.hlsl", _vertexShader, vertexShaderByteCode);
+	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelWireframe.hlsl",   _pixelShader,  pixelShaderByteCode);
 	 
 	// create constant buffer for vertex shader
 	SHADER_HELPERS::CreateConstantBuffer(_constantBufferVertex);

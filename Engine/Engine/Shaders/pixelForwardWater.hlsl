@@ -1,4 +1,4 @@
-#include "CommonPixel.ps"
+#include "CommonPixel.hlsl"
 
 Texture2D Texture[9];	    // normal, specular, DUDVMap, shadowMap, reflectionMap, refractionMap, refractionDepth, foam, foamNoise
 SamplerState SampleType[2]; // wrap,clamp 	

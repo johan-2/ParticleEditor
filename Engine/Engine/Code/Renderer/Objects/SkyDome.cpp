@@ -23,35 +23,18 @@ SkyDome::SkyDome(const char* settingsFile):
 	CreateMeshes();
 
 	// create shaders
-	SHADER_HELPERS::CreateVertexShader(L"shaders/SkyDome/vertexSkyDomeCubemap.vs",      _vertexDomeCubeMapShader,      vertexDomeCubeMapShaderByteCode);
-	SHADER_HELPERS::CreatePixelShader(L"shaders/SkyDome/pixelSkyDomeCubemap.ps",        _pixelDomeCubeMapShader,       pixelDomeCubeMapShaderByteCode);
-	SHADER_HELPERS::CreateVertexShader(L"shaders/SkyDome/vertexSkyDomeColorBlend.vs",   _vertexDomeColorBlendShader,   vertexDomeColorBlendShaderByteCode);
-	SHADER_HELPERS::CreatePixelShader(L"shaders/SkyDome/pixelSkyDomeColorBlend.ps",     _pixelDomeColorBlendShader,    pixelDomeColorBlendShaderByteCode);
-	SHADER_HELPERS::CreateVertexShader(L"shaders/SkyDome/vertexSkyDomeSun.vs",          _vertexSunShader,              vertexSunShaderByteCode);
-	SHADER_HELPERS::CreatePixelShader(L"shaders/SkyDome/pixelSkyDomeSun.ps",            _pixelSunShader,               pixelSunShaderByteCode);
+	SHADER_HELPERS::CreateVertexShader(L"shaders/SkyDome/vertexSkyDomeCubemap.hlsl",      _vertexDomeCubeMapShader,      vertexDomeCubeMapShaderByteCode);
+	SHADER_HELPERS::CreatePixelShader(L"shaders/SkyDome/pixelSkyDomeCubemap.hlsl",        _pixelDomeCubeMapShader,       pixelDomeCubeMapShaderByteCode);
+	SHADER_HELPERS::CreateVertexShader(L"shaders/SkyDome/vertexSkyDomeColorBlend.hlsl",   _vertexDomeColorBlendShader,   vertexDomeColorBlendShaderByteCode);
+	SHADER_HELPERS::CreatePixelShader(L"shaders/SkyDome/pixelSkyDomeColorBlend.hlsl",     _pixelDomeColorBlendShader,    pixelDomeColorBlendShaderByteCode);
+	SHADER_HELPERS::CreateVertexShader(L"shaders/SkyDome/vertexSkyDomeSun.hlsl",          _vertexSunShader,              vertexSunShaderByteCode);
+	SHADER_HELPERS::CreatePixelShader(L"shaders/SkyDome/pixelSkyDomeSun.hlsl",            _pixelSunShader,               pixelSunShaderByteCode);
 
 	// create constant buffers
 	SHADER_HELPERS::CreateConstantBuffer(_constantBufferVertex);
 	SHADER_HELPERS::CreateConstantBuffer(_constantBufferColorBlendPixel);
 	SHADER_HELPERS::CreateConstantBuffer(_constantBufferCubeMapBlendPixel);
 	SHADER_HELPERS::CreateConstantBuffer(_constantSunPixel);
-
-	// initialize sun/moon values
-	/*_sunMoon.sun.distance           = XMFLOAT3(5.0f, 5.0f, 5.0f);
-	_sunMoon.sun.beginEndFade       = XMFLOAT2(-0.1f, -0.25f);
-	_sunMoon.sun.dayColorTint       = XMFLOAT3(1.0f, 1.0f, 1.0f);
-	_sunMoon.sun.sunsetColorTint    = XMFLOAT3(0.95f, 0.65f, 0.1f);
-	_sunMoon.sun.minMaxDst          = XMFLOAT2(0.8f, 5.0f);
-	_sunMoon.sun.beginEndDstLerp    = XMFLOAT2(0.5f, -0.25f);
-	_sunMoon.sun.beginEndColorBlend = XMFLOAT2(0.5f, -0.15f);
-
-	_sunMoon.moon.distance           = XMFLOAT3(5.0f, 5.0f, 5.0f);
-	_sunMoon.moon.beginEndFade       = XMFLOAT2(-0.1f, -0.25f);
-	_sunMoon.moon.dayColorTint       = XMFLOAT3(1.0f, 1.0f, 1.0f);
-	_sunMoon.moon.sunsetColorTint    = XMFLOAT3(0.5f, 0.5f, 0.5f);
-	_sunMoon.moon.minMaxDst          = XMFLOAT2(8.0f, 10.0f);
-	_sunMoon.moon.beginEndDstLerp    = XMFLOAT2(0.5f, -0.25f);
-	_sunMoon.moon.beginEndColorBlend = XMFLOAT2(0.5f, -0.15f);*/
 	
 	sunMoon.sun.entity = new Entity();	
  	sunMoon.sun.transform = sunMoon.sun.entity->AddComponent<TransformComponent>();
@@ -85,7 +68,7 @@ SkyDome::~SkyDome()
 
 void SkyDome::CreateMeshes() 
 {
-	_domeMesh          = ModelLoader::CreateSphere(0, L"", L"", L"", L"", 1.0f, nullptr, 0);
+	_domeMesh         = ModelLoader::CreateSphere(0, L"", L"", L"", L"", 1.0f, nullptr, 0);
 	sunMoon.sun.mesh  = ModelLoader::CreateWorldSprite(0, L"Textures/sun.dds", nullptr);
 	sunMoon.moon.mesh = ModelLoader::CreateWorldSprite(0, L"Textures/moon2.dds", nullptr);
 }
@@ -491,52 +474,42 @@ void SkyDome::ReadSettings(const char* file)
 
 	assert(d.IsObject());
 
-	skySettings.speedMultiplier            = JSON::ReadFloat(d, "speedMultiplier");
-	skySettings.cycleTimer                 = JSON::ReadFloat(d, "cycleTimer");
-	skySettings.switchToMoonLightThreshold = JSON::ReadFloat(d, "switchToMoonLightThreshold");
-
+	skySettings.speedMultiplier                = JSON::ReadFloat(d, "speedMultiplier");
+	skySettings.cycleTimer                     = JSON::ReadFloat(d, "cycleTimer");
+	skySettings.switchToMoonLightThreshold     = JSON::ReadFloat(d, "switchToMoonLightThreshold");
 	skySettings.sunsetLightColorStartEndBlend  = JSON::ReadFloat2(d, "sunsetLightColorStartEndBlend");
 	skySettings.nightLightColorStartEndBlend   = JSON::ReadFloat2(d, "nightLightColorStartEndBlend");
 	skySettings.sunsetTopSkyColorStartEndBlend = JSON::ReadFloat2(d, "sunsetTopSkyColorStartEndBlend");
 	skySettings.nightTopSkyColorStartEndBlend  = JSON::ReadFloat2(d, "nightTopSkyColorStartEndBlend");
 	skySettings.sunsetMidSkyColorStartEndBlend = JSON::ReadFloat2(d, "sunsetMidSkyColorStartEndBlend");
 	skySettings.nightMidSkyColorStartEndBlend  = JSON::ReadFloat2(d, "nightMidSkyColorStartEndBlend");
-
-	skySettings.dayLightStartEndfade   = JSON::ReadFloat2(d, "dayLightStartEndfade");
-	skySettings.nightLightStartEndfade = JSON::ReadFloat2(d, "nightLightStartEndfade");
-
-	skySettings.shadowMapDistance = JSON::ReadFloat3(d, "shadowMapDistance");
-	skySettings.startRotation     = JSON::ReadFloat3(d, "startRotation");
-	skySettings.endRotation       = JSON::ReadFloat3(d, "endRotation");
-
-	skySettings.normalDirLightColor = JSON::ReadFloat4(d, "normalDirLightColor");
-	skySettings.sunsetDirLightColor = JSON::ReadFloat4(d, "sunsetDirLightColor");
-	skySettings.nightDirLightColor  = JSON::ReadFloat4(d, "nightDirLightColor");
-	skySettings.topSkyColorDay      = JSON::ReadFloat4(d, "topSkyColorDay");
-	skySettings.topSkyColorSunSet   = JSON::ReadFloat4(d, "topSkyColorSunSet");
-	skySettings.topSkyColorNight    = JSON::ReadFloat4(d, "topSkyColorNight");
-	skySettings.midSkyColorDay      = JSON::ReadFloat4(d, "midSkyColorDay");
-	skySettings.midSkyColorSunSet   = JSON::ReadFloat4(d, "midSkyColorSunSet");
-	skySettings.midSkyColorNight    = JSON::ReadFloat4(d, "midSkyColorNight");
-	skySettings.skyBottomColor      = JSON::ReadFloat4(d, "skyBottomColor");
-
-	skySettings.RENDER_MODE = (SKY_DOME_RENDER_MODE)JSON::ReadInt(d, "RENDER_MODE");
-	skySettings.cubeMapName = JSON::ReadString(d, "cubeMap");
-
-	sunMoon.sun.dayColorTint     = JSON::ReadFloat3(d, "sunDayColorTint");
-	sunMoon.moon.dayColorTint    = JSON::ReadFloat3(d, "moonDayColorTint");
-	sunMoon.sun.sunsetColorTint  = JSON::ReadFloat3(d, "sunSunsetColorTint");
-	sunMoon.moon.sunsetColorTint = JSON::ReadFloat3(d, "moonSunsetColorTint");
-
-	sunMoon.sun.beginEndFade  = JSON::ReadFloat2(d, "sunBeginEndfade");
-	sunMoon.moon.beginEndFade = JSON::ReadFloat2(d, "moonBeginEndfade");
-
-	sunMoon.sun.minMaxDst  = JSON::ReadFloat2(d, "sunMinMaxDst");
-	sunMoon.moon.minMaxDst = JSON::ReadFloat2(d, "moonMinMaxDst");
-
-	sunMoon.sun.beginEndDstLerp  = JSON::ReadFloat2(d, "sunBeginEndDstLerp");
-	sunMoon.moon.beginEndDstLerp = JSON::ReadFloat2(d, "moonBeginEndDstLerp");
-
-	sunMoon.sun.beginEndColorBlend  = JSON::ReadFloat2(d, "sunBeginEndColorBlend");
-	sunMoon.moon.beginEndColorBlend = JSON::ReadFloat2(d, "moonBeginEndColorBlend");
+	skySettings.dayLightStartEndfade           = JSON::ReadFloat2(d, "dayLightStartEndfade");
+	skySettings.nightLightStartEndfade         = JSON::ReadFloat2(d, "nightLightStartEndfade");
+	skySettings.shadowMapDistance              = JSON::ReadFloat3(d, "shadowMapDistance");
+	skySettings.startRotation                  = JSON::ReadFloat3(d, "startRotation");
+	skySettings.endRotation                    = JSON::ReadFloat3(d, "endRotation");
+	skySettings.normalDirLightColor            = JSON::ReadFloat4(d, "normalDirLightColor");
+	skySettings.sunsetDirLightColor            = JSON::ReadFloat4(d, "sunsetDirLightColor");
+	skySettings.nightDirLightColor             = JSON::ReadFloat4(d, "nightDirLightColor");
+	skySettings.topSkyColorDay                 = JSON::ReadFloat4(d, "topSkyColorDay");
+	skySettings.topSkyColorSunSet              = JSON::ReadFloat4(d, "topSkyColorSunSet");
+	skySettings.topSkyColorNight               = JSON::ReadFloat4(d, "topSkyColorNight");
+	skySettings.midSkyColorDay                 = JSON::ReadFloat4(d, "midSkyColorDay");
+	skySettings.midSkyColorSunSet              = JSON::ReadFloat4(d, "midSkyColorSunSet");
+	skySettings.midSkyColorNight               = JSON::ReadFloat4(d, "midSkyColorNight");
+	skySettings.skyBottomColor                 = JSON::ReadFloat4(d, "skyBottomColor");
+	skySettings.RENDER_MODE                    = (SKY_DOME_RENDER_MODE)JSON::ReadInt(d, "RENDER_MODE");
+	skySettings.cubeMapName                    = JSON::ReadString(d, "cubeMap");
+	sunMoon.sun.dayColorTint                   = JSON::ReadFloat3(d, "sunDayColorTint");
+	sunMoon.moon.dayColorTint                  = JSON::ReadFloat3(d, "moonDayColorTint");
+	sunMoon.sun.sunsetColorTint                = JSON::ReadFloat3(d, "sunSunsetColorTint");
+	sunMoon.moon.sunsetColorTint               = JSON::ReadFloat3(d, "moonSunsetColorTint");
+	sunMoon.sun.beginEndFade                   = JSON::ReadFloat2(d, "sunBeginEndfade");
+	sunMoon.moon.beginEndFade                  = JSON::ReadFloat2(d, "moonBeginEndfade");
+	sunMoon.sun.minMaxDst                      = JSON::ReadFloat2(d, "sunMinMaxDst");
+	sunMoon.moon.minMaxDst                     = JSON::ReadFloat2(d, "moonMinMaxDst");
+	sunMoon.sun.beginEndDstLerp                = JSON::ReadFloat2(d, "sunBeginEndDstLerp");
+	sunMoon.moon.beginEndDstLerp               = JSON::ReadFloat2(d, "moonBeginEndDstLerp");
+	sunMoon.sun.beginEndColorBlend             = JSON::ReadFloat2(d, "sunBeginEndColorBlend");
+	sunMoon.moon.beginEndColorBlend            = JSON::ReadFloat2(d, "moonBeginEndColorBlend");
 }

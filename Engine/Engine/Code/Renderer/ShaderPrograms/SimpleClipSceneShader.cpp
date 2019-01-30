@@ -18,9 +18,9 @@
 SimpleClipSceneShader::SimpleClipSceneShader()
 {
 	// create shaders
-	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexSimpleClip.vs", _vertexShader, vertexShaderByteCode);
-	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexSimpleClipInstanced.vs", _vertexShaderInstanced, vertexShaderByteCodeInstanced);
-	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelSimpleClip.ps",   _pixelShader,  pixelShaderByteCode);
+	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexSimpleClip.hlsl", _vertexShader, vertexShaderByteCode);
+	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexSimpleClipInstanced.hlsl", _vertexShaderInstanced, vertexShaderByteCodeInstanced);
+	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelSimpleClip.hlsl",   _pixelShader,  pixelShaderByteCode);
 
 	// create constant buffers
 	SHADER_HELPERS::CreateConstantBuffer(_CBVertex);

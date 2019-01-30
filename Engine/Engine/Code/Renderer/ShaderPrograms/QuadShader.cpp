@@ -11,8 +11,8 @@
 QuadShader::QuadShader()
 {
 	// create quad shaders
-	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexQuad.vs", _vertexShader, vertexShaderByteCode);
-	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelQuad.ps",   _pixelShader,  pixelShaderByteCode);
+	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexQuad.hlsl", _vertexShader, vertexShaderByteCode);
+	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelQuad.hlsl",   _pixelShader,  pixelShaderByteCode);
 
 	// create constant buffers
 	SHADER_HELPERS::CreateConstantBuffer(_constantBufferVertex);
