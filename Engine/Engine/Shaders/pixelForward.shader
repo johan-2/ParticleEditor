@@ -1,7 +1,6 @@
-#include "CommonPixel.hlsl"
-
-Texture2D Texture[6];	    // diffuse, normal, specular, emissive, shadowMap, reflectionMap
-SamplerState SampleType[6]; // wrapTrilinear, clampTrilinear, wrapBilinear, clampBililinear, wrapAnisotropic, clampAnisotropic
+#include "CommonPixel.shader"
+Texture2D Texture[5];	    // diffuse, normal, specular, emissive, shadowmap
+SamplerState SampleType[6]; // wrapTrilinear, clampTrilinear, wrapBilinear, clampBililinear, wrapAnisotropic, clampAnisotropic	
 
 struct PointLight
 {
@@ -27,9 +26,10 @@ cbuffer PointLightBuffer : register(b1)
 	PointLight pointLights[1024];
 };
 
-cbuffer ReflectionBuffer : register(b2)
+cbuffer heightBuffer : register(b2)
 {
-	float reflectiveFraction;
+	int    hasHeightmap; 	
+	float  heightScale;
 }
 
 struct PixelInputType
@@ -43,12 +43,12 @@ struct PixelInputType
 	float4 positionLightSpace : TEXCOORD2;
 	float3 worldPos           : TEXCOORD3;
 	float4 vertexColor        : COLOR;
-	float4 reflectionPosition : TEXCOORD4;
+	float3 cameraPos          : TEXCOORD4;
 };
 
-float3 GetBaseColor(PixelInputType input, float3 diffuseColor)
+float3 GetBaseColor(PixelInputType input, float3 textureColor)
 {
-	return (diffuseColor * input.vertexColor.rgb) * ambientColor.rgb;
+	return (textureColor * input.vertexColor) * ambientColor;
 }
 
 float3 GetDirectionalColor(PixelInputType input, float4 diffuse, float3 normal, float4 specularMap)
@@ -82,11 +82,9 @@ float3 GetPointColor(PixelInputType input, float3 textureColor, float3 bumpNorma
 	
 	for (int i =0; i < numLights; i++)
 	{	
-		// get light direction and distance from light	
-		float3 lightDir = -normalize(input.worldPos - pointLights[i].position);	
-		float dst       = length(input.worldPos - pointLights[i].position);
-		
-		// calculate attuniation	
+		// get light direction, distance from light	and calculate attuniation
+		float3 lightDir   = -normalize(input.worldPos - pointLights[i].position);	
+		float dst         = length(input.worldPos - pointLights[i].position);
 		float fallOff     = 1 - ((dst / pointLights[i].radius) * 0.5);	// make the falloff 50% slower then the radius to give more control of result depending of attuniation settings
 		float attuniation = 1 / (pointLights[i].attConstant + pointLights[i].attLinear * dst + pointLights[i].attExponential * dst * dst);
 		attuniation       = (attuniation * pointLights[i].intensity) * fallOff;
@@ -95,11 +93,9 @@ float3 GetPointColor(PixelInputType input, float3 textureColor, float3 bumpNorma
 		{						
 			// get intensity from the normal from normalmap and lightdirection
 			float lightIntensity = saturate(dot(bumpNormal, lightDir)); 
+			float3 color         = textureColor * input.vertexColor.rgb * lightIntensity * pointLights[i].color; 						
+			float3 specular      = float3(0,0,0);
 			
-			// get color based on texture, intensity and color of light
-			float3 color = textureColor * input.vertexColor.rgb * lightIntensity * pointLights[i].color; 
-						
-			float3 specular = float3(0,0,0);		
 			if (lightIntensity > 0 && dst < pointLights[i].radius)
 			{		
 				float3 vtc              = normalize(input.vertexToCamera);
@@ -116,39 +112,47 @@ float3 GetPointColor(PixelInputType input, float3 textureColor, float3 bumpNorma
     return finalColor;
 }
 
-float4 GetReflectionColor(PixelInputType input)
+float2 GetTexCoordOffset(PixelInputType input, float3x3 TBNMatrix)
 {
-	float2 reflectionTexCoords;
+	// calculate tex coords for POM here
+	float3x3 toTangentSpace = transpose(TBNMatrix);
 	
-	// get the projected texture coordinates so we can sample the reflection map
-	reflectionTexCoords.x =  input.reflectionPosition.x / input.reflectionPosition.w / 2.0f + 0.5f;
-    reflectionTexCoords.y = -input.reflectionPosition.y / input.reflectionPosition.w / 2.0f + 0.5f;
+	float3 viewDirectionW = normalize(-input.vertexToCamera);
+	float3 viewDirectionT = mul(viewDirectionW, toTangentSpace);
 	
-	return Texture[5].Sample(SampleType[0], reflectionTexCoords);
+	return float2(0.0, 0.0);
 }
 
 float4 Main(PixelInputType input) : SV_TARGET
-{	
-	float4 textureColor = Texture[0].Sample(SampleType[0], input.texCoord);		
+{						
+	// if the alpha channel of the emissivemap is not zero it means that this is 
+	// an emissive pixel and should not recive lightning
+	float4 emissiveMap = Texture[3].Sample(SampleType[0],input.texCoord);
+	if (emissiveMap.a > 0)	
+		return float4(Texture[0].Sample(SampleType[0],input.texCoord).rgb * emissiveMap.rgb, 1);
+	
+	input.normal   = normalize(input.normal);
+	input.binormal = normalize(input.binormal);
+	input.tangent  = normalize(input.tangent);
+	
+	float3x3 TBNMatrix = float3x3(input.tangent, input.binormal, input.normal);
+	
+	if (hasHeightmap == 1)
+		input.texCoord += GetPOMOffset(Texture[1], SampleType[0], input.normal, input.tangent, input.worldPos, input.cameraPos, input.texCoord, heightScale);
+	
+	float4 textureColor = Texture[0].Sample(SampleType[0], input.texCoord);;		
 	float4 normalMap    = Texture[1].Sample(SampleType[0], input.texCoord);
 	float4 specularMap  = Texture[2].Sample(SampleType[0], input.texCoord);
 	
 	// convert normalmap sample to range -1 to 1 and convert to worldspace
-	normalMap                   = (normalMap * 2.0) -1.0;
-	float3x3 tangentSpaceMatrix = float3x3(input.tangent,input.binormal,input.normal);	
-	float3 bumpNormal           = normalize(mul(normalMap, tangentSpaceMatrix));  
-
-	float4 reflectionColor  = GetReflectionColor(input);
+	normalMap         = (normalMap * 2.0) -1.0;	
+	float3 bumpNormal = normalize(mul(normalMap, TBNMatrix));  
+	
 	float3 baseColor        = GetBaseColor(input, textureColor.rgb);
 	float3 directionalColor = GetDirectionalColor(input, textureColor, bumpNormal, specularMap);
 	float3 pointColor       = GetPointColor(input, textureColor.rgb, bumpNormal, specularMap);
 	
-	float reflectFraction = reflectiveFraction;
-	
-	float3 finalColor = baseColor + directionalColor + pointColor; 
-	finalColor = lerp(finalColor, reflectionColor, reflectFraction);
-	
-	return float4(finalColor.rgb, textureColor.a); 
+	return float4(baseColor + directionalColor + pointColor, textureColor.a);
 }
 
 

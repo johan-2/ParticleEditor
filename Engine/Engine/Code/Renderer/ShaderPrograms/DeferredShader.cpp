@@ -16,13 +16,13 @@
 DeferredShader::DeferredShader()
 {
 	//create deferred geometry shaders
-	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexDeferredGeometry.hlsl", _vertexGeometryShader, vertexGeometryShaderByteCode);
-	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexDeferredGeometryInstanced.hlsl", _vertexGeometryShaderInstanced, vertexGeometryShaderByteCodeInstanced);
-	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelDeferredGeometry.hlsl",   _pixelGeometryShader,  pixelGeometryShaderByteCode);
+	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexDeferredGeometry.shader", _vertexGeometryShader, vertexGeometryShaderByteCode);
+	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexDeferredGeometryInstanced.shader", _vertexGeometryShaderInstanced, vertexGeometryShaderByteCodeInstanced);
+	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelDeferredGeometry.shader",   _pixelGeometryShader,  pixelGeometryShaderByteCode);
 
 	//create deferred lightning shaders
-	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexDeferredLightning.hlsl", _vertexLightShader, vertexLightningShaderByteCode);
-	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelDeferredLightning.hlsl",   _pixelLightShader,    pixelLightningShaderByteCode);
+	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexDeferredLightning.shader", _vertexLightShader, vertexLightningShaderByteCode);
+	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelDeferredLightning.shader",   _pixelLightShader,    pixelLightningShaderByteCode);
 
 	// create constant buffers for the deferred passes
 	SHADER_HELPERS::CreateConstantBuffer(_CBGeometryVertex);

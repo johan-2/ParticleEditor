@@ -249,7 +249,7 @@ namespace SHADER_HELPERS
 	static void CreateVertexShader(LPCWSTR filePath, ID3D11VertexShader*& shader, ID3D10Blob*& buffer, char* entryPoint = "Main")
 	{
 		ID3D11Device*& device = Systems::dxManager->device;
-		ID3D10Blob* errorMessage;
+		ID3D10Blob* errorMessage = nullptr;
 
 		// compile the vertex shader code from the text file into temporal buffers
 		HRESULT result = D3DCompileFromFile(filePath, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, entryPoint, "vs_5_0", 0, 0, &buffer, &errorMessage);
@@ -263,7 +263,7 @@ namespace SHADER_HELPERS
 	static void CreatePixelShader(LPCWSTR filePath, ID3D11PixelShader*& shader, ID3D10Blob*& buffer, char* entryPoint = "Main")
 	{
 		ID3D11Device*& device = Systems::dxManager->device;
-		ID3D10Blob* errorMessage;
+		ID3D10Blob* errorMessage = nullptr;
 
 		// compile the pixel shader code from the text file into temporal buffers
 		HRESULT result = D3DCompileFromFile(filePath, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, entryPoint, "ps_5_0", 0, 0, &buffer, &errorMessage);
@@ -278,7 +278,7 @@ namespace SHADER_HELPERS
 	{
 
 		ID3D11Device*& device = Systems::dxManager->device;
-		ID3D10Blob* errorMessage;
+		ID3D10Blob* errorMessage = nullptr;
 
 		// compile the compute shader code into blob
 		HRESULT result = D3DCompileFromFile(filePath, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, entryPoint, "cs_5_0", 0, 0, &buffer, &errorMessage);

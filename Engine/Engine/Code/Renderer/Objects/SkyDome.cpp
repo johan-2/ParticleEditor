@@ -23,12 +23,12 @@ SkyDome::SkyDome(const char* settingsFile):
 	CreateMeshes();
 
 	// create shaders
-	SHADER_HELPERS::CreateVertexShader(L"shaders/SkyDome/vertexSkyDomeCubemap.hlsl",      _vertexDomeCubeMapShader,      vertexDomeCubeMapShaderByteCode);
-	SHADER_HELPERS::CreatePixelShader(L"shaders/SkyDome/pixelSkyDomeCubemap.hlsl",        _pixelDomeCubeMapShader,       pixelDomeCubeMapShaderByteCode);
-	SHADER_HELPERS::CreateVertexShader(L"shaders/SkyDome/vertexSkyDomeColorBlend.hlsl",   _vertexDomeColorBlendShader,   vertexDomeColorBlendShaderByteCode);
-	SHADER_HELPERS::CreatePixelShader(L"shaders/SkyDome/pixelSkyDomeColorBlend.hlsl",     _pixelDomeColorBlendShader,    pixelDomeColorBlendShaderByteCode);
-	SHADER_HELPERS::CreateVertexShader(L"shaders/SkyDome/vertexSkyDomeSun.hlsl",          _vertexSunShader,              vertexSunShaderByteCode);
-	SHADER_HELPERS::CreatePixelShader(L"shaders/SkyDome/pixelSkyDomeSun.hlsl",            _pixelSunShader,               pixelSunShaderByteCode);
+	SHADER_HELPERS::CreateVertexShader(L"shaders/SkyDome/vertexSkyDomeCubemap.shader",      _vertexDomeCubeMapShader,      vertexDomeCubeMapShaderByteCode);
+	SHADER_HELPERS::CreatePixelShader(L"shaders/SkyDome/pixelSkyDomeCubemap.shader",        _pixelDomeCubeMapShader,       pixelDomeCubeMapShaderByteCode);
+	SHADER_HELPERS::CreateVertexShader(L"shaders/SkyDome/vertexSkyDomeColorBlend.shader",   _vertexDomeColorBlendShader,   vertexDomeColorBlendShaderByteCode);
+	SHADER_HELPERS::CreatePixelShader(L"shaders/SkyDome/pixelSkyDomeColorBlend.shader",     _pixelDomeColorBlendShader,    pixelDomeColorBlendShaderByteCode);
+	SHADER_HELPERS::CreateVertexShader(L"shaders/SkyDome/vertexSkyDomeSun.shader",          _vertexSunShader,              vertexSunShaderByteCode);
+	SHADER_HELPERS::CreatePixelShader(L"shaders/SkyDome/pixelSkyDomeSun.shader",            _pixelSunShader,               pixelSunShaderByteCode);
 
 	// create constant buffers
 	SHADER_HELPERS::CreateConstantBuffer(_constantBufferVertex);

@@ -12,8 +12,8 @@
 ForwardAlphaShader::ForwardAlphaShader()
 {
 	//create shaders
-	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexForward.hlsl",  _vertexShader, vertexShaderByteCode);
-	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelForward.hlsl",    _pixelShader,  pixelShaderByteCode);
+	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexForward.shader",  _vertexShader, vertexShaderByteCode);
+	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelForward.shader",    _pixelShader,  pixelShaderByteCode);
 
 	// create constant buffers
 	SHADER_HELPERS::CreateConstantBuffer(_CBVertex);

@@ -15,12 +15,12 @@
 PostProcessingShader::PostProcessingShader()
 {
 	// create and compile shaders
-	SHADER_HELPERS::CreateVertexShader(L"Shaders/PostProcess/vertexPostProcessing.hlsl",  _vertexPostProcessingShader,   vertexPostProcessingShaderByteCode);
-	SHADER_HELPERS::CreatePixelShader(L"Shaders/PostProcess/pixelPostProcessingHDR.hlsl", _pixelPostProcessingHDRShader, pixelPostProcessingHDRShaderByteCode);
-	SHADER_HELPERS::CreateVertexShader(L"Shaders/PostProcess/vertexBlur.hlsl",            _vertexBlurShader,             vertexBlurShaderByteCode);
-	SHADER_HELPERS::CreatePixelShader(L"Shaders/PostProcess/pixelBlur.hlsl",              _pixelBlurShader,              pixelBlurShaderByteCode);
-	SHADER_HELPERS::CreatePixelShader(L"Shaders/PostProcess/pixelPostProcessingSDR.hlsl", _pixelPostProcessingSDRShader, pixelPostProcessingSDRShaderByteCode);
-	SHADER_HELPERS::CreateComputeShader(L"Shaders/PostProcess/computeBrightness.hlsl",    _computeBrightnessShader,      computeBrightnessShaderByteCode);	
+	SHADER_HELPERS::CreateVertexShader(L"Shaders/PostProcess/vertexPostProcessing.shader",  _vertexPostProcessingShader,   vertexPostProcessingShaderByteCode);
+	SHADER_HELPERS::CreatePixelShader(L"Shaders/PostProcess/pixelPostProcessingHDR.shader", _pixelPostProcessingHDRShader, pixelPostProcessingHDRShaderByteCode);
+	SHADER_HELPERS::CreateVertexShader(L"Shaders/PostProcess/vertexBlur.shader",            _vertexBlurShader,             vertexBlurShaderByteCode);
+	SHADER_HELPERS::CreatePixelShader(L"Shaders/PostProcess/pixelBlur.shader",              _pixelBlurShader,              pixelBlurShaderByteCode);
+	SHADER_HELPERS::CreatePixelShader(L"Shaders/PostProcess/pixelPostProcessingSDR.shader", _pixelPostProcessingSDRShader, pixelPostProcessingSDRShaderByteCode);
+	SHADER_HELPERS::CreateComputeShader(L"Shaders/PostProcess/computeBrightness.shader",    _computeBrightnessShader,      computeBrightnessShaderByteCode);	
 
 	// create constant buffers
 	SHADER_HELPERS::CreateConstantBuffer(_blurVertexConstant);
