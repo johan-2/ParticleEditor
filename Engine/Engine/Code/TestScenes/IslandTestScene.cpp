@@ -37,7 +37,7 @@ IslandTestScene::IslandTestScene()
 	// create game camera
 	Entity* cameraGame = new Entity();
 	cameraGame->AddComponent<TransformComponent>()->Init(XMFLOAT3(-64.28f, 12.22f, 0.41f), XMFLOAT3(13.0f, 89.5f, 0.0f));
-	cameraGame->AddComponent<CameraComponent>()->Init3D(70);
+	cameraGame->AddComponent<CameraComponent>()->Init3D(90);
 	cameraGame->AddComponent<FreeMoveComponent>()->init(12.0f, 0.25f, 4.0f);
 	CM.currentCameraGame = cameraGame->GetComponent<CameraComponent>();
 

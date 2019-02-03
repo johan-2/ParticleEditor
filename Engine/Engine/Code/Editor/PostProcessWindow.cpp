@@ -57,7 +57,7 @@ void PostProcessWindow::Render()
 
 	// FXAA
 	GUI::Text(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "FXAA");
-	GUI::CheckBox("10", "Apply FXAA (work in progress)", "if FXAA will be performed on the final scene image", &PostProcessing::APPLY_FXAA);
+	GUI::CheckBox("10", "Apply FXAA", "if FXAA will be performed on the final scene image", &PostProcessing::APPLY_FXAA);
 
 	GUI::Space(1);
 

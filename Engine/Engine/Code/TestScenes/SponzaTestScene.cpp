@@ -62,11 +62,11 @@ SponzaTestScene::SponzaTestScene()
 	sponza->AddComponent<ModelComponent>()->InitModel("Models/sponza.obj", STANDARD | CAST_SHADOW_DIR | CAST_REFLECTION | REFRACT, L"Textures/marble.dds", L"", L"", L"", true, 1);
 
 	Entity* POM = new Entity();
-	POM->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 5, 40), XMFLOAT3(0, 0, 90), XMFLOAT3(3, 1, 3));
+	POM->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0.1f, 40), XMFLOAT3(0, 0, 0), XMFLOAT3(3, 1, 3));
 	POM->AddComponent<ModelComponent>()->InitModel("Models/plane.obj", STANDARD | CAST_REFLECTION, L"Textures/Stone1.dds", L"Textures/stone1Normal_H.dds", L"", L"", false, 3, 0.15f);
 
 	Entity* noPom = new Entity();
-	noPom->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 5, 60), XMFLOAT3(0, 0, 90), XMFLOAT3(3, 1, 3));
+	noPom->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0.1f, 60), XMFLOAT3(0, 0, 0), XMFLOAT3(3, 1, 3));
 	noPom->AddComponent<ModelComponent>()->InitModel("Models/plane.obj", STANDARD | CAST_REFLECTION, L"Textures/Stone1.dds", L"Textures/stone1Normal.dds", L"", L"", false, 3);
 
 	Entity* sphere = new Entity();
@@ -115,7 +115,7 @@ SponzaTestScene::SponzaTestScene()
 	water->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 2.0f, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(400, 1, 400));
 	water->AddComponent<ModelComponent>()->InitModel("models/plane.obj", ALPHA_WATER, L"", L"Textures/waterNormal.dds", L"Textures/FlatHighSpecular.dds", L"", false, 400.0f);
 	water->AddComponent<UVScrollComponent>()->Init(XMFLOAT2(0.015f, -0.01f));
-	water->GetComponent<ModelComponent>()->SetUVDVMap(L"Textures/waterDUDV.dds");
+	water->GetComponent<ModelComponent>()->SetDUDVMap(L"Textures/waterDUDV.dds");
 	water->GetComponent<ModelComponent>()->SetFoamMap(L"Textures/foam3.dds");
 	water->GetComponent<ModelComponent>()->SetNoiseMap(L"Textures/perlinNoise2.dds");*/
 
@@ -167,12 +167,12 @@ SponzaTestScene::SponzaTestScene()
 	fire6->AddComponent<ParticleSystemComponent>()->Init("Particles/fire.json");
 	fire6->AddComponent<LightPointComponent>()->Init(4.5f, 5, XMFLOAT3(0.8f, 0.4f, 0.0f), 0.0f, 1.0f, 0.0f);
 
-	InstancedModel* instancedModel = new InstancedModel("Models/cube.obj", INSTANCED_OPAQUE | INSTANCED_CAST_SHADOW_DIR | INSTANCED_CAST_REFLECTION, L"Textures/stone2.dds", L"Textures/stone2Normal_H.dds", L"Textures/stone2Specular.dds", L"", false, 4.0f, 0.05f);
+	InstancedModel* instancedModel = new InstancedModel("Models/sphere.obj", INSTANCED_OPAQUE | INSTANCED_CAST_SHADOW_DIR | INSTANCED_CAST_REFLECTION, L"Textures/stone2.dds", L"Textures/stone2Normal_H.dds", L"Textures/stone2Specular.dds", L"", false, 3.0f, 0.08f);
 
 	std::vector<ModelInstance> instances;
 	float spacing = 2.0f;
-	for (int i = 0; i < 64; i++)
-		for (int y = 0; y < 64; y++)		
+	for (int i = 0; i < 20; i++)
+		for (int y = 0; y < 20; y++)		
 			instances.emplace_back((ModelInstance(MATH_HELPERS::CreateWorldMatrix(XMFLOAT3(40 + (i * spacing), 2.5f, 40 + (y * spacing)), XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1)))));
 		
 	instancedModel->BuildInstanceBuffer(instances);	
