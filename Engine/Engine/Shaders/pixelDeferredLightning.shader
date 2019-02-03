@@ -3,7 +3,7 @@
 Texture2D    Texture[5];    // shadowmap, position, normal, diffuse, specular	
 SamplerState SampleType[6]; // wrapTrilinear, clampTrilinear, wrapBilinear, clampBililinear, wrapAnisotropic, clampAnisotropic 	
  
- struct PointLight
+struct PointLight
 {
 	float3 position;
 	float radius;

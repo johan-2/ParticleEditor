@@ -257,7 +257,9 @@ void PostProcessingShader::RenderFinalSDR(ID3D11ShaderResourceView* SceneImageSD
 
 	// set pixel constants
 	ConstantFinalSDRPixel pixelConstant;
-	pixelConstant.applyFXAA = PostProcessing::APPLY_FXAA;	
+	pixelConstant.applyFXAA    = PostProcessing::APPLY_FXAA;	
+	pixelConstant.screenWidth  = SystemSettings::SCREEN_WIDTH;
+	pixelConstant.screenHeight = SystemSettings::SCREEN_HEIGHT;
 	SHADER_HELPERS::UpdateConstantBuffer((void*)&pixelConstant, sizeof(ConstantFinalSDRPixel), _finalPixelConstant);
 
 	devCon->PSSetShader(_pixelPostProcessingSDRShader, NULL, 0);

@@ -97,8 +97,10 @@ private:
 
 	struct ConstantFinalSDRPixel
 	{
-		int      applyFXAA;
-		XMFLOAT3 pad1;
+		int   applyFXAA;
+		float screenWidth;
+		float screenHeight;
+		float pad;
 	};
 };
 
