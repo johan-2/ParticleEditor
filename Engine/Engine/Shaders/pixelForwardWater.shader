@@ -3,26 +3,9 @@
 Texture2D Texture[9];	    // normal, specular, DUDVMap, shadowMap, reflectionMap, refractionMap, refractionDepth, foam, foamNoise
 SamplerState SampleType[2]; // wrap,clamp 	
 
-// water settings
-static float darkenOcludedPercent      = 0.4;
-static float highlightStrength         = 2.0;
-static float4 waterColorTint           = float4(0.0, 0.3, 0.1, 1.0);
-static float tintFraction              = 0.2;
-static float waterDistortionDamping    = 0.012;
-static float reflectivePower           = 0.9;
-static float nearPlane                 = 0.1;
-static float farPlane                  = 5000.0;
-static float fadeToDepth               = 0.1f;
-static float normalScrollStrength      = 0.6;
-
-// foam settings
-static bool  applyFoam               = true;
-static float foamToDepth             = 0.5;
-static float foamDistortStrength     = 2.4;
-static float foamScrollStrength      = 0.8;
-static float foamTileMultiplier      = 5.0;
-static float foamNoiseTileMultiplier = 8.0;
-static float foamDistortionDamping   = 0.020;
+static float nearPlane = 0.1;
+static float farPlane  = 5000.0;
+static float darkenOcludedPercent = 0.4;
 
 struct PointLight
 {
@@ -47,6 +30,24 @@ cbuffer PointLightBuffer : register(b1)
 {
 	PointLight pointLights[1024];
 };
+
+cbuffer WaterBuffer : register(b2)
+{
+	float4 waterColorTint;
+	float highlightStrength;  
+	float tintFraction;
+	float waterDistortionDamping;
+	float reflectivePower;
+	float fadeToDepth;
+	float normalScrollStrength;
+	bool  applyFoam;
+	float foamToDepth;
+	float foamDistortStrength;
+	float foamScrollStrength;
+	float foamTileMultiplier;
+	float foamNoiseTileMultiplier;
+    float foamDistortionDamping;
+}
 
 struct PixelInputType
 {

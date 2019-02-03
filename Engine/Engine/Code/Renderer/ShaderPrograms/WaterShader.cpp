@@ -26,6 +26,7 @@ WaterShader::WaterShader()
 
 	// create constant buffers
 	SHADER_HELPERS::CreateConstantBuffer(_CBVertex);
+	SHADER_HELPERS::CreateConstantBuffer(_CBPixel);
 
 	_simpleClipShaderReflection = new SimpleClipSceneShader();
 	_simpleClipShaderRefraction = new SimpleClipSceneShader();
@@ -129,6 +130,7 @@ void WaterShader::Render(std::vector<Mesh*>& waterMeshes)
 		devCon->VSSetConstantBuffers(0, 1, &_CBVertex);
 		devCon->PSSetConstantBuffers(0, 1, &LM.cbAmbDir);
 		devCon->PSSetConstantBuffers(1, 1, &LM.cbPoint);
+		devCon->PSSetConstantBuffers(2, 1, &_CBPixel);
 
 		// set to alpha blending
 		DXM.blendStates->SetBlendState(BLEND_STATE::BLEND_ALPHA);
@@ -143,7 +145,8 @@ void WaterShader::Render(std::vector<Mesh*>& waterMeshes)
 		XMStoreFloat2(&constantVertex.uvOffset,               XMLoadFloat2(&mesh->uvOffset));
 
 		// update vertex constant buffer
-		SHADER_HELPERS::UpdateConstantBuffer((void*)&constantVertex, sizeof(CBVertexWater), _CBVertex);
+		SHADER_HELPERS::UpdateConstantBuffer((void*)&constantVertex,      sizeof(CBVertexWater), _CBVertex);
+		SHADER_HELPERS::UpdateConstantBuffer((void*)&mesh->waterSettings, sizeof(WaterSettings), _CBPixel);
 
 		// fill texture array with all textures including the shadow map and reflection map
 		ID3D11ShaderResourceView* t[9] = 

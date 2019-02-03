@@ -12,6 +12,28 @@ class ParticleShader;
 class DXInputLayouts;
 class SimpleClipSceneShader;
 
+struct WaterSettings
+{
+	// water
+	XMFLOAT4 colorTint         = XMFLOAT4(1, 1, 1, 1);
+	float highlightStrength    = 2.0f;
+	float tintFraction         = 0.2f;
+	float distortionDamping    = 0.012f;
+	float reflectivePower      = 0.9f;
+	float fadeToDepth          = 0.5f;
+	float normalScrollStrength = 0.6f;
+
+	// foam
+	bool applyFoam                = false;
+	float foamToDepth             = 0.5f;
+	float foamDistortStrength     = 2.5f;
+	float foamScrollStrength      = 0.8f;
+	float foamTileMultiplier      = 5.0f;
+	float foamNoiseTileMultiplier = 8.0f;
+	float foamDistortDamping      = 0.020f;
+	XMFLOAT3 pad;
+};
+
 class WaterShader
 {
 public:
@@ -33,6 +55,7 @@ private:
 	
 	// constant buffers
 	ID3D11Buffer* _CBVertex;
+	ID3D11Buffer* _CBPixel;
 
 	SimpleClipSceneShader*  _simpleClipShaderReflection;
 	SimpleClipSceneShader*  _simpleClipShaderRefraction;

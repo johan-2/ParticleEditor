@@ -3,6 +3,7 @@
 #include <DirectXMath.h>
 #include "TransformComponent.h"
 #include "Color32.h"
+#include "WaterShader.h"
 
 #define STANDARD                  1 << 0
 #define CAST_SHADOW_DIR           1 << 1
@@ -71,6 +72,8 @@ public:
 	float        heightMapScale;	
 	float        planarReflectionFraction;
 	XMFLOAT2     uvOffset;
+
+	WaterSettings waterSettings;
 
 private:	
 
