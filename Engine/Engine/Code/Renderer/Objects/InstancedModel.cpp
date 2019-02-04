@@ -4,6 +4,7 @@
 #include "DXErrorHandler.h"
 #include "Systems.h"
 #include "Mesh.h"
+#include "MathHelpers.h"
 
 InstancedModel::InstancedModel(char* model, unsigned int flags, wchar_t* diffuseMap, wchar_t* normalMap, wchar_t* specularMap, wchar_t* emissiveMap, bool useMaterial, float tiling, float heightMapScale)
 {
@@ -40,7 +41,22 @@ InstancedModel::~InstancedModel()
 	_instanceBuffer->Release();
 }
 
+void InstancedModel::AddInstance(XMFLOAT3 position, XMFLOAT3 rotation, XMFLOAT3 scale)
+{
+	modelInstances.emplace_back((ModelInstance(MATH_HELPERS::CreateWorldMatrix(position, rotation, scale))));
+}
+
+void InstancedModel::BuildInstanceBuffer()
+{
+	BuildBuffer(modelInstances);
+}
+
 void InstancedModel::BuildInstanceBuffer(std::vector<ModelInstance>& instances)
+{
+	BuildBuffer(instances);
+}
+
+void InstancedModel::BuildBuffer(std::vector<ModelInstance>& instances)
 {
 	D3D11_MAPPED_SUBRESOURCE data;
 	ID3D11DeviceContext*& devCon = Systems::dxManager->devCon;

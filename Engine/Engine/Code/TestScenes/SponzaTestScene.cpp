@@ -61,19 +61,12 @@ SponzaTestScene::SponzaTestScene()
 	sponza->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(0.025f, 0.025f, 0.025f));
 	sponza->AddComponent<ModelComponent>()->InitModel("Models/sponza.obj", STANDARD | CAST_SHADOW_DIR | CAST_REFLECTION, L"Textures/marble.dds", L"", L"", L"", true, 1);
 
-	Entity* POM = new Entity();
-	POM->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0.1f, 40), XMFLOAT3(0, 0, 0), XMFLOAT3(3, 1, 3));
-	POM->AddComponent<ModelComponent>()->InitModel("Models/plane.obj", STANDARD | CAST_REFLECTION, L"Textures/Stone1.dds", L"Textures/stone1Normal_H.dds", L"", L"", false, 3, 0.15f);
+	Entity* smallSphereLight = new Entity();
+	smallSphereLight->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 2.5f, 0.5f), XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1));
+	smallSphereLight->AddComponent<ModelComponent>()->InitModel("Models/sphere.obj", STANDARD | CAST_SHADOW_DIR | CAST_REFLECTION, L"", L"", L"", L"Textures/emissiveTest.dds");
+	smallSphereLight->AddComponent<LightPointComponent>()->Init(10, 10, XMFLOAT3(0.1f, 1.0f, 0), 0.0f, 1.0f, 0.2f);
 
-	Entity* noPom = new Entity();
-	noPom->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0.1f, 60), XMFLOAT3(0, 0, 0), XMFLOAT3(3, 1, 3));
-	noPom->AddComponent<ModelComponent>()->InitModel("Models/plane.obj", STANDARD | CAST_REFLECTION, L"Textures/Stone1.dds", L"Textures/stone1Normal.dds", L"", L"", false, 3);
-
-	Entity* sphere = new Entity();
-	sphere->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 2.5f, 0.5f), XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1));
-	sphere->AddComponent<ModelComponent>()->InitModel("Models/sphere.obj", STANDARD | CAST_SHADOW_DIR | CAST_REFLECTION, L"", L"", L"", L"Textures/emissiveTest.dds");
-	sphere->AddComponent<LightPointComponent>()->Init(10, 10, XMFLOAT3(0.1f, 1.0f, 0), 0.0f, 1.0f, 0.2f);
-
+	// spinning bar lights
 	Entity* bar = new Entity();
 	bar->AddComponent<TransformComponent>()->Init(XMFLOAT3(-20, 2.5f, 0.5f), XMFLOAT3(0, 0, 0), XMFLOAT3(2, 0.5f, 0.5f));
 	bar->AddComponent<ModelComponent>()->InitModel("Models/cube.obj", STANDARD | CAST_SHADOW_DIR | CAST_REFLECTION, L"", L"", L"", L"Textures/emissiveOrange.dds");
@@ -86,135 +79,162 @@ SponzaTestScene::SponzaTestScene()
 	bar2->AddComponent<LightPointComponent>()->Init(10, 10, XMFLOAT3(1.0f, 0.4f, 0.15f), 0.0f, 1.0f, 0.2f);
 	bar2->AddComponent<RotationComponent>()->Init(XMFLOAT3(2, 1.0f, 1.5f), 60);
 
-	Entity* sphere2 = new Entity();
-	sphere2->AddComponent<TransformComponent>()->Init(XMFLOAT3(-30.0f, 3.5f, -10.12f), XMFLOAT3(0, 0, 0), XMFLOAT3(2.5f, 2.5f, 2.5f));
-	sphere2->AddComponent<ModelComponent>()->InitModel("Models/sphere.obj", STANDARD | CAST_SHADOW_DIR | CAST_REFLECTION, L"", L"", L"", L"Textures/emissivePurple.dds");
-	sphere2->AddComponent<LightPointComponent>()->Init(10, 10, XMFLOAT3(0.8f, 0.2f, 0.8f), 0.0f, 1.0f, 0.2f);
+	// big sphere lights
+	Entity* BigSphereLight1 = new Entity();
+	BigSphereLight1->AddComponent<TransformComponent>()->Init(XMFLOAT3(-30.0f, 3.5f, -10.12f), XMFLOAT3(0, 0, 0), XMFLOAT3(2.5f, 2.5f, 2.5f));
+	BigSphereLight1->AddComponent<ModelComponent>()->InitModel("Models/sphere.obj", STANDARD | CAST_SHADOW_DIR | CAST_REFLECTION, L"", L"", L"", L"Textures/emissivePurple.dds");
+	BigSphereLight1->AddComponent<LightPointComponent>()->Init(10, 10, XMFLOAT3(0.8f, 0.2f, 0.8f), 0.0f, 1.0f, 0.2f);
 
-	Entity* sphere3 = new Entity();
-	sphere3->AddComponent<TransformComponent>()->Init(XMFLOAT3(28.0f, 3.5, -10.12f), XMFLOAT3(0, 0, 0), XMFLOAT3(2.5f, 2.5f, 2.5f));
-	sphere3->AddComponent<ModelComponent>()->InitModel("Models/sphere.obj", STANDARD | CAST_SHADOW_DIR | CAST_REFLECTION, L"", L"", L"", L"Textures/emissiveRed.dds");
-	sphere3->AddComponent<LightPointComponent>()->Init(10, 10, XMFLOAT3(1.0f, 0.0f, 0.0f), 0.0f, 1.0f, 0.2f);
+	Entity* BigSphereLight2 = new Entity();
+	BigSphereLight2->AddComponent<TransformComponent>()->Init(XMFLOAT3(28.0f, 3.5, -10.12f), XMFLOAT3(0, 0, 0), XMFLOAT3(2.5f, 2.5f, 2.5f));
+	BigSphereLight2->AddComponent<ModelComponent>()->InitModel("Models/sphere.obj", STANDARD | CAST_SHADOW_DIR | CAST_REFLECTION, L"", L"", L"", L"Textures/emissiveRed.dds");
+	BigSphereLight2->AddComponent<LightPointComponent>()->Init(10, 10, XMFLOAT3(1.0f, 0.0f, 0.0f), 0.0f, 1.0f, 0.2f);
 
-	Entity* sphere4 = new Entity();
-	sphere4->AddComponent<TransformComponent>()->Init(XMFLOAT3(-30, 3.5f, 11.25f), XMFLOAT3(0, 0, 0), XMFLOAT3(2.5f, 2.5f, 2.5f));
-	sphere4->AddComponent<ModelComponent>()->InitModel("Models/sphere.obj", STANDARD | CAST_SHADOW_DIR | CAST_REFLECTION, L"", L"", L"", L"Textures/emissiveBlue.dds");
-	sphere4->AddComponent<LightPointComponent>()->Init(10, 10, XMFLOAT3(0.0f, 0.4f, 0.95f), 0.0f, 1.0f, 0.2f);
+	Entity* BigSphereLight3 = new Entity();
+	BigSphereLight3->AddComponent<TransformComponent>()->Init(XMFLOAT3(-30, 3.5f, 11.25f), XMFLOAT3(0, 0, 0), XMFLOAT3(2.5f, 2.5f, 2.5f));
+	BigSphereLight3->AddComponent<ModelComponent>()->InitModel("Models/sphere.obj", STANDARD | CAST_SHADOW_DIR | CAST_REFLECTION, L"", L"", L"", L"Textures/emissiveBlue.dds");
+	BigSphereLight3->AddComponent<LightPointComponent>()->Init(10, 10, XMFLOAT3(0.0f, 0.4f, 0.95f), 0.0f, 1.0f, 0.2f);
 
-	Entity* sphere5 = new Entity();
-	sphere5->AddComponent<TransformComponent>()->Init(XMFLOAT3(28.0f, 3.5, 11.25f), XMFLOAT3(0, 0, 0), XMFLOAT3(2.5f, 2.5f, 2.5f));
-	sphere5->AddComponent<ModelComponent>()->InitModel("Models/sphere.obj", STANDARD | CAST_SHADOW_DIR | CAST_REFLECTION, L"", L"", L"", L"Textures/emissivePink.dds");
-	sphere5->AddComponent<LightPointComponent>()->Init(10, 10, XMFLOAT3(1.0f, 0.5f, 0.85f), 0.0f, 1.0f, 0.2f);
+	Entity* BigSphereLight4 = new Entity();
+	BigSphereLight4->AddComponent<TransformComponent>()->Init(XMFLOAT3(28.0f, 3.5, 11.25f), XMFLOAT3(0, 0, 0), XMFLOAT3(2.5f, 2.5f, 2.5f));
+	BigSphereLight4->AddComponent<ModelComponent>()->InitModel("Models/sphere.obj", STANDARD | CAST_SHADOW_DIR | CAST_REFLECTION, L"", L"", L"", L"Textures/emissivePink.dds");
+	BigSphereLight4->AddComponent<LightPointComponent>()->Init(10, 10, XMFLOAT3(1.0f, 0.5f, 0.85f), 0.0f, 1.0f, 0.2f);
 
+	// create reflective marble floor
 	Entity* floor = new Entity();
-	floor->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0.01f, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(600, 1, 600));
+	floor->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0.02f, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(600, 1, 600));
 	floor->AddComponent<ModelComponent>()->InitModel("Models/plane.obj", ALPHA_REFLECTION | REFRACT, L"Textures/sponza_floor_a_diff.dds", L"Textures/sponza_floor_a_ddn.dds", L"Textures/FlatHighSpecular.dds", L"", false, 800.0f);
 	floor->GetComponent<ModelComponent>()->meshes[0]->planarReflectionFraction = 0.25f;
 
+	// create water
 	Entity* water = new Entity();
 	water->AddComponent<TransformComponent>()->Init(XMFLOAT3(-30.0f, 2.0f, 50), XMFLOAT3(0, 0, 0), XMFLOAT3(6, 1, 4));
-	water->AddComponent<ModelComponent>()->InitModel("models/plane.obj", ALPHA_WATER, L"", L"Textures/waterNormal.dds", L"Textures/FlatHighSpecular.dds", L"", false, 3.0f);
+	water->AddComponent<ModelComponent>()->InitModel("models/plane.obj", ALPHA_WATER, L"", L"Textures/waterNormal.dds", L"Textures/FlatHighSpecular.dds", L"", false, 3.0f);;
 	water->AddComponent<UVScrollComponent>()->Init(XMFLOAT2(0.050f, -0.01f));
-	water->GetComponent<ModelComponent>()->SetDUDVMap(L"Textures/waterDUDV.dds");
-	water->GetComponent<ModelComponent>()->SetFoamMap(L"Textures/foam3.dds");
-	water->GetComponent<ModelComponent>()->SetNoiseMap(L"Textures/perlinNoise2.dds");
-	WaterSettings* waterSettings = &water->GetComponent<ModelComponent>()->meshes[0]->waterSettings;
-	waterSettings->colorTint = XMFLOAT4(0.3f, 0.8f, 0.95f, 1);
+
+	// get water properties
+	ModelComponent* waterPlane   = water->GetComponent<ModelComponent>();
+	WaterSettings* waterSettings = &waterPlane->meshes[0]->waterSettings;
+
+	// set maps
+	waterPlane->SetDUDVMap(L"Textures/waterDUDV.dds");
+	waterPlane->SetFoamMap(L"Textures/foam3.dds");
+	waterPlane->SetNoiseMap(L"Textures/perlinNoise2.dds");
+
+	// set water settings
 	waterSettings->normalScrollStrength = 0.015f;
+	waterSettings->colorTint            = XMFLOAT4(0.3f, 0.8f, 0.95f, 1);
 
-	Entity* dragon = new Entity();
-	dragon->AddComponent<TransformComponent>()->Init(XMFLOAT3(-30.0f, 0.0f, 50.0f), XMFLOAT3(0, 160, 0), XMFLOAT3(20, 20, 20));
-	dragon->AddComponent<ModelComponent>()->InitModel("Models/statue.obj", STANDARD | CAST_SHADOW_DIR | CAST_REFLECTION | REFRACT, L"Textures/statueDiffuse.dds", L"Textures/statueNormal.dds", L"", L"", false);
+	// create fountain model
+	Entity* fountainStatue = new Entity();
+	fountainStatue->AddComponent<TransformComponent>()->Init(XMFLOAT3(-30.0f, 0.0f, 50.0f), XMFLOAT3(0, 160, 0), XMFLOAT3(20, 20, 20));
+	fountainStatue->AddComponent<ModelComponent>()->InitModel("Models/statue.obj", STANDARD | CAST_SHADOW_DIR | CAST_REFLECTION | REFRACT, L"Textures/statueDiffuse.dds", L"Textures/statueNormal.dds", L"", L"", false);
 
+	// water pillar model
+	InstancedModel* waterPillars = new InstancedModel("Models/cube.obj", INSTANCED_OPAQUE | INSTANCED_CAST_SHADOW_DIR | INSTANCED_CAST_REFLECTION | INSTANCED_REFRACT);
+	waterPillars->AddInstance(XMFLOAT3(-42, 1.8f, 57.0f), XMFLOAT3(0, 0, 0), XMFLOAT3(1.0, 4.0f, 1.0f));
+	waterPillars->AddInstance(XMFLOAT3(-18, 1.8f, 57.0f), XMFLOAT3(0, 0, 0), XMFLOAT3(1.0, 4.0f, 1.0f));
+	waterPillars->AddInstance(XMFLOAT3(-42, 1.8f, 43.0f), XMFLOAT3(0, 0, 0), XMFLOAT3(1.0, 4.0f, 1.0f));
+	waterPillars->AddInstance(XMFLOAT3(-18, 1.8f, 43.0f), XMFLOAT3(0, 0, 0), XMFLOAT3(1.0, 4.0f, 1.0f));
+	waterPillars->BuildInstanceBuffer();
+
+	// water light bulb model
+	InstancedModel* waterBulbs = new InstancedModel("Models/sphere.obj", INSTANCED_OPAQUE | INSTANCED_CAST_SHADOW_DIR | INSTANCED_CAST_REFLECTION, L"", L"", L"", L"Textures/emissiveOrange.dds");
+	waterBulbs->AddInstance(XMFLOAT3(-42, 4.5f, 57.0f), XMFLOAT3(0, 0, 0), XMFLOAT3(2.0, 2.0f, 2.0f));
+	waterBulbs->AddInstance(XMFLOAT3(-18, 4.5f, 57.0f), XMFLOAT3(0, 0, 0), XMFLOAT3(2.0, 2.0f, 2.0f));
+	waterBulbs->AddInstance(XMFLOAT3(-42, 4.5f, 43.0f), XMFLOAT3(0, 0, 0), XMFLOAT3(2.0, 2.0f, 2.0f));
+	waterBulbs->AddInstance(XMFLOAT3(-18, 4.5f, 43.0f), XMFLOAT3(0, 0, 0), XMFLOAT3(2.0, 2.0f, 2.0f));
+	waterBulbs->BuildInstanceBuffer();
+
+	// water pillar lights
 	Entity* waterLight = new Entity();
-	Entity* waterPillar = new Entity();
-	waterPillar->AddComponent<TransformComponent>()->Init(XMFLOAT3(-42, 1.8f, 57.0f), XMFLOAT3(0, 0, 0), XMFLOAT3(1.0, 4.0f, 1.0f));
-	waterPillar->AddComponent<ModelComponent>()->InitModel("Models/cube.obj", STANDARD | CAST_SHADOW_DIR | CAST_REFLECTION | REFRACT, L"", L"", L"", L"");
 	waterLight->AddComponent<TransformComponent>()->Init(XMFLOAT3(-42, 4.5f, 57.0f), XMFLOAT3(0, 0, 0), XMFLOAT3(2, 2.0f, 2.0f));
-	waterLight->AddComponent<ModelComponent>()->InitModel("Models/sphere.obj", STANDARD | CAST_SHADOW_DIR | CAST_REFLECTION, L"", L"", L"", L"Textures/emissiveOrange.dds");
 	waterLight->AddComponent<LightPointComponent>()->Init(10, 10, XMFLOAT3(1.0f, 0.4f, 0.15f), 0.0f, 1.0f, 0.2f);
 
 	Entity* waterLight2 = new Entity();
-	Entity* waterPillar2 = new Entity();
-	waterPillar2->AddComponent<TransformComponent>()->Init(XMFLOAT3(-18, 1.8f, 57.0f), XMFLOAT3(0, 0, 0), XMFLOAT3(1.0, 4.0f, 1.0f));
-	waterPillar2->AddComponent<ModelComponent>()->InitModel("Models/cube.obj", STANDARD | CAST_SHADOW_DIR | CAST_REFLECTION | REFRACT, L"", L"", L"", L"");
 	waterLight2->AddComponent<TransformComponent>()->Init(XMFLOAT3(-18, 4.5f, 57.0f), XMFLOAT3(0, 0, 0), XMFLOAT3(2, 2.0f, 2.0f));
-	waterLight2->AddComponent<ModelComponent>()->InitModel("Models/sphere.obj", STANDARD | CAST_SHADOW_DIR | CAST_REFLECTION, L"", L"", L"", L"Textures/emissiveOrange.dds");
 	waterLight2->AddComponent<LightPointComponent>()->Init(10, 10, XMFLOAT3(1.0f, 0.4f, 0.15f), 0.0f, 1.0f, 0.2f);
 
 	Entity* waterLight3 = new Entity();
-	Entity* waterPillar3 = new Entity();
-	waterPillar3->AddComponent<TransformComponent>()->Init(XMFLOAT3(-42, 1.8f, 43.0f), XMFLOAT3(0, 0, 0), XMFLOAT3(1.0, 4.0f, 1.0f));
-	waterPillar3->AddComponent<ModelComponent>()->InitModel("Models/cube.obj", STANDARD | CAST_SHADOW_DIR | CAST_REFLECTION | REFRACT, L"", L"", L"", L"");
-	waterLight3->AddComponent<TransformComponent>()->Init(XMFLOAT3(-42, 4.5f, 43.0f), XMFLOAT3(0, 0, 0), XMFLOAT3(2, 2.0f, 2.0f));
-	waterLight3->AddComponent<ModelComponent>()->InitModel("Models/sphere.obj", STANDARD | CAST_SHADOW_DIR | CAST_REFLECTION, L"", L"", L"", L"Textures/emissiveOrange.dds");
+	waterLight3->AddComponent<TransformComponent>()->Init(XMFLOAT3(-42, 4.5f, 43.0f), XMFLOAT3(0, 0, 0), XMFLOAT3(2, 2.0f, 2.0f));	
 	waterLight3->AddComponent<LightPointComponent>()->Init(10, 10, XMFLOAT3(1.0f, 0.4f, 0.15f), 0.0f, 1.0f, 0.2f);
 
 	Entity* waterLight4 = new Entity();
-	Entity* waterPillar4 = new Entity();
-	waterPillar4->AddComponent<TransformComponent>()->Init(XMFLOAT3(-18, 1.8f, 43.0f), XMFLOAT3(0, 0, 0), XMFLOAT3(1.0, 4.0f, 1.0f));
-	waterPillar4->AddComponent<ModelComponent>()->InitModel("Models/cube.obj", STANDARD | CAST_SHADOW_DIR | CAST_REFLECTION | REFRACT, L"", L"", L"", L"");
 	waterLight4->AddComponent<TransformComponent>()->Init(XMFLOAT3(-18, 4.5f, 43.0f), XMFLOAT3(0, 0, 0), XMFLOAT3(2, 2.0f, 2.0f));
-	waterLight4->AddComponent<ModelComponent>()->InitModel("Models/sphere.obj", STANDARD | CAST_SHADOW_DIR | CAST_REFLECTION, L"", L"", L"", L"Textures/emissiveOrange.dds");
 	waterLight4->AddComponent<LightPointComponent>()->Init(10, 10, XMFLOAT3(1.0f, 0.4f, 0.15f), 0.0f, 1.0f, 0.2f);
 
+	// dust particle
 	Entity* dust = new Entity();
 	dust->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 10.0f, 0.0f), XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1));
 	dust->AddComponent<ParticleSystemComponent>()->Init("Particles/dust.json");
 
-	Entity* fire = new Entity();
-	fire->AddComponent<TransformComponent>()->Init(XMFLOAT3(30.0f, 0.0f, -3.0f), XMFLOAT3(0, 0, 0), XMFLOAT3(0.13, 0.13, 0.13));
-	fire->AddComponent<ParticleSystemComponent>()->Init("Particles/fire.json");
-	fire->AddComponent<LightPointComponent>()->Init(4.5f, 4, XMFLOAT3(0.8f, 0.4f, 0.0f), 0.0f, 1.0f, 0.1f);
-	fire->AddComponent<ModelComponent>()->InitModel("Models/fogata1.obj", STANDARD | CAST_SHADOW_DIR | CAST_REFLECTION);
+	// fire place models
+	InstancedModel* firePlaces = new InstancedModel("Models/fogata1.obj", INSTANCED_OPAQUE | INSTANCED_CAST_SHADOW_DIR | INSTANCED_CAST_REFLECTION);
+	firePlaces->AddInstance(XMFLOAT3(30.0f, 0.0f, -3.0f),  XMFLOAT3(0, 0, 0), XMFLOAT3(0.13, 0.13, 0.13));
+	firePlaces->AddInstance(XMFLOAT3(30.0f, 0.0f, 6.0f),   XMFLOAT3(0, 0, 0), XMFLOAT3(0.13, 0.13, 0.13));
+	firePlaces->AddInstance(XMFLOAT3(-32.5f, 0.0f, -3.0f), XMFLOAT3(0, 0, 0), XMFLOAT3(0.13, 0.13, 0.13));
+	firePlaces->AddInstance(XMFLOAT3(-32.5f, 0.0f, 6.0f),  XMFLOAT3(0, 0, 0), XMFLOAT3(0.13, 0.13, 0.13));
+	firePlaces->BuildInstanceBuffer();
 
-	Entity* fire2 = new Entity();
-	fire2->AddComponent<TransformComponent>()->Init(XMFLOAT3(30.0f, 0.0f, 6.0f), XMFLOAT3(0, 0, 0), XMFLOAT3(0.13, 0.13, 0.13));
-	fire2->AddComponent<ParticleSystemComponent>()->Init("Particles/fire.json");
-	fire2->AddComponent<LightPointComponent>()->Init(4.5f, 5, XMFLOAT3(0.8f, 0.4f, 0.0f), 0.0f, 1.0f, 0.0f);
-	fire2->AddComponent<ModelComponent>()->InitModel("Models/fogata1.obj", STANDARD | CAST_SHADOW_DIR | CAST_REFLECTION);
+	// ground fires and lights
+	Entity* fireFloor1 = new Entity();
+	fireFloor1->AddComponent<TransformComponent>()->Init(XMFLOAT3(30.0f, 0.0f, -3.0f));
+	fireFloor1->AddComponent<ParticleSystemComponent>()->Init("Particles/fire.json");
+	fireFloor1->AddComponent<LightPointComponent>()->Init(4.5f, 4, XMFLOAT3(0.8f, 0.4f, 0.0f), 0.0f, 1.0f, 0.1f);
+	
+	Entity* fireFloor2 = new Entity();
+	fireFloor2->AddComponent<TransformComponent>()->Init(XMFLOAT3(30.0f, 0.0f, 6.0f));
+	fireFloor2->AddComponent<ParticleSystemComponent>()->Init("Particles/fire.json");
+	fireFloor2->AddComponent<LightPointComponent>()->Init(4.5f, 5, XMFLOAT3(0.8f, 0.4f, 0.0f), 0.0f, 1.0f, 0.0f);
+	
+	Entity* fireFloor3 = new Entity();
+	fireFloor3->AddComponent<TransformComponent>()->Init(XMFLOAT3(-32.5f, 0.0f, -3.0f));
+	fireFloor3->AddComponent<ParticleSystemComponent>()->Init("Particles/fire.json");
+	fireFloor3->AddComponent<LightPointComponent>()->Init(4.5f, 4, XMFLOAT3(0.8f, 0.4f, 0.0f), 0.0f, 1.0f, 0.1f);
 
-	Entity* fire7 = new Entity();
-	fire7->AddComponent<TransformComponent>()->Init(XMFLOAT3(-32.5f, 0.0f, -3.0f), XMFLOAT3(0, 0, 0), XMFLOAT3(0.13, 0.13, 0.13));
-	fire7->AddComponent<ParticleSystemComponent>()->Init("Particles/fire.json");
-	fire7->AddComponent<LightPointComponent>()->Init(4.5f, 4, XMFLOAT3(0.8f, 0.4f, 0.0f), 0.0f, 1.0f, 0.1f);
-	fire7->AddComponent<ModelComponent>()->InitModel("Models/fogata1.obj", STANDARD | CAST_SHADOW_DIR | CAST_REFLECTION);
+	Entity* fireFloor4 = new Entity();
+	fireFloor4->AddComponent<TransformComponent>()->Init(XMFLOAT3(-32.5f, 0.0f, 6.0f));
+	fireFloor4->AddComponent<ParticleSystemComponent>()->Init("Particles/fire.json");
+	fireFloor4->AddComponent<LightPointComponent>()->Init(4.5f, 5, XMFLOAT3(0.8f, 0.4f, 0.0f), 0.0f, 1.0f, 0.0f);
+	
+	// chandeler fires and lights
+	Entity* fireHanging1 = new Entity();
+	fireHanging1->AddComponent<TransformComponent>()->Init(XMFLOAT3(12.25f, 2.75f, -3.5f));
+	fireHanging1->AddComponent<ParticleSystemComponent>()->Init("Particles/fire.json");
+	fireHanging1->AddComponent<LightPointComponent>()->Init(4.5f, 5, XMFLOAT3(0.8f, 0.4f, 0.0f), 0.0f, 1.0f, 0.0f);
 
-	Entity* fire8 = new Entity();
-	fire8->AddComponent<TransformComponent>()->Init(XMFLOAT3(-32.5f, 0.0f, 6.0f), XMFLOAT3(0, 0, 0), XMFLOAT3(0.13, 0.13, 0.13));
-	fire8->AddComponent<ParticleSystemComponent>()->Init("Particles/fire.json");
-	fire8->AddComponent<LightPointComponent>()->Init(4.5f, 5, XMFLOAT3(0.8f, 0.4f, 0.0f), 0.0f, 1.0f, 0.0f);
-	fire8->AddComponent<ModelComponent>()->InitModel("Models/fogata1.obj", STANDARD | CAST_SHADOW_DIR | CAST_REFLECTION);
+	Entity* fireHanging2 = new Entity();
+	fireHanging2->AddComponent<TransformComponent>()->Init(XMFLOAT3(12.25f, 2.75f, 5.5f));
+	fireHanging2->AddComponent<ParticleSystemComponent>()->Init("Particles/fire.json");
+	fireHanging2->AddComponent<LightPointComponent>()->Init(4.5f, 5, XMFLOAT3(0.8f, 0.4f, 0.0f), 0.0f, 1.0f, 0.0f);
 
-	Entity* fire3 = new Entity();
-	fire3->AddComponent<TransformComponent>()->Init(XMFLOAT3(12.25f, 2.75f, -3.5f));
-	fire3->AddComponent<ParticleSystemComponent>()->Init("Particles/fire.json");
-	fire3->AddComponent<LightPointComponent>()->Init(4.5f, 5, XMFLOAT3(0.8f, 0.4f, 0.0f), 0.0f, 1.0f, 0.0f);
+	Entity* fireHanging3 = new Entity();
+	fireHanging3->AddComponent<TransformComponent>()->Init(XMFLOAT3(-15.5f, 2.75f, -3.5f));
+	fireHanging3->AddComponent<ParticleSystemComponent>()->Init("Particles/fire.json");
+	fireHanging3->AddComponent<LightPointComponent>()->Init(4.5f, 5, XMFLOAT3(0.8f, 0.4f, 0.0f), 0.0f, 1.0f, 0.0f);
 
-	Entity* fire4 = new Entity();
-	fire4->AddComponent<TransformComponent>()->Init(XMFLOAT3(12.25f, 2.75f, 5.5f));
-	fire4->AddComponent<ParticleSystemComponent>()->Init("Particles/fire.json");
-	fire4->AddComponent<LightPointComponent>()->Init(4.5f, 5, XMFLOAT3(0.8f, 0.4f, 0.0f), 0.0f, 1.0f, 0.0f);
+	Entity* fireHanging4 = new Entity();
+	fireHanging4->AddComponent<TransformComponent>()->Init(XMFLOAT3(-15.5f, 2.75f, 5.5f));
+	fireHanging4->AddComponent<ParticleSystemComponent>()->Init("Particles/fire.json");
+	fireHanging4->AddComponent<LightPointComponent>()->Init(4.5f, 5, XMFLOAT3(0.8f, 0.4f, 0.0f), 0.0f, 1.0f, 0.0f);
 
-	Entity* fire5 = new Entity();
-	fire5->AddComponent<TransformComponent>()->Init(XMFLOAT3(-15.5f, 2.75f, -3.5f));
-	fire5->AddComponent<ParticleSystemComponent>()->Init("Particles/fire.json");
-	fire5->AddComponent<LightPointComponent>()->Init(4.5f, 5, XMFLOAT3(0.8f, 0.4f, 0.0f), 0.0f, 1.0f, 0.0f);
+	// create parallax occlussion mapping tests
+ 	Entity* POM = new Entity();
+	POM->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0.1f, 40), XMFLOAT3(0, 0, 0), XMFLOAT3(3, 1, 3));
+	POM->AddComponent<ModelComponent>()->InitModel("Models/plane.obj", STANDARD, L"Textures/Stone1.dds", L"Textures/stone1Normal_H.dds", L"", L"", false, 3, 0.15f);
 
-	Entity* fire6 = new Entity();
-	fire6->AddComponent<TransformComponent>()->Init(XMFLOAT3(-15.5f, 2.75f, 5.5f));
-	fire6->AddComponent<ParticleSystemComponent>()->Init("Particles/fire.json");
-	fire6->AddComponent<LightPointComponent>()->Init(4.5f, 5, XMFLOAT3(0.8f, 0.4f, 0.0f), 0.0f, 1.0f, 0.0f);
+	Entity* noPOM = new Entity();
+	noPOM->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0.1f, 60), XMFLOAT3(0, 0, 0), XMFLOAT3(3, 1, 3));
+	noPOM->AddComponent<ModelComponent>()->InitModel("Models/plane.obj", STANDARD, L"Textures/Stone1.dds", L"Textures/stone1Normal.dds", L"", L"", false, 3);
 
-	InstancedModel* instancedModel = new InstancedModel("Models/sphere.obj", INSTANCED_OPAQUE | INSTANCED_CAST_SHADOW_DIR | INSTANCED_CAST_REFLECTION, L"Textures/stone2.dds", L"Textures/stone2Normal_H.dds", L"Textures/stone2Specular.dds", L"", false, 3.0f, 0.08f);
-
-	std::vector<ModelInstance> instances;
+	// grid aligned spheres
+	InstancedModel* instancedSpheres = new InstancedModel("Models/sphere.obj", INSTANCED_OPAQUE | INSTANCED_CAST_SHADOW_DIR | INSTANCED_CAST_REFLECTION, L"Textures/stone2.dds", L"Textures/stone2Normal_H.dds", L"Textures/stone2Specular.dds", L"", false, 3.0f, 0.08f);
 	float spacing = 2.0f;
 	for (int i = 0; i < 20; i++)
 		for (int y = 0; y < 20; y++)		
-			instances.emplace_back((ModelInstance(MATH_HELPERS::CreateWorldMatrix(XMFLOAT3(40 + (i * spacing), 2.5f, 40 + (y * spacing)), XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1)))));
+			instancedSpheres->AddInstance(XMFLOAT3(40 + (i * spacing), 2.5f, 40 + (y * spacing)), XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1));
 		
-	instancedModel->BuildInstanceBuffer(instances);	
+	instancedSpheres->BuildInstanceBuffer();	
 }
 
 SponzaTestScene::~SponzaTestScene()
