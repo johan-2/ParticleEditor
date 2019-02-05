@@ -157,6 +157,7 @@
     <ClCompile Include="Code\Components\LightPointComponent.cpp" />
     <ClCompile Include="Code\Components\ModelComponent.cpp" />
     <ClCompile Include="Code\Components\ParticleSystemComponent.cpp" />
+    <ClCompile Include="Code\Components\PingPongComponent.cpp" />
     <ClCompile Include="Code\Components\QuadComponent.cpp" />
     <ClCompile Include="Code\Components\RotationComponent.cpp" />
     <ClCompile Include="Code\Components\TransformComponent.cpp" />
@@ -223,6 +224,7 @@
     <ClInclude Include="Code\Components\LightPointComponent.h" />
     <ClInclude Include="Code\Components\ModelComponent.h" />
     <ClInclude Include="Code\Components\ParticleSystemComponent.h" />
+    <ClInclude Include="Code\Components\PingPongComponent.h" />
     <ClInclude Include="Code\Components\QuadComponent.h" />
     <ClInclude Include="Code\Components\RotationComponent.h" />
     <ClInclude Include="Code\Components\TransformComponent.h" />

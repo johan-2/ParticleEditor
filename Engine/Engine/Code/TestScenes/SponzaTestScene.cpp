@@ -18,6 +18,7 @@
 #include "InstancedModel.h"
 #include "MathHelpers.h"
 #include "UVScrollComponent.h"
+#include "PingPongComponent.h"
 
 SponzaTestScene::SponzaTestScene()
 {
@@ -27,7 +28,7 @@ SponzaTestScene::SponzaTestScene()
 	Renderer& renderer = *Systems::renderer;
 
 	// create shadowMap
-	Entity* shadowMapRenderer = renderer.CreateShadowMap(150.0f, 8192.0f, XMFLOAT3(-6, 325, 9), XMFLOAT3(85.0f, -90.0f, 0), true);
+	Entity* shadowMapRenderer = renderer.CreateShadowMap(200.0f, 8192.0f, XMFLOAT3(-6, 325, 9), XMFLOAT3(85.0f, -90.0f, 0), true);
 
 	// create skybox
 	_skyDome = renderer.skyDome = new SkyDome("Settings/SkyDomeDefault.json");
@@ -63,6 +64,7 @@ SponzaTestScene::SponzaTestScene()
 
 	Entity* smallSphereLight = new Entity();
 	smallSphereLight->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 2.5f, 0.5f), XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1));
+	smallSphereLight->AddComponent<PingPongComponent>()->Init(XMFLOAT3(10.0f, 0.0f, 0.0f), 1.5f);
 	smallSphereLight->AddComponent<ModelComponent>()->InitModel("Models/sphere.obj", STANDARD | CAST_SHADOW_DIR | CAST_REFLECTION, L"", L"", L"", L"Textures/emissiveTest.dds");
 	smallSphereLight->AddComponent<LightPointComponent>()->Init(10, 10, XMFLOAT3(0.1f, 1.0f, 0), 0.0f, 1.0f, 0.2f);
 
@@ -82,21 +84,25 @@ SponzaTestScene::SponzaTestScene()
 	// big sphere lights
 	Entity* BigSphereLight1 = new Entity();
 	BigSphereLight1->AddComponent<TransformComponent>()->Init(XMFLOAT3(-30.0f, 3.5f, -10.12f), XMFLOAT3(0, 0, 0), XMFLOAT3(2.5f, 2.5f, 2.5f));
+	BigSphereLight1->AddComponent<PingPongComponent>()->Init(XMFLOAT3(0.0f, 0.1f, 0.0f), 1.5f);
 	BigSphereLight1->AddComponent<ModelComponent>()->InitModel("Models/sphere.obj", STANDARD | CAST_SHADOW_DIR | CAST_REFLECTION, L"", L"", L"", L"Textures/emissivePurple.dds");
 	BigSphereLight1->AddComponent<LightPointComponent>()->Init(10, 10, XMFLOAT3(0.8f, 0.2f, 0.8f), 0.0f, 1.0f, 0.2f);
 
 	Entity* BigSphereLight2 = new Entity();
 	BigSphereLight2->AddComponent<TransformComponent>()->Init(XMFLOAT3(28.0f, 3.5, -10.12f), XMFLOAT3(0, 0, 0), XMFLOAT3(2.5f, 2.5f, 2.5f));
+	BigSphereLight2->AddComponent<PingPongComponent>()->Init(XMFLOAT3(0.0f, 0.1f, 0.0f), 1.5f);
 	BigSphereLight2->AddComponent<ModelComponent>()->InitModel("Models/sphere.obj", STANDARD | CAST_SHADOW_DIR | CAST_REFLECTION, L"", L"", L"", L"Textures/emissiveRed.dds");
 	BigSphereLight2->AddComponent<LightPointComponent>()->Init(10, 10, XMFLOAT3(1.0f, 0.0f, 0.0f), 0.0f, 1.0f, 0.2f);
 
 	Entity* BigSphereLight3 = new Entity();
 	BigSphereLight3->AddComponent<TransformComponent>()->Init(XMFLOAT3(-30, 3.5f, 11.25f), XMFLOAT3(0, 0, 0), XMFLOAT3(2.5f, 2.5f, 2.5f));
+	BigSphereLight3->AddComponent<PingPongComponent>()->Init(XMFLOAT3(0.0f, 0.1f, 0.0f), 1.5f);
 	BigSphereLight3->AddComponent<ModelComponent>()->InitModel("Models/sphere.obj", STANDARD | CAST_SHADOW_DIR | CAST_REFLECTION, L"", L"", L"", L"Textures/emissiveBlue.dds");
 	BigSphereLight3->AddComponent<LightPointComponent>()->Init(10, 10, XMFLOAT3(0.0f, 0.4f, 0.95f), 0.0f, 1.0f, 0.2f);
 
 	Entity* BigSphereLight4 = new Entity();
 	BigSphereLight4->AddComponent<TransformComponent>()->Init(XMFLOAT3(28.0f, 3.5, 11.25f), XMFLOAT3(0, 0, 0), XMFLOAT3(2.5f, 2.5f, 2.5f));
+	BigSphereLight4->AddComponent<PingPongComponent>()->Init(XMFLOAT3(0.0f, 0.1f, 0.0f), 1.5f);
 	BigSphereLight4->AddComponent<ModelComponent>()->InitModel("Models/sphere.obj", STANDARD | CAST_SHADOW_DIR | CAST_REFLECTION, L"", L"", L"", L"Textures/emissivePink.dds");
 	BigSphereLight4->AddComponent<LightPointComponent>()->Init(10, 10, XMFLOAT3(1.0f, 0.5f, 0.85f), 0.0f, 1.0f, 0.2f);
 
@@ -227,14 +233,21 @@ SponzaTestScene::SponzaTestScene()
 	noPOM->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0.1f, 60), XMFLOAT3(0, 0, 0), XMFLOAT3(3, 1, 3));
 	noPOM->AddComponent<ModelComponent>()->InitModel("Models/plane.obj", STANDARD, L"Textures/Stone1.dds", L"Textures/stone1Normal.dds", L"", L"", false, 3);
 
-	// grid aligned spheres
-	InstancedModel* instancedSpheres = new InstancedModel("Models/sphere.obj", INSTANCED_OPAQUE | INSTANCED_CAST_SHADOW_DIR | INSTANCED_CAST_REFLECTION, L"Textures/stone2.dds", L"Textures/stone2Normal_H.dds", L"Textures/stone2Specular.dds", L"", false, 3.0f, 0.08f);
+	// grid aligned dynamic instanced spheres, generate two different sine waves for animations
+	_sineTimers[0] = XM_PI / 2;
+	_sineTimers[1] = XM_PI + (XM_PI / 2);
+
+	_sineWaves[0] = sin(_sineTimers[0]);
+	_sineWaves[1] = sin(_sineTimers[1]);
+
+	_instancedSpheres = new InstancedModel("Models/sphere.obj", INSTANCED_OPAQUE | INSTANCED_CAST_SHADOW_DIR | INSTANCED_CAST_REFLECTION, L"Textures/stone2.dds", L"Textures/stone2Normal_H.dds", L"Textures/stone2Specular.dds", L"", false, 3.0f, 0.08f);
 	float spacing = 2.0f;
-	for (int i = 0; i < 20; i++)
-		for (int y = 0; y < 20; y++)		
-			instancedSpheres->AddInstance(XMFLOAT3(40 + (i * spacing), 2.5f, 40 + (y * spacing)), XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1));
+	int count = 0;
+	for (int i = 0; i < 19; i++)
+		for (int y = 0; y < 19; y++)		
+			_instancedSpheres->AddInstance(XMFLOAT3(40 + (i * spacing), 5.0f + (2.0f * _sineWaves[count ++ % 2]), 40 + (y * spacing)), XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1));
 		
-	instancedSpheres->BuildInstanceBuffer();	
+	_instancedSpheres->BuildInstanceBuffer();	
 }
 
 SponzaTestScene::~SponzaTestScene()
@@ -243,5 +256,21 @@ SponzaTestScene::~SponzaTestScene()
 
 void SponzaTestScene::Update()
 {
-	_skyDome->Update(Systems::time->GetDeltaTime());	
+	const float& delta = Systems::time->GetDeltaTime();
+	_skyDome->Update(delta);	
+
+	_sineTimers[0] += delta;
+	_sineTimers[1] += delta;
+
+	_sineWaves[0] = sin(_sineTimers[0]);
+	_sineWaves[1] = sin(_sineTimers[1]);
+
+	float spacing = 2.0f;
+	int count = 0;
+	for (int i = 0; i < 19; i++)
+		for (int y = 0; y < 19; y++) 		
+			_instancedSpheres->modelInstances[count].worldMatrix = MATH_HELPERS::CreateWorldMatrix(XMFLOAT3(40 + (i * spacing), 5.0f + (2.0f * _sineWaves[count % 2]), 40 + (y * spacing)), XMFLOAT3(0, 0, -90 + (90 * _sineWaves[count % 2])), XMFLOAT3(1.5f + (1.0f * _sineWaves[count % 2]), 1.5f + (1.0f * _sineWaves[count % 2]), 1.5f + (1.0f * _sineWaves[count++ % 2])));			
+		
+	_instancedSpheres->BuildInstanceBuffer();
+
 }

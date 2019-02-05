@@ -207,6 +207,9 @@
     <ClCompile Include="Code\ThirdParty\ImGUI\imgui_draw.cpp">
       <Filter>Source Files\ThirdParty</Filter>
     </ClCompile>
+    <ClCompile Include="Code\Components\PingPongComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\Utils\SystemDefs.h">
@@ -405,6 +408,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Code\Renderer\Objects\InstancedModel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Components\PingPongComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
