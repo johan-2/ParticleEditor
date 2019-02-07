@@ -55,8 +55,8 @@ Output Main(PixelInputType input)
 	// if it is we will multiply the diffuse color with the emisive color and flag 
 	// the alpha channel with 0 so the deferred ligtning pass can check for this and
 	// know if it should perfom lightning calculations or not on this pixel
-	if (emissiveMap.a > 0)	
-		output.diffuse = float4(textureColor.rgb * emissiveMap.rgb, 0);
+	if (emissiveMap.r + emissiveMap.g + emissiveMap.b > 0.1)	
+		output.diffuse = float4(emissiveMap.rgb * 1.1, 0);
 			
 	return output;    
 }

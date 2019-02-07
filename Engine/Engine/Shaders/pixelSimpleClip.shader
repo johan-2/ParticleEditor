@@ -97,8 +97,8 @@ float4 Main(PixelInputType input) : SV_TARGET
 	float4 normalMap     = Texture[1].Sample(SampleType[0], input.texCoord);
 	float4 emissiveColor = Texture[2].Sample(SampleType[0], input.texCoord);
 	
-	if (emissiveColor.a > 0)
-		return float4(textureColor * emissiveColor.rgb, 1);
+	if (emissiveColor.r + emissiveColor.g + emissiveColor.b > 0.1)
+		return float4(emissiveColor.rgb * 1.1, 1);
 	
 	// convert normalmap sample to range -1 to 1 and convert to worldspace
 	normalMap         = (normalMap * 2.0) -1.0;		

@@ -128,8 +128,8 @@ float4 Main(PixelInputType input) : SV_TARGET
 	// if the alpha channel of the emissivemap is not zero it means that this is 
 	// an emissive pixel and should not recive lightning
 	float4 emissiveMap = Texture[3].Sample(SampleType[0],input.texCoord);
-	if (emissiveMap.a > 0)	
-		return float4(Texture[0].Sample(SampleType[0],input.texCoord).rgb * emissiveMap.rgb, 1);
+	if (emissiveMap.r + emissiveMap.g + emissiveMap.b > 0.1)
+		return float4(emissiveMap.rgb * 1.1, 1);
 	
 	input.normal   = normalize(input.normal);
 	input.binormal = normalize(input.binormal);

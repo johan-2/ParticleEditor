@@ -114,14 +114,14 @@ SponzaTestScene::SponzaTestScene()
 
 	// create water
 	Entity* water = new Entity();
-	water->AddComponent<TransformComponent>()->Init(XMFLOAT3(-30.0f, 2.0f, 50), XMFLOAT3(0, 0, 0), XMFLOAT3(6, 1, 4));
-	water->AddComponent<ModelComponent>()->InitModel("models/plane.obj", ALPHA_WATER, L"", L"Textures/waterNormal.dds", L"Textures/FlatHighSpecular.dds", L"", false, 3.0f);;
+	water->AddComponent<TransformComponent>()->Init(XMFLOAT3(-30.0f, 1.75f, 50), XMFLOAT3(0, 0, 0), XMFLOAT3(4, 1, 4));
+	water->AddComponent<ModelComponent>()->InitModel("models/waterPlane.obj", ALPHA_WATER, L"", L"Textures/waterNormal.dds", L"Textures/FlatHighSpecular.dds", L"", false, 3.0f);;
 	water->AddComponent<UVScrollComponent>()->Init(XMFLOAT2(0.050f, -0.01f));
 
 	// get water properties
 	ModelComponent* waterPlane   = water->GetComponent<ModelComponent>();
 	WaterSettings* waterSettings = &waterPlane->meshes[0]->waterSettings;
-
+	
 	// set maps
 	waterPlane->SetDUDVMap(L"Textures/waterDUDV.dds");
 	waterPlane->SetFoamMap(L"Textures/foam3.dds");
@@ -130,44 +130,50 @@ SponzaTestScene::SponzaTestScene()
 	// set water settings
 	waterSettings->normalScrollStrength = 0.015f;
 	waterSettings->colorTint            = XMFLOAT4(0.3f, 0.8f, 0.95f, 1);
+	waterSettings->applyFoam            = false;
+	waterSettings->foamToDepth          = 1.0f;
+
+	Entity* fountain = new Entity();
+	fountain->AddComponent<TransformComponent>()->Init(XMFLOAT3(-30.0f, 0.0f, 50.0f), XMFLOAT3(0, 0, 0), XMFLOAT3(4, 3, 4));
+	fountain->AddComponent<ModelComponent>()->InitModel("Models/poollow.obj", STANDARD | CAST_SHADOW_DIR | CAST_REFLECTION | REFRACT, L"Textures/poolDiffuse.dds", L"Textures/poolNormal.dds", L"Textures/poolSpecular.dds", L"Textures/poolEmissive.dds", false, 1.0f, 0.01);
 
 	// create fountain model
 	Entity* fountainStatue = new Entity();
-	fountainStatue->AddComponent<TransformComponent>()->Init(XMFLOAT3(-30.0f, 0.0f, 50.0f), XMFLOAT3(0, 160, 0), XMFLOAT3(20, 20, 20));
-	fountainStatue->AddComponent<ModelComponent>()->InitModel("Models/statue.obj", STANDARD | CAST_SHADOW_DIR | CAST_REFLECTION | REFRACT, L"Textures/statueDiffuse.dds", L"Textures/statueNormal.dds", L"", L"", false);
+	fountainStatue->AddComponent<TransformComponent>()->Init(XMFLOAT3(-30.0f, 3.5f, 50.0f), XMFLOAT3(0, 160, 0), XMFLOAT3(20, 20, 20));
+	fountainStatue->AddComponent<ModelComponent>()->InitModel("Models/statue.obj", STANDARD | CAST_SHADOW_DIR | CAST_REFLECTION, L"Textures/statueDiffuse.dds", L"Textures/statueNormal.dds", L"", L"", false);
 
 	// water pillar model
-	InstancedModel* waterPillars = new InstancedModel("Models/cube.obj", INSTANCED_OPAQUE | INSTANCED_CAST_SHADOW_DIR | INSTANCED_CAST_REFLECTION | INSTANCED_REFRACT);
-	waterPillars->AddInstance(XMFLOAT3(-42, 1.8f, 57.0f), XMFLOAT3(0, 0, 0), XMFLOAT3(1.0, 4.0f, 1.0f));
-	waterPillars->AddInstance(XMFLOAT3(-18, 1.8f, 57.0f), XMFLOAT3(0, 0, 0), XMFLOAT3(1.0, 4.0f, 1.0f));
-	waterPillars->AddInstance(XMFLOAT3(-42, 1.8f, 43.0f), XMFLOAT3(0, 0, 0), XMFLOAT3(1.0, 4.0f, 1.0f));
-	waterPillars->AddInstance(XMFLOAT3(-18, 1.8f, 43.0f), XMFLOAT3(0, 0, 0), XMFLOAT3(1.0, 4.0f, 1.0f));
+	InstancedModel* waterPillars = new InstancedModel("Models/cube.obj", INSTANCED_OPAQUE | INSTANCED_CAST_SHADOW_DIR | INSTANCED_CAST_REFLECTION);
+	waterPillars->AddInstance(XMFLOAT3(-42, 2.8f, 57.0f), XMFLOAT3(0, 0, 0), XMFLOAT3(1.0, 6.0f, 1.0f));
+	waterPillars->AddInstance(XMFLOAT3(-18, 2.8f, 57.0f), XMFLOAT3(0, 0, 0), XMFLOAT3(1.0, 6.0f, 1.0f));
+	waterPillars->AddInstance(XMFLOAT3(-42, 2.8f, 43.0f), XMFLOAT3(0, 0, 0), XMFLOAT3(1.0, 6.0f, 1.0f));
+	waterPillars->AddInstance(XMFLOAT3(-18, 2.8f, 43.0f), XMFLOAT3(0, 0, 0), XMFLOAT3(1.0, 6.0f, 1.0f));
 	waterPillars->BuildInstanceBuffer();
 
 	// water light bulb model
 	InstancedModel* waterBulbs = new InstancedModel("Models/sphere.obj", INSTANCED_OPAQUE | INSTANCED_CAST_SHADOW_DIR | INSTANCED_CAST_REFLECTION, L"", L"", L"", L"Textures/emissiveOrange.dds");
-	waterBulbs->AddInstance(XMFLOAT3(-42, 4.5f, 57.0f), XMFLOAT3(0, 0, 0), XMFLOAT3(2.0, 2.0f, 2.0f));
-	waterBulbs->AddInstance(XMFLOAT3(-18, 4.5f, 57.0f), XMFLOAT3(0, 0, 0), XMFLOAT3(2.0, 2.0f, 2.0f));
-	waterBulbs->AddInstance(XMFLOAT3(-42, 4.5f, 43.0f), XMFLOAT3(0, 0, 0), XMFLOAT3(2.0, 2.0f, 2.0f));
-	waterBulbs->AddInstance(XMFLOAT3(-18, 4.5f, 43.0f), XMFLOAT3(0, 0, 0), XMFLOAT3(2.0, 2.0f, 2.0f));
+	waterBulbs->AddInstance(XMFLOAT3(-42, 6.5f, 57.0f), XMFLOAT3(0, 0, 0), XMFLOAT3(2.0, 2.0f, 2.0f));
+	waterBulbs->AddInstance(XMFLOAT3(-18, 6.5f, 57.0f), XMFLOAT3(0, 0, 0), XMFLOAT3(2.0, 2.0f, 2.0f));
+	waterBulbs->AddInstance(XMFLOAT3(-42, 6.5f, 43.0f), XMFLOAT3(0, 0, 0), XMFLOAT3(2.0, 2.0f, 2.0f));
+	waterBulbs->AddInstance(XMFLOAT3(-18, 6.5f, 43.0f), XMFLOAT3(0, 0, 0), XMFLOAT3(2.0, 2.0f, 2.0f));
 	waterBulbs->BuildInstanceBuffer();
 
 	// water pillar lights
 	Entity* waterLight = new Entity();
 	waterLight->AddComponent<TransformComponent>()->Init(XMFLOAT3(-42, 4.5f, 57.0f), XMFLOAT3(0, 0, 0), XMFLOAT3(2, 2.0f, 2.0f));
-	waterLight->AddComponent<LightPointComponent>()->Init(10, 10, XMFLOAT3(1.0f, 0.4f, 0.15f), 0.0f, 1.0f, 0.2f);
+	waterLight->AddComponent<LightPointComponent>()->Init(20, 10, XMFLOAT3(1.0f, 0.4f, 0.15f), 0.0f, 1.0f, 0.2f);
 
 	Entity* waterLight2 = new Entity();
 	waterLight2->AddComponent<TransformComponent>()->Init(XMFLOAT3(-18, 4.5f, 57.0f), XMFLOAT3(0, 0, 0), XMFLOAT3(2, 2.0f, 2.0f));
-	waterLight2->AddComponent<LightPointComponent>()->Init(10, 10, XMFLOAT3(1.0f, 0.4f, 0.15f), 0.0f, 1.0f, 0.2f);
+	waterLight2->AddComponent<LightPointComponent>()->Init(20, 10, XMFLOAT3(1.0f, 0.4f, 0.15f), 0.0f, 1.0f, 0.2f);
 
 	Entity* waterLight3 = new Entity();
 	waterLight3->AddComponent<TransformComponent>()->Init(XMFLOAT3(-42, 4.5f, 43.0f), XMFLOAT3(0, 0, 0), XMFLOAT3(2, 2.0f, 2.0f));	
-	waterLight3->AddComponent<LightPointComponent>()->Init(10, 10, XMFLOAT3(1.0f, 0.4f, 0.15f), 0.0f, 1.0f, 0.2f);
+	waterLight3->AddComponent<LightPointComponent>()->Init(20, 10, XMFLOAT3(1.0f, 0.4f, 0.15f), 0.0f, 1.0f, 0.2f);
 
 	Entity* waterLight4 = new Entity();
 	waterLight4->AddComponent<TransformComponent>()->Init(XMFLOAT3(-18, 4.5f, 43.0f), XMFLOAT3(0, 0, 0), XMFLOAT3(2, 2.0f, 2.0f));
-	waterLight4->AddComponent<LightPointComponent>()->Init(10, 10, XMFLOAT3(1.0f, 0.4f, 0.15f), 0.0f, 1.0f, 0.2f);
+	waterLight4->AddComponent<LightPointComponent>()->Init(20, 10, XMFLOAT3(1.0f, 0.4f, 0.15f), 0.0f, 1.0f, 0.2f);
 
 	// dust particle
 	Entity* dust = new Entity();
