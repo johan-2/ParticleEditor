@@ -21,7 +21,8 @@ struct WaterSettings
 	float distortionDamping    = 0.012f;
 	float reflectivePower      = 0.9f;
 	float fadeToDepth          = 0.5f;
-	float normalScrollStrength = 0.6f;
+	float normalScrollStrength1 = 0.6f;
+	float normalScrollStrength2 = 0.6f;
 
 	// foam
 	bool applyFoam                = false;
@@ -31,7 +32,8 @@ struct WaterSettings
 	float foamTileMultiplier      = 5.0f;
 	float foamNoiseTileMultiplier = 8.0f;
 	float foamDistortDamping      = 0.020f;
-	XMFLOAT3 pad;
+
+	XMFLOAT2 pad;
 };
 
 class WaterShader

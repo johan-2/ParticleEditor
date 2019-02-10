@@ -32,9 +32,10 @@ public:
 	void SetRenderFlags(unsigned int flags); 
 
 	// adds a texturemap to all meshes in model
-	void SetDUDVMap(const wchar_t* texture)  { for (int i = 0; i < meshes.size(); i++) meshes[i]->DUDVMap  = Systems::texturePool->GetTexture(texture); }
-	void SetFoamMap(const wchar_t* texture)  { for (int i = 0; i < meshes.size(); i++) meshes[i]->foamMap  = Systems::texturePool->GetTexture(texture); }
-	void SetNoiseMap(const wchar_t* texture) { for (int i = 0; i < meshes.size(); i++) meshes[i]->noiseMap = Systems::texturePool->GetTexture(texture); }
+	void SetDUDVMap(const wchar_t* texture)    { for (int i = 0; i < meshes.size(); i++) meshes[i]->DUDVMap    = Systems::texturePool->GetTexture(texture); }
+	void SetFoamMap(const wchar_t* texture)    { for (int i = 0; i < meshes.size(); i++) meshes[i]->foamMap    = Systems::texturePool->GetTexture(texture); }
+	void SetNoiseMap(const wchar_t* texture)   { for (int i = 0; i < meshes.size(); i++) meshes[i]->noiseMap   = Systems::texturePool->GetTexture(texture); }
+	void SetNormalMap2(const wchar_t* texture) { for (int i = 0; i < meshes.size(); i++) meshes[i]->normalMap2 = Systems::texturePool->GetTexture(texture); }
 
 	std::vector<Mesh*> meshes;
 	unsigned int       numMeshes;

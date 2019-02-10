@@ -1,6 +1,6 @@
 #include "CommonPixel.shader"
 
-Texture2D Texture[9];	    // normal, specular, DUDVMap, shadowMap, reflectionMap, refractionMap, refractionDepth, foam, foamNoise
+Texture2D Texture[10];	    // normal, specular, DUDVMap, shadowMap, reflectionMap, refractionMap, refractionDepth, foam, foamNoise, normal2
 SamplerState SampleType[2]; // wrap,clamp 	
 
 static float nearPlane = 0.1;
@@ -39,7 +39,8 @@ cbuffer WaterBuffer : register(b2)
 	float waterDistortionDamping;
 	float reflectivePower;
 	float fadeToDepth;
-	float normalScrollStrength;
+	float normalScrollStrength1;
+	float normalScrollStrength2;
 	bool  applyFoam;
 	float foamToDepth;
 	float foamDistortStrength;
@@ -149,13 +150,17 @@ float4 Main(PixelInputType input) : SV_TARGET
 
 	// add the distortion amount to the regular texCoords for sampling normal and specular maps
 	float2 distortedTexCoords = input.texCoord + waterDistortStrength;
-	float4 normalMap    = Texture[0].Sample(SampleType[0], distortedTexCoords + (input.texCoordOffset * normalScrollStrength));
-	float4 specularMap  = Texture[1].Sample(SampleType[0], distortedTexCoords + (input.texCoordOffset * normalScrollStrength));
+	float4 normalMap1  = Texture[0].Sample(SampleType[0], distortedTexCoords + (input.texCoordOffset * normalScrollStrength1));
+	float4 normalMap2  = Texture[9].Sample(SampleType[0], distortedTexCoords + (-input.texCoordOffset * normalScrollStrength2));
+	float4 specularMap = Texture[1].Sample(SampleType[0], distortedTexCoords + (input.texCoordOffset * normalScrollStrength1));
 	
 	// convert normalmap sample to range -1 to 1 and convert to worldspace
-	normalMap                   = (normalMap * 2.0) -1.0;
+	normalMap1                  = (normalMap1 * 2.0) -1.0;
+	normalMap2                  = (normalMap2 * 2.0) -1.0;
 	float3x3 tangentSpaceMatrix = float3x3(input.tangent,input.binormal,input.normal);	
-	float3 bumpNormal           = normalize(mul(normalMap, tangentSpaceMatrix));  
+	float3 bumpNormal1          = normalize(mul(normalMap1, tangentSpaceMatrix)); 
+    float3 bumpNormal2          = normalize(mul(normalMap2, tangentSpaceMatrix)); 	
+	float3 bumpNormalFinal      = lerp(bumpNormal1, bumpNormal2, 0.5);
 
 	// get the colors from the projected reflection and distortion maps
 	float4 reflectionColor = GetReflectionColor(input, waterDistortStrength);
@@ -178,8 +183,8 @@ float4 Main(PixelInputType input) : SV_TARGET
 	float3 fullLightColor = (colorMix * darkenOcludedPercent) * lightPercent;
 	
 	// get the specular highlights for the water surface
-	float3 directionalColor = GetDirectionalColor(input, fullLightColor, bumpNormal, specularMap) * lightPercent;
-	float3 pointColor       = GetPointColor(input, fullLightColor, bumpNormal, specularMap);
+	float3 directionalColor = GetDirectionalColor(input, fullLightColor, bumpNormalFinal, specularMap) * lightPercent;
+	float3 pointColor       = GetPointColor(input, fullLightColor, bumpNormalFinal, specularMap);
 	
 	float4 finalColor = float4(0,0,0,1);
 	finalColor.rgb = ocludedColor + directionalColor + pointColor; 

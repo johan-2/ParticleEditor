@@ -64,6 +64,7 @@ public:
 	ID3D11ShaderResourceView* DUDVMap;
 	ID3D11ShaderResourceView* foamMap;
 	ID3D11ShaderResourceView* noiseMap;
+	ID3D11ShaderResourceView* normalMap2;
 
 	unsigned int FLAGS;
 	bool         hasHeightmap;	

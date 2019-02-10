@@ -116,7 +116,7 @@ SponzaTestScene::SponzaTestScene()
 	Entity* water = new Entity();
 	water->AddComponent<TransformComponent>()->Init(XMFLOAT3(-30.0f, 1.75f, 50), XMFLOAT3(0, 0, 0), XMFLOAT3(4, 1, 4));
 	water->AddComponent<ModelComponent>()->InitModel("models/waterPlane.obj", ALPHA_WATER, L"", L"Textures/waterNormal.dds", L"Textures/FlatHighSpecular.dds", L"", false, 3.0f);;
-	water->AddComponent<UVScrollComponent>()->Init(XMFLOAT2(0.050f, -0.01f));
+	water->AddComponent<UVScrollComponent>()->Init(XMFLOAT2(0.04f, 0.02f));
 
 	// get water properties
 	ModelComponent* waterPlane   = water->GetComponent<ModelComponent>();
@@ -126,12 +126,15 @@ SponzaTestScene::SponzaTestScene()
 	waterPlane->SetDUDVMap(L"Textures/waterDUDV.dds");
 	waterPlane->SetFoamMap(L"Textures/foam3.dds");
 	waterPlane->SetNoiseMap(L"Textures/perlinNoise2.dds");
+	waterPlane->SetNormalMap2(L"Textures/waterNormal2.dds");
 
 	// set water settings
-	waterSettings->normalScrollStrength = 0.015f;
-	waterSettings->colorTint            = XMFLOAT4(0.3f, 0.8f, 0.95f, 1);
-	waterSettings->applyFoam            = false;
-	waterSettings->foamToDepth          = 1.0f;
+	waterSettings->normalScrollStrength1 = 0.1f;
+	waterSettings->normalScrollStrength2 = 0.2f;
+	waterSettings->colorTint             = XMFLOAT4(0.3f, 0.8f, 0.95f, 1);
+	waterSettings->applyFoam             = false;
+	waterSettings->foamToDepth           = 1.0f;
+	waterSettings->reflectivePower       = 1.0f;
 
 	Entity* fountain = new Entity();
 	fountain->AddComponent<TransformComponent>()->Init(XMFLOAT3(-30.0f, 0.0f, 50.0f), XMFLOAT3(0, 0, 0), XMFLOAT3(4, 3, 4));
