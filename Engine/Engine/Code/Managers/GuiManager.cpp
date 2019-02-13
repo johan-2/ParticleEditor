@@ -61,7 +61,7 @@ void GuiManager::CreateTexture()
 {
 	// Build texture atlas
 	ImGuiIO& io = ImGui::GetIO();
-	ID3D11Device* device = Systems::dxManager->GetDevice();
+	ID3D11Device*& device = Systems::dxManager->device;
 
 	// get texture data from IMGUI
 	unsigned char* pixels;
@@ -103,14 +103,12 @@ void GuiManager::CreateTexture()
 	
 	// Store our identifier
 	io.Fonts->TexID = (void *)_texture;
-
-	texture->Release();
 }
 
 void GuiManager::CreateBuffers()
 {	
 	// get the device
-	ID3D11Device* device = Systems::dxManager->GetDevice();
+	ID3D11Device*& device = Systems::dxManager->device;
 		
 	// vertexbuffer desc
 	D3D11_BUFFER_DESC vertexDesc;
@@ -131,13 +129,11 @@ void GuiManager::CreateBuffers()
 
 	HRESULT result;
 
-	result = device->CreateBuffer(&vertexDesc, NULL, &_vertexBuffer);
-	if (FAILED(result))
-		DX_ERROR::PrintError(result, "failed to create vertex buffer for GUI");
+	result = device->CreateBuffer(&vertexDesc, NULL, &vertexBuffer);
+	if (FAILED(result)) DX_ERROR::PrintError(result, "failed to create vertex buffer for GUI");
 
-	result = device->CreateBuffer(&indexDesc, NULL, &_indexBuffer);
-	if (FAILED(result))
-		DX_ERROR::PrintError(result, "failed to create index buffer for GUI");
+	result = device->CreateBuffer(&indexDesc, NULL, &indexBuffer);
+	if (FAILED(result)) DX_ERROR::PrintError(result, "failed to create index buffer for GUI");
 }
 
 void GuiManager::Update()

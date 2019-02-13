@@ -29,10 +29,10 @@ void UVScrollComponent::Update(const float& delta)
 	_uvOffset.y += _scrollSpeed.y * delta;
 
 	// get all meshes in model
-	const std::vector<Mesh*>& meshes = _modelComponent->GetMeshes(); 
+	const std::vector<Mesh*>& meshes = _modelComponent->meshes; 
 
 	// set the offset on all meshes
-	unsigned int count = meshes.size();
+	size_t count = meshes.size();
 	for (int i = 0; i < count; i++)
-		meshes[i]->SetUvOffset(_uvOffset);
+		meshes[i]->uvOffset = _uvOffset;
 }

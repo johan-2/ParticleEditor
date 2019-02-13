@@ -23,7 +23,7 @@
 #include "LightPointComponent.h"
 #include <iostream>
 #include "GuiManager.h"
-#include "DebugStats.h"
+#include "MasterEditor.h"
 #include <algorithm>
 #include <random>
 #include <chrono>
@@ -31,16 +31,17 @@
 #include "Window.h"
 #include "Systems.h"
 #include "ParticleEditor.h"
+#include "Renderer.h"
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM Lparam);
 
 Framework::Framework()
 {
 	// create the window for the application
-	_window = new Window("Particle Editor", 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, WndProc);
+	_window = new Window("Particle Editor", 0, 0, SystemSettings::SCREEN_WIDTH, SystemSettings::SCREEN_HEIGHT, WndProc);
 	
 	// init all systems
-	Systems::InitSystems(_window, SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN, V_SYNC);
+	Systems::InitSystems(_window, SystemSettings::SCREEN_WIDTH, SystemSettings::SCREEN_HEIGHT, SystemSettings::FULLSCREEN, SystemSettings::V_SYNC);
 
 	// start and run
 	Start();
@@ -57,49 +58,48 @@ void Framework::Start()
 {
 	// get systems
 	CameraManager& CM = *Systems::cameraManager;
-	LightManager& LM  = *Systems::lightManager;
-
+	LightManager& LM = *Systems::lightManager;
 	Renderer& renderer = *Systems::renderer;
 
 	// create shadowMap
-	Entity* shadowMapRenderer = renderer.CreateShadowMap(30.0f, 8192.0f, XMFLOAT3(-60, 100, 100), XMFLOAT3(40.0f, 150.0f, 0));
+	Entity* shadowMapRenderer = renderer.CreateShadowMap(50.0f, 8192.0f, XMFLOAT3(-6, 100, 9), XMFLOAT3(85.0f, -90.0f, 0), false);
 
 	// create skybox
-	SkyDome* skyDome = renderer.CreateSkyBox(L"SkyBoxes/ThickCloudsWater.dds", SKY_DOME_RENDER_MODE::CUBEMAP_SIMPLE);
-	skyDome->SetSkyColorLayers(XMFLOAT4(0, 0, 0, 0), XMFLOAT4(0, 0, 0, 30), XMFLOAT4(0, 0, 0, 70));
-
-	// set skybox properties
-	skyDome->SetSunDirectionTransformPtr(shadowMapRenderer->GetComponent<TransformComponent>());
+	_skyDome = renderer.skyDome = new SkyDome("Settings/SkyDomeParticleEditor.json");
 
 	// create game camera
 	Entity* cameraGame = new Entity();
-	cameraGame->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 5, -12), XMFLOAT3(5,0,0));
-	cameraGame->AddComponent<CameraComponent>()->Init3D(70); 
-	cameraGame->AddComponent<FreeMoveComponent>()->init(20.0f, 0.25f);
-	CM.SetCurrentCameraGame(cameraGame->GetComponent<CameraComponent>());
+	cameraGame->AddComponent<TransformComponent>()->Init(XMFLOAT3(0.0f, 3.22f, -8.20f), XMFLOAT3(4.0f, 0.0f, 0.0f));
+	cameraGame->AddComponent<CameraComponent>()->Init3D(90);
+	cameraGame->AddComponent<FreeMoveComponent>()->init(12.0f, 0.25f, 6.0f);
+	CM.currentCameraGame = cameraGame->GetComponent<CameraComponent>();
 
 	// create UIcamera
 	Entity* cameraUI = new Entity();
 	cameraUI->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0, -1));
-	cameraUI->AddComponent<CameraComponent>()->Init2D(XMFLOAT2(SCREEN_WIDTH, SCREEN_HEIGHT), XMFLOAT2(0.01f, 10.0f));
-	CM.SetCurrentCameraUI(cameraUI->GetComponent<CameraComponent>());
+	cameraUI->AddComponent<CameraComponent>()->Init2D(XMFLOAT2(SystemSettings::SCREEN_WIDTH, SystemSettings::SCREEN_HEIGHT), XMFLOAT2(0.01f, 10.0f));
+	CM.currentCameraUI = cameraUI->GetComponent<CameraComponent>();
 
-	//set ambient light color	
-	LM.SetAmbientColor(XMFLOAT4(0.3f, 0.3f, 0.3f, 1.0f));
+	// set ambient light color	
+	LM.ambientColor = XMFLOAT4(0.15f, 0.15f, 0.15f, 1.0f);
 
-	TransformComponent* shadowMapTransform = Systems::cameraManager->GetCurrentCameraDepthMap()->GetComponent<TransformComponent>();
-
+	// create directional light and give it pointer to the depth render camera transform
+	// it will use the forward of this camera as the light direction
 	Entity* directionalLight = new Entity;
-	directionalLight->AddComponent<LightDirectionComponent>()->Init(XMFLOAT4(1.0f, 0.9f, 0.8f, 1), shadowMapRenderer->GetComponent<TransformComponent>());
+	directionalLight->AddComponent<LightDirectionComponent>()->Init(XMFLOAT4(0.8f, 0.8f, 0.8f, 1), shadowMapRenderer->GetComponent<TransformComponent>());
 
 	// create the particle editor and pass in some dependencies
-	_particleEditor = new ParticleEditor(*Systems::input, cameraGame->GetComponent<FreeMoveComponent>(), *Systems::renderer, *Systems::time);	
+	_particleEditor = new ParticleEditor(*Systems::input, cameraGame->GetComponent<FreeMoveComponent>(), *Systems::renderer, *Systems::time);
+	_masterEditor   = new MasterEditor();
+	_masterEditor->showStatsWindow = false;
 }
 
 void Framework::Update()
 {
 	Systems::world->Update();
+	_skyDome->Update(Systems::time->GetDeltaTime());
 	_particleEditor->Update();
+	_masterEditor->Update();
 }
 
 void Framework::Render()
@@ -135,7 +135,7 @@ void Framework::Run()
 		if (Systems::input->IskeyPressed(DIK_ESCAPE))
 		{
 			DXM.SetFullscreen(false);
-			DestroyWindow(_window->GetHWND());
+			DestroyWindow(_window->hwnd);
 		}
 
 		// update everything

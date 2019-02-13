@@ -6,12 +6,15 @@
 #include "ShaderHelpers.h"
 #include "Systems.h"
 #include "DXBlendStates.h"
+#include "MathHelpers.h"
+#include "InstancedModel.h"
 
 DepthShader::DepthShader()
 {
 	// create and compile shaders
-	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexDepth.vs", _vertexShader, _vertexShaderByteCode);
-	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelDepth.ps",   _pixelShader,  _pixelShaderByteCode);
+	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexDepth.shader", _vertexShader, vertexShaderByteCode);
+	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexDepthInstanced.shader", _vertexShaderInstanced, vertexShaderByteCodeInstanced);
+	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelDepth.shader",   _pixelShader,  pixelShaderByteCode);
 
 	// create constant buffer for vertex shader
 	SHADER_HELPERS::CreateConstantBuffer(_constantBufferVertex);
@@ -19,8 +22,8 @@ DepthShader::DepthShader()
 
 DepthShader::~DepthShader()
 {
-	_vertexShaderByteCode->Release();
-	_pixelShaderByteCode->Release();
+	vertexShaderByteCode->Release();
+	pixelShaderByteCode->Release();
 
 	_vertexShader->Release();
 	_pixelShader->Release();
@@ -31,19 +34,12 @@ DepthShader::~DepthShader()
 void DepthShader::RenderDepth(std::vector<Mesh*>& meshes)
 {
 	// get dx manager
-	DXManager& DXM    = *Systems::dxManager;
-	CameraManager& CM = *Systems::cameraManager;
+	DXManager& DXM               = *Systems::dxManager;
+	CameraManager& CM            = *Systems::cameraManager;
+	CameraComponent*& camera     = CM.currentCameraDepthMap;
+	ID3D11DeviceContext*& devCon = DXM.devCon;
 
-	DXM.BlendStates()->SetBlendState(BLEND_STATE::BLEND_ALPHA);
-
-	// get devicecontext
-	ID3D11DeviceContext* devCon = DXM.GetDeviceCon();
-
-	// constantbuffer structure for vertex data
-	ConstantVertex vertexData;
-
-	// get the camera that will render the depthmap
-	CameraComponent* camera = CM.GetCurrentCameraDepthMap();
+	DXM.blendStates->SetBlendState(BLEND_STATE::BLEND_ALPHA);
 
 	// set our shaders
 	devCon->VSSetShader(_vertexShader, NULL, 0);
@@ -52,26 +48,84 @@ void DepthShader::RenderDepth(std::vector<Mesh*>& meshes)
 	// set the vertex constant buffer
 	devCon->VSSetConstantBuffers(0, 1, &_constantBufferVertex);
 
-	// set constant data that is shared between all meshes
-	XMStoreFloat4x4(&vertexData.view,       XMLoadFloat4x4(&camera->GetViewMatrix()));
-	XMStoreFloat4x4(&vertexData.projection, XMLoadFloat4x4(&camera->GetProjectionMatrix()));
+	// constantbuffer structure for vertex data
+	ConstantVertex vertexData;
 
-	unsigned int size = meshes.size();
+	size_t size = meshes.size();
 	for (int i = 0; i < size; i++)
 	{
+		Mesh*& mesh = meshes[i];
+
 		// set world matrix of mesh
-		XMStoreFloat4x4(&vertexData.world, XMLoadFloat4x4(&meshes[i]->GetWorldMatrix()));
+		XMStoreFloat4x4(&vertexData.worldViewProj, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&mesh->GetWorldMatrix(), &camera->viewProjMatrix)));
 
 		// update the constant buffer with the vertexdata of this mesh
 		SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(ConstantVertex), _constantBufferVertex);
 
 		// set textures
-		devCon->PSSetShaderResources(0, 1, meshes[i]->GetTextureArray());
+		devCon->PSSetShaderResources(0, 1, mesh->baseTextures);
 
 		// upload vertices and indices
-		meshes[i]->UploadBuffers();
+		mesh->UploadBuffers();
 
 		// draw
-		devCon->DrawIndexed(meshes[i]->GetNumIndices(), 0, 0);
+		devCon->DrawIndexed(mesh->numIndices, 0, 0);
 	}
+
+	// unbind so we can use resources as input in next stages
+	ID3D11ShaderResourceView* nullSRV[1] = { NULL };
+	devCon->PSSetShaderResources(0, 1, nullSRV);
+}
+
+void DepthShader::RenderDepthInstanced(std::vector<InstancedModel*>& models)
+{
+	// get data needed
+	DXManager& DXM               = *Systems::dxManager;
+	CameraManager& CM            = *Systems::cameraManager;
+	ID3D11DeviceContext*& devCon = DXM.devCon;	
+	CameraComponent*& camera     = CM.currentCameraDepthMap;
+	
+	DXM.blendStates->SetBlendState(BLEND_STATE::BLEND_ALPHA);
+
+	// set our shaders
+	devCon->VSSetShader(_vertexShaderInstanced, NULL, 0);
+	devCon->PSSetShader(_pixelShader, NULL, 0);
+
+	// set the vertex constant buffer
+	devCon->VSSetConstantBuffers(0, 1, &_constantBufferVertex);
+
+	// set world matrix of mesh
+	ConstantVertex vertexData;
+	XMStoreFloat4x4(&vertexData.worldViewProj, XMLoadFloat4x4(&camera->viewProjMatrixTrans));
+	SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(ConstantVertex), _constantBufferVertex);
+
+	size_t size = models.size();
+	for (int i = 0; i < size; i++)
+	{
+		InstancedModel*& model = models[i];
+
+		model->UploadInstances();
+
+		std::vector<Mesh*>& meshes = model->meshes;
+		size_t meshesSize = meshes.size();
+		for (int y = 0; y < meshesSize; y++)
+		{
+			Mesh*& mesh = meshes[y];
+
+			// Set the vertex buffer in slot 0
+			devCon->IASetVertexBuffers(0, 1, &mesh->vertexBuffer, model->strides, model->offsets);
+
+			// Set the index buffer 
+			devCon->IASetIndexBuffer(mesh->indexBuffer, DXGI_FORMAT_R32_UINT, 0);
+
+			// set textures
+			devCon->PSSetShaderResources(0, 1, mesh->baseTextures);
+
+			// draw all instances of this mesh
+			devCon->DrawIndexedInstanced(mesh->numIndices, model->numInstances, 0, 0, 0);
+		}
+	}
+
+	ID3D11ShaderResourceView* nullSRV[1] = { NULL};
+	devCon->PSSetShaderResources(0, 1, nullSRV);
 }

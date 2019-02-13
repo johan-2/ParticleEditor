@@ -7,17 +7,17 @@
 #include "LightManager.h"
 #include "Mesh.h"
 #include "Systems.h"
+#include "MathHelpers.h"
 
 ForwardAlphaShader::ForwardAlphaShader()
 {
 	//create shaders
-	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexForward.vs",  _vertexShader, _vertexShaderByteCode);
-	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelForward.ps",    _pixelShader,  _pixelShaderByteCode);
+	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexForward.shader",  _vertexShader, vertexShaderByteCode);
+	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelForward.shader",    _pixelShader,  pixelShaderByteCode);
 
 	// create constant buffers
 	SHADER_HELPERS::CreateConstantBuffer(_CBVertex);
-	SHADER_HELPERS::CreateConstantBuffer(_CBPixelAmbDir);
-	SHADER_HELPERS::CreateConstantBuffer(_CBPixelPoint);
+	SHADER_HELPERS::CreateConstantBuffer(_CBPixel);
 }
 
 ForwardAlphaShader::~ForwardAlphaShader()
@@ -25,12 +25,11 @@ ForwardAlphaShader::~ForwardAlphaShader()
 	_vertexShader->Release();
 	_pixelShader->Release();
 
-	_vertexShaderByteCode->Release();
-	_pixelShaderByteCode->Release();
+	vertexShaderByteCode->Release();
+	pixelShaderByteCode->Release();
 
-	_CBPixelAmbDir->Release();
-	_CBPixelPoint->Release();
 	_CBVertex->Release();
+	_CBPixel->Release();
 }
 
 void ForwardAlphaShader::RenderForward(std::vector<Mesh*>& meshes)
@@ -43,18 +42,13 @@ void ForwardAlphaShader::RenderForward(std::vector<Mesh*>& meshes)
 	CameraManager& CM = *Systems::cameraManager;
 	LightManager& LM  = *Systems::lightManager;
 
-	// get device context
-	ID3D11DeviceContext*& devCon = DXM.GetDeviceCon();
-
-	// get game camera and shadow camera
-	CameraComponent*& camera      = CM.GetCurrentCameraGame();
-	CameraComponent*& cameraLight = CM.GetCurrentCameraDepthMap();
+	// get context and cameras
+	ID3D11DeviceContext*& devCon  = DXM.devCon;
+	CameraComponent*& camera      = CM.currentCameraGame;
+	CameraComponent*& cameraLight = CM.currentCameraDepthMap;
 
 	// get camera position
-	const XMFLOAT3& cameraPos = camera->GetComponent<TransformComponent>()->GetPositionRef();
-
-	// get directional light
-	LightDirectionComponent*& directionalLight = LM.GetDirectionalLight();
+	const XMFLOAT3& cameraPos = camera->GetComponent<TransformComponent>()->position;
 
 	// set shaders
 	devCon->VSSetShader(_vertexShader, NULL, 0);
@@ -62,65 +56,56 @@ void ForwardAlphaShader::RenderForward(std::vector<Mesh*>& meshes)
 
 	// set constant buffers
 	devCon->VSSetConstantBuffers(0, 1, &_CBVertex);
-	devCon->PSSetConstantBuffers(0, 1, &_CBPixelAmbDir);
-	devCon->PSSetConstantBuffers(1, 1, &_CBPixelPoint);
+	devCon->PSSetConstantBuffers(0, 1, &LM.cbAmbDir);
+	devCon->PSSetConstantBuffers(1, 1, &LM.cbPoint);
+	devCon->PSSetConstantBuffers(2, 1, &_CBPixel);
 
 	// set to alpha blending
-	DXM.BlendStates()->SetBlendState(BLEND_STATE::BLEND_ALPHA);
+	DXM.blendStates->SetBlendState(BLEND_STATE::BLEND_ALPHA);
 
 	// create constant buffer structures
 	CBVertex constantVertex;
-	CBAmbDir constantAmbDirPixel;
-
-	// set ambient and directional light properties for pixel shader
-	XMStoreFloat4(&constantAmbDirPixel.ambientColor,    XMLoadFloat4(&LM.GetAmbientColor()));
-	XMStoreFloat4(&constantAmbDirPixel.dirDiffuseColor, XMLoadFloat4(&directionalLight->GetLightColor()));
-	XMStoreFloat3(&constantAmbDirPixel.lightDir,        XMLoadFloat3(&directionalLight->GetLightDirectionInv()));
+	CBPixel  constantPixel;
 
 	// set camera matrices
-	XMStoreFloat4x4(&constantVertex.view,       XMLoadFloat4x4(&camera->GetViewMatrix()));
-	XMStoreFloat4x4(&constantVertex.projection, XMLoadFloat4x4(&camera->GetProjectionMatrix()));
-	XMStoreFloat3(&constantVertex.camPos,       XMLoadFloat3(&cameraPos));
-
-	// set direction light matrices
-	XMStoreFloat4x4(&constantVertex.lightView,       XMLoadFloat4x4(&cameraLight->GetViewMatrix()));
-	XMStoreFloat4x4(&constantVertex.lightProjection, XMLoadFloat4x4(&cameraLight->GetProjectionMatrix()));
-
-	// get shadow map
-	ID3D11ShaderResourceView* shadowMap = cameraLight->GetSRV();
-
-	// update pixel shader constant buffers
-	SHADER_HELPERS::UpdateConstantBuffer((void*)&constantAmbDirPixel, sizeof(CBAmbDir), _CBPixelAmbDir);
-	SHADER_HELPERS::UpdateConstantBuffer((void*)LM.GetCBPointBuffer(),sizeof(CBPoint) * LM.GetNumPointLights(), _CBPixelPoint);
+	XMStoreFloat3(&constantVertex.camPos, XMLoadFloat3(&cameraPos));
 
 	// sort alpha meshes to render back to front
 	SHADER_HELPERS::MeshSort(meshes, cameraPos, true);
 
-	const int numMeshes = meshes.size();
-	for (int i =0; i < numMeshes; i++)
+	size_t numMeshes = meshes.size();
+	for (int i = 0; i < numMeshes; i++)
 	{
 		// get mesh
 		Mesh* mesh = meshes[i];
 
 		// get mesh specific constant data
-		XMStoreFloat4x4(&constantVertex.world,  XMLoadFloat4x4(&mesh->GetWorldMatrix()));
-		XMStoreFloat2(&constantVertex.uvOffset, XMLoadFloat2(&mesh->GetUvOffset()));
+		const XMFLOAT4X4& worldMat = mesh->GetWorldMatrix();
+
+		XMStoreFloat4x4(&constantVertex.world,              XMLoadFloat4x4(&mesh->GetWorldMatrixTrans()));
+		XMStoreFloat4x4(&constantVertex.worldViewProj,      XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&worldMat, &camera->viewProjMatrix)));
+		XMStoreFloat4x4(&constantVertex.worldViewProjLight, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&worldMat, &cameraLight->viewProjMatrix)));
+		XMStoreFloat2(&constantVertex.uvOffset,             XMLoadFloat2(&mesh->uvOffset));
+
+		constantPixel.hasHeightmap = mesh->hasHeightmap;
+		constantPixel.heightScale  = mesh->heightMapScale;
 
 		// update vertex constant buffer
 		SHADER_HELPERS::UpdateConstantBuffer((void*)&constantVertex, sizeof(CBVertex), _CBVertex);
-
-		// get the texture array of mesh
-		ID3D11ShaderResourceView** meshTextures = mesh->GetTextureArray();
+		SHADER_HELPERS::UpdateConstantBuffer((void*)&constantPixel,  sizeof(CBPixel),  _CBPixel);
 
 		// fill texture array with all textures including the shadow map
-		ID3D11ShaderResourceView* t[5] = { meshTextures[0], meshTextures[1], meshTextures[2], meshTextures[3], shadowMap };
+		ID3D11ShaderResourceView* t[5] = { mesh->baseTextures[0], mesh->baseTextures[1], mesh->baseTextures[2], mesh->baseTextures[3], cameraLight->renderTexture };
 
 		// set SRV's
 		devCon->PSSetShaderResources(0, 5, t);
 
 		mesh->UploadBuffers();
 
-		devCon->DrawIndexed(mesh->GetNumIndices(), 0, 0);
+		devCon->DrawIndexed(mesh->numIndices, 0, 0);
 	}
 
+	// unbind so we can use resources as input in next stages
+	ID3D11ShaderResourceView* nullSRV[5] = { NULL, NULL, NULL, NULL, NULL };
+	devCon->PSSetShaderResources(0, 5, nullSRV);
 }

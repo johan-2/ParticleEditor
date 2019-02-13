@@ -15,6 +15,10 @@ public:
 
 	void RenderForward(std::vector<Mesh*>& meshes);
 
+	// the shader bytecode
+	ID3D10Blob* vertexShaderByteCode;
+	ID3D10Blob* pixelShaderByteCode;
+
 private:
 
 	// compiled shaders
@@ -23,20 +27,13 @@ private:
 
 	// constant buffers
 	ID3D11Buffer* _CBVertex;
-	ID3D11Buffer* _CBPixelAmbDir;
-	ID3D11Buffer* _CBPixelPoint;
-	
-	// the shader bytecode
-	ID3D10Blob* _vertexShaderByteCode;
-	ID3D10Blob* _pixelShaderByteCode;
+	ID3D11Buffer* _CBPixel;
 
 	struct CBVertex
 	{
 		XMFLOAT4X4 world;
-		XMFLOAT4X4 view;
-		XMFLOAT4X4 projection;
-		XMFLOAT4X4 lightView;
-		XMFLOAT4X4 lightProjection;
+		XMFLOAT4X4 worldViewProj;
+		XMFLOAT4X4 worldViewProjLight;
 
 		XMFLOAT3 camPos;
 		float    pad1;
@@ -44,12 +41,11 @@ private:
 		XMFLOAT2 pad2;
 	};
 
-	struct CBAmbDir
+	struct CBPixel
 	{
-		XMFLOAT4 ambientColor;
-		XMFLOAT4 dirDiffuseColor;
-		XMFLOAT3 lightDir;
-		float    padding;
+		int      hasHeightmap;
+		float    heightScale;
+		XMFLOAT2 pad;
 	};
 };
 

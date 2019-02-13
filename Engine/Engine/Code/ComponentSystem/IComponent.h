@@ -17,29 +17,28 @@ public:
 	virtual void Update(const float& delta) = 0;
 
 	// inactivate this component meaning update wont be called
-	// can overide this from each component if some more functionality is wanted
+	// can overide this from each component if some more functionality is needed 
+	// to be set before/after the set active call
+	// example of this is that the model components remove/add its meshes to/from the renderer
 	virtual void SetActive(bool active) { _isActive = active; }
 
 	// is this component active
-	bool IsActive() { return _isActive; }
+	// keep this data private so the SetActive functions have to be used
+	const bool& IsActive() { return _isActive; }
 
 	// get the type of component this is
 	COMPONENT_TYPE Type() { return _type; }
 
-	// get pointer to the entity
-	Entity*& GetParent() { return _parent; }
+	// convenience method to get another component without having to type parent first
+	template <class T> T* GetComponent(){ return parent->GetComponent<T>(); }	
 
-	// set the entity this component belongs to
-	void SetParent(Entity* parent) { _parent = parent; }
-
-	// convenience method to get another component without having to get the parent first
-	template <class T> T* GetComponent(){ return _parent->GetComponent<T>(); }	
+	// interface to parent and siblings
+	Entity* parent;
 
 protected:
 
 	// type and pointer to entity
 	COMPONENT_TYPE _type;
-	Entity*        _parent;
 	bool           _isActive;
 };
 

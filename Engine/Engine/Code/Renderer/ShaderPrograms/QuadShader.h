@@ -15,9 +15,9 @@ public:
 
 	void RenderQuadUI(const std::vector<QuadComponent*>& quads);
 
-	// get byte code from shaders
-	ID3D10Blob*& GetVertexShaderByteCode() { return _vertexShaderByteCode; }
-	ID3D10Blob*& GetPixelShaderByteCode()  { return _pixelShaderByteCode; }
+	// the shader bytecode
+	ID3D10Blob* vertexShaderByteCode;
+	ID3D10Blob* pixelShaderByteCode;
 
 private:
 
@@ -29,21 +29,18 @@ private:
 	ID3D11VertexShader* _vertexShader;
 	ID3D11PixelShader*  _pixelShader;
 
-	// the shader bytecode
-	ID3D10Blob* _vertexShaderByteCode;
-	ID3D10Blob* _pixelShaderByteCode;
-
 	// vertex canstant structure
 	struct ConstantQuadUIVertex
 	{
-		XMFLOAT4X4 view;
-		XMFLOAT4X4 projection;
+		XMFLOAT4X4 viewProj;
 	};
 
 	// pixel constant structure
 	struct ConstantQuadUIPixel
 	{
 		XMFLOAT4 color;
+		int ignoreAlpha;
+		XMFLOAT3 pad;
 	};
 };
 

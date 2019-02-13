@@ -28,9 +28,6 @@ ParticleEditor::ParticleEditor(Input& input, FreeMoveComponent* moveComponent, R
 	_renderer(renderer),
 	_time(time)
 {
-	// set start skybox
-	_renderer.GetSkybox()->LoadCubemap(L"Skyboxes/FullMoon.dds");
-
 	// set clear color to grey
 	_clearColor[0] = 0.5f;
 	_clearColor[1] = 0.5f;
@@ -40,12 +37,12 @@ ParticleEditor::ParticleEditor(Input& input, FreeMoveComponent* moveComponent, R
 	// create a grid
 	_floor = new Entity();
 	_floor->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0, 0), XMFLOAT3(0, 0, 0), XMFLOAT3(40, 1, 40));
-	_floor->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::PLANE, DEFERRED, L"Textures/bricks.dds", L"Textures/bricksNormal.dds", L"Textures/bricksSpecular.dds", L"", 30.0f);
+	_floor->AddComponent<ModelComponent>()->InitModel("Models/plane.obj", STANDARD, L"Textures/bricks.dds", L"Textures/bricksNormal.dds", L"Textures/bricksSpecular.dds", L"", false, 30.0f);
 
 	// create particle system entity
 	_particleEntity = new Entity();
 	_particleEntity->AddComponent<TransformComponent>()->Init(XMFLOAT3(0, 0.5f, 0), XMFLOAT3(0,0,0), XMFLOAT3(0.5f,0.5f,0.5f));
-	_particleEntity->AddComponent<ModelComponent>()->InitPrimitive(PRIMITIVE_TYPE::SPHERE, WIREFRAME_COLOR | CAST_SHADOW_DIR | CAST_REFLECTION_OPAQUE, L"Textures/Dirt_21_Diffuse.dds", L"Textures/Dirt_21_Normal.dds", L"Textures/Dirt_21_Specular.dds", L"", 1.0f);
+	_particleEntity->AddComponent<ModelComponent>()->InitModel("models/sphere.obj", WIREFRAME_COLOR | CAST_SHADOW_DIR, L"Textures/Dirt_21_Diffuse.dds", L"Textures/Dirt_21_Normal.dds", L"Textures/Dirt_21_Specular.dds", L"", false, 1.0f);
 	_particleEntity->AddComponent<ParticleSystemComponent>()->Init("Particles/fire.json");
 
 	// cache components
@@ -54,7 +51,7 @@ ParticleEditor::ParticleEditor(Input& input, FreeMoveComponent* moveComponent, R
 	_systemModelComponent     = _particleEntity->GetComponent<ModelComponent>();
 
 	// get how many emitters exist in the start particle system
-	_numEmitters = _systemParticleComponent->GetNumEmitters();
+	_numEmitters = _systemParticleComponent->numEmitters;
 
 	// start camera frozen
 	_cameraFreeMoveComponent->SetActive(_cameraMoveToggle);
@@ -113,8 +110,8 @@ void ParticleEditor::UpdateParticleSettingsWindow()
 	bool open = true;
 
 	// set properties of this GUI window
-	ImGui::SetNextWindowSize(ImVec2(SCREEN_WIDTH * 0.21f, SCREEN_HEIGHT * 0.81f));
-	ImGui::SetNextWindowPos(ImVec2(SCREEN_WIDTH * 0.01f, SCREEN_HEIGHT * 0.01f), 0, ImVec2(0, 0));
+	ImGui::SetNextWindowSize(ImVec2(SystemSettings::SCREEN_WIDTH * 0.21f, SystemSettings::SCREEN_HEIGHT * 0.81f));
+	ImGui::SetNextWindowPos(ImVec2(SystemSettings::SCREEN_WIDTH * 0.01f, SystemSettings::SCREEN_HEIGHT * 0.01f), 0, ImVec2(0, 0));
 	ImGui::Begin("Particle Settings", &open, ImGuiWindowFlags_HorizontalScrollbar);
 
 	// texture
@@ -145,7 +142,7 @@ void ParticleEditor::UpdateParticleSettingsWindow()
 
 	// texture input
 	ImGui::SameLine();
-	ImGui::PushItemWidth(SCREEN_WIDTH * 0.09f);
+	ImGui::PushItemWidth(SystemSettings::SCREEN_WIDTH * 0.09f);
 	ImGui::InputText("01", (char*)_particleSettings[_currentEmitterIndex].texturePath.c_str(), 30);
 	ImGui::SameLine();
 	ImGui::TextColored(ImVec4(0.9, 0.9, 0.9, 1), "Texture");
@@ -153,7 +150,7 @@ void ParticleEditor::UpdateParticleSettingsWindow()
 	ImGui::PopItemWidth();
 
 	// num particles
-	ImGui::PushItemWidth(SCREEN_WIDTH * 0.09f);
+	ImGui::PushItemWidth(SystemSettings::SCREEN_WIDTH * 0.09f);
 	ImGui::InputInt("02", (int*)&_particleSettings[_currentEmitterIndex].numParticles);
 	ImGui::SameLine();
 	ImGui::TextColored(ImVec4(0.9, 0.9, 0.9, 1), "Num Particles");
@@ -161,7 +158,7 @@ void ParticleEditor::UpdateParticleSettingsWindow()
 	ImGui::PopItemWidth();
 
 	// spawnradius
-	ImGui::PushItemWidth(SCREEN_WIDTH * 0.09f);
+	ImGui::PushItemWidth(SystemSettings::SCREEN_WIDTH * 0.09f);
 	ImGui::InputFloat("03", &_particleSettings[_currentEmitterIndex].spawnRadius, 0.1f, 0, 2);
 	ImGui::SameLine();
 	ImGui::TextColored(ImVec4(0.9, 0.9, 0.9, 1), "SpawnRadius");
@@ -169,7 +166,7 @@ void ParticleEditor::UpdateParticleSettingsWindow()
 	ImGui::PopItemWidth();
 
 	//spawnOffset
-	ImGui::PushItemWidth(SCREEN_WIDTH * 0.09f);
+	ImGui::PushItemWidth(SystemSettings::SCREEN_WIDTH * 0.09f);
 	ImGui::InputFloat3("04", &_particleSettings[_currentEmitterIndex].spawnOffset.x, 2);
 	ImGui::SameLine();
 	ImGui::TextColored(ImVec4(0.9, 0.9, 0.9, 1), "Spawn Offset");
@@ -177,7 +174,7 @@ void ParticleEditor::UpdateParticleSettingsWindow()
 	ImGui::PopItemWidth();
 
 	//startsize
-	ImGui::PushItemWidth(SCREEN_WIDTH * 0.09f);
+	ImGui::PushItemWidth(SystemSettings::SCREEN_WIDTH * 0.09f);
 	ImGui::InputFloat2("05", &_particleSettings[_currentEmitterIndex].minMaxSpeed.x, 2);
 	ImGui::SameLine();
 	ImGui::TextColored(ImVec4(0.9, 0.9, 0.9, 1), "Speed Min Max");
@@ -185,7 +182,7 @@ void ParticleEditor::UpdateParticleSettingsWindow()
 	ImGui::PopItemWidth();
 
 	//startsize
-	ImGui::PushItemWidth(SCREEN_WIDTH * 0.09f);
+	ImGui::PushItemWidth(SystemSettings::SCREEN_WIDTH * 0.09f);
 	ImGui::InputFloat2("06", &_particleSettings[_currentEmitterIndex].startSize.x, 2);
 	ImGui::SameLine();
 	ImGui::TextColored(ImVec4(0.9, 0.9, 0.9, 1), "Start Size");
@@ -193,7 +190,7 @@ void ParticleEditor::UpdateParticleSettingsWindow()
 	ImGui::PopItemWidth();
 
 	//startScaleMinMax
-	ImGui::PushItemWidth(SCREEN_WIDTH * 0.09f);
+	ImGui::PushItemWidth(SystemSettings::SCREEN_WIDTH * 0.09f);
 	ImGui::InputFloat2("07", &_particleSettings[_currentEmitterIndex].startScaleMinMax.x, 2);
 	ImGui::SameLine();
 	ImGui::TextColored(ImVec4(0.9, 0.9, 0.9, 1), "StartScale Min Max");
@@ -201,7 +198,7 @@ void ParticleEditor::UpdateParticleSettingsWindow()
 	ImGui::PopItemWidth();
 
 	//endScaleMinMax
-	ImGui::PushItemWidth(SCREEN_WIDTH * 0.09f);
+	ImGui::PushItemWidth(SystemSettings::SCREEN_WIDTH * 0.09f);
 	ImGui::InputFloat2("08", &_particleSettings[_currentEmitterIndex].endScaleMinMax.x, 2);
 	ImGui::SameLine();
 	ImGui::TextColored(ImVec4(0.9, 0.9, 0.9, 1), "EndScale Min Max");
@@ -209,7 +206,7 @@ void ParticleEditor::UpdateParticleSettingsWindow()
 	ImGui::PopItemWidth();
 
 	//Move direction
-	ImGui::PushItemWidth(SCREEN_WIDTH * 0.09f);
+	ImGui::PushItemWidth(SystemSettings::SCREEN_WIDTH * 0.09f);
 	ImGui::InputFloat3("09", &_particleSettings[_currentEmitterIndex].direction.x, 2);
 	ImGui::SameLine();
 	ImGui::TextColored(ImVec4(0.9, 0.9, 0.9, 1), "Move Direction");
@@ -217,7 +214,7 @@ void ParticleEditor::UpdateParticleSettingsWindow()
 	ImGui::PopItemWidth();
 
 	//spread
-	ImGui::PushItemWidth(SCREEN_WIDTH * 0.09f);
+	ImGui::PushItemWidth(SystemSettings::SCREEN_WIDTH * 0.09f);
 	ImGui::InputFloat3("10", &_particleSettings[_currentEmitterIndex].velocitySpread.x, 2);
 	ImGui::SameLine();
 	ImGui::TextColored(ImVec4(0.9, 0.9, 0.9, 1), "Directional Spread");
@@ -225,7 +222,7 @@ void ParticleEditor::UpdateParticleSettingsWindow()
 	ImGui::PopItemWidth();
 
 	//gravity
-	ImGui::PushItemWidth(SCREEN_WIDTH * 0.09f);
+	ImGui::PushItemWidth(SystemSettings::SCREEN_WIDTH * 0.09f);
 	ImGui::InputFloat3("11", &_particleSettings[_currentEmitterIndex].gravity.x, 2);
 	ImGui::SameLine();
 	ImGui::TextColored(ImVec4(0.9, 0.9, 0.9, 1), "Gravity");
@@ -233,7 +230,7 @@ void ParticleEditor::UpdateParticleSettingsWindow()
 	ImGui::PopItemWidth();
 
 	// Drag
-	ImGui::PushItemWidth(SCREEN_WIDTH * 0.09f);
+	ImGui::PushItemWidth(SystemSettings::SCREEN_WIDTH * 0.09f);
 	ImGui::InputFloat("12", &_particleSettings[_currentEmitterIndex].drag, 0.01f, 0, 2);
 	ImGui::SameLine();
 	ImGui::TextColored(ImVec4(0.9, 0.9, 0.9, 1), "Drag");
@@ -241,7 +238,7 @@ void ParticleEditor::UpdateParticleSettingsWindow()
 	ImGui::PopItemWidth();
 
 	// emitter lifetime
-	ImGui::PushItemWidth(SCREEN_WIDTH * 0.09f);
+	ImGui::PushItemWidth(SystemSettings::SCREEN_WIDTH * 0.09f);
 	ImGui::InputFloat("13", &_particleSettings[_currentEmitterIndex].emitterLifetime, 0.1f, 0, 2);
 	ImGui::SameLine();
 	ImGui::TextColored(ImVec4(0.9, 0.9, 0.9, 1), "Emitter Lifetime");
@@ -249,7 +246,7 @@ void ParticleEditor::UpdateParticleSettingsWindow()
 	ImGui::PopItemWidth();
 
 	// particle lifetime
-	ImGui::PushItemWidth(SCREEN_WIDTH * 0.09f);
+	ImGui::PushItemWidth(SystemSettings::SCREEN_WIDTH * 0.09f);
 	ImGui::InputFloat("14", &_particleSettings[_currentEmitterIndex].particleLifetime, 0.1f, 0, 2);
 	ImGui::SameLine();
 	ImGui::TextColored(ImVec4(0.9, 0.9, 0.9, 1), "Particle Lifetime");
@@ -257,7 +254,7 @@ void ParticleEditor::UpdateParticleSettingsWindow()
 	ImGui::PopItemWidth();
 
 	// start alpha
-	ImGui::PushItemWidth(SCREEN_WIDTH * 0.09f);
+	ImGui::PushItemWidth(SystemSettings::SCREEN_WIDTH * 0.09f);
 	ImGui::SliderFloat("15", &_particleSettings[_currentEmitterIndex].startAlpha, 0.0f, 1.0f, "%.2f");
 	ImGui::SameLine();
 	ImGui::TextColored(ImVec4(0.9, 0.9, 0.9, 1), "Start Alpha");
@@ -265,7 +262,7 @@ void ParticleEditor::UpdateParticleSettingsWindow()
 	ImGui::PopItemWidth();
 
 	// end alpha
-	ImGui::PushItemWidth(SCREEN_WIDTH * 0.09f);
+	ImGui::PushItemWidth(SystemSettings::SCREEN_WIDTH * 0.09f);
 	ImGui::SliderFloat("16", &_particleSettings[_currentEmitterIndex].endAlpha, 0.0f, 1.0f, "%.2f");
 	ImGui::SameLine();
 	ImGui::TextColored(ImVec4(0.9, 0.9, 0.9, 1), "End Alpha");
@@ -273,7 +270,7 @@ void ParticleEditor::UpdateParticleSettingsWindow()
 	ImGui::PopItemWidth();
 
 	//StartColor min
-	ImGui::PushItemWidth(SCREEN_WIDTH * 0.09f);
+	ImGui::PushItemWidth(SystemSettings::SCREEN_WIDTH * 0.09f);
 	ImGui::InputFloat3("17", &_particleSettings[_currentEmitterIndex].startColorMultiplierRGBMin.x, 2);
 	ImGui::SameLine();
 	ImGui::TextColored(ImVec4(0.9, 0.9, 0.9, 1), "StartColor Multiplier Min");
@@ -281,7 +278,7 @@ void ParticleEditor::UpdateParticleSettingsWindow()
 	ImGui::PopItemWidth();
 
 	//startcolor max
-	ImGui::PushItemWidth(SCREEN_WIDTH * 0.09f);
+	ImGui::PushItemWidth(SystemSettings::SCREEN_WIDTH * 0.09f);
 	ImGui::InputFloat3("18", &_particleSettings[_currentEmitterIndex].startColorMultiplierRGBMax.x, 2);
 	ImGui::SameLine();
 	ImGui::TextColored(ImVec4(0.9, 0.9, 0.9, 1), "StartColor multiplier Max");
@@ -289,7 +286,7 @@ void ParticleEditor::UpdateParticleSettingsWindow()
 	ImGui::PopItemWidth();
 
 	//endcolor min
-	ImGui::PushItemWidth(SCREEN_WIDTH * 0.09f);
+	ImGui::PushItemWidth(SystemSettings::SCREEN_WIDTH * 0.09f);
 	ImGui::InputFloat3("19", &_particleSettings[_currentEmitterIndex].endColorMultiplierRGBMin.x, 2);
 	ImGui::SameLine();
 	ImGui::TextColored(ImVec4(0.9, 0.9, 0.9, 1), "EndColor Multiplier Min");
@@ -297,7 +294,7 @@ void ParticleEditor::UpdateParticleSettingsWindow()
 	ImGui::PopItemWidth();
 
 	//endcolor max
-	ImGui::PushItemWidth(SCREEN_WIDTH * 0.09f);
+	ImGui::PushItemWidth(SystemSettings::SCREEN_WIDTH * 0.09f);
 	ImGui::InputFloat3("20", &_particleSettings[_currentEmitterIndex].endColorMultiplierRGBMax.x, 2);
 	ImGui::SameLine();
 	ImGui::TextColored(ImVec4(0.9, 0.9, 0.9, 1), "EndColor Multiplier Max");
@@ -305,7 +302,7 @@ void ParticleEditor::UpdateParticleSettingsWindow()
 	ImGui::PopItemWidth();
 
 	//endcolor max
-	ImGui::PushItemWidth(SCREEN_WIDTH * 0.09f);
+	ImGui::PushItemWidth(SystemSettings::SCREEN_WIDTH * 0.09f);
 	ImGui::InputFloat3("30", &_particleSettings[_currentEmitterIndex].inheritVelocityScale.x, 2);
 	ImGui::SameLine();
 	ImGui::TextColored(ImVec4(0.9, 0.9, 0.9, 1), "Enherit Velocity scale");
@@ -313,7 +310,7 @@ void ParticleEditor::UpdateParticleSettingsWindow()
 	ImGui::PopItemWidth();
 
 	//rotation per sec minmax
-	ImGui::PushItemWidth(SCREEN_WIDTH * 0.09f);
+	ImGui::PushItemWidth(SystemSettings::SCREEN_WIDTH * 0.09f);
 	ImGui::InputFloat2("21", &_particleSettings[_currentEmitterIndex].rotationPerSecMinMax.x, 2);
 	ImGui::SameLine();
 	ImGui::TextColored(ImVec4(0.9, 0.9, 0.9, 1), "Rotation Per Second");
@@ -345,7 +342,7 @@ void ParticleEditor::UpdateParticleSettingsWindow()
 	ShowToolTip("Makes the up axis always point towards the direction of velocity");
 
 	// blendstate
-	ImGui::PushItemWidth(SCREEN_WIDTH * 0.09f);
+	ImGui::PushItemWidth(SystemSettings::SCREEN_WIDTH * 0.09f);
 	ImGui::Combo("28", &_blendEnum[_currentEmitterIndex], "ALPHA\0ADDITIVE\0SUBTRACTIVE");
 	ImGui::SameLine();
 	ImGui::TextColored(ImVec4(0.9, 0.9, 0.9, 1), "Blend State");
@@ -403,8 +400,8 @@ void ParticleEditor::UpdateParticleSettingsWindow()
 void ParticleEditor::UpdateInfoWindow()
 {
 	// info window with short commands	
-	ImGui::SetNextWindowSize(ImVec2(SCREEN_WIDTH * 0.15f, SCREEN_HEIGHT * 0.1f));
-	ImGui::SetNextWindowPos(ImVec2(SCREEN_WIDTH * 0.01f, SCREEN_HEIGHT * 0.95f), 0, ImVec2(0, 1));
+	ImGui::SetNextWindowSize(ImVec2(SystemSettings::SCREEN_WIDTH * 0.15f, SystemSettings::SCREEN_HEIGHT * 0.1f));
+	ImGui::SetNextWindowPos(ImVec2(SystemSettings::SCREEN_WIDTH * 0.01f, SystemSettings::SCREEN_HEIGHT * 0.95f), 0, ImVec2(0, 1));
 
 	ImGui::Begin("short commands", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoInputs);
 
@@ -501,13 +498,13 @@ void ParticleEditor::UpdateEditorSettingsWindow()
 	bool startOpen = true;
 
 	// editor settings window
-	ImGui::SetNextWindowSize(ImVec2(SCREEN_WIDTH * 0.20f, SCREEN_HEIGHT * 0.5f));
-	ImGui::SetNextWindowPos(ImVec2(SCREEN_WIDTH * 0.99f, SCREEN_HEIGHT * 0.01f), 0, ImVec2(1, 0));
+	ImGui::SetNextWindowSize(ImVec2(SystemSettings::SCREEN_WIDTH * 0.20f, SystemSettings::SCREEN_HEIGHT * 0.5f));
+	ImGui::SetNextWindowPos(ImVec2(SystemSettings::SCREEN_WIDTH * 0.99f, SystemSettings::SCREEN_HEIGHT * 0.01f), 0, ImVec2(1, 0));
 	ImGui::Begin("Editor Settings", &startOpen, ImGuiWindowFlags_HorizontalScrollbar);
 
 	// render skybox
 	ImGui::Checkbox("Render Skybox", &_miscSettings.renderSkybox);
-	_renderer.GetSkybox()->setActive(_miscSettings.renderSkybox);
+	_renderer.skyDome->isActive = _miscSettings.renderSkybox;
 
 	// show clear color and open color picker if pressed
 	if (ImGui::ColorButton("color", ImVec4(_clearColor[0], _clearColor[1], _clearColor[2], _clearColor[3])))
@@ -530,7 +527,8 @@ void ParticleEditor::UpdateEditorSettingsWindow()
 			std::wstring wName(name.begin(), name.end());
 
 			// set the new cubemap
-			_renderer.GetSkybox()->LoadCubemap(wName.c_str());
+			_renderer.skyDome->skySettings.cubeMapName = name;
+			_renderer.skyDome->LoadCubemap();
 		}
 	}
 
@@ -545,7 +543,7 @@ void ParticleEditor::UpdateEditorSettingsWindow()
 		{
 			// remove and add new model component
 			_particleEntity->RemoveComponent(_systemModelComponent);
-			_particleEntity->AddComponent<ModelComponent>()->InitModel((char*)name.c_str(), DEFERRED | CAST_SHADOW_DIR | CAST_REFLECTION_OPAQUE);
+			_particleEntity->AddComponent<ModelComponent>()->InitModel((char*)name.c_str(), STANDARD | CAST_SHADOW_DIR);
 
 			// get pointer to model component
 			_systemModelComponent = _particleEntity->GetComponent<ModelComponent>();
@@ -567,7 +565,7 @@ void ParticleEditor::UpdateEditorSettingsWindow()
 	if (_miscSettings.emitterAsWireFrame)
 		_systemModelComponent->SetRenderFlags(WIREFRAME_COLOR | CAST_SHADOW_DIR);
 	else
-		_systemModelComponent->SetRenderFlags(DEFERRED | CAST_SHADOW_DIR | CAST_REFLECTION_OPAQUE);
+		_systemModelComponent->SetRenderFlags(STANDARD | CAST_SHADOW_DIR );
 
 	// show grid
 	ImGui::Checkbox("Show Grid", &_miscSettings.showGrid);
@@ -578,35 +576,35 @@ void ParticleEditor::UpdateEditorSettingsWindow()
 	_systemModelComponent->SetActive(_miscSettings.showParticleModel);
 
 	// emitter origin position
-	ImGui::PushItemWidth(SCREEN_WIDTH * 0.09f);
+	ImGui::PushItemWidth(SystemSettings::SCREEN_WIDTH * 0.09f);
 	ImGui::InputFloat3("Entity Position", (float*)&_miscSettings.systemOrigin, 2);
 	ImGui::PopItemWidth();
 
 	// emitter rotation
-	ImGui::PushItemWidth(SCREEN_WIDTH * 0.09f);
+	ImGui::PushItemWidth(SystemSettings::SCREEN_WIDTH * 0.09f);
 	ImGui::InputFloat3("Entity Rotation", (float*)&_miscSettings.systemRotationAmount, 2);
 	ImGui::PopItemWidth();
 
 	// emitter scale
-	ImGui::PushItemWidth(SCREEN_WIDTH * 0.09f);
+	ImGui::PushItemWidth(SystemSettings::SCREEN_WIDTH * 0.09f);
 	ImGui::InputFloat3("Entity Scale", (float*)&_miscSettings.systemScale, 2);
 	ImGui::PopItemWidth();
 
 	// emitter translation
-	ImGui::PushItemWidth(SCREEN_WIDTH * 0.09f);
+	ImGui::PushItemWidth(SystemSettings::SCREEN_WIDTH * 0.09f);
 	ImGui::Combo("Entity Translation", &_miscSettings.moveState, "IDLE\0BACK_FORTH\0UP_DOWN");
 	ImGui::PopItemWidth();
 
 	// emitter translation speed
-	ImGui::PushItemWidth(SCREEN_WIDTH * 0.09f);
+	ImGui::PushItemWidth(SystemSettings::SCREEN_WIDTH * 0.09f);
 	ImGui::InputFloat("Entity Translation Speed", &_miscSettings.moveSpeed, 0, 0, 2);
 	ImGui::PopItemWidth();
 
 	// reset emitter transform
 	if (ImGui::Button("Reset Transform"))
 	{
-		_systemTransformComponent->SetPosition(XMFLOAT3(0, 0, 0));
-		_systemTransformComponent->SetRotation(XMFLOAT3(0, 0, 0));
+		_systemTransformComponent->position = XMFLOAT3(0, 0, 0);
+		_systemTransformComponent->rotation = XMFLOAT3(0, 0, 0);
 	}
 
 	ImGui::Spacing();
@@ -628,7 +626,7 @@ void ParticleEditor::UpdateEditorSettingsWindow()
 			_blendEnum.clear();
 
 			// get how many emitters the new system have
-			_numEmitters = _systemParticleComponent->GetNumEmitters();
+			_numEmitters = _systemParticleComponent->numEmitters;
 
 			// add the settings and blendstates for all emitters in this system
 			for (int i = 0; i < _numEmitters; i++)
@@ -938,10 +936,10 @@ void ParticleEditor::UpdateEntityMovement()
 			XMVectorMultiply(XMLoadFloat3(&_miscSettings.systemRotationAmount), XMLoadFloat3(&deltaAligned))));
 
 	// set rotation, position and scale of system entity
-	_systemTransformComponent->SetRotation(_miscSettings.systemRotation);
-	_systemTransformComponent->SetPosition(_miscSettings.systemPosition);
-	_systemTransformComponent->SetScale(_miscSettings.systemScale);
+	_systemTransformComponent->rotation = _miscSettings.systemRotation;
+	_systemTransformComponent->rotation = _miscSettings.systemPosition;
+	_systemTransformComponent->scale    = _miscSettings.systemScale;
 
 	// build new world matrix
-	_systemTransformComponent->UpdateWorldMatrix();
+	_systemTransformComponent->BuildWorldMatrix();
 }

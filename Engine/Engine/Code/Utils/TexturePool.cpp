@@ -17,7 +17,7 @@ TexturePool::~TexturePool()
 	_textures.clear();
 }
 
-ID3D11ShaderResourceView* TexturePool::GetTexture(const wchar_t* name)
+ID3D11ShaderResourceView* TexturePool::GetTexture(const wchar_t* name, bool printStatus)
 {
 	// get wstring
 	std::wstring key(name);
@@ -31,7 +31,7 @@ ID3D11ShaderResourceView* TexturePool::GetTexture(const wchar_t* name)
 	// return pointer to existing texture
 	if (it != _textures.end()) 
 	{
-		printf("Returning existing texture : %ls\n", key.c_str());
+		if (printStatus) printf("Returning existing texture : %ls\n", key.c_str());
 		return it->second;
 	}
 	else 
@@ -39,7 +39,7 @@ ID3D11ShaderResourceView* TexturePool::GetTexture(const wchar_t* name)
 		ID3D11ShaderResourceView* texture;
 
 		// create new texture
-		HRESULT result = DirectX::CreateDDSTextureFromFile(Systems::dxManager->GetDevice(), name, NULL, &texture);
+		HRESULT result = DirectX::CreateDDSTextureFromFile(Systems::dxManager->device, name, NULL, &texture);
 
 		if (FAILED(result))
 		{
@@ -48,7 +48,7 @@ ID3D11ShaderResourceView* TexturePool::GetTexture(const wchar_t* name)
 		}
 		else
 		{
-			printf("Create texture : %ls\n", key.c_str());
+			if (printStatus) printf("Create texture : %ls\n", key.c_str());
 
 			// insert texure in map
 			_textures.insert(std::pair<std::wstring, ID3D11ShaderResourceView*>(key, texture));

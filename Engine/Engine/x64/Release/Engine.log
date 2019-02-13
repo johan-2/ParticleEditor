@@ -1,7 +1,70 @@
-﻿  SponzaTestScene.cpp
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(377,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
+  IEditorWindow.cpp
+  MainEditorWindow.cpp
+  MasterEditor.cpp
+  PostProcessWindow.cpp
+  SkyDomeWindow.cpp
+  SystemSettingsWindow.cpp
+  Framework.cpp
+c:\users\nilss\desktop\particleeditor\engine\engine\code\framework.cpp(41): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+c:\users\nilss\desktop\particleeditor\engine\engine\code\framework.cpp(188): warning C4244: 'initializing': conversion from '_Rep' to 'unsigned int', possible loss of data
+          with
+          [
+              _Rep=std::chrono::system_clock::rep
+          ]
+  ParticleEditor.cpp
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(60): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(148): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(156): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(164): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(172): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(180): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(188): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(196): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(204): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(212): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(220): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(228): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(236): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(244): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(252): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(260): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(268): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(276): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(284): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(292): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(300): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(308): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(316): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(323): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(329): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(335): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(341): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(348): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(410): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(412): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(416): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(418): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(422): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(424): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(428): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(477): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(514): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(632): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(671): warning C4018: '<': signed/unsigned mismatch
+c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(917): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  InstancedModel.cpp
+c:\users\nilss\desktop\particleeditor\engine\engine\code\renderer\objects\instancedmodel.cpp(27): warning C4267: '=': conversion from 'size_t' to 'unsigned int', possible loss of data
+c:\users\nilss\desktop\particleeditor\engine\engine\code\renderer\objects\instancedmodel.cpp(63): warning C4267: '=': conversion from 'size_t' to 'unsigned int', possible loss of data
+c:\users\nilss\desktop\particleeditor\engine\engine\code\renderer\objects\instancedmodel.cpp(94): warning C4244: '=': conversion from 'float' to 'UINT', possible loss of data
+  SimpleClipSceneShader.cpp
+  WaterShader.cpp
+  imgui_draw.cpp
+  DebugQuadHandler.cpp
+  SystemDefs.cpp
+  Window.cpp
+  Main.cpp
   Generating code
-  1 of 2617 functions (<0.1%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    2 functions had inline decision re-evaluated but remain unchanged
+  All 3277 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
   Finished generating code
-  Engine.vcxproj -> C:\Users\nilss\Desktop\EngineDx11\Engine\Engine\Engine.exe
+  Engine.vcxproj -> C:\Users\nilss\Desktop\ParticleEditor\Engine\Engine\Engine.exe

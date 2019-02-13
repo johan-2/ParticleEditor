@@ -4,6 +4,8 @@
 
 class Window;
 class ParticleEditor;
+class MasterEditor;
+class SkyDome;
 
 class Framework
 {
@@ -25,5 +27,7 @@ private:
 	// window and debug stats
 	Window*         _window;
 	ParticleEditor* _particleEditor;
+	MasterEditor*   _masterEditor;
+	SkyDome* _skyDome;
 };
 

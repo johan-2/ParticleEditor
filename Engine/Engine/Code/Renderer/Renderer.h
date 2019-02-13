@@ -22,7 +22,10 @@ class ForwardAlphaShader;
 class WireframeShader;
 class PlanarReflectionShader;
 class PostProcessingShader;
-class ReflectionMapShader;
+class SimpleClipSceneShader;
+class WaterShader;
+class DebugQuadHandler;
+class InstancedModel;
 
 // the different render lists we have
 enum SHADER_TYPE
@@ -33,8 +36,20 @@ enum SHADER_TYPE
 	S_WIREFRAME,
 	S_CAST_REFLECTION_OPAQUE,
 	S_CAST_REFLECTION_ALPHA,
+	S_REFRACT_OPAQUE,
+	S_REFRACT_ALPHA,
 	S_ALPHA_REFLECTION,
+	S_ALPHA_WATER,
 	S_NUM_RENDER_TYPES,
+};
+
+enum INSTANCED_SHADER_TYPE
+{
+	S_INSTANCED_DEFERRED,
+	S_INSTANCED_DEPTH,
+	S_INSTANCED_CAST_REFLECTION,
+	S_INSTANCED_REFRACT,
+	S_NUM_INSTANCED_RENDER_TYPES
 };
 
 class Renderer
@@ -46,27 +61,27 @@ public:
 	void Initialize();
 
 	// add objects to respective renderers
-	void AddMeshToRenderer(Mesh* mesh, SHADER_TYPE type)               { _meshes[type].push_back(mesh); }
-	void AddQuadToRenderer(QuadComponent* quad)                        { _quads.push_back(quad); }
-	void AddParticleSystemToRenderer(ParticleSystemComponent* emitter) { _particleSystems.push_back(emitter); }
+	void AddMeshToRenderer(Mesh* mesh, SHADER_TYPE type)                                { _meshes[type].push_back(mesh); }
+	void AddInstancedModelToRenderer(InstancedModel* model, INSTANCED_SHADER_TYPE type) { _instancedModels[type].push_back(model); }
+	void AddQuadToRenderer(QuadComponent* quad)                                         { _quads.push_back(quad); }
+	void AddParticleSystemToRenderer(ParticleSystemComponent* emitter)                  { _particleSystems.push_back(emitter); }
 
 	// remove objects from respective renderers
-	void RemoveMeshFromRenderer(Mesh* mesh, SHADER_TYPE type)               { VECTOR_HELPERS::RemoveItemFromVector(_meshes[type], mesh); }
-	void RemoveQuadFromRenderer(QuadComponent* quad)                        { VECTOR_HELPERS::RemoveItemFromVector(_quads, quad); }
-	void RemoveParticleSystemFromRenderer(ParticleSystemComponent* emitter) { VECTOR_HELPERS::RemoveItemFromVector(_particleSystems, emitter); }
+	void RemoveMeshFromRenderer(Mesh* mesh, SHADER_TYPE type)                                { VECTOR_HELPERS::RemoveItemFromVector(_meshes[type], mesh); }
+	void RemoveInstancedModelFromRenderer(InstancedModel* model, INSTANCED_SHADER_TYPE type) { VECTOR_HELPERS::RemoveItemFromVector(_instancedModels[type], model); }
+	void RemoveQuadFromRenderer(QuadComponent* quad)                                         { VECTOR_HELPERS::RemoveItemFromVector(_quads, quad); }
+	void RemoveParticleSystemFromRenderer(ParticleSystemComponent* emitter)                  { VECTOR_HELPERS::RemoveItemFromVector(_particleSystems, emitter); }
 	
-	// create/ get skydome
-	SkyDome* GetSkybox() { return _skyBox; }
-	SkyDome* CreateSkyBox(const wchar_t* cubeMap, SKY_DOME_RENDER_MODE mode);
+	// get meshes and particles
+	std::vector<Mesh*>& GetMeshes(SHADER_TYPE type)                              { return _meshes[type]; }
+	std::vector<InstancedModel*>& GetInstancedModels(INSTANCED_SHADER_TYPE type) { return _instancedModels[type]; }
+	std::vector<ParticleSystemComponent*>& GetParticles()                        { return _particleSystems; }
 
 	// create the shadowmap
-	Entity* CreateShadowMap(float orthoSize, float resolution, XMFLOAT3 position, XMFLOAT3 rotation);
+	Entity* CreateShadowMap(float orthoSize, float resolution, XMFLOAT3 position, XMFLOAT3 rotation, bool debugQuad);
 
 	// create debug images that show each component of the G-Buffer
-	void CreateDebugImages();
-
-	// set the clear color
-	void SetClearColor(float r, float g, float b, float a) { _clearColor[0] = r; _clearColor[1] = g; _clearColor[2] = b; _clearColor[3] = a;  }
+	void ShowGBufferDebugImages();
 
 	// set the main render target active
 	void SetMainRenderTarget(); 
@@ -74,8 +89,32 @@ public:
 	// will render everything
 	void Render();
 
-	// set a input layout
-	void SetInputLayout(INPUT_LAYOUT_TYPE type) { _inputLayouts->SetInputLayout(type); }
+	// skydome class with all rendering built in
+	SkyDome* skyDome;
+
+	// contains all input layouts
+	DXInputLayouts* inputLayouts;
+
+	// class that handles creating and aligning debug render quads
+	DebugQuadHandler* debugQuadHandler;
+
+	// shader "programs" that will handle all preperations
+	// for rendering with a specific shader
+	DepthShader*            depthShader;
+	DeferredShader*         deferredShader;
+	QuadShader*             quadShader;
+	ParticleShader*         particleShader;
+	ImGUIShader*            imGUIShader;
+	ForwardAlphaShader*     forwardAlphaShader;
+	WireframeShader*        wireframeShader;
+	PlanarReflectionShader* planarReflectionShader;
+	PostProcessingShader*   postProcessingShader;
+	WaterShader*            waterShader;
+
+	RenderToTexture* mainRendertarget;
+
+	float clearColor[4];
+	void SetClearColor(float r, float g, float b, float a) { clearColor[0] = r; clearColor[1] = g; clearColor[2] = b; clearColor[3] = a;}
 	
 private:
 
@@ -83,28 +122,12 @@ private:
 	void RenderDeferred();
 	void RenderDepth();
 
-	// shader "programs" that will handle all preperations
-	// for rendering with a specific shader
-	DepthShader*            _depthShader;
-	DeferredShader*         _deferredShader;
-	QuadShader*             _quadShader;
-	ParticleShader*         _particleShader;
-	ImGUIShader*            _imGUIShader;
-	ForwardAlphaShader*     _forwardAlphaShader;
-	WireframeShader*        _wireframeShader;
-	PlanarReflectionShader* _planarReflectionShader;
-	PostProcessingShader*   _PostProcessingShader;
-	ReflectionMapShader*    _reflectionMapShader;
-
-	// skybox class with all rendering built in
-	SkyDome* _skyBox;
-
-	// contains all input layouts
-	DXInputLayouts* _inputLayouts;
-
 	// list of meshes for each shader type
 	// one mesh can be added to several shader types
 	std::vector<Mesh*> _meshes[S_NUM_RENDER_TYPES];	
+
+	// list of all instanced models
+	std::vector<InstancedModel*> _instancedModels[S_NUM_INSTANCED_RENDER_TYPES];
 
 	// all 2D UI quads
 	std::vector<QuadComponent*> _quads;
@@ -112,19 +135,14 @@ private:
 	// all particle systems
 	std::vector<ParticleSystemComponent*> _particleSystems;
 
-	// the camera entity that renders the depth map for shadows
-	Entity* _cameraDepth;
-
-	// the render texure that the depth camera renders to
-	RenderToTexture* _depthMap;
-	RenderToTexture* _mainRendertarget;
+	// shadow rendering
+	Entity*          _cameraDepth;
+	RenderToTexture* _depthMap;	
 
 	// the Gbuffer for deferred rendering
 	// and the fullscreen quad where we will 
 	// project the deferred lightningpass
 	GBuffer*    _gBuffer;
 	ScreenQuad* _fullScreenQuad;
-
-	float _clearColor[4];
 };
 

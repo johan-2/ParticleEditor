@@ -13,12 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\ThirdParty">
+      <UniqueIdentifier>{369eae22-2754-4296-b478-3b812415d2bc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\DDSTextureLoader\DDSTextureLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Code\Utils\TexturePool.cpp">
@@ -66,9 +66,6 @@
     <ClCompile Include="Code\Managers\LightManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Utils\DebugStats.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Code\Utils\Time.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -82,15 +79,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Code\Input\Input.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\ImGUI\imgui.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\ImGUI\imgui_demo.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\ImGUI\imgui_draw.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Code\Components\ParticleSystemComponent.cpp">
@@ -174,15 +162,51 @@
     <ClCompile Include="Code\Renderer\ShaderPrograms\PostProcessingShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Renderer\ShaderPrograms\ReflectionMapShader.cpp">
+    <ClCompile Include="Code\ThirdParty\DDSTextureLoader\DDSTextureLoader.cpp">
+      <Filter>Source Files\ThirdParty</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ThirdParty\ImGUI\imgui.cpp">
+      <Filter>Source Files\ThirdParty</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ThirdParty\ImGUI\imgui_draw.cpp">
+      <Filter>Source Files\ThirdParty</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Renderer\ShaderPrograms\WaterShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Renderer\ShaderPrograms\SimpleClipSceneShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Utils\DebugQuadHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Utils\SystemDefs.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Renderer\Objects\InstancedModel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Editor\IEditorWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Editor\MainEditorWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Editor\MasterEditor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Editor\PostProcessWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Editor\SkyDomeWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Editor\SystemSettingsWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\Utils\SystemDefs.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\DDSTextureLoader\DDSTextureLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Code\Utils\TexturePool.h">
@@ -233,9 +257,6 @@
     <ClInclude Include="Code\Managers\LightManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Utils\DebugStats.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Code\Utils\Time.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -249,24 +270,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Code\Input\Input.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ImGUI\imconfig.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ImGUI\imgui.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ImGUI\imgui_internal.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ImGUI\stb_rect_pack.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ImGUI\stb_textedit.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ImGUI\stb_truetype.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Code\Components\ParticleSystemComponent.h">
@@ -356,10 +359,46 @@
     <ClInclude Include="Code\Renderer\ShaderPrograms\PostProcessingShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Renderer\ShaderPrograms\ReflectionMapShader.h">
+    <ClInclude Include="Code\Utils\ModelLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Utils\ModelLoader.h">
+    <ClInclude Include="Code\Renderer\ShaderPrograms\WaterShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Renderer\ShaderPrograms\SimpleClipSceneShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Utils\DebugQuadHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Utils\GUI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Utils\JsonHelpers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Utils\MathHelpers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Renderer\Objects\InstancedModel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Editor\IEditorWindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Editor\MainEditorWindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Editor\MasterEditor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Editor\PostProcessWindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Editor\SkyDomeWindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Editor\SystemSettingsWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -9,13 +9,14 @@ LightDirectionComponent::LightDirectionComponent() : IComponent(COMPONENT_TYPE::
 // removes this light as the active one when this component is destroyed
 LightDirectionComponent::~LightDirectionComponent()
 {
-	Systems::lightManager->RemoveDirectionalLight();
+	if (Systems::lightManager->directionalLight == this)
+		Systems::lightManager->directionalLight = nullptr;
 }
 
 void LightDirectionComponent::Init(XMFLOAT4 lightColor, TransformComponent* transformOverride)
 {
 	// set light properties
-	_lightColor = lightColor;
+	this->lightColor = lightColor;
 
 	// get pointer to transform
 	_transform = GetComponent<TransformComponent>();
@@ -23,7 +24,7 @@ void LightDirectionComponent::Init(XMFLOAT4 lightColor, TransformComponent* tran
 	_overrideTransform = transformOverride;
 
 	// set this light to be used for rendering
-	Systems::lightManager->SetDirectionalLight(this);
+	Systems::lightManager->directionalLight = this;
 }
 
 XMFLOAT3 LightDirectionComponent::GetLightDirection()

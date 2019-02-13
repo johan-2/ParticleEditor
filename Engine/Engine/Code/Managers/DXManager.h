@@ -17,40 +17,28 @@ public:
 	void ClearRenderTarget(float r, float g, float b, float a);
 	void PresentScene();	
 
-	void SetViewport(D3D11_VIEWPORT* viewport, bool setDefault = false);
+	void SetDefaultViewport();
 	void SetBackBuffer();
+	void SetNullRenderTarget();
 
 	void SetFullscreen(bool fullscreen, bool toggle = false);
 
-	// get DX modules
-	DXBlendStates*&        BlendStates()        { return _DXBlendStates; }
-	DXRasterizerStates*&   RasterizerStates()   { return _DXRasterizerStates; }
-	DXDepthStencilStates*& DepthStencilStates() { return _DXDepthStencilStates; }
-	DXSamplerStates*&      SamplerStates()      { return _DXSamplerStates; }
+	// DX modules
+	DXBlendStates*        blendStates;
+	DXRasterizerStates*   rasterizerStates;
+	DXDepthStencilStates* depthStencilStates;
+	DXSamplerStates*      samplerStates;
+	HardwareProperties*   hardwareProperties;
 
-	// get hardware properties
-	HardwareProperties*& GetHardwareProperties() { return _hardwareProperties; }
-
-	// get dx interfaces
-	ID3D11Device*&        GetDevice()    { return _device; }
-	ID3D11DeviceContext*& GetDeviceCon() { return _devCon; }	
-
-	// get default render/depth views
-	ID3D11DepthStencilView*&   GetDefaultDepthStencilView() { return _depthStencilView; }
-	ID3D11RenderTargetView*&   GetDefaultRenderTargetView() { return _renderTargetView; }
+	ID3D11Device*        device;
+	ID3D11DeviceContext* devCon;
 
 private:
 
 	// create swapchain and devices
 	void CreateSwapchainAndRenderTarget(HWND hwnd, bool fullscreen, int screenWidth, int screenHeight);
 	void CreateDepthStencilViews(int screenWidth, int screenHeight);
-
-	// DX modules
-	DXBlendStates*        _DXBlendStates;
-	DXRasterizerStates*   _DXRasterizerStates;
-	DXDepthStencilStates* _DXDepthStencilStates;
-	DXSamplerStates*      _DXSamplerStates;
-	HardwareProperties*   _hardwareProperties;
+	void SetDebugLayerIgnores();
 	
 	// create the viewport
 	void CreateViewport(int screenWidth, int screenHeight);
@@ -58,19 +46,13 @@ private:
 	// misc settings
 	bool _vsyncEnabled;
 	bool _fullscreen;
-	
-	// dx interfaces and swapchain
-	ID3D11Device*        _device;
-	ID3D11DeviceContext* _devCon;
-	IDXGISwapChain*      _swapChain;
 
-	// Render and depth stencil views
+	// backbuffer stuff
 	ID3D11RenderTargetView*   _renderTargetView;
 	ID3D11DepthStencilView*   _depthStencilView;
+	IDXGISwapChain*           _swapChain;
 
 	// default viewport
 	D3D11_VIEWPORT _viewport;
-
-	
 };
 

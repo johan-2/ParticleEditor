@@ -18,15 +18,12 @@ public:
 	HardwareProperties(int screenWidth, int screenHeight);
 	~HardwareProperties();
 
-	// return hardware information
-	const HardwareInfo& GetHardwareInfo() { return _hardwareInfo; }
+	// stores hardware info
+	HardwareInfo hardwareInfo;
 
 private:
 
 	// gets hardware info
 	void GetHardwareInfo(int screenWidth, int screenHeight);
-	
-	// stores hardware info
-	HardwareInfo _hardwareInfo;	
 };
 

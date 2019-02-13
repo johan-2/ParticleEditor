@@ -6,12 +6,13 @@
 #include "ShaderHelpers.h"
 #include "DXRasterizerStates.h"
 #include "Systems.h"
+#include "MathHelpers.h"
 
 WireframeShader::WireframeShader()
 {
 	// create and compile shaders
-	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexWireframe.vs", _vertexShader, _vertexShaderByteCode);
-	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelWireframe.ps",   _pixelShader,  _pixelShaderByteCode);
+	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexWireframe.shader", _vertexShader, vertexShaderByteCode);
+	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelWireframe.shader",   _pixelShader,  pixelShaderByteCode);
 	 
 	// create constant buffer for vertex shader
 	SHADER_HELPERS::CreateConstantBuffer(_constantBufferVertex);
@@ -19,8 +20,8 @@ WireframeShader::WireframeShader()
 
 WireframeShader::~WireframeShader()
 {
-	_vertexShaderByteCode->Release();
-	_pixelShaderByteCode->Release();
+	vertexShaderByteCode->Release();
+	pixelShaderByteCode->Release();
 
 	_vertexShader->Release();
 	_pixelShader->Release();
@@ -38,13 +39,13 @@ void WireframeShader::RenderWireFrame(std::vector<Mesh*>& meshes)
 	CameraManager& CM = *Systems::cameraManager;
 
 	// get devicecontext
-	ID3D11DeviceContext* devCon = DXM.GetDeviceCon();
+	ID3D11DeviceContext*& devCon = DXM.devCon;
 
 	// constantbuffer structure for vertex data
 	ConstantVertex vertexData;
 
 	// get the camera that will render the depthmap
-	CameraComponent* camera = CM.GetCurrentCameraGame();
+	CameraComponent* camera = CM.currentCameraGame;
 
 	// set our shaders
 	devCon->VSSetShader(_vertexShader, NULL, 0);
@@ -53,17 +54,13 @@ void WireframeShader::RenderWireFrame(std::vector<Mesh*>& meshes)
 	// set the vertex constant buffer
 	devCon->VSSetConstantBuffers(0, 1, &_constantBufferVertex);
 
-	DXM.RasterizerStates()->SetRasterizerState(RASTERIZER_STATE::WIREFRAME);
+	DXM.rasterizerStates->SetRasterizerState(RASTERIZER_STATE::WIREFRAME);
 
-	// set camera matrices
-	XMStoreFloat4x4(&vertexData.view,       XMLoadFloat4x4(&camera->GetViewMatrix()));
-	XMStoreFloat4x4(&vertexData.projection, XMLoadFloat4x4(&camera->GetProjectionMatrix()));
-
-	unsigned int size = meshes.size();
+	size_t size = meshes.size();
 	for (int i = 0; i < size; i++)
 	{
 		// set world matrix
-		XMStoreFloat4x4(&vertexData.world, XMLoadFloat4x4(&meshes[i]->GetWorldMatrix()));
+		XMStoreFloat4x4(&vertexData.worldViewProj, XMLoadFloat4x4(&MATH_HELPERS::MatrixMutiplyTrans(&meshes[i]->GetWorldMatrix(), &camera->viewProjMatrix)));
 
 		// update the constant buffer with the vertexdata of this mesh
 		SHADER_HELPERS::UpdateConstantBuffer((void*)&vertexData, sizeof(ConstantVertex), _constantBufferVertex);
@@ -72,8 +69,8 @@ void WireframeShader::RenderWireFrame(std::vector<Mesh*>& meshes)
 		meshes[i]->UploadBuffers();
 
 		// draw
-		devCon->DrawIndexed(meshes[i]->GetNumIndices(), 0, 0);
+		devCon->DrawIndexed(meshes[i]->numIndices, 0, 0);
 	}
 
-	DXM.RasterizerStates()->SetRasterizerState(RASTERIZER_STATE::BACKCULL);
+	DXM.rasterizerStates->SetRasterizerState(RASTERIZER_STATE::BACKCULL);
 }

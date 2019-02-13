@@ -1,5 +1,4 @@
 #pragma once
-
 #include "ComponentTypes.h"
 #include <vector>
 
@@ -13,6 +12,7 @@ class UVScrollComponent;
 class ParticleSystemComponent;
 class LightDirectionComponent;
 class LightPointComponent;
+class PingPongComponent;
 
 class Entity
 {
@@ -27,7 +27,7 @@ public:
 
 		// we asume that T inherits from IComponent (witch we know) 
 		// so we can call SetParent 
-		component->SetParent(this);
+		component->parent = this;
 		_components.push_back(component);
 		
 		return component;
@@ -61,31 +61,22 @@ private:
 	// a kind of dirty function for retriving the enum ID of a component from T type
 	template <class T> COMPONENT_TYPE GetTypeFromTemplate()
 	{
-		if (std::is_same<T, TransformComponent>::value)       { return TRANSFORM_COMPONENT; }
-													   
-		if (std::is_same<T, ModelComponent>::value)           { return MODEL_COMPONENT; }
-															   
-		if (std::is_same<T, RotationComponent>::value)        { return TRANSFORMATION_COMPONENT; }
-													   
-		if (std::is_same<T, FreeMoveComponent>::value)        { return FREE_MOVE_COMPONENT; }
-													   
-		if (std::is_same<T, CameraComponent>::value)          { return CAMERA_COMPONENT; }
-													   
-		if (std::is_same<T, QuadComponent>::value)            { return QUAD_COMPONENT; }
-													   
-		if (std::is_same<T, LightDirectionComponent>::value)  { return DIR_LIGHT_COMPONENT; }
-													   
-		if (std::is_same<T, LightPointComponent>::value)      { return POINT_LIGHT_COMPONENT; }
-													   
+		if (std::is_same<T, TransformComponent>::value)       { return TRANSFORM_COMPONENT; }													   
+		if (std::is_same<T, ModelComponent>::value)           { return MODEL_COMPONENT; }															   
+		if (std::is_same<T, RotationComponent>::value)        { return TRANSFORMATION_COMPONENT; }													   
+		if (std::is_same<T, FreeMoveComponent>::value)        { return FREE_MOVE_COMPONENT; }													   
+		if (std::is_same<T, CameraComponent>::value)          { return CAMERA_COMPONENT; }													   
+		if (std::is_same<T, QuadComponent>::value)            { return QUAD_COMPONENT; }													   
+		if (std::is_same<T, LightDirectionComponent>::value)  { return DIR_LIGHT_COMPONENT; }													   
+		if (std::is_same<T, LightPointComponent>::value)      { return POINT_LIGHT_COMPONENT; }													   
 		if (std::is_same<T, UVScrollComponent>::value)        { return UVSCROLL_COMPONENT; }
-
-		if (std::is_same<T, ParticleSystemComponent>::value) { return PARTICLE_COMPONENT; }
-
+		if (std::is_same<T, ParticleSystemComponent>::value)  { return PARTICLE_COMPONENT; }
+		if (std::is_same<T, PingPongComponent>::value)        { return PING_PONG_COMPONENT; }
 
 		printf("Failed to get Component enum ID from T template\n");
 
 		// just return this in case nothing matched the T
-		// should only get here if a newly creared component type have not been added to this function
+		// should only get here if a newly created component type have not been added to this function
 		return NUM_COMPONENT_TYPES;		
 	}
 

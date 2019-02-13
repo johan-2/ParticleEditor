@@ -35,27 +35,23 @@ void DXRasterizerStates::CreateRasterizerStates()
 
 	// with backface culling
 	result = _device->CreateRasterizerState(&rasterDesc, &_rasterizerBackCull);
-	if (FAILED(result))
-		DX_ERROR::PrintError(result, "failed to create rasterizer state backcull");
+	if (FAILED(result)) DX_ERROR::PrintError(result, "failed to create rasterizer state backcull");
 
 	// with frontface culling
 	rasterDesc.CullMode = D3D11_CULL_FRONT;
 	result = _device->CreateRasterizerState(&rasterDesc, &_rasterizerFrontCull);
-	if (FAILED(result))
-		DX_ERROR::PrintError(result, "failed to create rasterizer state frontcull");
+	if (FAILED(result)) DX_ERROR::PrintError(result, "failed to create rasterizer state frontcull");
 
 	// with no cull
 	rasterDesc.CullMode = D3D11_CULL_NONE;
 	result = _device->CreateRasterizerState(&rasterDesc, &_rasterizerNoCull);
-	if (FAILED(result))
-		DX_ERROR::PrintError(result, "failed to create rasterizer state no cull");
+	if (FAILED(result)) DX_ERROR::PrintError(result, "failed to create rasterizer state no cull");
 
 	// wireframe
 	rasterDesc.CullMode = D3D11_CULL_NONE;
 	rasterDesc.FillMode = D3D11_FILL_WIREFRAME;
 	result = _device->CreateRasterizerState(&rasterDesc, &_rasterizerWireframe);
-	if (FAILED(result))
-		DX_ERROR::PrintError(result, "failed to create rasterizer state wireframe");
+	if (FAILED(result)) DX_ERROR::PrintError(result, "failed to create rasterizer state wireframe");
 
 	// initialize to backface culling
 	_devCon->RSSetState(_rasterizerBackCull);

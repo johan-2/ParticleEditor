@@ -12,8 +12,8 @@
 ImGUIShader::ImGUIShader()
 {
 	// create shaders
-	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexImGui.vs", _vertexShader, _vertexShaderByteCode);
-	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelImGui.ps",   _pixelShader,  _pixelShaderByteCode);
+	SHADER_HELPERS::CreateVertexShader(L"shaders/vertexImGui.shader", _vertexShader, _vertexShaderByteCode);
+	SHADER_HELPERS::CreatePixelShader(L"shaders/pixelImGui.shader",   _pixelShader,  _pixelShaderByteCode);
 
 	// create constant buffers
 	SHADER_HELPERS::CreateConstantBuffer(_constantBufferVertex);
@@ -42,12 +42,12 @@ void ImGUIShader::RenderGUI()
 	GuiManager& GUIM = *Systems::guiManager;
 
 	// get device and device context
-	ID3D11DeviceContext* devCon = DXM.GetDeviceCon();
-	ID3D11Device* device        = DXM.GetDevice();
+	ID3D11DeviceContext*& devCon = DXM.devCon;
+	ID3D11Device*& device        = DXM.device;
 
 	// get the vertex and index buffers from IM GUI
-	ID3D11Buffer*& vertexBuffer = GUIM.GetVertexBuffer();
-	ID3D11Buffer*& indexBuffer  = GUIM.GetIndexBuffer();
+	ID3D11Buffer*& vertexBuffer = GUIM.vertexBuffer;
+	ID3D11Buffer*& indexBuffer  = GUIM.indexBuffer;
 
 	// get the draw data from IM GUI
 	ImDrawData* draw_data = ImGui::GetDrawData();
@@ -55,8 +55,8 @@ void ImGUIShader::RenderGUI()
 	HRESULT result;
 
 	// disable depth and set to alpha blending
-	DXM.BlendStates()->SetBlendState(BLEND_STATE::BLEND_ALPHA);
-	DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::DISABLED);
+	DXM.blendStates->SetBlendState(BLEND_STATE::BLEND_ALPHA);
+	DXM.depthStencilStates->SetDepthStencilState(DEPTH_STENCIL_STATE::DISABLED);
 
 	// declare vertex and index buffer descriptions
 	D3D11_BUFFER_DESC currentSizevertex;
@@ -206,5 +206,5 @@ void ImGUIShader::RenderGUI()
 	}
 
 	// enable deapth
-	DXM.DepthStencilStates()->SetDepthStencilState(DEPTH_STENCIL_STATE::ENABLED);
+	DXM.depthStencilStates->SetDepthStencilState(DEPTH_STENCIL_STATE::ENABLED);
 }

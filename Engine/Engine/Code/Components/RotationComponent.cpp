@@ -33,6 +33,6 @@ void RotationComponent::Update(const float& delta)
 
 	// add rotation and build world matrix
 	_transform->AddRotation(newRotation);
-	_transform->UpdateWorldMatrix();
+	_transform->BuildWorldMatrix();
 	
 }

@@ -26,43 +26,38 @@ void HardwareProperties::GetHardwareInfo(int screenWidth, int screenHeight)
 
 	// Create factory
 	result = CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&factory);
-	if (FAILED(result))
-		DX_ERROR::PrintError(result, "failed to create DXGI factory");
+	if (FAILED(result)) DX_ERROR::PrintError(result, "failed to create DXGI factory");
 
 	// use the factory to create a adapter for the primary graphics interface(video card), we can then use the adapter to get info about our monitor/video memory etc
 	result = factory->EnumAdapters(0, &adapter);
-	if (FAILED(result))
-		DX_ERROR::PrintError(result, "failed to create adapter");
+	if (FAILED(result)) DX_ERROR::PrintError(result, "failed to create adapter");
 
 	// get the primary adapter output
 	result = adapter->EnumOutputs(0, &adapterOutput);
-	if (FAILED(result))
-		DX_ERROR::PrintError(result, "failed to create adapter output");
+	if (FAILED(result)) DX_ERROR::PrintError(result, "failed to create adapter output");
 
 	//get the number of modes that fit the DXGI_FORMATR8G8B8A8_UNORM display format for the adapter output
 	result = adapterOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, NULL);
-	if (FAILED(result))
-		DX_ERROR::PrintError(result, "failed to get display modes");
+	if (FAILED(result)) DX_ERROR::PrintError(result, "failed to get display modes");
 
 	// create a list to hold all the possible modes for this monitor/videocard combination
 	displayModeList = new DXGI_MODE_DESC[numModes];
 
 	// get all displaymodes
 	result = adapterOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, displayModeList);
-	if (FAILED(result))
-		DX_ERROR::PrintError(result, "failed to create output mode list");
+	if (FAILED(result)) DX_ERROR::PrintError(result, "failed to create output mode list");
 
 	// save the monitors refreshrate to be used if Vsync is enabled	
 	for (int i = 0; i < numModes; i++)
 	{
 		if (displayModeList[i].Width == (unsigned int)screenWidth && displayModeList[i].Height == (unsigned int)screenHeight)
 		{
-			_hardwareInfo.numerator   = displayModeList[i].RefreshRate.Numerator;
-			_hardwareInfo.denominator = displayModeList[i].RefreshRate.Denominator;
-			_hardwareInfo.refreshrate = (int)round((float)_hardwareInfo.numerator / _hardwareInfo.denominator);
+			hardwareInfo.numerator   = displayModeList[i].RefreshRate.Numerator;
+			hardwareInfo.denominator = displayModeList[i].RefreshRate.Denominator;
+			hardwareInfo.refreshrate = (int)round((float)hardwareInfo.numerator / hardwareInfo.denominator);
 		}
 	}
-	if (_hardwareInfo.numerator == 0 && _hardwareInfo.denominator == 0)
+	if (hardwareInfo.numerator == 0 && hardwareInfo.denominator == 0)
 		printf("your monitor do not support the current aspect ratio\n");
 
 	// Get the adapter description 
@@ -71,10 +66,10 @@ void HardwareProperties::GetHardwareInfo(int screenWidth, int screenHeight)
 		DX_ERROR::PrintError(result, "failed to create adapter description");
 
 	// store the videocard memory in mbs
-	_hardwareInfo.videoCardMemory = (unsigned int)(adapterDesc.DedicatedVideoMemory / 1024 / 1024);
+	hardwareInfo.videoCardMemory = (unsigned int)(adapterDesc.DedicatedVideoMemory / 1024 / 1024);
 
 	// convert the name of videocard to character array
-	error = wcstombs_s(&stringLenght, _hardwareInfo.videoCardDescription, 128, adapterDesc.Description, 128);
+	error = wcstombs_s(&stringLenght, hardwareInfo.videoCardDescription, 128, adapterDesc.Description, 128);
 	if (error != 0)
 		printf("Failed to convert the videocard info");
 

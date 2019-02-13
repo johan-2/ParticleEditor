@@ -17,15 +17,15 @@ void Systems::InitSystems(Window* window, float screenWidth, float screenHeight,
 {
 	// create DX Manager
 	dxManager = new DXManager();
-	dxManager->Initialize(window->GetHWND(), screenWidth, screenHeight, vSync, fullscreen);
+	dxManager->Initialize(window->hwnd, screenWidth, screenHeight, vSync, fullscreen);
 
 	// create GUI Manager
 	guiManager = new GuiManager();
-	guiManager->Initialize(window->GetHWND());
+	guiManager->Initialize(window->hwnd);
 
 	// Create Input Handler
 	input = new Input();
-	input->InitializeInputDevices(window->GetHINSTANCE(), window->GetHWND());
+	input->InitializeInputDevices(window->hInstance, window->hwnd);
 
 	// Create misc systems
 	time          = new Time();

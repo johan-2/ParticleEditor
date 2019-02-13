@@ -15,47 +15,66 @@ public:
 	~PostProcessingShader();
 
 	// renders all meshes to the depth map
-	void Render(ScreenQuad* quad, ID3D11ShaderResourceView* SceneImage);
+	void Render(ScreenQuad* quad, ID3D11ShaderResourceView* SceneImage, ID3D11ShaderResourceView* sceneDepth);
 
-	// get byte code from shaders
-	ID3D10Blob*& GetVertexShaderByteCode() { return _vertexPostProcessingShaderByteCode; }
-	ID3D10Blob*& GetPixelShaderByteCode()  { return _pixelPostProcessingShaderByteCode; }
+	void CreateBloomBlurRenderTextures();
+	void createDofRenderTextures();
+
+	void ShowAllDebugQuads();
+	void ShowBrightnessMapDebugQuad();
+	void ShowBloomBlurP1DebugQuad();
+	void ShowBloomBlurP2DebugQuad();
+	void ShowDofMapDebugQuad();
+
+	// the shader bytecode
+	ID3D10Blob* vertexPostProcessingShaderByteCode;
+	ID3D10Blob* pixelPostProcessingHDRShaderByteCode;
+	ID3D10Blob* vertexBlurShaderByteCode;
+	ID3D10Blob* pixelBlurShaderByteCode;
+	ID3D10Blob* pixelPostProcessingSDRShaderByteCode;
+	ID3D10Blob* computeBrightnessShaderByteCode;
 
 private:
 
-	ID3D11ShaderResourceView* RenderBlurMaps(ID3D11ShaderResourceView* imageToBlur, bool twoPass, float scaleDown1, float scaleDown2);
-	void RenderBrightnessMap(ID3D11ShaderResourceView* originalImage);
-	void RenderFinal(ID3D11ShaderResourceView* SceneImage);
+	struct ComputeResources
+	{
+		ID3D11Texture2D*           Tex;
+		ID3D11ShaderResourceView*  SRV;
+		ID3D11UnorderedAccessView* UAV;
+	};
+
+	ID3D11ShaderResourceView* RenderBlurMap(ID3D11ShaderResourceView* imageToBlur, float scaleDown1, RenderToTexture* h1, RenderToTexture* v1);
+	void ComputeBrightnessMap(ID3D11ShaderResourceView* originalImage);
+	void RenderFinalHDR(ID3D11ShaderResourceView* SceneImage, ID3D11ShaderResourceView* sceneDepth);
+	void RenderFinalSDR(ID3D11ShaderResourceView* SceneImageSDR);
 
 	// compiled shaders
-	ID3D11VertexShader* _vertexBlurShader;
-	ID3D11PixelShader*  _pixelBlurShader;
-	ID3D11VertexShader* _vertexBrightnessShader;
-	ID3D11PixelShader*  _pixelBrightnessShader;
-	ID3D11VertexShader* _vertexPostProcessingShader;
-	ID3D11PixelShader*  _pixelPostProcessingShader;
-	
-	// the shader bytecode
-	ID3D10Blob* _vertexPostProcessingShaderByteCode;
-	ID3D10Blob* _pixelPostProcessingShaderByteCode;
-	ID3D10Blob* _vertexBlurShaderByteCode;
-	ID3D10Blob* _pixelBlurShaderByteCode;
-	ID3D10Blob* _vertexBrightnessShaderByteCode;
-	ID3D10Blob* _pixelBrightnessShaderByteCode;
+	ID3D11VertexShader*  _vertexBlurShader;
+	ID3D11PixelShader*   _pixelBlurShader;
+	ID3D11VertexShader*  _vertexPostProcessingShader;
+	ID3D11PixelShader*   _pixelPostProcessingHDRShader;
+	ID3D11PixelShader*   _pixelPostProcessingSDRShader;
+	ID3D11ComputeShader* _computeBrightnessShader;
 
 	// constant buffers
 	ID3D11Buffer* _blurVertexConstant;
 	ID3D11Buffer* _finalPixelConstant;
 
 	// render textures 
-	RenderToTexture* _horizontalBlurPass1;
-	RenderToTexture* _verticalBlurPass1;
-	RenderToTexture* _horizontalBlurPass2;
-	RenderToTexture* _verticalBlurPass2;
-	RenderToTexture* _brightnessMap;
+	RenderToTexture* _bloomHorizontalBlurPass1;
+	RenderToTexture* _bloomVerticalBlurPass1;
+	RenderToTexture* _bloomHorizontalBlurPass2;
+	RenderToTexture* _bloomVerticalBlurPass2;
+	RenderToTexture* _dofHorizontalBlurPass;
+	RenderToTexture* _dofVerticalBlurPass;
+	RenderToTexture* _sceneSDR;
+
+	// compute resources
+	ComputeResources _brightnessResources;
 
 	// final input maps to post processing shader
 	ID3D11ShaderResourceView* _bloomMap;
+	ID3D11ShaderResourceView* _dofMap;
 
 	struct ConstantBlurVertex
 	{
@@ -65,11 +84,23 @@ private:
 		int   pad; 
 	};
 
-	struct ConstantFinalPixel
+	struct ConstantFinalHDRPixel
 	{
 		int      applyBloom;
 		float    bloomIntensity;
-		XMFLOAT2 pad;
+		int      applyDof;
+		int      applyTonemap;
+		XMFLOAT2 startEndDofdst;
+		int      tonemapType;
+		float    tonemapExposure;
+	};
+
+	struct ConstantFinalSDRPixel
+	{
+		int   applyFXAA;
+		float screenWidth;
+		float screenHeight;
+		float pad;
 	};
 };
 

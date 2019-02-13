@@ -17,7 +17,11 @@ private:
 	ID3D11DeviceContext* _devCon;
 
 	// the sampler states
-	ID3D11SamplerState* _sampleStateWrap;
-	ID3D11SamplerState* _sampleStateClamp;
+	ID3D11SamplerState* _sampleStateWrapTri;
+	ID3D11SamplerState* _sampleStateClampTri;
+	ID3D11SamplerState* _sampleStateWrapBil;
+	ID3D11SamplerState* _sampleStateClampBil;
+	ID3D11SamplerState* _sampleStateWrapAni;
+	ID3D11SamplerState* _sampleStateClampAni;
 };
 

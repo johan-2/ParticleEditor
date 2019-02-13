@@ -14,11 +14,11 @@ public:
 	~ParticleShader();
 
 	// render all particle systems
-	void RenderParticles(const std::vector<ParticleSystemComponent*>& systems, bool useReflectViewMatrix = false, float reflectHeight = 0.0f);
+	void RenderParticles(std::vector<ParticleSystemComponent*>& systems);
 
-	// get byte code from shaders
-	ID3D10Blob*& GetVertexShaderByteCode() { return _vertexShaderByteCode; }
-	ID3D10Blob*& GetPixelShaderByteCode() { return _pixelShaderByteCode; }
+	// the shader bytecode
+	ID3D10Blob* vertexShaderByteCode;
+	ID3D10Blob* pixelShaderByteCode;
 
 private:
 
@@ -26,18 +26,13 @@ private:
 	ID3D11VertexShader* _vertexShader;
 	ID3D11PixelShader*  _pixelShader;
 
-	// the shader bytecode
-	ID3D10Blob* _vertexShaderByteCode;
-	ID3D10Blob* _pixelShaderByteCode;
-
 	// constant vertex buffer
 	ID3D11Buffer* _constantBufferVertex;
 
 	// constant vertex structure
-	struct ConstantVertex
+	struct CBVertex
 	{
-		XMFLOAT4X4 view;
-		XMFLOAT4X4 projection;
+		XMFLOAT4X4 viewProj;
 	};
 };
 

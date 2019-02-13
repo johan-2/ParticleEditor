@@ -10,8 +10,7 @@ public:
 	// sets the rendertargets of this buffer
 	void SetRenderTargets(ID3D11DepthStencilView* depthStencil);
 
-	// get All SRV's in this buffer
-	ID3D11ShaderResourceView**& GetSrvArray() { return _srvArray; }
+	ID3D11ShaderResourceView** SRVArray;
 
 private:
 
@@ -19,7 +18,6 @@ private:
 	void CreateRenderTargets();
 
 	// srv and render target arrays
-	ID3D11ShaderResourceView** _srvArray;
 	ID3D11RenderTargetView**   _renderTargetArray;
 };
 
