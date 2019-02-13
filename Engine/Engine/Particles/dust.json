@@ -1,0 +1,81 @@
+{
+    "numEmitters": 1,
+    "numParticles0": 200,
+    "texture0": "dust.dds",
+    "startSize0": [
+        0.20000000298023225,
+        0.20000000298023225
+    ],
+    "direction0": [
+        1.0,
+        1.0,
+        1.0
+    ],
+    "minMaxSpeed0": [
+        0.5,
+        1.0
+    ],
+    "gravity0": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "drag0": 0.030000073835253717,
+    "velocitySpread0": [
+        3.0,
+        3.0,
+        3.0
+    ],
+    "emitterLifetime0": 0.0,
+    "particleLifetime0": 30.0,
+    "spawnRadius0": 60.0,
+    "burst0": false,
+    "followEmitter0": false,
+    "startColorMultiplierRGBMin0": [
+        1.0,
+        1.0,
+        1.0
+    ],
+    "startColorMultiplierRGBMax0": [
+        2.0,
+        2.0,
+        1.0
+    ],
+    "endColorMultiplierRGBMin0": [
+        1.0,
+        1.0,
+        1.0
+    ],
+    "endColorMultiplierRGBMax0": [
+        3.0,
+        3.0,
+        1.0
+    ],
+    "startAlpha0": 0.0,
+    "endAlpha0": 1.0,
+    "BLEND0": 2,
+    "spawnOffset0": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "localSpace0": false,
+    "startScaleMinMax0": [
+        1.0,
+        2.0
+    ],
+    "endScaleMinMax0": [
+        0.0,
+        0.0
+    ],
+    "rotationByVelocity0": false,
+    "rotationPerSecMinMax0": [
+        0.0,
+        0.0
+    ],
+    "inheritVelocityScale0": [
+        0.0,
+        0.0,
+        0.0
+    ]
+}
