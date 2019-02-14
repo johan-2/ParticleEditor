@@ -592,7 +592,7 @@ void ParticleEditor::UpdateEditorSettingsWindow()
 
 	// emitter translation
 	ImGui::PushItemWidth(SystemSettings::SCREEN_WIDTH * 0.09f);
-	ImGui::Combo("Entity Translation", &_miscSettings.moveState, "IDLE\0BACK_FORTH\0UP_DOWN");
+	ImGui::Combo("Entity Translation", &_miscSettings.moveState, "IDLE\0BACK_FORTH\0UP_DOWN\0");
 	ImGui::PopItemWidth();
 
 	// emitter translation speed
@@ -937,7 +937,7 @@ void ParticleEditor::UpdateEntityMovement()
 
 	// set rotation, position and scale of system entity
 	_systemTransformComponent->rotation = _miscSettings.systemRotation;
-	_systemTransformComponent->rotation = _miscSettings.systemPosition;
+	_systemTransformComponent->position = _miscSettings.systemPosition;
 	_systemTransformComponent->scale    = _miscSettings.systemScale;
 
 	// build new world matrix

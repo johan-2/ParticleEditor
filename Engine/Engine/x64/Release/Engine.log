@@ -1,17 +1,4 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(377,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
-  IEditorWindow.cpp
-  MainEditorWindow.cpp
-  MasterEditor.cpp
-  PostProcessWindow.cpp
-  SkyDomeWindow.cpp
-  SystemSettingsWindow.cpp
-  Framework.cpp
-c:\users\nilss\desktop\particleeditor\engine\engine\code\framework.cpp(41): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
-c:\users\nilss\desktop\particleeditor\engine\engine\code\framework.cpp(188): warning C4244: 'initializing': conversion from '_Rep' to 'unsigned int', possible loss of data
-          with
-          [
-              _Rep=std::chrono::system_clock::rep
-          ]
   ParticleEditor.cpp
 c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(60): warning C4018: '<': signed/unsigned mismatch
 c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(148): warning C4305: 'argument': truncation from 'double' to 'float'
@@ -53,18 +40,9 @@ c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particle
 c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(632): warning C4018: '<': signed/unsigned mismatch
 c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(671): warning C4018: '<': signed/unsigned mismatch
 c:\users\nilss\desktop\particleeditor\engine\engine\code\particleeditor\particleeditor.cpp(917): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-  InstancedModel.cpp
-c:\users\nilss\desktop\particleeditor\engine\engine\code\renderer\objects\instancedmodel.cpp(27): warning C4267: '=': conversion from 'size_t' to 'unsigned int', possible loss of data
-c:\users\nilss\desktop\particleeditor\engine\engine\code\renderer\objects\instancedmodel.cpp(63): warning C4267: '=': conversion from 'size_t' to 'unsigned int', possible loss of data
-c:\users\nilss\desktop\particleeditor\engine\engine\code\renderer\objects\instancedmodel.cpp(94): warning C4244: '=': conversion from 'float' to 'UINT', possible loss of data
-  SimpleClipSceneShader.cpp
-  WaterShader.cpp
-  imgui_draw.cpp
-  DebugQuadHandler.cpp
-  SystemDefs.cpp
-  Window.cpp
-  Main.cpp
   Generating code
-  All 3277 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  1 of 3277 functions (<0.1%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    3 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   Engine.vcxproj -> C:\Users\nilss\Desktop\ParticleEditor\Engine\Engine\Engine.exe
